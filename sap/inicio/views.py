@@ -1,6 +1,6 @@
 from django.template import loader, Context
 from django.http import HttpResponse
-from blog.models import BlogPost
+from inicio.models import BlogPost
 
 def archive(request):
     posts = BlogPost.objects.all()

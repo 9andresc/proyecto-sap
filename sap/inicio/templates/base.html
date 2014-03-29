@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<HTML>
+<HEAD>
+	<TITLE>{% block title %}SAP{% endblock %}</TITLE>
+</HEAD>
+<BODY>
+	<HEADER>
+		<H1>SISTEMA DE ADMINISTRACION DE PROYECTOS</H1>
+		<NAV>
+			<a href="#">Inicio</a>
+			<a href="#">Administracion</a>
+			<a href="#">Desarrollo</a>
+			<a href="#">Gestion de cambios</a>
+			<a href="#">Cerrar sesion</a>
+		</NAV>
+	</HEADER>
+	<SECTION>
+		{% block content %}
+		{% endblock %}
+	</SECTION>
+</BODY>
+</HTML>
