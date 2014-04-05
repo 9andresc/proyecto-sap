@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}SAP - Agregar roles{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1>Roles</h1>
+		{% if roles %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+        		
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre del rol</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for r in roles %}
+                			<tr>
+                    			<td>{{ r.id }}</td>
+                    			<td>{{ r.nombre }}</td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_usuarios/confirmacion_agregar_rol/usuario/{{ usuario.id }}/{{ r.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No existen roles.</h3>
+    	{% endif %}
+	</div>
+</div>
+{% endblock %}

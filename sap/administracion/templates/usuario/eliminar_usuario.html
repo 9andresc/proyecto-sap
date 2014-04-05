@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}SAP - Confirmación{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		<h3>¿Realmente desea eliminar al usuario {{ usuario.username }}?</h3>
+		<form action="" method="post">
+			{% csrf_token %}
+			<p class="text-warning"><small>Si acepta, los registros del usuario se perderán.</small></p>
+			<br>
+			<a type="button" class="btn btn-default" href="/administracion/gestion_usuarios/">Cancelar</a>
+        	<button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+	</div>
+</div>
+{% endblock %}

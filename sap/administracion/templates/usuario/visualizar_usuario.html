@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}SAP - Usuario {{ usuario.username }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1>Detalles del usuario</h1>
+		<p>{{ usuario.username }}</p>
+		<p>{{ usuario.email }}</p>
+		<p>{{ usuario.first_name }}</p>
+		<p>{{ usuario.last_name }}</p>
+		<p>{{ usuario.direccion }}</p>
+		<p>{{ usuario.telefono }}</p>
+		<br>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_usuarios' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de usuarios</a>
+	</div>
+</div>
+{% endblock %}

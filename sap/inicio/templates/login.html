@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesion{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		{% if not valido %}
+			<div class="alert alert-danger">
+        		<strong>Atención:</strong> Nombre de usuario y/o contraseña incorrecto. Intentelo de nuevo.
+      		</div>
+			<h3></h3>
+		{% endif %}
+		<h2>Por favor, inicie sesión</h2>
+		<form class="form-horizontal" method="POST">
+			{% csrf_token %}
+        	<div class="form-group">
+        		<label for="id_username" class="control-label col-xs-2">Nombre de usuario:</label>
+            	<div class="col-xs-10">
+            		<input id="id_username" name="username" type="text" class="form-control" placeholder="Nombre de usuario"/>
+            	</div>
+        	</div>
+        	<div class="form-group">
+        		<label for="id_password" class="control-label col-xs-2">Contraseña:</label>
+            	<div class="col-xs-10">
+            		<input id="id_password" name="password" type="password" class="form-control" placeholder="Contraseña"/>
+            	</div>
+        	</div>
+        	<div class="form-group">
+            	<div class="col-xs-offset-2 col-xs-10">
+                	<button type="submit" class="btn btn-primary">Acceder</button>
+            	</div>
+        	</div>
+    	</form>
+	</div>
+</div>
+{% endblock %}
