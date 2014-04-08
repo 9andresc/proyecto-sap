@@ -8,7 +8,6 @@
 			{% csrf_token %}
 			{{ form.as_p }}
             <button type="submit" class="btn btn-primary">Crear</button>
-            <input type="reset" class="btn btn-default" value="Limpiar">
 		</form>
 		<br>
 		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_usuarios' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de usuarios</a>
