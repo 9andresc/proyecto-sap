@@ -50,10 +50,14 @@
               			</ul>
             		</li>
 					<li><a href="{% url 'vista_logout' %}">Cerrar sesion</a></li>
+					
 					{% else %}
 					<li><a href="{% url 'vista_login' %}">Iniciar sesion</a></li>
 					{% endif %}
 				</ul>
+				{% if user.is_authenticated %}
+				<p class="navbar-text navbar-right">Usuario {{ user.username }}</p>
+				{% endif %}
 			</div>
 		</div>
 	</div>
