@@ -3,7 +3,11 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		<h3>El permiso {{ permiso.nombre }} fue asignado al rol {{ rol.nombre }}.</h3>
+		{% if valido %}
+		<h3>El permiso {{ permiso.nombre }} fue asignado al rol {{ rol.nombre }}. </h3>
+		{% else %}
+		<h3>El permiso {{ permiso.nombre }} ya está asignado al usuario {{ rol.nombre }}.</h3>
+		{% endif %}
 	</div>
 </div>
 {% endblock %}

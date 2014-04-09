@@ -192,11 +192,15 @@ def agregar_permiso_view(request, id_rol):
     return render_to_response('rol/agregar_permiso.html', ctx, context_instance=RequestContext(request))
     
 def confirmacion_agregar_permiso_view(request, id_rol, id_permiso):
+    valido = True
     rol = Rol.objects.get(id=id_rol)
     permiso = Permiso.objects.get(id=id_permiso)
-    rol.permisos.add(permiso)
-    rol.save()
-    ctx = {'rol':rol, 'permiso':permiso}
+    if rol.permisos.get(id=id_permiso) == permiso:
+        valido = False
+    if valido:
+        rol.permisos.add(permiso)
+        rol.save()
+    ctx = {'rol':rol, 'permiso':permiso, 'valido':valido}
     return render_to_response('rol/confirmacion_agregar_permiso.html', ctx, context_instance=RequestContext(request))
     
 def quitar_permiso_view(request, id_rol, id_permiso):
