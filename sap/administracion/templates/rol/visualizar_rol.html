@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}SAP - Rol {{ rol.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1>Detalles del rol</h1>
+		<p><label><b>Nombre: </b></label> {{ rol.nombre }}</p>
+		<p><label><b>Descripcion:</b></label> {{ rol.descripcion }}</p>
+		<br>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_roles' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles</a>
+	</div>
+</div>
+{% endblock %}

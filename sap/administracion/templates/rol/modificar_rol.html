@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}SAP - Modificar rol {{ rol.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+		<h1>Modificar rol</h1>
+		<form class="form-horizontal" method="POST">
+			{% csrf_token %}
+			{{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Modificar</button>
+		</form>
+		<br>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_roles' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles</a>
+
+</div>
+{% endblock %}

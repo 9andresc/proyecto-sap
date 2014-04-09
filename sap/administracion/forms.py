@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from administracion.models import Rol
 
 class CrearUsuarioForm(forms.Form):
     username = forms.CharField(label="Nombre de usuario", widget=forms.TextInput(), required=True)
@@ -52,3 +53,30 @@ class ModificarUsuarioForm(forms.Form):
             pass
         else:
             raise forms.ValidationError('Las claves no coinciden')
+        
+class CrearRolForm(forms.Form):
+    nombre = forms.CharField(label="Nombre de rol", widget=forms.TextInput(), required=True)
+    descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea(), required=True)
+    
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre']
+        try:
+            rol = Rol.objects.get(nombre=nombre)
+        except Rol.DoesNotExist:
+            return nombre
+        raise forms.ValidationError('Nombre de rol ya registrado')
+
+class ModificarRolForm(forms.Form):
+    nombre = forms.CharField(label="Nombre de rol", widget=forms.TextInput(), required=True)
+    descripcion = forms.CharField(label="Descripcion", widget=forms.TextInput(), required=True)
+        
+    def clean_nombre(self): 
+        nombre = self.cleaned_data['nombre'] 
+        try: 
+            rol = Rol.objects.get(nombre=nombre) 
+            if rol.nombre == nombre:
+                return nombre 
+        except Rol.DoesNotExist:
+            return nombre 
+        raise forms.ValidationError('Nombre de rol ya registrado')
+    
