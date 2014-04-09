@@ -69,7 +69,7 @@ class CrearRolForm(forms.Form):
 
 class ModificarRolForm(forms.Form):
     nombre = forms.CharField(label="Nombre de rol", widget=forms.TextInput(), required=True)
-    descripcion = forms.CharField(label="Descripcion", widget=forms.TextInput(), required=True)
+    descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea, required=True)
         
     def clean_nombre(self): 
         nombre = self.cleaned_data['nombre'] 
@@ -92,6 +92,21 @@ class CrearTipoAtributoForm(forms.Form):
             tipo_atributo = TipoAtributo.objects.get(nombre=nombre)
         except TipoAtributo.DoesNotExist:
             return nombre
+        raise forms.ValidationError('Nombre de tipo atributo ya registrado')
+
+class ModificarTipoAtributoForm(forms.Form):
+    nombre = forms.CharField(label="Nombre de tipo atributo", widget=forms.TextInput(), required=True)
+    descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea, required=True)
+    tipo_dato = forms.ChoiceField(label="Tipo dato",choices=TIPO_DATO, required=True)
+        
+    def clean_nombre(self): 
+        nombre = self.cleaned_data['nombre'] 
+        try: 
+            tipo_atributo = TipoAtributo.objects.get(nombre=nombre) 
+            if tipo_atributo.nombre == nombre:
+                return nombre 
+        except TipoAtributo.DoesNotExist:
+            return nombre 
         raise forms.ValidationError('Nombre de tipo atributo ya registrado')
 
     
