@@ -3,7 +3,11 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
+		{% if valido %}
 		<h3>El rol {{ rol.nombre }} fue asignado al usuario {{ usuario.username }}.</h3>
+		{% else %}
+		<h3>El rol {{ rol.nombre }} ya está asignado al usuario {{ usuario.username }}</h3>
+		{% endif %}
 	</div>
 </div>
 {% endblock %}

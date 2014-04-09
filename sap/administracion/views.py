@@ -101,11 +101,15 @@ def agregar_rol_view(request, id_usuario):
     return render_to_response('usuario/agregar_rol.html', ctx, context_instance=RequestContext(request))
     
 def confirmacion_agregar_rol_view(request, id_usuario, id_rol):
+    valido = True
     usuario = User.objects.get(id=id_usuario)
     rol = Rol.objects.get(id=id_rol)
-    usuario.roles.add(rol)
-    usuario.save()
-    ctx = {'usuario':usuario, 'rol':rol}
+    if usuario.roles.get(id=id_rol) == rol:
+        valido = False
+    if valido:
+        usuario.roles.add(rol)
+        usuario.save()
+    ctx = {'usuario':usuario, 'rol':rol, 'valido':valido}
     return render_to_response('usuario/confirmacion_agregar_rol.html', ctx, context_instance=RequestContext(request))
     
 def confirmacion_quitar_rol_view(request, id_usuario, id_rol):
