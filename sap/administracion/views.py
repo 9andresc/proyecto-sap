@@ -269,3 +269,14 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
     ctx = {'form': form, 'tipo_atributo': tipo_atributo}
     return render_to_response('tipo_atributo/modificar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
+def eliminar_tipo_atributo_view(request, id_tipo_atributo):
+    tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
+    if request.method == "POST":
+        TipoAtributo.objects.get(id=id_tipo_atributo).delete()
+        return HttpResponseRedirect('/administracion/gestion_tipos_atributo/')
+    if request.method == "GET":
+        ctx = {'tipo_atributo':tipo_atributo}
+        return render_to_response('tipo_atributo/eliminar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+
+
