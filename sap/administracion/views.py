@@ -28,6 +28,7 @@ def crear_usuario_view(request):
             usuario = User.objects.create_user(username=username, email=email, password=password_uno, first_name=first_name, last_name=last_name, direccion=direccion, telefono=telefono)
             usuario.save()
             return HttpResponseRedirect('administracion/gestion_usuarios.html')
+            
         else:
             ctx = {'form':form}
             return render_to_response('usuario/crear_usuario.html', ctx, context_instance=RequestContext(request))
@@ -132,7 +133,7 @@ def crear_rol_view(request):
             descripcion = form.cleaned_data['descripcion']
             rol = Rol.objects.create(nombre=nombre, descripcion=descripcion)
             rol.save()
-            return HttpResponseRedirect('administracion/gestion_roles.html')
+            return HttpResponseRedirect('/administracion/gestion_roles/')
         else:
             ctx = {'form':form}
             return render_to_response('rol/crear_rol.html', ctx, context_instance=RequestContext(request))
