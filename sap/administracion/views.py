@@ -112,13 +112,13 @@ def confirmacion_agregar_rol_view(request, id_usuario, id_rol):
     ctx = {'usuario':usuario, 'rol':rol, 'valido':valido}
     return render_to_response('usuario/confirmacion_agregar_rol.html', ctx, context_instance=RequestContext(request))
     
-def confirmacion_quitar_rol_view(request, id_usuario, id_rol):
+def quitar_rol_view(request, id_usuario, id_rol):
     usuario = User.objects.get(id=id_usuario)
     rol = Rol.objects.get(id=id_rol)
     usuario.roles.remove(rol)
     usuario.save()
     ctx = {'usuario':usuario, 'rol':rol}
-    return render_to_response('usuario/confirmacion_quitar_rol.html', ctx, context_instance=RequestContext(request))
+    return render_to_response('usuario/quitar_rol.html', ctx, context_instance=RequestContext(request))
     
     
     
