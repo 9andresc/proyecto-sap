@@ -5,15 +5,15 @@
 <div class="jumbotron">
 	<div class="bs-example">
 		<h1>Gestión de tipos atributo</h1>
-		<a class="btn btn-sm btn-default" href="{% url 'vista_crear_rol' %}"><span class="glyphicon glyphicon-record"></span> Crear</a>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_crear_tipo_atributo' %}"><span class="glyphicon glyphicon-record"></span> Crear</a>
 		<br><br>
-		{% if roles %}
+		{% if tipos_atributo %}
 			<div class="table-responsive"> 
         		<table class="table table-hover">
             		<thead>
                 		<tr>
                     		<th>ID</th>
-                    		<th>Nombre de tipo_atributo</th>   
+                    		<th>Nombre de tipo atributo</th>   
                     		<th></th>
                     		<th></th>
                     		<th></th>
@@ -35,7 +35,7 @@
         		</table>
     		</div>
     	{% else %}
-    		<h3>No existen tipos_atributo</h3>
+    		<h3>No existen tipos atributo</h3>
     	{% endif %}
 	</div>
 </div>

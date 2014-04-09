@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from administracion.models import Rol
+from administracion.models import TipoAtributo, TIPO_DATO
 
 class CrearUsuarioForm(forms.Form):
     username = forms.CharField(label="Nombre de usuario", widget=forms.TextInput(), required=True)
@@ -79,4 +80,18 @@ class ModificarRolForm(forms.Form):
         except Rol.DoesNotExist:
             return nombre 
         raise forms.ValidationError('Nombre de rol ya registrado')
+
+class CrearTipoAtributoForm(forms.Form):
+    nombre = forms.CharField(label="Nombre de tipo atributo", widget=forms.TextInput(), required=True)
+    descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea(), required=True)
+    tipo_dato = forms.ChoiceField(label="Tipo dato",choices=TIPO_DATO, required=True)
+    
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre']
+        try:
+            tipo_atributo = TipoAtributo.objects.get(nombre=nombre)
+        except TipoAtributo.DoesNotExist:
+            return nombre
+        raise forms.ValidationError('Nombre de tipo atributo ya registrado')
+
     

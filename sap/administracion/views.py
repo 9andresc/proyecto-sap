@@ -3,7 +3,7 @@ from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CrearRolForm, ModificarRolForm
+from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm
 from administracion.models import Rol, Permiso,TipoAtributo
 
 @login_required(login_url='/login/')
@@ -218,4 +218,23 @@ def gestion_tipos_atributo_view(request):
     tipos_atributo = TipoAtributo.objects.all()
     ctx = {'tipos_atributo': tipos_atributo}
     return render_to_response('tipo_atributo/gestion_tipos_atributo.html', ctx, context_instance=RequestContext(request)) 
-    
+  
+  
+@login_required(login_url='/login/')
+def crear_tipo_atributo_view(request):
+    form = CrearTipoAtributoForm()
+    if request.method == "POST":
+        form = CrearTipoAtributoForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            tipo_dato = form.cleaned_data['tipo_dato']
+            tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato)
+            tipo_atributo.save()
+            return HttpResponseRedirect('/administracion/gestion_roles/')
+            
+        else:
+            ctx = {'form':form}
+            return render_to_response('tipo_atributo/crear_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+    ctx = {'form':form}
+    return render_to_response('tipo_atributo/crear_tipo_atributo.html', ctx, context_instance=RequestContext(request))

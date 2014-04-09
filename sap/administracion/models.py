@@ -18,7 +18,7 @@ class Rol(models.Model):
 TIPO_DATO = (
     (0, "Numerico"),
     (1, "Fecha"),
-    (2, "Tecto"),
+    (2, "Texto"),
     (3, "Logico"),
 ) 
 
