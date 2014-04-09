@@ -119,12 +119,19 @@ def confirmacion_quitar_rol_view(request, id_usuario, id_rol):
        
 @login_required(login_url='/login/')
 def gestion_roles_view(request):
+    """
+    Permite listar todos los roles registrados en el sistema, junto con las 
+    operaciones disponibles por cada rol.
+    """
     roles = Rol.objects.all()
     ctx = {'roles': roles}
     return render_to_response('rol/gestion_roles.html', ctx, context_instance=RequestContext(request))
     
 @login_required(login_url='/login/')
 def crear_rol_view(request):
+    """
+    Permite crear un nuevo rol en el sistema.
+    """
     form = CrearRolForm()
     if request.method == "POST":
         form = CrearRolForm(request.POST)
@@ -138,16 +145,13 @@ def crear_rol_view(request):
             ctx = {'form':form}
             return render_to_response('rol/crear_rol.html', ctx, context_instance=RequestContext(request))
     ctx = {'form':form}
-    return render_to_response('rol/crear_rol.html', ctx, context_instance=RequestContext(request))
-
-@login_required(login_url='/login/')
-def visualizar_rol_view(request, id_rol):
-    rol = Rol.objects.get(id=id_rol)
-    ctx = {'rol': rol}
-    return render_to_response('rol/visualizar_rol.html', ctx, context_instance=RequestContext(request))  
+    return render_to_response('rol/crear_rol.html', ctx, context_instance=RequestContext(request)) 
 
 @login_required(login_url='/login/')
 def modificar_rol_view(request, id_rol):
+    """
+    Permite modificar un rol existente en el sistema.
+    """
     rol = Rol.objects.get(id=id_rol)
     if request.method == "POST":
         form = ModificarRolForm(data=request.POST)
@@ -169,6 +173,9 @@ def modificar_rol_view(request, id_rol):
 
 @login_required(login_url='/login/')
 def eliminar_rol_view(request, id_rol):
+    """
+    Permite eliminar un rol existente en el sistema.
+    """
     rol = Rol.objects.get(id=id_rol)
     if request.method == "POST":
         Rol.objects.get(id=id_rol).delete()
@@ -176,9 +183,22 @@ def eliminar_rol_view(request, id_rol):
     if request.method == "GET":
         ctx = {'rol':rol}
         return render_to_response('rol/eliminar_rol.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def visualizar_rol_view(request, id_rol):
+    """
+    Permite visualizar todos los campos de un rol existente en el sistema.
+    """
+    rol = Rol.objects.get(id=id_rol)
+    ctx = {'rol': rol}
+    return render_to_response('rol/visualizar_rol.html', ctx, context_instance=RequestContext(request)) 
     
 @login_required(login_url='/login/')
 def permisos_rol_view(request, id_rol):
+    """
+    Permite listar todos los permisos pertenecientes a un rol existente en el sistema, 
+    junto con las operaciones de agregacion de permisos y eliminación de permisos.
+    """
     rol = Rol.objects.get(id=id_rol)
     permisos = Permiso.objects.filter(rol__id=id_rol)
     ctx = {'rol':rol, 'permisos':permisos}
@@ -187,12 +207,20 @@ def permisos_rol_view(request, id_rol):
 
 @login_required(login_url='/login/')
 def agregar_permiso_view(request, id_rol):
+    """
+    Permite listar todos los permisos registrados en el sistema, junto con las 
+    operaciones de agregación de permiso.
+    """
     rol = Rol.objects.get(id=id_rol)
     permisos = Permiso.objects.all()
     ctx = {'rol':rol, 'permisos':permisos}
     return render_to_response('rol/agregar_permiso.html', ctx, context_instance=RequestContext(request))
     
 def confirmacion_agregar_permiso_view(request, id_rol, id_permiso):
+    """
+    Permite agregar un permiso previamente seleccionado a un rol existente en el 
+    sistema.
+    """
     valido = True
     rol = Rol.objects.get(id=id_rol)
     permiso = Permiso.objects.get(id=id_permiso)
@@ -205,6 +233,10 @@ def confirmacion_agregar_permiso_view(request, id_rol, id_permiso):
     return render_to_response('rol/confirmacion_agregar_permiso.html', ctx, context_instance=RequestContext(request))
     
 def quitar_permiso_view(request, id_rol, id_permiso):
+    """
+    Permite quitar un permiso previamente seleccionado de un rol existente en el 
+    sistema.
+    """
     rol = Rol.objects.get(id=id_rol)
     permiso = Permiso.objects.get(id=id_permiso)
     rol.permisos.remove(permiso)
@@ -215,6 +247,10 @@ def quitar_permiso_view(request, id_rol, id_permiso):
        
 @login_required(login_url='/login/')
 def gestion_tipos_atributo_view(request):
+    """
+    Permite listar todos los tipos atributo registrados en el sistema, junto con las 
+    operaciones disponibles por cada tipo atributo.
+    """
     tipos_atributo = TipoAtributo.objects.all()
     ctx = {'tipos_atributo': tipos_atributo}
     return render_to_response('tipo_atributo/gestion_tipos_atributo.html', ctx, context_instance=RequestContext(request)) 
@@ -222,6 +258,9 @@ def gestion_tipos_atributo_view(request):
   
 @login_required(login_url='/login/')
 def crear_tipo_atributo_view(request):
+    """
+    Permite crear un nuevo tipo atributo en el sistema.
+    """
     form = CrearTipoAtributoForm()
     if request.method == "POST":
         form = CrearTipoAtributoForm(request.POST)
@@ -240,13 +279,10 @@ def crear_tipo_atributo_view(request):
     return render_to_response('tipo_atributo/crear_tipo_atributo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
-def visualizar_tipo_atributo_view(request, id_tipo_atributo):
-    tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
-    ctx = {'tipo_atributo': tipo_atributo}
-    return render_to_response('tipo_atributo/visualizar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
-
-@login_required(login_url='/login/')
 def modificar_tipo_atributo_view(request, id_tipo_atributo):
+    """
+    Permite modificar un tipo atributo existente en el sistema.
+    """
     tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
     if request.method == "POST":
         form = ModificarTipoAtributoForm(data=request.POST)
@@ -271,6 +307,9 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
 
 @login_required(login_url='/login/')
 def eliminar_tipo_atributo_view(request, id_tipo_atributo):
+    """
+    Permite eliminar un tipo atributo existente en el sistema.
+    """
     tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
     if request.method == "POST":
         TipoAtributo.objects.get(id=id_tipo_atributo).delete()
@@ -278,5 +317,15 @@ def eliminar_tipo_atributo_view(request, id_tipo_atributo):
     if request.method == "GET":
         ctx = {'tipo_atributo':tipo_atributo}
         return render_to_response('tipo_atributo/eliminar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def visualizar_tipo_atributo_view(request, id_tipo_atributo):
+    """
+    Permite visualizar todos los campos de un tipo atributo existente en el sistema.
+    """
+    tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
+    ctx = {'tipo_atributo': tipo_atributo}
+    return render_to_response('tipo_atributo/visualizar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+
 
 

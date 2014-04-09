@@ -2,12 +2,18 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Permiso(models.Model):
+    """
+    Clase que especifica los atributos de los Permisos.
+    """
     nombre = models.CharField(max_length=50, blank=False)
     
     def __unicode__(self):
         return self.nombre
 
 class Rol(models.Model):
+    """
+    Clase que especifica los atributos de los Roles.
+    """
     nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=True)
     permisos = models.ManyToManyField(Permiso, blank=False)
@@ -23,6 +29,9 @@ TIPO_DATO = (
 ) 
 
 class TipoAtributo(models.Model):
+    """
+    Clase que especifica los atributos de los Tipos atributo.
+    """
     nombre = models.CharField(max_length=50, blank=False)
     tipo_dato  = models.IntegerField(max_length=30,choices= TIPO_DATO, default=1)
     descripcion = models.TextField(blank=True)
