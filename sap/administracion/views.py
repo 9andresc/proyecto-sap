@@ -27,7 +27,7 @@ def crear_usuario_view(request):
             telefono = form.cleaned_data['telefono']
             usuario = User.objects.create_user(username=username, email=email, password=password_uno, first_name=first_name, last_name=last_name, direccion=direccion, telefono=telefono)
             usuario.save()
-            return HttpResponseRedirect('administracion/gestion_usuarios.html')
+            return HttpResponseRedirect('/administracion/gestion_usuarios/')
         else:
             ctx = {'form':form}
             return render_to_response('usuario/crear_usuario.html', ctx, context_instance=RequestContext(request))
