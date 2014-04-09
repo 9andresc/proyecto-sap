@@ -197,7 +197,7 @@ def visualizar_rol_view(request, id_rol):
 def permisos_rol_view(request, id_rol):
     """
     Permite listar todos los permisos pertenecientes a un rol existente en el sistema, 
-    junto con las operaciones de agregacion de permisos y eliminación de permisos.
+    junto con las operaciones de agregacion de permisos y eliminacion de permisos.
     """
     rol = Rol.objects.get(id=id_rol)
     permisos = Permiso.objects.filter(rol__id=id_rol)
@@ -209,7 +209,7 @@ def permisos_rol_view(request, id_rol):
 def agregar_permiso_view(request, id_rol):
     """
     Permite listar todos los permisos registrados en el sistema, junto con las 
-    operaciones de agregación de permiso.
+    operaciones de agregacion de permiso.
     """
     rol = Rol.objects.get(id=id_rol)
     permisos = Permiso.objects.all()

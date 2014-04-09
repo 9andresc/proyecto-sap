@@ -57,7 +57,7 @@ class ModificarUsuarioForm(forms.Form):
         
 class CrearRolForm(forms.Form):
     """
-    Formulario utilizado para la creación de un rol.
+    Formulario utilizado para la creacion de un rol.
     """
     nombre = forms.CharField(label="Nombre de rol", widget=forms.TextInput(), required=True)
     descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea(), required=True)
@@ -72,7 +72,7 @@ class CrearRolForm(forms.Form):
 
 class ModificarRolForm(forms.Form):
     """
-    Formulario utilizado para la modificación de un rol.
+    Formulario utilizado para la modificacion de un rol.
     """
     nombre = forms.CharField(label="Nombre de rol", widget=forms.TextInput(), required=True)
     descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea, required=True)
@@ -89,7 +89,7 @@ class ModificarRolForm(forms.Form):
 
 class CrearTipoAtributoForm(forms.Form):
     """
-    Formulario utilizado para la creación de un tipo atributo.
+    Formulario utilizado para la creacion de un tipo atributo.
     """
     nombre = forms.CharField(label="Nombre de tipo atributo", widget=forms.TextInput(), required=True)
     descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea(), required=True)
@@ -105,7 +105,7 @@ class CrearTipoAtributoForm(forms.Form):
 
 class ModificarTipoAtributoForm(forms.Form):
     """
-    Formulario utilizado para la modificación de un tipo atributo.
+    Formulario utilizado para la modificacion de un tipo atributo.
     """
     nombre = forms.CharField(label="Nombre de tipo atributo", widget=forms.TextInput(), required=True)
     descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea, required=True)
