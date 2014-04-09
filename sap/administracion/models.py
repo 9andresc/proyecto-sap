@@ -15,10 +15,30 @@ class Rol(models.Model):
     def __unicode__(self):
         return self.nombre
 
+TIPO_DATO = (
+    (0, "Numerico"),
+    (1, "Fecha"),
+    (2, "Tecto"),
+    (3, "Logico"),
+) 
+
+class TipoAtributo(models.Model):
+    nombre = models.CharField(max_length=50, blank=False)
+    tipo_dato  = models.IntegerField(max_length=30,choices= TIPO_DATO, default=1)
+    descripcion = models.TextField(blank=True)
+    valor = models.CharField(max_length=50, blank=True)
+    
+    
+    def __unicode__(self):
+        return self.nombre
+    
+   
+
 ESTADOS_USUARIO = (
     (0, "Activo"),
     (1, "Inactivo"),
 )
+
 
 def url_foto(self, filename):
     """

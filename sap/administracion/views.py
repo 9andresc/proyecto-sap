@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CrearRolForm, ModificarRolForm
-from administracion.models import Rol, Permiso
+from administracion.models import Rol, Permiso,TipoAtributo
 
 @login_required(login_url='/login/')
 def gestion_usuarios_view(request):
@@ -211,5 +211,11 @@ def quitar_permiso_view(request, id_rol, id_permiso):
     rol.save()
     ctx = {'rol':rol, 'permiso':permiso}
     return render_to_response('rol/quitar_permiso.html', ctx, context_instance=RequestContext(request))
-    
+   
+       
+@login_required(login_url='/login/')
+def gestion_tipos_atributo_view(request):
+    tipos_atributo = TipoAtributo.objects.all()
+    ctx = {'tipos_atributo': tipos_atributo}
+    return render_to_response('tipo_atributo/gestion_tipos_atributo.html', ctx, context_instance=RequestContext(request)) 
     
