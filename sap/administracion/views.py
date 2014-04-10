@@ -129,11 +129,13 @@ def confirmacion_agregar_rol_view(request, id_usuario, id_rol):
     Permite agregar un rol previamente seleccionado a un usuario existente en el 
     sistema.
     """
-    valido = True
+    valido = False
     usuario = User.objects.get(id=id_usuario)
     rol = Rol.objects.get(id=id_rol)
-    if usuario.roles.get(id=id_rol) == rol:
-        valido = False
+    try:
+        role = usuario.roles.get(id=id_rol)
+    except Rol.DoesNotExist:
+        valido = True
     if valido:
         usuario.roles.add(rol)
         usuario.save()

@@ -8,6 +8,8 @@
 		{% else %}
 		<h3>El rol {{ rol.nombre }} ya está asignado al usuario {{ usuario.username }}.</h3>
 		{% endif %}
+		<br>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_usuarios' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de usuarios</a>
 	</div>
 </div>
 {% endblock %}
