@@ -2,6 +2,9 @@ from django import forms
 from django.contrib.auth.models import User
 
 class CrearUsuarioForm(forms.Form):
+    """
+    LALALALA.
+    """
     username = forms.CharField(label="Nombre de usuario", widget=forms.TextInput(), required=True)
     email = forms.EmailField(label="Email", widget=forms.TextInput(), required=True)
     password_uno = forms.CharField(label="Contrasenha", widget=forms.PasswordInput(render_value=False), required=True)
@@ -36,6 +39,9 @@ class CrearUsuarioForm(forms.Form):
             raise forms.ValidationError('Las claves no coinciden')
         
 class ModificarUsuarioForm(forms.Form):
+    """
+    LALALALALA.
+    """
     username = forms.CharField(label="Nombre de usuario", widget=forms.TextInput(), required=True)
     email = forms.EmailField(label="Email", widget=forms.TextInput(), required=True)
     password_uno = forms.CharField(label="Contrasenha", widget=forms.PasswordInput(render_value=False), required=True)

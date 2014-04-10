@@ -2,12 +2,18 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Permiso(models.Model):
+    """
+    LALALALALA.
+    """
     nombre = models.CharField(max_length=50, blank=False)
     
     def __unicode__(self):
         return self.nombre
 
 class Rol(models.Model):
+    """
+    lalalala.
+    """
     nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=True)
     permisos = models.ManyToManyField(Permiso, blank=False)
