@@ -26,7 +26,7 @@ TEMPLATE_DEBUG = True
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, "inicio/templates"),
-    os.path.join(BASE_DIR, "aplicaciones/templates"),
+    os.path.join(BASE_DIR, "administracion/templates"),
     os.path.join(BASE_DIR, "desarrollo/templates"),
     os.path.join(BASE_DIR, "gestion_cambios/templates"),
 )
@@ -43,7 +43,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'south',
     'administracion',
 )
 

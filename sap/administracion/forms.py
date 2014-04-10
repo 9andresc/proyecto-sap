@@ -4,6 +4,9 @@ from administracion.models import Rol
 from administracion.models import TipoAtributo, TIPO_DATO
 
 class CrearUsuarioForm(forms.Form):
+    """
+    Formulario utilizado para la creacion de un usuario.
+    """
     username = forms.CharField(label="Nombre de usuario", widget=forms.TextInput(), required=True)
     email = forms.EmailField(label="Email", widget=forms.TextInput(), required=True)
     password_uno = forms.CharField(label="Contrasenha", widget=forms.PasswordInput(render_value=False), required=True)
@@ -38,6 +41,9 @@ class CrearUsuarioForm(forms.Form):
             raise forms.ValidationError('Las claves no coinciden')
         
 class ModificarUsuarioForm(forms.Form):
+    """
+    Formulario utilizado para la modificacion de un usuario.
+    """
     username = forms.CharField(label="Nombre de usuario", widget=forms.TextInput(), required=True)
     email = forms.EmailField(label="Email", widget=forms.TextInput(), required=True)
     password_uno = forms.CharField(label="Contrasenha", widget=forms.PasswordInput(render_value=False), required=True)
@@ -54,6 +60,26 @@ class ModificarUsuarioForm(forms.Form):
             pass
         else:
             raise forms.ValidationError('Las claves no coinciden')
+        
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        try:
+            usuario = User.objects.get(username=username)
+            if usuario.username == username:
+                return username
+        except User.DoesNotExist:
+            return username
+        raise forms.ValidationError('Nombre de usuario ya registrado')
+        
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            usuario = User.objects.get(email=email)
+            if usuario.email == email:
+                return email
+        except User.DoesNotExist:
+            return email
+        raise forms.ValidationError('Email ya registrado')
         
 class CrearRolForm(forms.Form):
     """
@@ -120,5 +146,3 @@ class ModificarTipoAtributoForm(forms.Form):
         except TipoAtributo.DoesNotExist:
             return nombre 
         raise forms.ValidationError('Nombre de tipo atributo ya registrado')
-
-    

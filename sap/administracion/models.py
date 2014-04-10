@@ -37,17 +37,13 @@ class TipoAtributo(models.Model):
     descripcion = models.TextField(blank=True)
     valor = models.CharField(max_length=50, blank=True)
     
-    
     def __unicode__(self):
         return self.nombre
     
-   
-
 ESTADOS_USUARIO = (
     (0, "Activo"),
     (1, "Inactivo"),
 )
-
 
 def url_foto(self, filename):
     """
