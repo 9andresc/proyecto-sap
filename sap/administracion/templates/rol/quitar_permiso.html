@@ -5,5 +5,7 @@
 	<div class="bs-example">
 		<h3>El permiso {{ permiso.nombre }} fue desasignado del rol {{ rol.nombre }}.</h3>
 	</div>
+	<br>
+	<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_roles' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles</a>
 </div>
 {% endblock %}

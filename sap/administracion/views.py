@@ -221,11 +221,13 @@ def confirmacion_agregar_permiso_view(request, id_rol, id_permiso):
     Permite agregar un permiso previamente seleccionado a un rol existente en el 
     sistema.
     """
-    valido = True
+    valido = False
     rol = Rol.objects.get(id=id_rol)
     permiso = Permiso.objects.get(id=id_permiso)
-    if rol.permisos.get(id=id_permiso) == permiso:
-        valido = False
+    try:
+        permis = rol.permisos.get(id=id_permiso)
+    except Permiso.DoesNotExist:
+        valido = True      
     if valido:
         rol.permisos.add(permiso)
         rol.save()

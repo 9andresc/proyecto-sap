@@ -36,21 +36,9 @@
                 			<li><a href="{% url 'vista_gestion_usuarios' %}">Gestionar usuarios</a></li>
                 			<li><a href="{% url 'vista_gestion_roles' %}">Gestionar roles</a></li>
                 			<li><a href="{% url 'vista_gestion_tipos_atributo' %}">Gestionar tipos atributo</a></li>
-                			<li><a href="#">Gestionar tipos de ítem</a></li>
-                			<li><a href="#">Gestionar proyectos</a></li>
-                			<li><a href="#">Gestionar fases</a></li>
-              			</ul>
-            		</li>
-					<li><a href="#">Desarrollo</a></li>
-					<li class="dropdown">
-              			<a href="#" class="dropdown-toggle" data-toggle="dropdown">Gestion de cambios <b class="caret"></b></a>
-              			<ul class="dropdown-menu">
-                			<li><a href="#">Gestionar líneas base</a></li>
-                			<li><a href="#">Gestionar solicitudes de cambios</a></li>
               			</ul>
             		</li>
 					<li><a href="{% url 'vista_logout' %}">Cerrar sesion</a></li>
-					
 					{% else %}
 					<li><a href="{% url 'vista_login' %}">Iniciar sesion</a></li>
 					{% endif %}
