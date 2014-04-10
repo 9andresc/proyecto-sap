@@ -106,7 +106,7 @@ def visualizar_usuario_view(request, id_usuario):
 def roles_usuario_view(request, id_usuario):
     """
     Permite listar todos los roles pertenecientes a un usuario existente en el sistema, 
-    junto con las operaciones de agregacion de roles y eliminación de roles.
+    junto con las operaciones de agregacion de roles y eliminacion de roles.
     """
     usuario = User.objects.get(id=id_usuario)
     roles = Rol.objects.filter(user__id=id_usuario)
@@ -117,7 +117,7 @@ def roles_usuario_view(request, id_usuario):
 def agregar_rol_view(request, id_usuario):
     """
     Permite listar todos los roles registrados en el sistema, junto con las 
-    operaciones de agregación de rol.
+    operaciones de agregacion de rol.
     """
     usuario = User.objects.get(id=id_usuario)
     roles = Rol.objects.all()
