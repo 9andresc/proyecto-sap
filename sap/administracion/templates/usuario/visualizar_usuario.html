@@ -4,12 +4,12 @@
 <div class="jumbotron">
 	<div class="bs-example">
 		<h1>Detalles del usuario</h1>
-		<p>{{ usuario.username }}</p>
-		<p>{{ usuario.email }}</p>
-		<p>{{ usuario.first_name }}</p>
-		<p>{{ usuario.last_name }}</p>
-		<p>{{ usuario.direccion }}</p>
-		<p>{{ usuario.telefono }}</p>
+		<p><label><b>Nombre de usuario:</b></label> {{ usuario.username }}</p>
+		<p><label><b>Email:</b></label> {{ usuario.email }}</p>
+		<p><label><b>Nombre:</b></label> {{ usuario.first_name }}</p>
+		<p><label><b>Apellido:</b></label> {{ usuario.last_name }}</p>
+		<p><label><b>Dirección:</b></label> {{ usuario.direccion }}</p>
+		<p><label><b>Teléfono:</b></label> {{ usuario.telefono }}</p>
 		<br>
 		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_usuarios' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de usuarios</a>
 	</div>
