@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class Permiso(models.Model):
     """
-    LALALALALA.
+    Clase que especifica los atributos de los Permisos.
     """
     nombre = models.CharField(max_length=50, blank=False)
     
@@ -12,7 +12,7 @@ class Permiso(models.Model):
 
 class Rol(models.Model):
     """
-    lalalala.
+    Clase que especifica los atributos de los Roles.
     """
     nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=True)
@@ -21,12 +21,40 @@ class Rol(models.Model):
     def __unicode__(self):
         return self.nombre
 
+TIPO_DATO = (
+    (0, "Numerico"),
+    (1, "Fecha"),
+    (2, "Texto"),
+    (3, "Logico"),
+) 
+
+class TipoAtributo(models.Model):
+    """
+    Clase que especifica los atributos de los Tipos atributo.
+    """
+    nombre = models.CharField(max_length=50, blank=False)
+    tipo_dato  = models.IntegerField(max_length=30,choices= TIPO_DATO, default=1)
+    descripcion = models.TextField(blank=True)
+    valor = models.CharField(max_length=50, blank=True)
+    
+    def __unicode__(self):
+        return self.nombre
+    
 ESTADOS_USUARIO = (
     (0, "Activo"),
     (1, "Inactivo"),
 )
 
+def url_foto(self, filename):
+    """
+    Define y retorna la ruta de una foto adjuntada a un usuario.
+    """
+    ruta = "images/%s/%s"%(self.user.username, filename)
+    return ruta
+
 User.add_to_class('estado', models.IntegerField(max_length=30, choices=ESTADOS_USUARIO, default=1))
 User.add_to_class('telefono', models.CharField(max_length=100, blank=True))
 User.add_to_class('direccion', models.CharField(max_length=100, blank=True))
+User.add_to_class('url_foto', url_foto)
+User.add_to_class('foto', models.ImageField(upload_to=url_foto, blank=True, null=True))
 User.add_to_class('roles', models.ManyToManyField(Rol, null=True, blank=True))

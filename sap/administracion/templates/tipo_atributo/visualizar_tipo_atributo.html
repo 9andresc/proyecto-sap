@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}SAP - Tipo atributo {{ tipo_atributo.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1>Detalles del tipo atributo</h1>
+		<p><label><b>Nombre: </b></label> {{ tipo_atributo.nombre }}</p>
+		<p><label><b>Descripción:</b></label> {{ tipo_atributo.descripcion }}</p>
+		<p><label><b>Tipo Dato:</b></label>  
+		{% if tipo_atributo.tipo_dato == 0 %}  
+        <span>Numerico</span>  
+        {% elif tipo_atributo.tipo_dato == 1 %}  
+        <span>Fecha</span> 
+        {% elif tipo_atributo.tipo_dato == 2 %}  
+        <span>Texto</span> 
+        {% else %}
+		<span>Logico</span> 
+		{% endif %} 
+		</p>
+		<br>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_tipos_atributo' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de tipos atributo</a>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}SAP - Crear tipo atributo{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1>Crear tipo atributo</h1>
+		<form class="form-horizontal" method="POST">
+			{% csrf_token %}
+			{{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Crear</button>
+		</form>
+		<br>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_tipos_atributo' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de tipos atributo</a>
+	</div>
+</div>
+{% endblock %}

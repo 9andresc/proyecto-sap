@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}SAP - Gestión de tipos_atributo{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1>Gestión de tipos atributo</h1>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_crear_tipo_atributo' %}"><span class="glyphicon glyphicon-record"></span> Crear</a>
+		<br><br>
+		{% if tipos_atributo %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre de tipo atributo</th>   
+                    		<th></th>
+                    		<th></th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for t in tipos_atributo %}
+                			<tr>
+                    			<td>{{ t.id }}</td>
+                    			<td>{{ t.nombre }}</td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_tipos_atributo/modificar_tipo_atributo/{{ t.id }}/"><span class="glyphicon glyphicon-edit"></span> Modificar</a></td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_tipos_atributo/eliminar_tipo_atributo/{{ t.id }}/"><span class="glyphicon glyphicon-trash"></span> Eliminar</a></td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_tipos_atributo/tipo_atributo/{{ t.id }}/"><span class="glyphicon glyphicon-search"></span> Visualizar</a></td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No existen tipos atributo</h3>
+    	{% endif %}
+	</div>
+</div>
+{% endblock %}
