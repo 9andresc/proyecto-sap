@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}SAP - Permisos del rol {{ rol.nombre }}{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1>Administración de permisos</h1>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_agregar_permiso' id_rol=rol.id %}"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
+		<br><br>
+		{% if permisos %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre del permiso</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for p in permisos %}
+                			<tr>
+                    			<td>{{ p.id }}</td>
+                    			<td>{{ p.nombre }}</td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_roles/quitar_permiso/rol/{{ rol.id }}/{{ p.id }}/"><span class="glyphicon glyphicon-minus"></span> Quitar</a></td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No posee permisos</h3>
+    	{% endif %}
+	</div>
+</div>
+{% endblock %}

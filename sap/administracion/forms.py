@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
+from administracion.models import Rol
+from administracion.models import TipoAtributo, TIPO_DATO
 
 class CrearUsuarioForm(forms.Form):
     username = forms.CharField(label="Nombre de usuario", widget=forms.TextInput(), required=True)
@@ -52,3 +54,71 @@ class ModificarUsuarioForm(forms.Form):
             pass
         else:
             raise forms.ValidationError('Las claves no coinciden')
+        
+class CrearRolForm(forms.Form):
+    """
+    Formulario utilizado para la creacion de un rol.
+    """
+    nombre = forms.CharField(label="Nombre de rol", widget=forms.TextInput(), required=True)
+    descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea(), required=True)
+    
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre']
+        try:
+            rol = Rol.objects.get(nombre=nombre)
+        except Rol.DoesNotExist:
+            return nombre
+        raise forms.ValidationError('Nombre de rol ya registrado')
+
+class ModificarRolForm(forms.Form):
+    """
+    Formulario utilizado para la modificacion de un rol.
+    """
+    nombre = forms.CharField(label="Nombre de rol", widget=forms.TextInput(), required=True)
+    descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea, required=True)
+        
+    def clean_nombre(self): 
+        nombre = self.cleaned_data['nombre'] 
+        try: 
+            rol = Rol.objects.get(nombre=nombre) 
+            if rol.nombre == nombre:
+                return nombre 
+        except Rol.DoesNotExist:
+            return nombre 
+        raise forms.ValidationError('Nombre de rol ya registrado')
+
+class CrearTipoAtributoForm(forms.Form):
+    """
+    Formulario utilizado para la creacion de un tipo atributo.
+    """
+    nombre = forms.CharField(label="Nombre de tipo atributo", widget=forms.TextInput(), required=True)
+    descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea(), required=True)
+    tipo_dato = forms.ChoiceField(label="Tipo dato",choices=TIPO_DATO, required=True)
+    
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre']
+        try:
+            tipo_atributo = TipoAtributo.objects.get(nombre=nombre)
+        except TipoAtributo.DoesNotExist:
+            return nombre
+        raise forms.ValidationError('Nombre de tipo atributo ya registrado')
+
+class ModificarTipoAtributoForm(forms.Form):
+    """
+    Formulario utilizado para la modificacion de un tipo atributo.
+    """
+    nombre = forms.CharField(label="Nombre de tipo atributo", widget=forms.TextInput(), required=True)
+    descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea, required=True)
+    tipo_dato = forms.ChoiceField(label="Tipo dato",choices=TIPO_DATO, required=True)
+        
+    def clean_nombre(self): 
+        nombre = self.cleaned_data['nombre'] 
+        try: 
+            tipo_atributo = TipoAtributo.objects.get(nombre=nombre) 
+            if tipo_atributo.nombre == nombre:
+                return nombre 
+        except TipoAtributo.DoesNotExist:
+            return nombre 
+        raise forms.ValidationError('Nombre de tipo atributo ya registrado')
+
+    
