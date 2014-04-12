@@ -67,8 +67,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'sap',
-        'USER': 'gustavo',
-        'PASSWORD': 'cabral',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
         'HOST': '127.0.0.1',
     }
 }
@@ -92,9 +92,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = '/home/gustavo/git/RepositorioProyectoSAP/sap/media/'
-
-MEDIA_URL = '/media/'
-
-ROOT_URL = '/'
-MEDIA_URL = ROOT_URL + 'media/'
+MEDIA_ROOT = '/home/gustavo/git/proyecto-sap/sap/media/'
