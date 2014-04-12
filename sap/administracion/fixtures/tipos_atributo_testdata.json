@@ -1,0 +1,34 @@
+[
+{
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "gustavo", 
+        "first_name": "Gustavo", 
+        "last_name": "Cabral", 
+        "roles": [], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2014-04-11T20:33:04.071Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$vHpiV6ErPnxE$KC2Y3E76bUqHWAKxkuJ3bFrMb7QDZS1RaGpOjbmi4+Q=", 
+        "estado": 1, 
+        "email": "andrescabral.c@gmail.com", 
+        "date_joined": "2014-04-11T20:31:10.894Z"
+    }
+},
+{
+    "pk": 1, 
+    "model": "administracion.tipoatributo", 
+    "fields": {
+        "descripcion": "Indica la fecha de vencimiento de un item.", 
+        "nombre": "Fecha de vencimiento", 
+        "tipo_dato": 1, 
+        "valor": ""
+    }
+}
+]
