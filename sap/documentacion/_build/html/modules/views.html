@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Views &mdash; sap 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="sap 1.0.0 documentation" href="../index.html" />
+    <link rel="next" title="Forms" href="forms.html" />
+    <link rel="prev" title="Models" href="models.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="forms.html" title="Forms"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="models.html" title="Models"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">sap 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-administracion.views">
+<span id="views"></span><h1>Views<a class="headerlink" href="#module-administracion.views" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="administracion.views.agregar_permiso_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">agregar_permiso_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#agregar_permiso_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.agregar_permiso_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite listar todos los permisos registrados en el sistema, junto con las 
+operaciones de agregacion de permiso.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.agregar_rol_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">agregar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.agregar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite listar todos los roles registrados en el sistema, junto con las 
+operaciones de agregacion de rol.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.confirmacion_agregar_permiso_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">confirmacion_agregar_permiso_view</tt><big>(</big><em>request</em>, <em>id_rol</em>, <em>id_permiso</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#confirmacion_agregar_permiso_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.confirmacion_agregar_permiso_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite agregar un permiso previamente seleccionado a un rol existente en el 
+sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.confirmacion_agregar_rol_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">confirmacion_agregar_rol_view</tt><big>(</big><em>request</em>, <em>id_usuario</em>, <em>id_rol</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#confirmacion_agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.confirmacion_agregar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite agregar un rol previamente seleccionado a un usuario existente en el 
+sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.crear_rol_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">crear_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#crear_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.crear_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite crear un nuevo rol en el sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.crear_tipo_atributo_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">crear_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#crear_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.crear_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite crear un nuevo tipo atributo en el sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.crear_usuario_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">crear_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#crear_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.crear_usuario_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite crear un nuevo usuario en el sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.eliminar_rol_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">eliminar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#eliminar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.eliminar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite eliminar un rol existente en el sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.eliminar_tipo_atributo_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">eliminar_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#eliminar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.eliminar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite eliminar un tipo atributo existente en el sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.eliminar_usuario_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">eliminar_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#eliminar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.eliminar_usuario_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite eliminar un usuario existente en el sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.gestion_roles_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">gestion_roles_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#gestion_roles_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.gestion_roles_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite listar todos los roles registrados en el sistema, junto con las 
+operaciones disponibles por cada rol.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.gestion_tipos_atributo_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">gestion_tipos_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#gestion_tipos_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.gestion_tipos_atributo_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite listar todos los tipos atributo registrados en el sistema, junto con las 
+operaciones disponibles por cada tipo atributo.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.gestion_usuarios_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">gestion_usuarios_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#gestion_usuarios_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.gestion_usuarios_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite listar todos los usuarios registrados en el sistema, junto con las 
+operaciones disponibles por cada usuario.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.modificar_rol_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">modificar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#modificar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.modificar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite modificar un rol existente en el sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.modificar_tipo_atributo_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">modificar_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#modificar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.modificar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite modificar un tipo atributo existente en el sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.modificar_usuario_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">modificar_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#modificar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.modificar_usuario_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite modificar un usuario existente en el sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.permisos_rol_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">permisos_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#permisos_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.permisos_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite listar todos los permisos pertenecientes a un rol existente en el sistema, 
+junto con las operaciones de agregacion de permisos y eliminacion de permisos.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.quitar_permiso_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">quitar_permiso_view</tt><big>(</big><em>request</em>, <em>id_rol</em>, <em>id_permiso</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#quitar_permiso_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.quitar_permiso_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite quitar un permiso previamente seleccionado de un rol existente en el 
+sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.quitar_rol_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">quitar_rol_view</tt><big>(</big><em>request</em>, <em>id_usuario</em>, <em>id_rol</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#quitar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.quitar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite quitar un rol previamente seleccionado de un usuario existente en el 
+sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.roles_usuario_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">roles_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#roles_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.roles_usuario_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite listar todos los roles pertenecientes a un usuario existente en el sistema, 
+junto con las operaciones de agregacion de roles y eliminacion de roles.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.visualizar_rol_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">visualizar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#visualizar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.visualizar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite visualizar todos los campos de un rol existente en el sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.visualizar_tipo_atributo_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">visualizar_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#visualizar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.visualizar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite visualizar todos los campos de un tipo atributo existente en el sistema.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.visualizar_usuario_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">visualizar_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#visualizar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.visualizar_usuario_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Permite visualizar todos los campos de un usuario existente en el sistema.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="models.html"
+                        title="previous chapter">Models</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="forms.html"
+                        title="next chapter">Forms</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/modules/views.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="forms.html" title="Forms"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="models.html" title="Models"
+             >previous</a> |</li>
+        <li><a href="../index.html">sap 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Rodrigo Santos / Gustavo Cabral.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
