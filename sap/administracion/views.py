@@ -309,7 +309,7 @@ def crear_tipo_atributo_view(request):
             tipo_dato = form.cleaned_data['tipo_dato']
             tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato)
             tipo_atributo.save()
-            return HttpResponseRedirect('/administracion/gestion_roles/')
+            return HttpResponseRedirect('/administracion/gestion_tipos_atributo/')
             
         else:
             ctx = {'form':form}
