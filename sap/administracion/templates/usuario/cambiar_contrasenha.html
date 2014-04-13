@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}SAP - Cambiar contraseña{% endblock %}
+{% block content %}
+<div class="jumbotron">
+		<h1>Cambio de contraseña del usuario {{ usuario.username }}</h1>
+		<form class="form-horizontal" method="POST">
+			{% csrf_token %}
+			{{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Cambiar</button>
+		</form>
+</div>
+{% endblock %}

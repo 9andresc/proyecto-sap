@@ -1,9 +1,10 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm
+from django.contrib.auth import logout
+from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm
 from administracion.models import Rol, Permiso, TipoAtributo, TIPO_DATO
 
 @login_required(login_url='/login/')
@@ -52,14 +53,12 @@ def modificar_usuario_view(request, id_usuario):
         if form.is_valid():
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
-            password_uno = form.cleaned_data['password_uno']
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             direccion = form.cleaned_data['direccion']
             telefono = form.cleaned_data['telefono']
             usuario.username = username
             usuario.email = email
-            usuario.set_password(password_uno)
             usuario.first_name = first_name
             usuario.last_name = last_name
             usuario.direccion = direccion
@@ -79,6 +78,28 @@ def modificar_usuario_view(request, id_usuario):
     ctx = {'form': form, 'usuario': usuario}
     return render_to_response('usuario/modificar_usuario.html', ctx, context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
+def cambiar_contrasenha_view(request, id_usuario):
+    valido = True
+    usuario = User.objects.get(id=id_usuario)
+    if request.method == "POST":
+        form = CambiarContrasenhaForm(request.POST)
+        if form.is_valid():
+            password_uno = form.cleaned_data['password_uno']
+            usuario.set_password(password_uno)
+            usuario.save()
+            logout(request)
+            return redirect('vista_login')
+        else:
+            valido = False
+    if request.method == "GET":
+        form = CambiarContrasenhaForm(initial={
+            'password_uno': '',
+            'password_dos': '',
+            })
+    ctx = {'form': form, 'valido':valido, 'usuario':usuario}
+    return render_to_response('usuario/cambiar_contrasenha.html', ctx, context_instance=RequestContext(request))
+            
 @login_required(login_url='/login/')
 def eliminar_usuario_view(request, id_usuario):
     """

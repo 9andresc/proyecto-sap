@@ -5,9 +5,13 @@
 	<div class="bs-example">
 		{% if not valido %}
 			<div class="alert alert-danger">
-        		<strong>Atención:</strong> Nombre de usuario y/o contraseña incorrecto. Intentelo de nuevo.
+        		<strong>Atención:</strong> Nombre de usuario y/o contraseña incorrecto. Intentalo de nuevo.
       		</div>
-			<h3></h3>
+		{% endif %}
+		{% if messages %}
+			<div class="alert alert-info">
+        		<strong>La contraseña fue cambiada:</strong> Ahora intenta iniciar sesión con tu nueva contraseña.
+      		</div>
 		{% endif %}
 		<h2>Por favor, inicie sesión</h2>
 		<form class="form-horizontal" method="POST">

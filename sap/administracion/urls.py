@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from administracion.views import crear_usuario_view, gestion_usuarios_view, visualizar_usuario_view, modificar_usuario_view, eliminar_usuario_view, roles_usuario_view, agregar_rol_view, confirmacion_agregar_rol_view, quitar_rol_view
+from administracion.views import crear_usuario_view, gestion_usuarios_view, visualizar_usuario_view, modificar_usuario_view, cambiar_contrasenha_view, eliminar_usuario_view, roles_usuario_view, agregar_rol_view, confirmacion_agregar_rol_view, quitar_rol_view
 from administracion.views import gestion_roles_view, crear_rol_view, visualizar_rol_view, modificar_rol_view, eliminar_rol_view, permisos_rol_view, agregar_permiso_view, confirmacion_agregar_permiso_view, quitar_permiso_view
 from administracion.views import gestion_tipos_atributo_view, crear_tipo_atributo_view, visualizar_tipo_atributo_view, modificar_tipo_atributo_view, eliminar_tipo_atributo_view
 
@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     url(r'^administracion/gestion_usuarios/crear_usuario/$', crear_usuario_view, name="vista_crear_usuario"),
     url(r'^administracion/gestion_usuarios/usuario/(?P<id_usuario>.*)/$', visualizar_usuario_view, name="vista_visualizar_usuario"),
     url(r'^administracion/gestion_usuarios/modificar_usuario/(?P<id_usuario>.*)/$', modificar_usuario_view, name="vista_modificar_usuario"),
+    url(r'^administracion/gestion_usuarios/cambiar_contrasenha/(?P<id_usuario>.*)/$', cambiar_contrasenha_view, name="vista_cambiar_contrasenha"),
     url(r'^administracion/gestion_usuarios/eliminar_usuario/(?P<id_usuario>.*)/$', eliminar_usuario_view, name="vista_eliminar_usuario"),
     url(r'^administracion/gestion_usuarios/roles/usuario/(?P<id_usuario>.*)/$', roles_usuario_view, name="vista_roles_usuario"),
     url(r'^administracion/gestion_usuarios/agregar_rol/usuario/(?P<id_usuario>.*)/$', agregar_rol_view, name="vista_agregar_rol"),
