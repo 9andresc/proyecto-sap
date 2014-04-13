@@ -3,6 +3,13 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
+		<h1>Detalles del usuario</h1>
+		<p><label><b>Nombre de usuario:</b></label> {{ usuario.username }}</p>
+		<p><label><b>Email:</b></label> {{ usuario.email }}</p>
+		<p><label><b>Nombre:</b></label> {{ usuario.first_name }}</p>
+		<p><label><b>Apellido:</b></label> {{ usuario.last_name }}</p>
+		<p><label><b>Dirección:</b></label> {{ usuario.direccion }}</p>
+		<p><label><b>Teléfono:</b></label> {{ usuario.telefono }}</p>
 		<h3>¿Realmente desea eliminar al usuario {{ usuario.username }}?</h3>
 		<form action="" method="post">
 			{% csrf_token %}
