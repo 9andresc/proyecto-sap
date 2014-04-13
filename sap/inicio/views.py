@@ -20,6 +20,8 @@ def login_view(request):
                     return HttpResponseRedirect('/')
                 else:
                     valido = False
+            else:
+                valido = False
         form = LoginForm()
         ctx = {"form":form, "valido":valido}
         return render_to_response("login.html", ctx, context_instance=RequestContext(request))
