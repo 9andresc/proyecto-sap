@@ -3,8 +3,13 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		<div class="alert alert-success">
-        	<strong>¡Éxito!</strong> El rol {{ rol.nombre }} fue desasignado del usuario {{ usuario.username }}.
+		<div class="panel panel-success">
+      		<div class="panel-heading">
+        		<h3 class="panel-title">¡Éxito!</h3>
+      		</div>
+      		<div class="panel-body">
+        		El rol {{ rol.nombre }} fue desasignado del usuario {{ usuario.username }}.
+      		</div>
       	</div>
 		<br>
 		<a class="btn btn-sm btn-default" href="{% url 'vista_roles_usuario' id_usuario=usuario.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles del usuario {{ usuario.username }}</a>

@@ -4,12 +4,22 @@
 <div class="jumbotron">
 	<div class="bs-example">
 		{% if valido %}
-			<div class="alert alert-success">
-        		<strong>¡Éxito!</strong> El permiso {{ permiso.nombre }} fue asignado al rol {{ rol.nombre }}.
+			<div class="panel panel-success">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Éxito!</h3>
+      			</div>
+      			<div class="panel-body">
+        			El permiso {{ permiso.nombre }} fue asignado al rol {{ rol.nombre }}.
+      			</div>
       		</div>
 		{% else %}
-			<div class="alert alert-warning">
-        		<strong>¡Alto ahí!</strong> El permiso {{ permiso.nombre }} no puede ser asignado porque ya está asignado al rol {{ rol.nombre }}.
+			<div class="panel panel-warning">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Alto ahí!</h3>
+      			</div>
+      			<div class="panel-body">
+        			El permiso {{ permiso.nombre }} no puede ser asignado porque ya está asignado al rol {{ rol.nombre }}.
+      			</div>
       		</div>
 		{% endif %}
 	</div>
