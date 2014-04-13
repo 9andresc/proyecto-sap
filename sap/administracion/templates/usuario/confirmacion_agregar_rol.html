@@ -4,12 +4,16 @@
 <div class="jumbotron">
 	<div class="bs-example">
 		{% if valido %}
-		<h3>El rol {{ rol.nombre }} fue asignado al usuario {{ usuario.username }}.</h3>
+			<div class="alert alert-success">
+        		<strong>¡Éxito!</strong> El rol {{ rol.nombre }} fue asignado al usuario {{ usuario.username }}.
+      		</div>
 		{% else %}
-		<h3>El rol {{ rol.nombre }} ya está asignado al usuario {{ usuario.username }}.</h3>
+			<div class="alert alert-warning">
+        		<strong>¡Alto ahí!</strong> El rol {{ rol.nombre }} no puede ser asignado porque ya está asignado al usuario {{ usuario.username }}.
+      		</div>
 		{% endif %}
 		<br>
-		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_usuarios' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de usuarios</a>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_roles_usuario' id_usuario=usuario.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles del usuario {{ usuario.username }}</a>
 	</div>
 </div>
 {% endblock %}
