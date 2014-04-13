@@ -4,7 +4,7 @@
 
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1>Administración de roles</h1>
+		<h1>Roles del usuario {{ usuario.username }}</h1>
 		<a class="btn btn-sm btn-default" href="{% url 'vista_agregar_rol' id_usuario=usuario.id %}"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
 		<br><br>
 		{% if roles %}
@@ -29,7 +29,7 @@
         		</table>
     		</div>
     	{% else %}
-    		<h3>No posee roles</h3>
+    		<h3>No posee roles.</h3>
     	{% endif %}
 	</div>
 	<br>
