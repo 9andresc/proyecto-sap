@@ -24,7 +24,7 @@ def crear_usuario_view(request):
     """
     form = CrearUsuarioForm()
     if request.method == "POST":
-        form = CrearUsuarioForm(request.POST)
+        form = CrearUsuarioForm(data=request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
