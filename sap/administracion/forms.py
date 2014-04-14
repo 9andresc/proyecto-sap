@@ -77,13 +77,16 @@ class ModificarUsuarioForm(forms.Form):
         raise forms.ValidationError('Email ya registrado')
     
 class CambiarContrasenhaForm(forms.Form):
-    password_uno = forms.CharField(label="Contrasenha", widget=forms.PasswordInput(render_value=False), required=True)
-    password_dos = forms.CharField(label="Confirmar contrasenha", widget=forms.PasswordInput(render_value=False), required=True)
+    password_uno = forms.CharField(label="Contrasenha", required=True)
+    password_dos = forms.CharField(label="Confirmar contrasenha", required=True)
     
     def clean_password_dos(self):
-        password_uno = self.cleaned_data['password_uno']
         password_dos = self.cleaned_data['password_dos']
-        if password_uno == password_dos:
+        if 'password_uno' in self.cleaned_data:
+            password_uno = self.cleaned_data['password_uno']
+        else:
+            raise forms.ValidationError('Las claves no coinciden')
+        if password_dos == password_uno:
             pass
         else:
             raise forms.ValidationError('Las claves no coinciden')
