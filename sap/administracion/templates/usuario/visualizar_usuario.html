@@ -3,15 +3,40 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1>Detalles del usuario</h1>
-		<p><label><b>Nombre de usuario:</b></label> {{ usuario.username }}</p>
-		<p><label><b>Email:</b></label> {{ usuario.email }}</p>
-		<p><label><b>Nombre:</b></label> {{ usuario.first_name }}</p>
-		<p><label><b>Apellido:</b></label> {{ usuario.last_name }}</p>
-		<p><label><b>Dirección:</b></label> {{ usuario.direccion }}</p>
-		<p><label><b>Teléfono:</b></label> {{ usuario.telefono }}</p>
+		<h1><small>Detalles del usuario {{ usuario.username }}</small></h1>
+		
+		<div class="input-group">
+			<span class="input-group-addon"><b>Nombre de usuario</b></span>
+			<input type="text" class="form-control" id="username" name="username" value="{{ usuario.username }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Email</b></span>
+			<input type="text" class="form-control" id="email" name="email" value="{{ usuario.email }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Nombre/s</b></span>
+			<input type="text" class="form-control" id="first_name" name="first_name" value="{{ usuario.first_name }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Apellido/s</b></span>
+			<input type="text" class="form-control" id="last_name" name="last_name" value="{{ usuario.last_name }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Dirección</b></span>
+			<textarea rows="3" class="form-control" id="direccion" name="direccion" disabled="disabled">{{ usuario.direccion }}</textarea>
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Teléfono</b></span>
+			<input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}" disabled="disabled">
+        </div>
+        
 		<br>
-		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_usuarios' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de usuarios</a>
+		<a class="btn btn-default" href="{% url 'vista_gestion_usuarios' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de usuarios</a>
 	</div>
 </div>
 {% endblock %}
