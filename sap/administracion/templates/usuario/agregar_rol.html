@@ -32,6 +32,6 @@
     	{% endif %}
 	</div>
 	<br>
-	<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_usuarios' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de usuarios</a>
+	<a class="btn btn-default" href="{% url 'vista_roles_usuario' id_usuario=usuario.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles del usuario {{ usuario.username }}</a>
 </div>
 {% endblock %}
