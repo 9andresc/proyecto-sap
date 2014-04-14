@@ -1,24 +1,38 @@
 {% extends "base.html" %}
-{% block title %}SAP - Tipo atributo {{ tipo_atributo.nombre }}{% endblock %}
+{% block title %}SAP - Tipo de atributo {{ tipo_atributo.nombre }}{% endblock %}
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1>Detalles del tipo atributo</h1>
-		<p><label><b>Nombre: </b></label> {{ tipo_atributo.nombre }}</p>
-		<p><label><b>Descripción:</b></label> {{ tipo_atributo.descripcion }}</p>
-		<p><label><b>Tipo Dato:</b></label>  
-		{% if tipo_atributo.tipo_dato == 0 %}  
-        <span>Numerico</span>  
-        {% elif tipo_atributo.tipo_dato == 1 %}  
-        <span>Fecha</span> 
-        {% elif tipo_atributo.tipo_dato == 2 %}  
-        <span>Texto</span> 
-        {% else %}
-		<span>Logico</span> 
-		{% endif %} 
-		</p>
+		<h1><small>Detalles del tipo de atributo</small></h1>
+		
+		<div class="input-group">
+			<span class="input-group-addon"><b>Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ tipo_atributo.nombre }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Tipo de dato</b></span>
+			{% ifequal tipo_atributo.tipo_dato 0 %}
+				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Numérico" disabled="disabled">
+			{% endifequal %}
+			{% ifequal tipo_atributo.tipo_dato 1 %}
+				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Fecha" disabled="disabled">
+			{% endifequal %}
+			{% ifequal tipo_atributo.tipo_dato 2 %}
+				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Texto" disabled="disabled">
+			{% endifequal %}
+			{% ifequal tipo_atributo.tipo_dato 3 %}
+				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Lógico" disabled="disabled">
+			{% endifequal %}
+		</div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" disabled="disabled">{{ tipo_atributo.descripcion }}</textarea>
+        </div>
+        
 		<br>
-		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_tipos_atributo' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de tipos atributo</a>
+		<a class="btn btn-default" href="{% url 'vista_gestion_tipos_atributo' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de tipos de atributo</a>
 	</div>
 </div>
 {% endblock %}

@@ -128,9 +128,9 @@ class CrearTipoAtributoForm(forms.Form):
     """
     Formulario utilizado para la creacion de un tipo atributo.
     """
-    nombre = forms.CharField(label="Nombre de tipo atributo", widget=forms.TextInput(), required=True)
-    descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea(), required=True)
-    tipo_dato = forms.ChoiceField(label="Tipo dato",choices=TIPO_DATO, required=True)
+    nombre = forms.CharField(label="Nombre de tipo atributo", required=True)
+    descripcion = forms.CharField(label="Descripcion", required=False)
+    tipo_dato = forms.ChoiceField(label="Tipo dato", choices=TIPO_DATO, required=True)
     
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']
@@ -144,9 +144,9 @@ class ModificarTipoAtributoForm(forms.Form):
     """
     Formulario utilizado para la modificacion de un tipo atributo.
     """
-    nombre = forms.CharField(label="Nombre de tipo atributo", widget=forms.TextInput(), required=True)
-    descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea, required=True)
-    tipo_dato = forms.ChoiceField(label="Tipo dato",choices=TIPO_DATO, required=True)
+    nombre = forms.CharField(label="Nombre de tipo atributo", required=True)
+    descripcion = forms.CharField(label="Descripcion", required=True)
+    tipo_dato = forms.ChoiceField(label="Tipo dato", choices=TIPO_DATO, required=True)
         
     def clean_nombre(self): 
         nombre = self.cleaned_data['nombre'] 

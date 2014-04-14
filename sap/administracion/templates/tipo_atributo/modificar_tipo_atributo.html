@@ -1,15 +1,70 @@
 {% extends "base.html" %}
-{% block title %}SAP - Modificar tipo atributo {{ tipo_atributo.nombre }}{% endblock %}
+{% block title %}SAP - Modificar tipo de atributo {{ tipo_atributo.nombre }}{% endblock %}
 {% block content %}
 <div class="jumbotron">
-		<h1>Modificar tipo atributo</h1>
-		<form class="form-horizontal" method="POST">
-			{% csrf_token %}
-			{{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Modificar</button>
-		</form>
+	<h1><small>Modificar tipo atributo</small></h1>
+	<form class="form-horizontal" method="POST">
+		{% csrf_token %}
+		
+		<!-- Manejo de errores del formulario -->
+    	{% if form.errors %}
+    	<div class="panel panel-warning">
+    		<div class="panel-heading">
+    			<h3 class="panel-title">¡Alto ahí!</h3>
+            </div>
+            <div class="panel-body">
+            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
+            	<br>
+            	<ul class="list-unstyled">
+            		{% for field in form %}
+            			{% if field.errors %} 
+  							<li><b>{{ field.label }}</b></li>
+  								{% for error in field.errors %}
+    								<ul>
+    									{% if error == "This field is required." %}
+      										<li>No has ingresado este campo.</li>
+      									{% else %}
+      										<li>{{ error }}</li>
+      									{% endif %}
+    								</ul>
+    							{% endfor %}
+  							</li>
+  						{% endif %}
+  					{% endfor %}
+				</ul>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Fin del manejo de errores del formulario -->
+        
+        <p class="text-muted">Campos obligatorios (*)</p>
+		<div class="input-group">
+			<span class="input-group-addon"><b>* Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ tipo_atributo.nombre }}">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Tipo de dato</b></span>
+			<select class="form-control" id="tipo_dato" name="tipo_dato">
+				{% for eleccion in form.tipo_dato.field.choices %}
+					{% ifequal tipo_atributo.tipo_dato eleccion.0 %}
+						<option value="{{ form.tipo_dato.data }}" selected="selected">{{ eleccion.1 }}</option>
+					{% else %}
+						<option value="{{ eleccion.0 }}">{{ eleccion.1 }}</option>
+					{% endifequal %}
+				{% endfor %}
+			</select>
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion">{{ tipo_atributo.descripcion }}</textarea>
+        </div>
+        
 		<br>
-		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_tipos_atributo' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de tipos atributo</a>
-
+        <button type="submit" class="btn btn-success">Modificar</button>
+	</form>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_gestion_tipos_atributo' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de tipos de atributo</a>
 </div>
 {% endblock %}

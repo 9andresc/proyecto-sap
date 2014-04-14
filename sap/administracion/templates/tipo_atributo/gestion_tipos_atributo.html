@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block title %}SAP - Gestión de tipos_atributo{% endblock %}
+{% block title %}SAP - Gestión de tipos de atributo{% endblock %}
 {% block content %}
 
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1>Gestión de tipos atributo</h1>
+		<h1><small>Gestión de tipos atributo</small></h1>
 		<a class="btn btn-sm btn-default" href="{% url 'vista_crear_tipo_atributo' %}"><span class="glyphicon glyphicon-record"></span> Crear</a>
 		<br><br>
 		{% if tipos_atributo %}
@@ -13,7 +13,7 @@
             		<thead>
                 		<tr>
                     		<th>ID</th>
-                    		<th>Nombre de tipo atributo</th>   
+                    		<th>Nombre de tipo de atributo</th>   
                     		<th></th>
                     		<th></th>
                     		<th></th>
@@ -33,7 +33,7 @@
         		</table>
     		</div>
     	{% else %}
-    		<h3>No existen tipos atributo</h3>
+    		<h3>No existen tipos de atributo.</h3>
     	{% endif %}
 	</div>
 </div>

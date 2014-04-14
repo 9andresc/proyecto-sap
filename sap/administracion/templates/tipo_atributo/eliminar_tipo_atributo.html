@@ -1,15 +1,52 @@
 {% extends "base.html" %}
-{% block title %}SAP - Confirmación{% endblock %}
+{% block title %}SAP - Eliminación del tipo de atributo {{ tipo_atributo.nombre }}{% endblock %}
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		<h3>¿Realmente desea eliminar el tipo atributo {{ tipo_atributo.nombre }}?</h3>
-		<form action="" method="post">
+		<h1><small>Detalles del tipo de atributo</small></h1>
+		
+		<div class="input-group">
+			<span class="input-group-addon"><b>Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ tipo_atributo.nombre }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Tipo de dato</b></span>
+			{% ifequal tipo_atributo.tipo_dato 0 %}
+				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Numérico" disabled="disabled">
+			{% endifequal %}
+			{% ifequal tipo_atributo.tipo_dato 1 %}
+				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Fecha" disabled="disabled">
+			{% endifequal %}
+			{% ifequal tipo_atributo.tipo_dato 2 %}
+				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Texto" disabled="disabled">
+			{% endifequal %}
+			{% ifequal tipo_atributo.tipo_dato 3 %}
+				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Lógico" disabled="disabled">
+			{% endifequal %}
+		</div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" disabled="disabled">{{ tipo_atributo.descripcion }}</textarea>
+        </div>
+		
+		<br>
+		<form action="" method="POST">
 			{% csrf_token %}
-			<p class="text-warning"><small>Si acepta, los registros del tipo atributo se perderán.</small></p>
-			<br>
-			<a type="button" class="btn btn-default" href="/administracion/gestion_tipos_atributo/">Cancelar</a>
-        	<button type="submit" class="btn btn-danger">Eliminar</button>
+			<div class="panel panel-danger">
+    			<div class="panel-heading">
+    				<h3 class="panel-title">¡Atención!</h3>
+            	</div>
+            	<div class="panel-body">
+            		<h3 class="panel-title">¿Realmente desea eliminar el tipo de atributo {{ tipo_atributo.nombre }}?</h3>
+            		<br>
+					<h3 class="panel-title"><em>Si acepta, los registros del tipo de atributo {{ tipo_atributo.nombre }} se perderán.</em></h3>
+					<br>
+					<a type="button" class="btn btn-default" href="/administracion/gestion_roles/">Cancelar</a>
+        			<button type="submit" class="btn btn-danger">Eliminar</button>
+			    </div>
+        	</div>
         </form>
 	</div>
 </div>
