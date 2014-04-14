@@ -4,7 +4,7 @@
 
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1>Permisos del rol {{ rol.nombre }}</h1>
+		<h1><small>Permisos del rol {{ rol.nombre }}</small></h1>
 		<a class="btn btn-sm btn-default" href="{% url 'vista_agregar_permiso' id_rol=rol.id %}"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
 		<br><br>
 		{% if permisos %}
@@ -33,6 +33,6 @@
     	{% endif %}
 	</div>
 	<br>
-	<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_roles' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles</a>
+	<a class="btn btn-default" href="{% url 'vista_gestion_roles' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles</a>
 </div>
 {% endblock %}

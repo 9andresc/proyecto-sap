@@ -4,7 +4,7 @@
 
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1>Gestión de roles</h1>
+		<h1><small>Gestión de roles</small></h1>
 		<a class="btn btn-sm btn-default" href="{% url 'vista_crear_rol' %}"><span class="glyphicon glyphicon-record"></span> Crear</a>
 		<br><br>
 		{% if roles %}
@@ -35,7 +35,7 @@
         		</table>
     		</div>
     	{% else %}
-    		<h3>No existen roles</h3>
+    		<h3>No existen roles.</h3>
     	{% endif %}
 	</div>
 </div>

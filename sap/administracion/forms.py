@@ -96,8 +96,8 @@ class CrearRolForm(forms.Form):
     """
     Formulario utilizado para la creacion de un rol.
     """
-    nombre = forms.CharField(label="Nombre de rol", widget=forms.TextInput(), required=True)
-    descripcion = forms.CharField(label="Descripcion", widget=forms.Textarea(), required=True)
+    nombre = forms.CharField(label="Nombre de rol", required=True)
+    descripcion = forms.CharField(label="Descripcion", required=False)
     
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']

@@ -3,11 +3,20 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1>Detalles del rol</h1>
-		<p><label><b>Nombre: </b></label> {{ rol.nombre }}</p>
-		<p><label><b>Descripción:</b></label> {{ rol.descripcion }}</p>
+		<h1><small>Detalles del rol</small></h1>
+		
+		<div class="input-group">
+			<span class="input-group-addon"><b>Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ rol.nombre }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Dirección</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" disabled="disabled">{{ rol.descripcion }}</textarea>
+        </div>
+        
 		<br>
-		<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_roles' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles</a>
+		<a class="btn btn-default" href="{% url 'vista_gestion_roles' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles</a>
 	</div>
 </div>
 {% endblock %}

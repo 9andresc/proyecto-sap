@@ -3,13 +3,34 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		<h3>¿Realmente desea eliminar el rol {{ rol.nombre }}?</h3>
-		<form action="" method="post">
+		<h1><small>Detalles del rol</small></h1>
+		
+		<div class="input-group">
+			<span class="input-group-addon"><b>Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ rol.nombre }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Dirección</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" disabled="disabled">{{ rol.descripcion }}</textarea>
+        </div>
+		
+		<br>
+		<form action="" method="POST">
 			{% csrf_token %}
-			<p class="text-warning"><small>Si acepta, los registros del rol se perderán.</small></p>
-			<br>
-			<a type="button" class="btn btn-default" href="/administracion/gestion_roles/">Cancelar</a>
-        	<button type="submit" class="btn btn-danger">Eliminar</button>
+			<div class="panel panel-danger">
+    			<div class="panel-heading">
+    				<h3 class="panel-title">¡Atención!</h3>
+            	</div>
+            	<div class="panel-body">
+            		<h3 class="panel-title">¿Realmente desea eliminar el rol {{ rol.nombre }}?</h3>
+            		<br>
+					<h3 class="panel-title"><em>Si acepta, los registros del rol {{ rol.nombre }} se perderán.</em></h3>
+					<br>
+					<a type="button" class="btn btn-default" href="/administracion/gestion_roles/">Cancelar</a>
+        			<button type="submit" class="btn btn-danger">Eliminar</button>
+			    </div>
+        	</div>
         </form>
 	</div>
 </div>

@@ -4,11 +4,10 @@
 
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1>Permisos</h1>
+		<h1><small>Permisos</small></h1>
 		{% if permisos %}
 			<div class="table-responsive"> 
         		<table class="table table-hover">
-        		
             		<thead>
                 		<tr>
                     		<th>ID</th>
@@ -32,6 +31,6 @@
     	{% endif %}
 	</div>
 	<br>
-	<a class="btn btn-sm btn-default" href="{% url 'vista_gestion_roles' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles</a>
+	<a class="btn btn-default" href="{% url 'vista_permisos_rol' id_rol=rol.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de permisos del rol {{ rol.nombre }}</a>
 </div>
 {% endblock %}
