@@ -2,7 +2,7 @@
 {% block title %}SAP - Cambiar contraseña{% endblock %}
 {% block content %}
 <div class="jumbotron">
-		<h2>Cambio de contraseña del usuario {{ usuario.username }}</h2>
+		<h1><small>Cambio de contraseña del usuario {{ usuario.username }}</small></h1>
 		<br>
 		<form class="form-horizontal" method="POST">
 			{% csrf_token %}
