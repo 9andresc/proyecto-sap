@@ -1,22 +1,56 @@
 {% extends "base.html" %}
-{% block title %}SAP - Confirmación{% endblock %}
+{% block title %}SAP - Eliminación del usuario {{ usuario.username }}{% endblock %}
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
 		<h1>Detalles del usuario</h1>
-		<p><label><b>Nombre de usuario:</b></label> {{ usuario.username }}</p>
-		<p><label><b>Email:</b></label> {{ usuario.email }}</p>
-		<p><label><b>Nombre:</b></label> {{ usuario.first_name }}</p>
-		<p><label><b>Apellido:</b></label> {{ usuario.last_name }}</p>
-		<p><label><b>Dirección:</b></label> {{ usuario.direccion }}</p>
-		<p><label><b>Teléfono:</b></label> {{ usuario.telefono }}</p>
-		<h3>¿Realmente desea eliminar al usuario {{ usuario.username }}?</h3>
-		<form action="" method="post">
+		
+		<div class="input-group">
+			<span class="input-group-addon"><b>Nombre de usuario</b></span>
+			<input type="text" class="form-control" id="username" name="username" value="{{ usuario.username }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Email</b></span>
+			<input type="text" class="form-control" id="email" name="email" value="{{ usuario.email }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Nombre/s</b></span>
+			<input type="text" class="form-control" id="first_name" name="first_name" value="{{ usuario.first_name }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Apellido/s</b></span>
+			<input type="text" class="form-control" id="last_name" name="last_name" value="{{ usuario.last_name }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Dirección</b></span>
+			<textarea rows="3" class="form-control" id="direccion" name="direccion" disabled="disabled">{{ usuario.direccion }}</textarea>
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Teléfono</b></span>
+			<input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}" disabled="disabled">
+        </div>
+		
+		<br>
+		<form action="" method="POST">
 			{% csrf_token %}
-			<p class="text-warning"><small>Si acepta, los registros del usuario se perderán.</small></p>
-			<br>
-			<a type="button" class="btn btn-default" href="/administracion/gestion_usuarios/">Cancelar</a>
-        	<button type="submit" class="btn btn-danger">Eliminar</button>
+			<div class="panel panel-danger">
+    			<div class="panel-heading">
+    				<h3 class="panel-title">¡Atención!</h3>
+            	</div>
+            	<div class="panel-body">
+            		<h3 class="panel-title">¿Realmente desea eliminar al usuario {{ usuario.username }}?</h3>
+            		<br>
+					<h3 class="panel-title"><em>Si acepta, los registros del usuario {{ usuario.username }} se perderán.</em></h3>
+					<br>
+					<a type="button" class="btn btn-default" href="/administracion/gestion_usuarios/">Cancelar</a>
+        			<button type="submit" class="btn btn-danger">Eliminar</button>
+			    </div>
+        	</div>
         </form>
 	</div>
 </div>
