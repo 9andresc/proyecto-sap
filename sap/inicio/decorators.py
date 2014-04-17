@@ -11,6 +11,6 @@ def permiso_requerido(permiso):
                 for perm in permisos:
                     if perm.nombre == permiso:
                         return func(request, *args, **kwargs)
-            return HttpResponseRedirect('/administracion/gestion_usuarios/')
+            return HttpResponseRedirect('/acceso_denegado/')
         return wraps(func)(inner_decorator)
     return decorator

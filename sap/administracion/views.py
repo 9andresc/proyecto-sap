@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm
 from administracion.models import Rol, Permiso, TipoAtributo, TIPO_DATO
+from inicio.decorators import permiso_requerido
 
 @login_required(login_url='/login/')
 def gestion_usuarios_view(request):
@@ -18,6 +19,7 @@ def gestion_usuarios_view(request):
     return render_to_response('usuario/gestion_usuarios.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Crear usuario")
 def crear_usuario_view(request):
     """
     Permite crear un nuevo usuario en el sistema.
