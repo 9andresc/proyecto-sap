@@ -45,7 +45,6 @@ ESTADOS_USUARIO = (
     (1, "Inactivo"),
 )
 
-
 ESTADOS_PROYECTO = (
     (0, "En Construccion"),
     (1, "En Curso"),
@@ -65,16 +64,11 @@ class Proyecto(models.Model):
     usuario_lider = models.OneToOneField(User, related_name='usuario_lider_proyecto', null=True, blank=True)
     usuarios = models.ManyToManyField(User, related_name='usuarios_proyecto', blank=True)
     comite_de_cambios = models.ManyToManyField(User, related_name='comite_de_Cambios_proyecto', blank=True)
-    
-    
+       
     def __unicode__(self):
         return self.nombre
-
-
 
 User.add_to_class('estado', models.IntegerField(max_length=30, choices=ESTADOS_USUARIO, default=1))
 User.add_to_class('telefono', models.CharField(max_length=100, blank=True))
 User.add_to_class('direccion', models.CharField(max_length=100, blank=True))
 User.add_to_class('roles', models.ManyToManyField(Rol, null=True, blank=True))
-
-
