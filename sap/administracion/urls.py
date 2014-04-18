@@ -29,4 +29,5 @@ urlpatterns = patterns('',
     url(r'^administracion/gestion_tipos_atributo/modificar_tipo_atributo/(?P<id_tipo_atributo>.*)/$', modificar_tipo_atributo_view, name="vista_modificar_tipo_atributo"),
     url(r'^administracion/gestion_tipos_atributo/eliminar_tipo_atributo/(?P<id_tipo_atributo>.*)/$', eliminar_tipo_atributo_view, name="vista_eliminar_tipo_atributo"),
     url(r'^administracion/gestion_proyectos/$', gestion_proyectos_view, name="vista_gestion_proyectos"),
+   
 )

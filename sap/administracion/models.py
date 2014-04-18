@@ -45,14 +45,32 @@ ESTADOS_USUARIO = (
     (1, "Inactivo"),
 )
 
+
+ESTADOS_PROYECTO = (
+    (0, "En Construccion"),
+    (1, "En Curso"),
+    (2, "Finalizado"),
+)
+
 class Proyecto(models.Model):
     """
     Clase que especifica los atributos de los Proyectos.
     """
     nombre = models.CharField(max_length=50, blank=False)
+    descripcion = models.TextField(blank=True)
+    fecha_inicio = models.DateField(auto_now=False, auto_now_add=True)
+    estado = models.IntegerField(max_length=30,choices= ESTADOS_PROYECTO, default=1)
+    presupuesto = models.FloatField(max_length=50, blank=True)
+    complejidad = models.IntegerField(max_length= 50, blank= True)
+    usuario_lider = models.OneToOneField(User, blank=False)
+    usuarios = models.ManyToManyField(User, blank=True)
+    comite_de_cambios = models.ManyToManyField(User, blank=True)
+    
     
     def __unicode__(self):
         return self.nombre
+
+
 
 
 User.add_to_class('estado', models.IntegerField(max_length=30, choices=ESTADOS_USUARIO, default=1))

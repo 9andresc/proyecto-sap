@@ -5,7 +5,7 @@ from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm
-from administracion.models import Rol, Permiso, TipoAtributo, TIPO_DATO, Proyecto
+from administracion.models import Rol, Permiso, TipoAtributo, Proyecto
 from inicio.decorators import permiso_requerido
 
 @login_required(login_url='/login/')
@@ -420,3 +420,4 @@ def gestion_proyectos_view(request):
     proyectos = Proyecto.objects.all()
     ctx = {'proyectos': proyectos}
     return render_to_response('proyecto/gestion_proyectos.html', ctx, context_instance=RequestContext(request))
+
