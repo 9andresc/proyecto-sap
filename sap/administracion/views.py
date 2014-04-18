@@ -5,7 +5,7 @@ from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm
-from administracion.models import Rol, Permiso, TipoAtributo, TIPO_DATO
+from administracion.models import Rol, Permiso, TipoAtributo, TIPO_DATO, Proyecto
 from inicio.decorators import permiso_requerido
 
 @login_required(login_url='/login/')
@@ -410,3 +410,13 @@ def visualizar_tipo_atributo_view(request, id_tipo_atributo):
     tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
     ctx = {'tipo_atributo': tipo_atributo}
     return render_to_response('tipo_atributo/visualizar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def gestion_proyectos_view(request):
+    """
+    Permite listar todos los proyectos registrados en el sistema, junto con las 
+    operaciones disponibles por cada proyecto.
+    """
+    proyectos = Proyecto.objects.all()
+    ctx = {'proyectos': proyectos}
+    return render_to_response('proyecto/gestion_proyectos.html', ctx, context_instance=RequestContext(request))

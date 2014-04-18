@@ -45,6 +45,16 @@ ESTADOS_USUARIO = (
     (1, "Inactivo"),
 )
 
+class Proyecto(models.Model):
+    """
+    Clase que especifica los atributos de los Proyectos.
+    """
+    nombre = models.CharField(max_length=50, blank=False)
+    
+    def __unicode__(self):
+        return self.nombre
+
+
 User.add_to_class('estado', models.IntegerField(max_length=30, choices=ESTADOS_USUARIO, default=1))
 User.add_to_class('telefono', models.CharField(max_length=100, blank=True))
 User.add_to_class('direccion', models.CharField(max_length=100, blank=True))
