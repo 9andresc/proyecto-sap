@@ -33,7 +33,7 @@ class TipoAtributo(models.Model):
     Clase que especifica los atributos de los Tipos atributo.
     """
     nombre = models.CharField(max_length=50, blank=False)
-    tipo_dato  = models.IntegerField(max_length=30,choices= TIPO_DATO, default=1)
+    tipo_dato  = models.IntegerField(max_length=30,choices= TIPO_DATO, default=0)
     descripcion = models.TextField(blank=True)
     valor = models.CharField(max_length=50, blank=True)
     
@@ -60,11 +60,11 @@ class Proyecto(models.Model):
     descripcion = models.TextField(blank=True)
     fecha_inicio = models.DateField(auto_now=False, auto_now_add=True)
     estado = models.IntegerField(max_length=30,choices= ESTADOS_PROYECTO, default=1)
-    presupuesto = models.FloatField(max_length=50, blank=True)
-    complejidad = models.IntegerField(max_length= 50, blank= True)
-    usuario_lider = models.OneToOneField(User, blank=False)
-    usuarios = models.ManyToManyField(User, blank=True)
-    comite_de_cambios = models.ManyToManyField(User, blank=True)
+    presupuesto = models.FloatField(max_length=50, null=True, blank=True)
+    complejidad = models.IntegerField(max_length= 50, null=True, blank= True)
+    usuario_lider = models.OneToOneField(User, related_name='usuario_lider_proyecto', null=True, blank=True)
+    usuarios = models.ManyToManyField(User, related_name='usuarios_proyecto', blank=True)
+    comite_de_cambios = models.ManyToManyField(User, related_name='comite_de_Cambios_proyecto', blank=True)
     
     
     def __unicode__(self):
@@ -72,8 +72,9 @@ class Proyecto(models.Model):
 
 
 
-
 User.add_to_class('estado', models.IntegerField(max_length=30, choices=ESTADOS_USUARIO, default=1))
 User.add_to_class('telefono', models.CharField(max_length=100, blank=True))
 User.add_to_class('direccion', models.CharField(max_length=100, blank=True))
 User.add_to_class('roles', models.ManyToManyField(Rol, null=True, blank=True))
+
+

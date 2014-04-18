@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm
+from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm
 from administracion.models import Rol, Permiso, TipoAtributo, Proyecto
 from inicio.decorators import permiso_requerido
 
@@ -421,3 +421,37 @@ def gestion_proyectos_view(request):
     ctx = {'proyectos': proyectos}
     return render_to_response('proyecto/gestion_proyectos.html', ctx, context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Crear proyecto")
+def crear_proyecto_view(request):
+    """
+    Permite crear un nuevo proyecto en el sistema.
+    """
+    form = CrearProyectoForm()
+    if request.method == "POST":
+        form = CrearProyectoForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            estado = form.cleaned_data['estado']
+            presupuesto = form.cleaned_data['presupuesto']
+            complejidad = form.cleaned_data['complejidad']
+            proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, estado=estado, presupuesto=presupuesto, complejidad=complejidad)
+            proyecto.save()
+            return HttpResponseRedirect('/administracion/gestion_proyectos/')
+            
+        else:
+            ctx = {'form':form}
+            return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
+    ctx = {'form':form}
+    return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar tipo de atributo")
+def visualizar_proyecto_view(request, id_proyecto):
+    """
+    Permite visualizar todos los campos de un proyecto existente en el sistema.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    ctx = {'proyecto': proyecto}
+    return render_to_response('proyecto/visualizar_proyecto.html', ctx, context_instance=RequestContext(request))

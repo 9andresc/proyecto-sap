@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from administracion.models import Rol
 from administracion.models import TipoAtributo, TIPO_DATO
+from administracion.models import Proyecto, ESTADOS_PROYECTO
 
 class CrearUsuarioForm(forms.Form):
     """
@@ -157,3 +158,23 @@ class ModificarTipoAtributoForm(forms.Form):
         except TipoAtributo.DoesNotExist:
             return nombre 
         raise forms.ValidationError('Nombre de tipo atributo ya registrado')
+    
+class CrearProyectoForm(forms.Form):
+    """
+    Formulario utilizado para la creacion de un proyecto.
+    """
+    nombre = forms.CharField(label="Nombre de proyecto", required=True)
+    descripcion = forms.CharField(label="Descripcion", required=False)
+    estado = forms.ChoiceField(label="Estado", choices=ESTADOS_PROYECTO, required=True)
+    #usuario_lider = forms.ModelChoiceField(label='Usuario Lider', queryset=User.objects.all(), widget=forms.Select(), required=False)
+    presupuesto = forms.FloatField(label="Presupuesto", required=False)
+    complejidad = forms.IntegerField(label="Complejidad", required=False)
+
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre']
+        try:
+            proyecto = Proyecto.objects.get(nombre=nombre)
+        except Proyecto.DoesNotExist:
+            return nombre
+        raise forms.ValidationError('Nombre de proyecto ya registrado')
+

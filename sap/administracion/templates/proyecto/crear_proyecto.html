@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}SAP - Crear proyecto{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<h1><small>Crear proyecto</small></h1>
+	<form class="form-horizontal" method="POST">
+		{% csrf_token %}
+		
+		<!-- Manejo de errores del formulario -->
+    	{% if form.errors %}
+    	<div class="panel panel-warning">
+    		<div class="panel-heading">
+    			<h3 class="panel-title">¡Alto ahí!</h3>
+            </div>
+            <div class="panel-body">
+            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
+            	<br>
+            	<ul class="list-unstyled">
+            		{% for field in form %}
+            			{% if field.errors %} 
+  							<li><b>{{ field.label }}</b></li>
+  								{% for error in field.errors %}
+    								<ul>
+    									{% if error == "This field is required." %}
+      										<li>No has ingresado este campo.</li>
+      									{% else %}
+      										<li>{{ error }}</li>
+      									{% endif %}
+    								</ul>
+    							{% endfor %}
+  							</li>
+  						{% endif %}
+  					{% endfor %}
+				</ul>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Fin del manejo de errores del formulario -->
+		
+		<p class="text-muted">Campos obligatorios (*)</p>
+		<div class="input-group">
+			<span class="input-group-addon"><b>* Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del proyecto">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Estado</b></span>
+			<select class="form-control" id="estado" name="estado">
+				<option value="0">En Construcción</option>
+				<option value="1">En Curso</option>
+				<option value="2">Finalizado</option>
+			</select>
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción del proyecto"></textarea>
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Presupuesto</b></span>
+			<input type="text" class="form-control" id="presupuesto" name="presupuesto" placeholder="Presupuesto del proyecto">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Complejidad</b></span>
+			<input type="text" class="form-control" id="complejidad" name="complejidad" placeholder="Complejidad del proyecto">
+        </div>
+        
+        <br>
+        <button type="submit" class="btn btn-success">Crear</button>
+	</form>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_gestion_proyectos' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de proyectos</a>
+</div>
+{% endblock %}
