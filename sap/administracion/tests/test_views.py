@@ -327,9 +327,10 @@ class TipoAtributoTestCase(TestCase):
         
         self.client.login(username='gustavo', password='cabral')
         
-        response = self.client.post('/administracion/gestion_tipos_atributo/modificar_tipo_atributo/2/', {'nombre': 'Valido', 'descripcion':'Indica si un item es valido.', 'tipo_dato':'4'})
+        response = self.client.post('/administracion/gestion_tipos_atributo/modificar_tipo_atributo/2/', {'nombre': 'Valido', 'descripcion':'Indica si un item es valido.', 'tipo_dato':'2'})
         
         self.assertEqual(response.status_code, 302)
+        print response['Location']
         self.assertEqual(response['Location'], 'http://testserver/administracion/gestion_tipos_atributo/tipo_atributo/2')
         
         nombre = TipoAtributo.objects.get(pk=2).nombre
