@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm
+from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm
 from administracion.models import Rol, Permiso, TipoAtributo, Proyecto
 from inicio.decorators import permiso_requerido
 
@@ -447,7 +447,38 @@ def crear_proyecto_view(request):
     return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
-@permiso_requerido(permiso="Visualizar tipo de atributo")
+@permiso_requerido(permiso="Modificar proyecto")
+def modificar_proyecto_view(request, id_proyecto):
+    """
+    Permite modificar un proyecto existente en el sistema.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    if request.method == "POST":
+        form = ModificarProyectoForm(data=request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            presupuesto = form.cleaned_data['presupuesto']
+            complejidad = form.cleaned_data['complejidad']
+            proyecto.nombre = nombre
+            proyecto.descripcion = descripcion
+            proyecto.presupuesto = presupuesto
+            proyecto.complejidad = complejidad
+            proyecto.save()
+            return HttpResponseRedirect('/administracion/gestion_proyectos/proyecto/%s'%proyecto.id)
+            
+    if request.method == "GET":
+        form = ModificarProyectoForm(initial={
+            'nombre': proyecto.nombre,
+            'descripcion': proyecto.descripcion,
+            'presupuesto': proyecto.presupuesto,
+            'complejidad': proyecto.complejidad,
+            })
+    ctx = {'form': form, 'proyecto': proyecto}
+    return render_to_response('proyecto/modificar_proyecto.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar proyecto")
 def visualizar_proyecto_view(request, id_proyecto):
     """
     Permite visualizar todos los campos de un proyecto existente en el sistema.
