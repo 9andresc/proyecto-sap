@@ -433,11 +433,11 @@ def crear_proyecto_view(request):
         if form.is_valid():
             nombre = form.cleaned_data['nombre']
             descripcion = form.cleaned_data['descripcion']
-            estado = form.cleaned_data['estado']
             presupuesto = form.cleaned_data['presupuesto']
             complejidad = form.cleaned_data['complejidad']
             fecha_inicio = form.cleaned_data['fecha_inicio']
-            proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, estado=estado, presupuesto=presupuesto, complejidad=complejidad, fecha_inicio=fecha_inicio)
+            usuario_lider = form.cleaned_data['usuario_lider']
+            proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, presupuesto=presupuesto, complejidad=complejidad, fecha_inicio=fecha_inicio, usuario_lider=usuario_lider)
             proyecto.save()
             return HttpResponseRedirect('/administracion/gestion_proyectos/')
             

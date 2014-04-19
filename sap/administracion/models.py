@@ -70,7 +70,7 @@ class Proyecto(models.Model):
     nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=True)
     fecha_inicio = models.DateField()
-    estado = models.IntegerField(max_length=30,choices= ESTADOS_PROYECTO, default=0)
+    estado = models.IntegerField(max_length=30, choices=ESTADOS_PROYECTO, default=0)
     presupuesto = models.FloatField(null=True, blank=True, default=0)
     complejidad = models.IntegerField(null=True, blank=True, default=0)
     usuario_lider = models.OneToOneField(User, related_name='usuario_lider_proyecto', null=True, blank=True)

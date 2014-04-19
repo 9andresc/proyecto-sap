@@ -164,17 +164,25 @@ class ModificarTipoAtributoForm(forms.Form):
             return nombre 
         raise forms.ValidationError('Nombre de tipo atributo ya registrado')
     
+def opcion_lider():
+    usuarios = User.objects.all()
+    resultado = []
+    for usuario in usuarios: 
+        if usuario.is_active:
+            tupla = (usuario.id, usuario.username)
+            resultado.append(tupla)
+    return resultado
+    
 class CrearProyectoForm(forms.Form):
     """
     Formulario utilizado para la creacion de un proyecto.
     """
     nombre = forms.CharField(label="Nombre de proyecto", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
-    estado = forms.ChoiceField(label="Estado", choices=ESTADOS_PROYECTO, required=True)
-    #usuario_lider = forms.ModelChoiceField(label='Usuario Lider', queryset=User.objects.all(), widget=forms.Select(), required=False)
+    usuario_lider = forms.ChoiceField(label="Lider", choices=(opcion_lider()), required=True)
     presupuesto = forms.FloatField(label="Presupuesto", required=True)
     complejidad = forms.IntegerField(label="Complejidad", required=True)
-    fecha_inicio = CustomDateField()
+    fecha_inicio = CustomDateField(required=True)
 
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']
