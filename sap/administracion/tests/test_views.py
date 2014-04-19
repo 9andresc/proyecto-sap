@@ -13,31 +13,54 @@ class UserTestCase(TestCase):
         self.factory = RequestFactory()
         
     def test_gestion_usuarios_view(self):
-        request = self.factory.get('/administracion/gestion_usuarios/')
+        print "Prueba 1: Gestion de usuarios"
+        print ""
+        print "1- Se obtiene la direccion /administracion/gestion_usuarios/"
+        request = self.factory.get('/administracion/gestion_roles/')
+        print "2- Ademas, se accede con una cuenta valida"
         self.user = User.objects.get(pk=1)
         request.user = self.user
+        print "3- Se accede a la vista gestion_usuarios_view con la direccion obtenida y la cuenta establecida"
         response = gestion_usuarios_view(request)
-        
+        print "4- Revisamos si la pagina obtenida es correcta"
+        print "   4.1- Codigo de estado de la pagina obtenida: %s"%response.status_code
         self.assertEqual(response.status_code, 200)
         self.assertTrue('usuarios' in response.content)
         
     def test_crear_usuario_view(self):
+        print "Prueba 2: Crear usuario"
+        print "1- Se obtiene la direccion /administracion/gestion_usuarios/crear_usuario/"
         request = self.factory.get('/administracion/gestion_usuarios/crear_usuario/')
+        print "2- Ademas, se accede con una cuenta valida"
         self.user = User.objects.get(pk=1)
         request.user = self.user
+        print "3- Se accede a la vista crear_usuario_view con la direccion obtenida y la cuenta establecida"
         response = crear_usuario_view(request)
         
+        print "4- Revisamos si la pagina obtenida es correcta"
+        print "   4.1- Codigo de estado de la pagina obtenida: %s"%response.status_code
         self.assertEqual(response.status_code, 200)
         self.assertTrue('form' in response.content)
         
+        print "1- Iniciamos sesion con la cuenta de gustavo"
         self.client.login(username='gustavo', password='cabral')
         
-        response = self.client.post('/administracion/gestion_usuarios/crear_usuario/', {'username': 'rodrigo', 'email':'rodrigo@gmail.com', 'password_uno':'santos', 'password_dos':'santos', 'first_name':'Rodrigo', 'last_name':'Santos', 'direccion':'', 'telefono':''})
+        print "2- Enviamos datos, mediante un formulario, a la direccion /administracion/gestion_usuarios/crear_usuario/."
+        print "   Algunos de los datos enviados son: "
+        print "   -username: rodrigo"
+        print "   -email: rodrigo@gmail.com"
+        print "   -..."
+        response = self.client.post('/administracion/gestion_usuarios/crear_usuario/', {'username': 'andres', 'email':'andres@gmail.com', 'password_uno':'cabral', 'password_dos':'cabral', 'first_name':'Andres', 'last_name':'Cabral', 'direccion':'', 'telefono':''})
         
+        print "3- Revisamos si la pagina redirigida es correcta"
+        print "   3.1- Codigo de estado de la pagina obtenida: %s"%response.status_code
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'], 'http://testserver/administracion/gestion_usuarios/')
         
+        print "4- Obtenemos el usuario recien creado y verificamos si fue correctamente creado"
         usuario = User.objects.get(pk=2)
+        print "   4.1- Nombre de usuario del usuario: %s"%usuario.username
+        print "   4.2- Email del usuario: %s"%usuario.email
         
         self.assertTrue(usuario)
         
@@ -53,14 +76,14 @@ class UserTestCase(TestCase):
         
         self.client.login(username='gustavo', password='cabral')
         
-        response = self.client.post('/administracion/gestion_usuarios/modificar_usuario/1/', {'username': 'rodrigo', 'email':'rodrigo@gmail.com', 'password_uno':'santos', 'password_dos':'santos', 'first_name':'Rodrigo', 'last_name':'Santos', 'direccion':'', 'telefono':''})
+        response = self.client.post('/administracion/gestion_usuarios/modificar_usuario/1/', {'username': 'andres', 'email':'andres@gmail.com', 'password_uno':'cabral', 'password_dos':'cabral', 'first_name':'Andres', 'last_name':'Cabral', 'direccion':'', 'telefono':''})
         
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'], 'http://testserver/administracion/gestion_usuarios/usuario/1')
         
         username = User.objects.get(pk=1).username
         
-        self.assertEqual(username, 'rodrigo')
+        self.assertEqual(username, 'andres')
         
     def test_eliminar_usuario_view(self):
         request = self.factory.get('/administracion/gestion_usuarios/eliminar_usuario/1/')
@@ -133,7 +156,7 @@ class UserTestCase(TestCase):
         self.assertFalse(rol)
         
 class RolTestCase(TestCase):
-    fixtures = ['roles_testdata.json']
+    fixtures = ['usuarios_testdata.json']
     
     def setUp(self):
         self.factory = RequestFactory()
@@ -292,45 +315,43 @@ class TipoAtributoTestCase(TestCase):
         tipo_atributo = TipoAtributo.objects.get(pk=2)
         
         self.assertTrue(tipo_atributo)
-    """
+
     def test_modificar_tipo_atributo_view(self):
-        request = self.factory.get('/administracion/gestion_tipos_atributo/modificar_tipo_atributo/1/')
+        request = self.factory.get('/administracion/gestion_tipos_atributo/modificar_tipo_atributo/2/')
         self.user = User.objects.get(pk=1)
         request.user = self.user
-        response = modificar_tipo_atributo_view(request, 1)
+        response = modificar_tipo_atributo_view(request, 2)
         
         self.assertEqual(response.status_code, 200)
         self.assertTrue('form' in response.content)
-        self.assertTrue('tipo_atributo' in response.content)
         
         self.client.login(username='gustavo', password='cabral')
         
-        response = self.client.post('/administracion/gestion_tipos_atributo/modificar_tipo_atributo/1/', {'nombre': 'Valido', 'descripcion':'Indica si un item es valido.', 'tipo_dato':'4'})
+        response = self.client.post('/administracion/gestion_tipos_atributo/modificar_tipo_atributo/2/', {'nombre': 'Valido', 'descripcion':'Indica si un item es valido.', 'tipo_dato':'2'})
         
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['Location'], 'http://testserver/administracion/gestion_tipos_atributo/tipo_atributo/1')
+        print response['Location']
+        self.assertEqual(response['Location'], 'http://testserver/administracion/gestion_tipos_atributo/tipo_atributo/2')
         
-        nombre = TipoAtributo.objects.get(pk=1).nombre
+        nombre = TipoAtributo.objects.get(pk=2).nombre
         
         self.assertEqual(nombre, 'Valido')
 
     def test_eliminar_tipo_atributo_view(self):
-        request = self.factory.get('/administracion/gestion_tipos_atributo/eliminar_tipo_atributo/1/')
+        request = self.factory.get('/administracion/gestion_tipos_atributo/eliminar_tipo_atributo/2/')
         self.user = User.objects.get(pk=1)
         request.user = self.user
-        response = eliminar_tipo_atributo_view(request, 1)
+        response = eliminar_tipo_atributo_view(request, 2)
         
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('tipo_atributo' in response.content)
         
         self.client.login(username='gustavo', password='cabral')
         
-        response = self.client.post('/administracion/gestion_tipos_atributo/eliminar_tipo_atributo/1/')
+        response = self.client.post('/administracion/gestion_tipos_atributo/eliminar_tipo_atributo/2/')
         
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'], 'http://testserver/administracion/gestion_tipos_atributo/')
         
-        tipo_atributo = TipoAtributo.objects.filter(pk=1)
+        tipo_atributo = TipoAtributo.objects.filter(pk=2)
         
         self.assertFalse(tipo_atributo)
-    """

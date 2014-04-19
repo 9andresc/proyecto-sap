@@ -6,28 +6,225 @@
         "username": "gustavo", 
         "first_name": "Gustavo", 
         "last_name": "Cabral", 
-        "roles": [], 
+        "roles": [
+            1
+        ], 
+        "telefono": "0972-953303", 
+        "is_active": true, 
+        "direccion": "Fernando", 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2014-04-18T21:39:55.891Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$uxaQwo4CAKjM$GRrWX0FFge65ZEAzrRcJvOtAB0ucGrANN+kW9MhWwZ0=", 
+        "estado": 1, 
+        "email": "andrescabral.c@gmail.com", 
+        "date_joined": "2014-04-14T02:58:31.740Z"
+    }
+},
+{
+    "pk": 2, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "rodrigo", 
+        "first_name": "Rodrigo", 
+        "last_name": "Santos", 
+        "roles": [
+            2
+        ], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
-        "is_superuser": true, 
-        "is_staff": true, 
-        "last_login": "2014-04-11T20:33:04.071Z", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-04-17T04:47:31.954Z", 
         "groups": [], 
         "user_permissions": [], 
-        "password": "pbkdf2_sha256$12000$vHpiV6ErPnxE$KC2Y3E76bUqHWAKxkuJ3bFrMb7QDZS1RaGpOjbmi4+Q=", 
+        "password": "pbkdf2_sha256$12000$YFe4Jp1eS1Ts$Iy9nEr0p962OcH4/qel48kQUUnqiC/DInyDq5CYXe3c=", 
         "estado": 1, 
-        "email": "andrescabral.c@gmail.com", 
-        "date_joined": "2014-04-11T20:31:10.894Z"
+        "email": "rodrigo@gmail.com", 
+        "date_joined": "2014-04-17T04:47:08.569Z"
     }
 },
 {
     "pk": 1, 
     "model": "administracion.rol", 
     "fields": {
-        "descripcion": "Posee todos los permisos del modulo de administracion.", 
+        "descripcion": "Tiene todos los permisos del modulo de administraci\u00f3n.", 
         "nombre": "Administrador", 
-        "permisos": []
+        "permisos": [
+            1, 
+            2, 
+            3, 
+            4, 
+            5, 
+            6, 
+            7, 
+            8, 
+            9, 
+            10, 
+            11, 
+            12, 
+            13, 
+            14, 
+            15, 
+            16, 
+            17, 
+            18, 
+            19
+        ]
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee todos los permisos de gesti\u00f3n de usuarios.", 
+        "nombre": "Usuario", 
+        "permisos": [
+            1, 
+            2, 
+            3, 
+            4, 
+            5, 
+            6, 
+            7, 
+            8
+        ]
+    }
+},
+{
+    "pk": 1, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear usuario"
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar usuario"
+    }
+},
+{
+    "pk": 3, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar usuario"
+    }
+},
+{
+    "pk": 4, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar usuario"
+    }
+},
+{
+    "pk": 5, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Cambiar contrasenha"
+    }
+},
+{
+    "pk": 6, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar roles de usuario"
+    }
+},
+{
+    "pk": 7, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar rol a usuario"
+    }
+},
+{
+    "pk": 8, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar rol de usuario"
+    }
+},
+{
+    "pk": 9, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear rol"
+    }
+},
+{
+    "pk": 10, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar rol"
+    }
+},
+{
+    "pk": 11, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar rol"
+    }
+},
+{
+    "pk": 12, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar rol"
+    }
+},
+{
+    "pk": 13, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar permisos de rol"
+    }
+},
+{
+    "pk": 14, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar permiso a rol"
+    }
+},
+{
+    "pk": 15, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar permiso de rol"
+    }
+},
+{
+    "pk": 16, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear tipo de atributo"
+    }
+},
+{
+    "pk": 17, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar tipo de atributo"
+    }
+},
+{
+    "pk": 18, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar tipo de atributo"
+    }
+},
+{
+    "pk": 19, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar tipo de atributo"
     }
 }
 ]

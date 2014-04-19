@@ -48,7 +48,7 @@
 			<select class="form-control" id="tipo_dato" name="tipo_dato">
 				{% for eleccion in form.tipo_dato.field.choices %}
 					{% ifequal tipo_atributo.tipo_dato eleccion.0 %}
-						<option value="{{ form.tipo_dato.data }}" selected="selected">{{ eleccion.1 }}</option>
+						<option value="{{ eleccion.0 }}" selected="selected">{{ eleccion.1 }}</option>
 					{% else %}
 						<option value="{{ eleccion.0 }}">{{ eleccion.1 }}</option>
 					{% endifequal %}

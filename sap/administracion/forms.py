@@ -147,7 +147,7 @@ class ModificarTipoAtributoForm(forms.Form):
     """
     nombre = forms.CharField(label="Nombre de tipo atributo", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
-    tipo_dato = forms.ChoiceField(label="Tipo dato", choices=TIPO_DATO, required=True)
+    tipo_dato = forms.ChoiceField(label="Tipo dato", choices=TIPO_DATO, required=False)
         
     def clean_nombre(self): 
         nombre = self.cleaned_data['nombre'] 
