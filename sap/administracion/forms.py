@@ -198,8 +198,10 @@ class ModificarProyectoForm(forms.Form):
     """
     nombre = forms.CharField(label="Nombre de proyecto", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
-    presupuesto = forms.FloatField(label = 'Presupuesto', required=True)
-    complejidad = forms.IntegerField(label = 'Complejidad', required=True)
+    usuario_lider = forms.ChoiceField(label="Lider", choices=(opcion_lider()), required=True)
+    presupuesto = forms.FloatField(label="Presupuesto", required=True)
+    complejidad = forms.IntegerField(label="Complejidad", required=True)
+    fecha_inicio = CustomDateField(required=True)
         
     def clean_nombre(self): 
         nombre = self.cleaned_data['nombre'] 

@@ -73,7 +73,7 @@ class Proyecto(models.Model):
     estado = models.IntegerField(max_length=30, choices=ESTADOS_PROYECTO, default=0)
     presupuesto = models.FloatField(null=True, blank=True, default=0)
     complejidad = models.IntegerField(null=True, blank=True, default=0)
-    usuario_lider = models.OneToOneField(User, related_name='usuario_lider_proyecto', null=True, blank=True)
+    usuario_lider = models.ForeignKey(User, null=True, blank=True)
     usuarios = models.ManyToManyField(User, related_name='usuarios_proyecto', blank=True)
     comite_de_cambios = models.ManyToManyField(User, related_name='comite_de_cambios_proyecto', blank=True)
     roles = models.ManyToManyField(Rol, related_name='roles_proyecto', null=True, blank=True)

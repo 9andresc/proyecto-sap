@@ -437,7 +437,10 @@ def crear_proyecto_view(request):
             complejidad = form.cleaned_data['complejidad']
             fecha_inicio = form.cleaned_data['fecha_inicio']
             usuario_lider = form.cleaned_data['usuario_lider']
-            proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, presupuesto=presupuesto, complejidad=complejidad, fecha_inicio=fecha_inicio, usuario_lider=usuario_lider)
+            
+            lider = User.objects.get(id=usuario_lider)
+            
+            proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, presupuesto=presupuesto, complejidad=complejidad, fecha_inicio=fecha_inicio, usuario_lider=lider)
             proyecto.save()
             return HttpResponseRedirect('/administracion/gestion_proyectos/')
             
@@ -461,10 +464,17 @@ def modificar_proyecto_view(request, id_proyecto):
             descripcion = form.cleaned_data['descripcion']
             presupuesto = form.cleaned_data['presupuesto']
             complejidad = form.cleaned_data['complejidad']
+            fecha_inicio = form.cleaned_data['fecha_inicio']
+            usuario_lider = form.cleaned_data['usuario_lider']
+            
+            lider = User.objects.get(id=usuario_lider)
+            
             proyecto.nombre = nombre
             proyecto.descripcion = descripcion
             proyecto.presupuesto = presupuesto
             proyecto.complejidad = complejidad
+            proyecto.fecha_inicio = fecha_inicio
+            proyecto.usuario_lider = lider
             proyecto.save()
             return HttpResponseRedirect('/administracion/gestion_proyectos/proyecto/%s'%proyecto.id)
             
