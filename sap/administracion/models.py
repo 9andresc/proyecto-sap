@@ -39,14 +39,26 @@ class TipoAtributo(models.Model):
     
     def __unicode__(self):
         return self.nombre
-    
-ESTADOS_USUARIO = (
-    (0, "Activo"),
-    (1, "Inactivo"),
+
+ESTADOS_FASE = (
+    (0, "Inactivo"),
+    (1, "En curso"),
+    (2, "Finalizada"),
 )
 
+class Fase(models.Model):
+    """
+    Clase que especifica los atributos de las Fases.
+    """
+    nombre = models.CharField(max_length=20)
+    descripcion = models.TextField(blank=True)
+    estado = models.IntegerField(max_length=30, choices=ESTADOS_FASE, default=0)
+    fecha_inicio = models.DateField(null=True)
+    duracion = models.IntegerField(null=True, blank=True, default=0)
+    roles = models.ManyToManyField(Rol, null=True, blank=True)
+
 ESTADOS_PROYECTO = (
-    (0, "En Construccion"),
+    (0, "Inactivo"),
     (1, "En Curso"),
     (2, "Finalizado"),
 )
@@ -57,16 +69,23 @@ class Proyecto(models.Model):
     """
     nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=True)
-    fecha_inicio = models.DateField(auto_now=False, auto_now_add=True)
+    fecha_inicio = models.DateField()
     estado = models.IntegerField(max_length=30,choices= ESTADOS_PROYECTO, default=0)
     presupuesto = models.FloatField(null=True, blank=True, default=0)
     complejidad = models.IntegerField(null=True, blank=True, default=0)
     usuario_lider = models.OneToOneField(User, related_name='usuario_lider_proyecto', null=True, blank=True)
     usuarios = models.ManyToManyField(User, related_name='usuarios_proyecto', blank=True)
-    comite_de_cambios = models.ManyToManyField(User, related_name='comite_de_Cambios_proyecto', blank=True)
-       
+    comite_de_cambios = models.ManyToManyField(User, related_name='comite_de_cambios_proyecto', blank=True)
+    roles = models.ManyToManyField(Rol, related_name='roles_proyecto', null=True, blank=True)
+    fases = models.ManyToManyField(Fase, related_name='fases_proyecto', null=True, blank=True)
+    
     def __unicode__(self):
         return self.nombre
+
+ESTADOS_USUARIO = (
+    (0, "Activo"),
+    (1, "Inactivo"),
+)
 
 User.add_to_class('estado', models.IntegerField(max_length=30, choices=ESTADOS_USUARIO, default=1))
 User.add_to_class('telefono', models.CharField(max_length=100, blank=True))

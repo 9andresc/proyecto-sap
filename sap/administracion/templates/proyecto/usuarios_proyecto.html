@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}SAP - Usuarios del proyecto {{ proyecto.nombre }}{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Usuarios del proyecto {{ proyecto.nombre }}</small></h1>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_proyecto_agregar_usuario' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
+		<br><br>
+		{% if usuarios %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre de usuario</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for u in usuarios %}
+                			<tr>
+                    			<td>{{ u.id }}</td>
+                    			<td>{{ u.username }}</td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_proyectos/quitar_usuario/proyecto/{{ proyecto.id }}/{{ u.id }}/"><span class="glyphicon glyphicon-minus"></span> Quitar</a></td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No posee usuarios.</h3>
+    	{% endif %}
+	</div>
+	<br>
+		<a class="btn btn-default" href="{% url 'vista_gestion_proyectos' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de proyectos</a>
+</div>
+{% endblock %}

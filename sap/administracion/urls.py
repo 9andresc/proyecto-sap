@@ -1,8 +1,14 @@
 from django.conf.urls import patterns, url
+# -------------- Vistas de usuarios -------------- #
 from administracion.views import crear_usuario_view, gestion_usuarios_view, visualizar_usuario_view, modificar_usuario_view, cambiar_contrasenha_view, eliminar_usuario_view, roles_usuario_view, agregar_rol_view, confirmacion_agregar_rol_view, quitar_rol_view
+# -------------- Vistas de roles -------------- #
 from administracion.views import gestion_roles_view, crear_rol_view, visualizar_rol_view, modificar_rol_view, eliminar_rol_view, permisos_rol_view, agregar_permiso_view, confirmacion_agregar_permiso_view, quitar_permiso_view
+# -------------- Vistas de tipos de atributo -------------- #
 from administracion.views import gestion_tipos_atributo_view, crear_tipo_atributo_view, visualizar_tipo_atributo_view, modificar_tipo_atributo_view, eliminar_tipo_atributo_view
-from administracion.views import gestion_proyectos_view, crear_proyecto_view, visualizar_proyecto_view, modificar_proyecto_view, eliminar_proyecto_view, usuarios_proyecto_view
+# -------------- Vistas de proyectos -------------- #
+from administracion.views import gestion_proyectos_view, crear_proyecto_view, visualizar_proyecto_view, modificar_proyecto_view, eliminar_proyecto_view
+from administracion.views import usuarios_proyecto_view, proyecto_agregar_usuario_view, confirmacion_proyecto_agregar_usuario_view, proyecto_quitar_usuario_view
+
 urlpatterns = patterns('',
     url(r'^administracion/gestion_usuarios/$', gestion_usuarios_view, name="vista_gestion_usuarios"),
     url(r'^administracion/gestion_usuarios/crear_usuario/$', crear_usuario_view, name="vista_crear_usuario"),
@@ -34,4 +40,7 @@ urlpatterns = patterns('',
     url(r'^administracion/gestion_proyectos/modificar_proyecto/(?P<id_proyecto>.*)/$', modificar_proyecto_view, name="vista_modificar_proyecto"),
     url(r'^administracion/gestion_proyectos/eliminar_proyecto/(?P<id_proyecto>.*)/$', eliminar_proyecto_view, name="vista_eliminar_proyecto"),
     url(r'^administracion/gestion_proyectos/usuarios/proyecto/(?P<id_proyecto>.*)/$', usuarios_proyecto_view, name="vista_usuarios_proyecto"),
+    url(r'^administracion/gestion_proyectos/agregar_usuario/proyecto/(?P<id_proyecto>.*)/$', proyecto_agregar_usuario_view, name="vista_proyecto_agregar_usuario"),
+    url(r'^administracion/gestion_proyectos/confirmacion_agregar_usuario/proyecto/(?P<id_proyecto>.*)/(?P<id_usuario>.*)/$', confirmacion_proyecto_agregar_usuario_view, name="vista_confirmacion_proyecto_agregar_usuario"),
+    url(r'^administracion/gestion_proyectos/quitar_usuario/proyecto/(?P<id_proyecto>.*)/(?P<id_usuario>.*)/$', proyecto_quitar_usuario_view, name="vista_proyecto_quitar_usuario"),
 )

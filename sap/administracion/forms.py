@@ -4,6 +4,11 @@ from administracion.models import Rol
 from administracion.models import TipoAtributo, TIPO_DATO
 from administracion.models import Proyecto, ESTADOS_PROYECTO
 
+class CustomDateField(forms.DateField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('input_formats', ("%d/%m/%Y",))
+        super(CustomDateField, self).__init__(*args, **kwargs)
+
 class CrearUsuarioForm(forms.Form):
     """
     Formulario utilizado para la creacion de un usuario.
@@ -169,6 +174,7 @@ class CrearProyectoForm(forms.Form):
     #usuario_lider = forms.ModelChoiceField(label='Usuario Lider', queryset=User.objects.all(), widget=forms.Select(), required=False)
     presupuesto = forms.FloatField(label="Presupuesto", required=True)
     complejidad = forms.IntegerField(label="Complejidad", required=True)
+    fecha_inicio = CustomDateField()
 
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']

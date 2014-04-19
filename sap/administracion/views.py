@@ -436,7 +436,8 @@ def crear_proyecto_view(request):
             estado = form.cleaned_data['estado']
             presupuesto = form.cleaned_data['presupuesto']
             complejidad = form.cleaned_data['complejidad']
-            proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, estado=estado, presupuesto=presupuesto, complejidad=complejidad)
+            fecha_inicio = form.cleaned_data['fecha_inicio']
+            proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, estado=estado, presupuesto=presupuesto, complejidad=complejidad, fecha_inicio=fecha_inicio)
             proyecto.save()
             return HttpResponseRedirect('/administracion/gestion_proyectos/')
             
@@ -508,6 +509,49 @@ def usuarios_proyecto_view(request, id_proyecto):
     junto con las operaciones de agregacion de usuarios y eliminacion de usuarios.
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
-    usuarios = User.objects.filter(proyecto__id=id_proyecto)
+    usuarios = User.objects.filter(usuarios_proyecto__id=id_proyecto)
     ctx = {'proyecto':proyecto, 'usuarios':usuarios}
-    return render_to_response('usuario/usuarios_proyecto.html', ctx, context_instance=RequestContext(request))
+    return render_to_response('proyecto/usuarios_proyecto.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def proyecto_agregar_usuario_view(request, id_proyecto):
+    """
+    Permite listar todos los usuarios registrados en el sistema, junto con las 
+    operaciones de agregacion de usuario.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    usuarios = User.objects.all()
+    ctx = {'proyecto':proyecto, 'usuarios':usuarios}
+    return render_to_response('proyecto/agregar_usuario.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def confirmacion_proyecto_agregar_usuario_view(request, id_proyecto, id_usuario):
+    """
+    Permite agregar un usuario previamente seleccionado a un proyecto existente en el 
+    sistema.
+    """
+    valido = False
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    usuario = User.objects.get(id=id_usuario)
+    try:
+        user = proyecto.usuarios.get(id=id_usuario)
+    except User.DoesNotExist:
+        valido = True      
+    if valido:
+        proyecto.usuarios.add(usuario)
+        proyecto.save()
+    ctx = {'proyecto':proyecto, 'usuario':usuario, 'valido':valido}
+    return render_to_response('proyecto/confirmacion_agregar_usuario.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def proyecto_quitar_usuario_view(request, id_proyecto, id_usuario):
+    """
+    Permite quitar un usuario previamente seleccionado de un proyecto existente en el 
+    sistema.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    usuario = User.objects.get(id=id_usuario)
+    proyecto.usuarios.remove(usuario)
+    proyecto.save()
+    ctx = {'proyecto':proyecto, 'usuario':usuario}
+    return render_to_response('proyecto/quitar_usuario.html', ctx, context_instance=RequestContext(request))

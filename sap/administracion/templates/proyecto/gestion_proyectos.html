@@ -26,6 +26,7 @@
                     			<td>{{ p.nombre }}</td>
                     			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_proyectos/modificar_proyecto/{{ p.id }}/"><span class="glyphicon glyphicon-edit"></span> Modificar</a></td>
                     			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_proyectos/eliminar_proyecto/{{ p.id }}/"><span class="glyphicon glyphicon-trash"></span> Eliminar</a></td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_proyectos/usuarios/proyecto/{{ p.id }}/"><span class="glyphicon glyphicon-cog"></span> Usuarios</a></td>
                     			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_proyectos/proyecto/{{ p.id }}/"><span class="glyphicon glyphicon-search"></span> Visualizar</a></td>
                 			</tr>
                 		{% endfor %}
