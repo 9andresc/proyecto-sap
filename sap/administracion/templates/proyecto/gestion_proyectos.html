@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}SAP - Gestión de proyectos{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Gestión de proyectos</small></h1>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_crear_proyecto' %}"><span class="glyphicon glyphicon-record"></span> Crear</a>
+		<br><br>
+		{% if proyectos %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre de proyecto</th>   
+                    		<th></th>
+                    		<th></th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for p in proyectos %}
+                			<tr>
+                    			<td>{{ p.id }}</td>
+                    			<td>{{ p.nombre }}</td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_proyectos/modificar_proyecto/{{ p.id }}/"><span class="glyphicon glyphicon-edit"></span> Modificar</a></td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_proyectos/eliminar_proyecto/{{ p.id }}/"><span class="glyphicon glyphicon-trash"></span> Eliminar</a></td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_proyectos/proyecto/{{ p.id }}/"><span class="glyphicon glyphicon-search"></span> Visualizar</a></td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No existen proyectos.</h3>
+    	{% endif %}
+	</div>
+</div>
+{% endblock %}

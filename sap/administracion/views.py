@@ -4,8 +4,9 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm
-from administracion.models import Rol, Permiso, TipoAtributo, TIPO_DATO
+from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm
+from administracion.models import Rol, Permiso, TipoAtributo, Proyecto
+from inicio.decorators import permiso_requerido
 
 @login_required(login_url='/login/')
 def gestion_usuarios_view(request):
@@ -18,6 +19,7 @@ def gestion_usuarios_view(request):
     return render_to_response('usuario/gestion_usuarios.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Crear usuario")
 def crear_usuario_view(request):
     """
     Permite crear un nuevo usuario en el sistema.
@@ -43,6 +45,7 @@ def crear_usuario_view(request):
     return render_to_response('usuario/crear_usuario.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Modificar usuario")
 def modificar_usuario_view(request, id_usuario):
     """
     Permite modificar un usuario existente en el sistema.
@@ -79,6 +82,7 @@ def modificar_usuario_view(request, id_usuario):
     return render_to_response('usuario/modificar_usuario.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Cambiar contrasenha")
 def cambiar_contrasenha_view(request, id_usuario):
     valido = True
     usuario = User.objects.get(id=id_usuario)
@@ -101,6 +105,7 @@ def cambiar_contrasenha_view(request, id_usuario):
     return render_to_response('usuario/cambiar_contrasenha.html', ctx, context_instance=RequestContext(request))
             
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Eliminar usuario")
 def eliminar_usuario_view(request, id_usuario):
     """
     Permite eliminar un usuario existente en el sistema.
@@ -115,6 +120,7 @@ def eliminar_usuario_view(request, id_usuario):
         
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar usuario")
 def visualizar_usuario_view(request, id_usuario):
     """
     Permite visualizar todos los campos de un usuario existente en el sistema.
@@ -124,6 +130,7 @@ def visualizar_usuario_view(request, id_usuario):
     return render_to_response('usuario/visualizar_usuario.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar roles de usuario")
 def roles_usuario_view(request, id_usuario):
     """
     Permite listar todos los roles pertenecientes a un usuario existente en el sistema, 
@@ -145,6 +152,8 @@ def agregar_rol_view(request, id_usuario):
     ctx = {'usuario':usuario, 'roles':roles}
     return render_to_response('usuario/agregar_rol.html', ctx, context_instance=RequestContext(request))
     
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Agregar rol a usuario")
 def confirmacion_agregar_rol_view(request, id_usuario, id_rol):
     """
     Permite agregar un rol previamente seleccionado a un usuario existente en el 
@@ -163,6 +172,8 @@ def confirmacion_agregar_rol_view(request, id_usuario, id_rol):
     ctx = {'usuario':usuario, 'rol':rol, 'valido':valido}
     return render_to_response('usuario/confirmacion_agregar_rol.html', ctx, context_instance=RequestContext(request))
     
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar rol de usuario")
 def quitar_rol_view(request, id_usuario, id_rol):
     """
     Permite quitar un rol previamente seleccionado de un usuario existente en el 
@@ -186,6 +197,7 @@ def gestion_roles_view(request):
     return render_to_response('rol/gestion_roles.html', ctx, context_instance=RequestContext(request))
     
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Crear rol")
 def crear_rol_view(request):
     """
     Permite crear un nuevo rol en el sistema.
@@ -206,6 +218,7 @@ def crear_rol_view(request):
     return render_to_response('rol/crear_rol.html', ctx, context_instance=RequestContext(request)) 
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Modificar rol")
 def modificar_rol_view(request, id_rol):
     """
     Permite modificar un rol existente en el sistema.
@@ -230,6 +243,7 @@ def modificar_rol_view(request, id_rol):
     return render_to_response('rol/modificar_rol.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Eliminar rol")
 def eliminar_rol_view(request, id_rol):
     """
     Permite eliminar un rol existente en el sistema.
@@ -243,6 +257,7 @@ def eliminar_rol_view(request, id_rol):
         return render_to_response('rol/eliminar_rol.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar rol")
 def visualizar_rol_view(request, id_rol):
     """
     Permite visualizar todos los campos de un rol existente en el sistema.
@@ -252,6 +267,7 @@ def visualizar_rol_view(request, id_rol):
     return render_to_response('rol/visualizar_rol.html', ctx, context_instance=RequestContext(request)) 
     
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar permisos de rol")
 def permisos_rol_view(request, id_rol):
     """
     Permite listar todos los permisos pertenecientes a un rol existente en el sistema, 
@@ -273,7 +289,9 @@ def agregar_permiso_view(request, id_rol):
     permisos = Permiso.objects.all()
     ctx = {'rol':rol, 'permisos':permisos}
     return render_to_response('rol/agregar_permiso.html', ctx, context_instance=RequestContext(request))
-    
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Agregar permiso a rol")
 def confirmacion_agregar_permiso_view(request, id_rol, id_permiso):
     """
     Permite agregar un permiso previamente seleccionado a un rol existente en el 
@@ -292,6 +310,8 @@ def confirmacion_agregar_permiso_view(request, id_rol, id_permiso):
     ctx = {'rol':rol, 'permiso':permiso, 'valido':valido}
     return render_to_response('rol/confirmacion_agregar_permiso.html', ctx, context_instance=RequestContext(request))
     
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar permiso de rol")
 def quitar_permiso_view(request, id_rol, id_permiso):
     """
     Permite quitar un permiso previamente seleccionado de un rol existente en el 
@@ -317,6 +337,7 @@ def gestion_tipos_atributo_view(request):
   
   
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Crear tipo de atributo")
 def crear_tipo_atributo_view(request):
     """
     Permite crear un nuevo tipo atributo en el sistema.
@@ -339,6 +360,7 @@ def crear_tipo_atributo_view(request):
     return render_to_response('tipo_atributo/crear_tipo_atributo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Modificar tipo de atributo")
 def modificar_tipo_atributo_view(request, id_tipo_atributo):
     """
     Permite modificar un tipo atributo existente en el sistema.
@@ -366,6 +388,7 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
     return render_to_response('tipo_atributo/modificar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Eliminar tipo de atributo")
 def eliminar_tipo_atributo_view(request, id_tipo_atributo):
     """
     Permite eliminar un tipo atributo existente en el sistema.
@@ -379,6 +402,7 @@ def eliminar_tipo_atributo_view(request, id_tipo_atributo):
         return render_to_response('tipo_atributo/eliminar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar tipo de atributo")
 def visualizar_tipo_atributo_view(request, id_tipo_atributo):
     """
     Permite visualizar todos los campos de un tipo atributo existente en el sistema.
@@ -386,3 +410,93 @@ def visualizar_tipo_atributo_view(request, id_tipo_atributo):
     tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
     ctx = {'tipo_atributo': tipo_atributo}
     return render_to_response('tipo_atributo/visualizar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def gestion_proyectos_view(request):
+    """
+    Permite listar todos los proyectos registrados en el sistema, junto con las 
+    operaciones disponibles por cada proyecto.
+    """
+    proyectos = Proyecto.objects.all()
+    ctx = {'proyectos': proyectos}
+    return render_to_response('proyecto/gestion_proyectos.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Crear proyecto")
+def crear_proyecto_view(request):
+    """
+    Permite crear un nuevo proyecto en el sistema.
+    """
+    form = CrearProyectoForm()
+    if request.method == "POST":
+        form = CrearProyectoForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            estado = form.cleaned_data['estado']
+            presupuesto = form.cleaned_data['presupuesto']
+            complejidad = form.cleaned_data['complejidad']
+            proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, estado=estado, presupuesto=presupuesto, complejidad=complejidad)
+            proyecto.save()
+            return HttpResponseRedirect('/administracion/gestion_proyectos/')
+            
+        else:
+            ctx = {'form':form}
+            return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
+    ctx = {'form':form}
+    return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Modificar proyecto")
+def modificar_proyecto_view(request, id_proyecto):
+    """
+    Permite modificar un proyecto existente en el sistema.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    if request.method == "POST":
+        form = ModificarProyectoForm(data=request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            presupuesto = form.cleaned_data['presupuesto']
+            complejidad = form.cleaned_data['complejidad']
+            proyecto.nombre = nombre
+            proyecto.descripcion = descripcion
+            proyecto.presupuesto = presupuesto
+            proyecto.complejidad = complejidad
+            proyecto.save()
+            return HttpResponseRedirect('/administracion/gestion_proyectos/proyecto/%s'%proyecto.id)
+            
+    if request.method == "GET":
+        form = ModificarProyectoForm(initial={
+            'nombre': proyecto.nombre,
+            'descripcion': proyecto.descripcion,
+            'presupuesto': proyecto.presupuesto,
+            'complejidad': proyecto.complejidad,
+            })
+    ctx = {'form': form, 'proyecto': proyecto}
+    return render_to_response('proyecto/modificar_proyecto.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Eliminar proyecto")
+def eliminar_proyecto_view(request, id_proyecto):
+    """
+    Permite eliminar un proyecto existente en el sistema.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    if request.method == "POST":
+        Proyecto.objects.get(id=id_proyecto).delete()
+        return HttpResponseRedirect('/administracion/gestion_proyectos/')
+    if request.method == "GET":
+        ctx = {'proyecto':proyecto}
+        return render_to_response('proyecto/eliminar_proyecto.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar proyecto")
+def visualizar_proyecto_view(request, id_proyecto):
+    """
+    Permite visualizar todos los campos de un proyecto existente en el sistema.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    ctx = {'proyecto': proyecto}
+    return render_to_response('proyecto/visualizar_proyecto.html', ctx, context_instance=RequestContext(request))
