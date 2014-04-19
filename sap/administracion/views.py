@@ -478,6 +478,20 @@ def modificar_proyecto_view(request, id_proyecto):
     return render_to_response('proyecto/modificar_proyecto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Eliminar proyecto")
+def eliminar_proyecto_view(request, id_proyecto):
+    """
+    Permite eliminar un proyecto existente en el sistema.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    if request.method == "POST":
+        Proyecto.objects.get(id=id_proyecto).delete()
+        return HttpResponseRedirect('/administracion/gestion_proyectos/')
+    if request.method == "GET":
+        ctx = {'proyecto':proyecto}
+        return render_to_response('proyecto/eliminar_proyecto.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
 @permiso_requerido(permiso="Visualizar proyecto")
 def visualizar_proyecto_view(request, id_proyecto):
     """
