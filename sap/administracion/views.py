@@ -500,3 +500,14 @@ def visualizar_proyecto_view(request, id_proyecto):
     proyecto = Proyecto.objects.get(id=id_proyecto)
     ctx = {'proyecto': proyecto}
     return render_to_response('proyecto/visualizar_proyecto.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def usuarios_proyecto_view(request, id_proyecto):
+    """
+    Permite listar todos los usuarios pertenecientes a un proyecto existente en el sistema, 
+    junto con las operaciones de agregacion de usuarios y eliminacion de usuarios.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    usuarios = User.objects.filter(proyecto__id=id_proyecto)
+    ctx = {'proyecto':proyecto, 'usuarios':usuarios}
+    return render_to_response('usuario/usuarios_proyecto.html', ctx, context_instance=RequestContext(request))
