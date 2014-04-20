@@ -495,11 +495,18 @@ def eliminar_proyecto_view(request, id_proyecto):
     Permite eliminar un proyecto existente en el sistema.
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
+    valido = True
+    if proyecto.estado == 2:
+        valido = False
     if request.method == "POST":
-        Proyecto.objects.get(id=id_proyecto).delete()
-        return HttpResponseRedirect('/administracion/gestion_proyectos/')
+        if valido == True:
+            Proyecto.objects.get(id=id_proyecto).delete()
+            return HttpResponseRedirect('/administracion/gestion_proyectos/')
+        else:
+            ctx = {'proyecto':proyecto, 'valido':valido}
+            return render_to_response('proyecto/eliminar_proyecto.html', ctx, context_instance=RequestContext(request))
     if request.method == "GET":
-        ctx = {'proyecto':proyecto}
+        ctx = {'proyecto':proyecto, 'valido':valido}
         return render_to_response('proyecto/eliminar_proyecto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
