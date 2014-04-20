@@ -619,3 +619,14 @@ def proyecto_quitar_fase_view(request, id_proyecto, id_fase):
     proyecto.save()
     ctx = {'proyecto':proyecto, 'fase':fase}
     return render_to_response('proyecto/quitar_fase.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def roles_proyecto_view(request, id_proyecto):
+    """
+    Permite listar todos los roles pertenecientes a un proyecto existente en el sistema, 
+    junto con las operaciones de agregacion de roles y eliminacion de roles.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    roles = Rol.objects.filter(roles_proyecto__id=id_proyecto)
+    ctx = {'proyecto':proyecto, 'roles':roles}
+    return render_to_response('proyecto/roles_proyecto.html', ctx, context_instance=RequestContext(request))

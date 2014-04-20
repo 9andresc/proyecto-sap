@@ -9,6 +9,7 @@ from administracion.views import gestion_tipos_atributo_view, crear_tipo_atribut
 from administracion.views import gestion_proyectos_view, crear_proyecto_view, visualizar_proyecto_view, modificar_proyecto_view, eliminar_proyecto_view
 from administracion.views import usuarios_proyecto_view, proyecto_agregar_usuario_view, confirmacion_proyecto_agregar_usuario_view, proyecto_quitar_usuario_view
 from administracion.views import fases_proyecto_view, proyecto_agregar_fase_view, confirmacion_proyecto_agregar_fase_view, proyecto_quitar_fase_view
+from administracion.views import roles_proyecto_view
 
 urlpatterns = patterns('',
     url(r'^administracion/gestion_usuarios/$', gestion_usuarios_view, name="vista_gestion_usuarios"),
@@ -48,4 +49,5 @@ urlpatterns = patterns('',
     url(r'^administracion/gestion_proyectos/agregar_fase/proyecto/(?P<id_proyecto>.*)/$', proyecto_agregar_fase_view, name="vista_proyecto_agregar_fase"),
     url(r'^administracion/gestion_proyectos/confirmacion_agregar_fase/proyecto/(?P<id_proyecto>.*)/(?P<id_fase>.*)/$', confirmacion_proyecto_agregar_fase_view, name="vista_confirmacion_proyecto_agregar_fase"),
     url(r'^administracion/gestion_proyectos/quitar_fase/proyecto/(?P<id_proyecto>.*)/(?P<id_fase>.*)/$', proyecto_quitar_fase_view, name="vista_proyecto_quitar_fase"),
+    url(r'^administracion/gestion_proyectos/roles/proyecto/(?P<id_proyecto>.*)/$', roles_proyecto_view, name="vista_roles_proyecto"),
 )
