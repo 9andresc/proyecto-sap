@@ -641,3 +641,22 @@ def proyecto_agregar_rol_view(request, id_proyecto):
     roles = Rol.objects.all()
     ctx = {'proyecto':proyecto, 'roles':roles}
     return render_to_response('proyecto/agregar_rol.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def confirmacion_proyecto_agregar_rol_view(request, id_proyecto, id_rol):
+    """
+    Permite agregar un rol previamente seleccionado a un proyecto existente en el 
+    sistema.
+    """
+    valido = False
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    rol = Rol.objects.get(id=id_rol)
+    try:
+        role = proyecto.roles.get(id=id_rol)
+    except Rol.DoesNotExist:
+        valido = True      
+    if valido:
+        proyecto.roles.add(rol)
+        proyecto.save()
+    ctx = {'proyecto':proyecto, 'rol':rol, 'valido':valido}
+    return render_to_response('proyecto/confirmacion_agregar_rol.html', ctx, context_instance=RequestContext(request))

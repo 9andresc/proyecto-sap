@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}SAP - Confirmación{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		{% if valido %}
+			<div class="panel panel-success">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Éxito!</h3>
+      			</div>
+      			<div class="panel-body">
+        			El rol {{ rol.nombre }} fue asignado al proyecto {{ proyecto.nombre }}.
+      			</div>
+      		</div>
+		{% else %}
+			<div class="panel panel-warning">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Alto ahí!</h3>
+      			</div>
+      			<div class="panel-body">
+        			El rol {{ rol.nombre }} no puede ser asignado porque ya está asignado al proyecto {{ proyecto.nombre }}.
+      			</div>
+      		</div>
+		{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_roles_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles del proyecto {{ proyecto.nombre }}</a>
+</div>
+{% endblock %}
