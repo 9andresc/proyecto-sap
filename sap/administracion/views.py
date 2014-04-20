@@ -727,3 +727,24 @@ def proyecto_quitar_miembro_view(request, id_proyecto, id_usuario):
     proyecto.save()
     ctx = {'proyecto':proyecto, 'usuario':usuario}
     return render_to_response('proyecto/quitar_miembro.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def iniciar_proyecto_view(request, id_proyecto):
+    """
+    Permite arrancar un proyecto si es que se cumplen todas las condiciones mencionadas abajo:
+        - El proyecto debe poseer un lider.
+        - El proyecto debe poseer al menos un miembro en su comite de cambios.
+        - El proyecto debe poseer al menos una fase.
+        - El proyecto debe poseer al menos un rol.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    valido = False
+    if proyecto.usuario_lider and proyecto.comite_de_cambios.count() > 0 and proyecto.fases.count() > 0 and proyecto.roles.count() > 0:
+        valido = True
+        proyecto.estado = 1
+        proyecto.save()
+        ctx = {'proyecto':proyecto, 'valido':valido}
+        return render_to_response('proyecto/iniciar_proyecto.html', ctx, context_instance=RequestContext(request))
+    else:
+        ctx = {'proyecto':proyecto, 'valido':valido}
+        return render_to_response('proyecto/iniciar_proyecto.html', ctx, context_instance=RequestContext(request))

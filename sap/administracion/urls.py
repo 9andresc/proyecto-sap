@@ -11,6 +11,7 @@ from administracion.views import usuarios_proyecto_view, proyecto_agregar_usuari
 from administracion.views import fases_proyecto_view, proyecto_agregar_fase_view, confirmacion_proyecto_agregar_fase_view, proyecto_quitar_fase_view
 from administracion.views import roles_proyecto_view, proyecto_agregar_rol_view, confirmacion_proyecto_agregar_rol_view, proyecto_quitar_rol_view
 from administracion.views import comite_proyecto_view, proyecto_agregar_miembro_view, confirmacion_proyecto_agregar_miembro_view, proyecto_quitar_miembro_view
+from administracion.views import iniciar_proyecto_view
 
 urlpatterns = patterns('',
     url(r'^administracion/gestion_usuarios/$', gestion_usuarios_view, name="vista_gestion_usuarios"),
@@ -58,4 +59,5 @@ urlpatterns = patterns('',
     url(r'^administracion/gestion_proyectos/agregar_miembro_comite/proyecto/(?P<id_proyecto>.*)/$', proyecto_agregar_miembro_view, name="vista_proyecto_agregar_miembro"),
     url(r'^administracion/gestion_proyectos/confirmacion_agregar_miembro/proyecto/(?P<id_proyecto>.*)/(?P<id_usuario>.*)/$', confirmacion_proyecto_agregar_miembro_view, name="vista_confirmacion_proyecto_agregar_miembro"),
     url(r'^administracion/gestion_proyectos/quitar_miembro/proyecto/(?P<id_proyecto>.*)/(?P<id_usuario>.*)/$', proyecto_quitar_miembro_view, name="vista_proyecto_quitar_miembro"),
+    url(r'^administracion/gestion_proyectos/iniciar_proyecto/(?P<id_proyecto>.*)/$', iniciar_proyecto_view, name="vista_iniciar_proyecto"),
 )

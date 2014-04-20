@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}SAP - Confirmación de inicio del proyecto {{ proyecto.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		{% if valido %}
+			<div class="panel panel-success">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Éxito!</h3>
+      			</div>
+      			<div class="panel-body">
+        			El proyecto {{ proyecto.nombre }} cumple con todos los requisitos. Ya está en marcha.
+      			</div>
+      		</div>
+		{% else %}
+			<div class="panel panel-warning">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Alto ahí!</h3>
+      			</div>
+      			<div class="panel-body">
+        			El proyecto {{ proyecto.nombre }} no cumple con todos los requisitos para iniciar. A continuación, un listado de todos los requisitos a cumplir:
+					<br><br>
+					<ul class="list-styled">
+						<li>El proyecto debe poseer un lider.</li>
+        				<li>El proyecto debe poseer al menos un miembro en su comite de cambios.</li>
+        				<li>El proyecto debe poseer al menos una fase.</li>
+        				<li>El proyecto debe poseer al menos un rol.</li>
+					</ul>        			
+      			</div>
+      		</div>
+		{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_gestion_proyectos' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de proyectos</a>
+</div>
+{% endblock %}
