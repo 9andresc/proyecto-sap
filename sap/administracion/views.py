@@ -673,3 +673,14 @@ def proyecto_quitar_rol_view(request, id_proyecto, id_rol):
     proyecto.save()
     ctx = {'proyecto':proyecto, 'rol':rol}
     return render_to_response('proyecto/quitar_rol.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def comite_proyecto_view(request, id_proyecto):
+    """
+    Permite listar todos los miembros del comite de cambios perteneciente a un proyecto existente en el sistema, 
+    junto con las operaciones de agregacion de miembros y eliminacion de miembros.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    miembros = User.objects.filter(comite_de_cambios_proyecto__id=id_proyecto)
+    ctx = {'proyecto':proyecto, 'miembros':miembros}
+    return render_to_response('proyecto/comite_proyecto.html', ctx, context_instance=RequestContext(request))
