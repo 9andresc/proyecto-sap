@@ -606,3 +606,16 @@ def confirmacion_proyecto_agregar_fase_view(request, id_proyecto, id_fase):
         proyecto.save()
     ctx = {'proyecto':proyecto, 'fase':fase, 'valido':valido}
     return render_to_response('proyecto/confirmacion_agregar_fase.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def proyecto_quitar_fase_view(request, id_proyecto, id_fase):
+    """
+    Permite quitar una fase previamente seleccionada de un proyecto existente en el 
+    sistema.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = Fase.objects.get(id=id_fase)
+    proyecto.fases.remove(fase)
+    proyecto.save()
+    ctx = {'proyecto':proyecto, 'fase':fase}
+    return render_to_response('proyecto/quitar_fase.html', ctx, context_instance=RequestContext(request))
