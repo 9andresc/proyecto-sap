@@ -5,7 +5,7 @@ from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm
-from administracion.models import Rol, Permiso, TipoAtributo, Proyecto
+from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase
 from inicio.decorators import permiso_requerido
 
 @login_required(login_url='/login/')
@@ -565,3 +565,14 @@ def proyecto_quitar_usuario_view(request, id_proyecto, id_usuario):
     proyecto.save()
     ctx = {'proyecto':proyecto, 'usuario':usuario}
     return render_to_response('proyecto/quitar_usuario.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def fases_proyecto_view(request, id_proyecto):
+    """
+    Permite listar todas las fases pertenecientes a un proyecto existente en el sistema, 
+    junto con las operaciones de agregacion de fases y eliminacion de fases.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fases = Fase.objects.filter(fases_proyecto__id=id_proyecto)
+    ctx = {'proyecto':proyecto, 'fases':fases}
+    return render_to_response('proyecto/fases_proyecto.html', ctx, context_instance=RequestContext(request))
