@@ -513,6 +513,7 @@ def visualizar_proyecto_view(request, id_proyecto):
     return render_to_response('proyecto/visualizar_proyecto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar usuarios de proyecto")
 def usuarios_proyecto_view(request, id_proyecto):
     """
     Permite listar todos los usuarios pertenecientes a un proyecto existente en el sistema, 
@@ -535,6 +536,7 @@ def proyecto_agregar_usuario_view(request, id_proyecto):
     return render_to_response('proyecto/agregar_usuario.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Agregar usuario a proyecto")
 def confirmacion_proyecto_agregar_usuario_view(request, id_proyecto, id_usuario):
     """
     Permite agregar un usuario previamente seleccionado a un proyecto existente en el 
@@ -554,6 +556,7 @@ def confirmacion_proyecto_agregar_usuario_view(request, id_proyecto, id_usuario)
     return render_to_response('proyecto/confirmacion_agregar_usuario.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar usuario de proyecto")
 def proyecto_quitar_usuario_view(request, id_proyecto, id_usuario):
     """
     Permite quitar un usuario previamente seleccionado de un proyecto existente en el 
@@ -567,6 +570,7 @@ def proyecto_quitar_usuario_view(request, id_proyecto, id_usuario):
     return render_to_response('proyecto/quitar_usuario.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar fases de proyecto")
 def fases_proyecto_view(request, id_proyecto):
     """
     Permite listar todas las fases pertenecientes a un proyecto existente en el sistema, 
@@ -589,6 +593,7 @@ def proyecto_agregar_fase_view(request, id_proyecto):
     return render_to_response('proyecto/agregar_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Agregar fase a proyecto")
 def confirmacion_proyecto_agregar_fase_view(request, id_proyecto, id_fase):
     """
     Permite agregar una fase previamente seleccionada a un proyecto existente en el 
@@ -608,6 +613,7 @@ def confirmacion_proyecto_agregar_fase_view(request, id_proyecto, id_fase):
     return render_to_response('proyecto/confirmacion_agregar_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar fase de proyecto")
 def proyecto_quitar_fase_view(request, id_proyecto, id_fase):
     """
     Permite quitar una fase previamente seleccionada de un proyecto existente en el 
@@ -621,6 +627,7 @@ def proyecto_quitar_fase_view(request, id_proyecto, id_fase):
     return render_to_response('proyecto/quitar_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar roles de proyecto")
 def roles_proyecto_view(request, id_proyecto):
     """
     Permite listar todos los roles pertenecientes a un proyecto existente en el sistema, 
@@ -643,6 +650,7 @@ def proyecto_agregar_rol_view(request, id_proyecto):
     return render_to_response('proyecto/agregar_rol.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Agregar rol a proyecto")
 def confirmacion_proyecto_agregar_rol_view(request, id_proyecto, id_rol):
     """
     Permite agregar un rol previamente seleccionado a un proyecto existente en el 
@@ -662,6 +670,7 @@ def confirmacion_proyecto_agregar_rol_view(request, id_proyecto, id_rol):
     return render_to_response('proyecto/confirmacion_agregar_rol.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar rol de proyecto")
 def proyecto_quitar_rol_view(request, id_proyecto, id_rol):
     """
     Permite quitar un rol previamente seleccionado de un proyecto existente en el 
@@ -675,6 +684,7 @@ def proyecto_quitar_rol_view(request, id_proyecto, id_rol):
     return render_to_response('proyecto/quitar_rol.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar comite de proyecto")
 def comite_proyecto_view(request, id_proyecto):
     """
     Permite listar todos los miembros del comite de cambios perteneciente a un proyecto existente en el sistema, 
@@ -697,6 +707,7 @@ def proyecto_agregar_miembro_view(request, id_proyecto):
     return render_to_response('proyecto/agregar_miembro.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Agregar miembro a comite")
 def confirmacion_proyecto_agregar_miembro_view(request, id_proyecto, id_usuario):
     """
     Permite agregar un usuario previamente seleccionado al comite de cambios de un proyecto existente en el 
@@ -716,6 +727,7 @@ def confirmacion_proyecto_agregar_miembro_view(request, id_proyecto, id_usuario)
     return render_to_response('proyecto/confirmacion_agregar_miembro.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar miembro de comite")
 def proyecto_quitar_miembro_view(request, id_proyecto, id_usuario):
     """
     Permite quitar un usuario previamente seleccionado del comite de cambios de un proyecto existente en el 
@@ -729,6 +741,7 @@ def proyecto_quitar_miembro_view(request, id_proyecto, id_usuario):
     return render_to_response('proyecto/quitar_miembro.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Iniciar proyecto")
 def iniciar_proyecto_view(request, id_proyecto):
     """
     Permite arrancar un proyecto si es que se cumplen todas las condiciones mencionadas abajo:
