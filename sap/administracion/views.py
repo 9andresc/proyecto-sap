@@ -576,3 +576,33 @@ def fases_proyecto_view(request, id_proyecto):
     fases = Fase.objects.filter(fases_proyecto__id=id_proyecto)
     ctx = {'proyecto':proyecto, 'fases':fases}
     return render_to_response('proyecto/fases_proyecto.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def proyecto_agregar_fase_view(request, id_proyecto):
+    """
+    Permite listar todas las fases registradas en el sistema, junto con las 
+    operaciones de agregacion de fase.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fases = Fase.objects.all()
+    ctx = {'proyecto':proyecto, 'fases':fases}
+    return render_to_response('proyecto/agregar_fase.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def confirmacion_proyecto_agregar_fase_view(request, id_proyecto, id_fase):
+    """
+    Permite agregar una fase previamente seleccionada a un proyecto existente en el 
+    sistema.
+    """
+    valido = False
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = Fase.objects.get(id=id_fase)
+    try:
+        fas = proyecto.fases.get(id=id_fase)
+    except Fase.DoesNotExist:
+        valido = True      
+    if valido:
+        proyecto.fases.add(fase)
+        proyecto.save()
+    ctx = {'proyecto':proyecto, 'fase':fase, 'valido':valido}
+    return render_to_response('proyecto/confirmacion_agregar_fase.html', ctx, context_instance=RequestContext(request))

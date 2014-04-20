@@ -5,7 +5,7 @@
 <div class="jumbotron">
 	<div class="bs-example">
 		<h1><small>Fases del proyecto {{ proyecto.nombre }}</small></h1>
-		<a class="btn btn-sm btn-default" href="{% url 'vista_proyecto_agregar_usuario' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
+		<a class="btn btn-sm btn-default" href="{% url 'vista_proyecto_agregar_fase' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
 		<br><br>
 		{% if fases %}
 			<div class="table-responsive"> 

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}SAP - Agregar fases{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Fases</small></h1>
+		{% if fases %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+        			<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre de fase</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for f in fases %}
+                			<tr>
+                    			<td>{{ f.id }}</td>
+                    			<td>{{ f.nombre }}</td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_proyectos/confirmacion_agregar_fase/proyecto/{{ proyecto.id }}/{{ f.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No existen fases.</h3>
+    	{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_fases_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
+</div>
+{% endblock %}

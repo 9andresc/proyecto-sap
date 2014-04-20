@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}SAP - Confirmación{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		{% if valido %}
+			<div class="panel panel-success">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Éxito!</h3>
+      			</div>
+      			<div class="panel-body">
+        			La fase {{ fase.nombre }} fue asignada al proyecto {{ proyecto.nombre }}.
+      			</div>
+      		</div>
+		{% else %}
+			<div class="panel panel-warning">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Alto ahí!</h3>
+      			</div>
+      			<div class="panel-body">
+        			La fase {{ fase.nombre }} no puede ser asignada porque ya está asignada al proyecto {{ proyecto.nombre }}.
+      			</div>
+      		</div>
+		{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_fases_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
+</div>
+{% endblock %}
