@@ -630,3 +630,14 @@ def roles_proyecto_view(request, id_proyecto):
     roles = Rol.objects.filter(roles_proyecto__id=id_proyecto)
     ctx = {'proyecto':proyecto, 'roles':roles}
     return render_to_response('proyecto/roles_proyecto.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def proyecto_agregar_rol_view(request, id_proyecto):
+    """
+    Permite listar todos los roles registrados en el sistema, junto con las 
+    operaciones de agregacion de rol.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    roles = Rol.objects.all()
+    ctx = {'proyecto':proyecto, 'roles':roles}
+    return render_to_response('proyecto/agregar_rol.html', ctx, context_instance=RequestContext(request))
