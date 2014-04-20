@@ -660,3 +660,16 @@ def confirmacion_proyecto_agregar_rol_view(request, id_proyecto, id_rol):
         proyecto.save()
     ctx = {'proyecto':proyecto, 'rol':rol, 'valido':valido}
     return render_to_response('proyecto/confirmacion_agregar_rol.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def proyecto_quitar_rol_view(request, id_proyecto, id_rol):
+    """
+    Permite quitar un rol previamente seleccionado de un proyecto existente en el 
+    sistema.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    rol = Rol.objects.get(id=id_rol)
+    proyecto.roles.remove(rol)
+    proyecto.save()
+    ctx = {'proyecto':proyecto, 'rol':rol}
+    return render_to_response('proyecto/quitar_rol.html', ctx, context_instance=RequestContext(request))

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}SAP - Confirmación{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		<div class="panel panel-success">
+      		<div class="panel-heading">
+        		<h3 class="panel-title">¡Éxito!</h3>
+      		</div>
+      		<div class="panel-body">
+        		El rol {{ rol.nombre }} fue desasignado del proyecto {{ proyecto.nombre }}.
+      		</div>
+      	</div>
+		<br>
+		<a class="btn btn-default" href="{% url 'vista_roles_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles del proyecto {{ proyecto.nombre }}</a>
+	</div>
+</div>
+{% endblock %}
