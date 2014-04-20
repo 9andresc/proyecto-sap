@@ -9,6 +9,9 @@ class Permiso(models.Model):
     
     def __unicode__(self):
         return self.nombre
+    
+    class Meta:
+        ordering = ["nombre"]
 
 class Rol(models.Model):
     """
@@ -20,6 +23,9 @@ class Rol(models.Model):
     
     def __unicode__(self):
         return self.nombre
+    
+    class Meta:
+        ordering = ["nombre"]
 
 TIPO_DATO = (
     (0, "Numerico"),
@@ -39,6 +45,9 @@ class TipoAtributo(models.Model):
     
     def __unicode__(self):
         return self.nombre
+    
+    class Meta:
+        ordering = ["nombre"]
 
 ESTADOS_FASE = (
     (0, "Inactivo"),
@@ -56,6 +65,12 @@ class Fase(models.Model):
     fecha_inicio = models.DateField(null=True)
     duracion = models.IntegerField(null=True, blank=True, default=0)
     roles = models.ManyToManyField(Rol, null=True, blank=True)
+    
+    def __unicode__(self):
+        return self.nombre
+    
+    class Meta:
+        ordering = ["nombre"]
 
 ESTADOS_PROYECTO = (
     (0, "Inactivo"),
@@ -81,6 +96,9 @@ class Proyecto(models.Model):
     
     def __unicode__(self):
         return self.nombre
+    
+    class Meta:
+        ordering = ["nombre"]
 
 ESTADOS_USUARIO = (
     (0, "Activo"),
