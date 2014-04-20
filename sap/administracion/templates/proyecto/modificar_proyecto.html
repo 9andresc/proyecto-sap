@@ -24,7 +24,7 @@
     									{% if error == "This field is required." %}
       										<li>No has ingresado este campo.</li>
       									{% elif error == "Enter a valid date."%}
-      										<li>Ingresa una fecha válida. Formato dd/mm/aaaa</li>
+      										<li>Ingresa una fecha válida. Formato: día/mes/año. Ejemplo: 14/12/2014.</li>
       									{% else %}
       										<li>{{ error }}</li>
       									{% endif %}
