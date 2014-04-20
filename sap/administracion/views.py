@@ -684,3 +684,46 @@ def comite_proyecto_view(request, id_proyecto):
     miembros = User.objects.filter(comite_de_cambios_proyecto__id=id_proyecto)
     ctx = {'proyecto':proyecto, 'miembros':miembros}
     return render_to_response('proyecto/comite_proyecto.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def proyecto_agregar_miembro_view(request, id_proyecto):
+    """
+    Permite listar todos los usuarios registrados en el sistema, junto con las 
+    operaciones de agregacion de usuario.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    usuarios = User.objects.all()
+    ctx = {'proyecto':proyecto, 'usuarios':usuarios}
+    return render_to_response('proyecto/agregar_miembro.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def confirmacion_proyecto_agregar_miembro_view(request, id_proyecto, id_usuario):
+    """
+    Permite agregar un usuario previamente seleccionado al comite de cambios de un proyecto existente en el 
+    sistema.
+    """
+    valido = False
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    usuario = User.objects.get(id=id_usuario)
+    try:
+        user = proyecto.comite_de_cambios.get(id=id_usuario)
+    except User.DoesNotExist:
+        valido = True      
+    if valido:
+        proyecto.comite_de_cambios.add(usuario)
+        proyecto.save()
+    ctx = {'proyecto':proyecto, 'usuario':usuario, 'valido':valido}
+    return render_to_response('proyecto/confirmacion_agregar_miembro.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def proyecto_quitar_miembro_view(request, id_proyecto, id_usuario):
+    """
+    Permite quitar un usuario previamente seleccionado del comite de cambios de un proyecto existente en el 
+    sistema.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    usuario = User.objects.get(id=id_usuario)
+    proyecto.comite_de_cambios.remove(usuario)
+    proyecto.save()
+    ctx = {'proyecto':proyecto, 'usuario':usuario}
+    return render_to_response('proyecto/quitar_miembro.html', ctx, context_instance=RequestContext(request))

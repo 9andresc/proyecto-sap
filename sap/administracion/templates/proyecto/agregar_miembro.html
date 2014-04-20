@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}SAP - Agregar miembros{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Usuarios</small></h1>
+		{% if usuarios %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+        			<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre de usuario</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for u in usuarios %}
+                			<tr>
+                    			<td>{{ u.id }}</td>
+                    			<td>{{ u.username }}</td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_proyectos/confirmacion_agregar_miembro/proyecto/{{ proyecto.id }}/{{ u.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No existen usuarios.</h3>
+    	{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_comite_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de comité del proyecto {{ proyecto.nombre }}</a>
+</div>
+{% endblock %}
