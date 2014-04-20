@@ -13,7 +13,7 @@
         <div class="input-group">
 			<span class="input-group-addon"><b>Estado</b></span>
 			{% ifequal proyecto.estado 0 %}
-				<input type="text" class="form-control" id="estado" name="estado" value="En Construcción" disabled="disabled">
+				<input type="text" class="form-control" id="estado" name="estado" value="Inactivo" disabled="disabled">
 			{% endifequal %}
 			{% ifequal proyecto.estado 1 %}
 				<input type="text" class="form-control" id="estado" name="estado" value="En Curso" disabled="disabled">
@@ -22,6 +22,11 @@
 				<input type="text" class="form-control" id="estado" name="estado" value="Finalizado" disabled="disabled">
 			{% endifequal %}
 		</div>
+		<br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Líder</b></span>
+			<input type="text" class="form-control" id="usuario_lider" name="usuario_lider" value="{{ proyecto.usuario_lider.username }}" disabled="disabled">
+        </div>
         <br>
         <div class="input-group">
 			<span class="input-group-addon"><b>Descripción</b></span>
