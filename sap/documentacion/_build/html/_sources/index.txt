@@ -24,14 +24,13 @@ Contenido del Modulo de Administracion:
    :maxdepth: 4
 
    modules/models.rst
-   modules/views.rst
    modules/forms.rst
+   modules/views.rst
+   
 
 
-Indices y Tablas
-================
+Buscar una palabra clave
+========================
 
-* :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
 

@@ -24,8 +24,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="sap 1.0.0 documentation" href="../index.html" />
-    <link rel="next" title="Forms" href="forms.html" />
-    <link rel="prev" title="Models" href="models.html" /> 
+    <link rel="prev" title="Forms" href="forms.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,13 +34,7 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="forms.html" title="Forms"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="models.html" title="Models"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">sap 1.0.0 documentation</a> &raquo;</li> 
       </ul>
@@ -52,157 +45,198 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-administracion.views">
-<span id="views"></span><h1>Views<a class="headerlink" href="#module-administracion.views" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="administracion.views.agregar_permiso_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">agregar_permiso_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#agregar_permiso_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.agregar_permiso_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los permisos registrados en el sistema, junto con las 
-operaciones de agregacion de permiso.</p>
-</dd></dl>
+  <div class="section" id="views">
+<h1>Views<a class="headerlink" href="#views" title="Permalink to this headline">¶</a></h1>
+<p>Import:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render_to_response</span><span class="p">,</span> <span class="n">redirect</span>
+<span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">RequestContext</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">django.http.response</span> <span class="kn">import</span> <span class="n">HttpResponseRedirect</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">logout</span>
+<span class="kn">from</span> <span class="nn">administracion.forms</span> <span class="kn">import</span> <span class="n">CrearUsuarioForm</span><span class="p">,</span> <span class="n">ModificarUsuarioForm</span><span class="p">,</span> <span class="n">CambiarContrasenhaForm</span><span class="p">,</span> <span class="n">CrearRolForm</span><span class="p">,</span> <span class="n">ModificarRolForm</span><span class="p">,</span> <span class="n">CrearTipoAtributoForm</span><span class="p">,</span> <span class="n">ModificarTipoAtributoForm</span><span class="p">,</span> <span class="n">CrearProyectoForm</span><span class="p">,</span> <span class="n">ModificarProyectoForm</span>
+<span class="kn">from</span> <span class="nn">administracion.models</span> <span class="kn">import</span> <span class="n">Rol</span><span class="p">,</span> <span class="n">Permiso</span><span class="p">,</span> <span class="n">TipoAtributo</span><span class="p">,</span> <span class="n">Proyecto</span><span class="p">,</span> <span class="n">Fase</span>
+<span class="kn">from</span> <span class="nn">inicio.decorators</span> <span class="kn">import</span> <span class="n">permiso_requerido</span>
+</pre></div>
+</div>
+<div class="section" id="gestion-de-usuarios">
+<h2>Gestión de Usuarios<a class="headerlink" href="#gestion-de-usuarios" title="Permalink to this headline">¶</a></h2>
+<p>&#64;login_required(login_url=&#8217;/login/&#8217;)</p>
+<p>def <strong>gestion_usuarios_view</strong> (request):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Permite listar todos los usuarios registrados en el sistema, junto con las</span>
+<span class="sd">operaciones disponibles por cada usuario.</span>
+<span class="sd">Requiere estar Logueado.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">usuarios</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;usuarios&#39;</span><span class="p">:</span> <span class="n">usuarios</span><span class="p">}</span>
+<span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;usuario/gestion_usuarios.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>&#64;login_required(login_url=&#8217;/login/&#8217;)</p>
+<p>&#64;permiso_requerido(permiso=&#8221;Crear usuario&#8221;)</p>
+<p>def <strong>crear_usuario_view</strong> (request):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Permite crear un nuevo usuario en el sistema.</span>
+<span class="sd">Se crea un formulario y se verifica si la informacion almacenada es valida,</span>
+<span class="sd">de ser asi se crea un objeto para almacenar la informacion y se lo registra en la base de datos.</span>
+<span class="sd">Si la informacion no es valida se informa de esto para poder solicitar el re-ingreso de los datos.</span>
+<span class="sd">Requiere poseer permiso para la creación de usuarios.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">form</span> <span class="o">=</span> <span class="n">CrearUsuarioForm</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">CrearUsuarioForm</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;email&#39;</span><span class="p">]</span>
+        <span class="n">password_uno</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;password_uno&#39;</span><span class="p">]</span>
+        <span class="n">first_name</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;first_name&#39;</span><span class="p">]</span>
+        <span class="n">last_name</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;last_name&#39;</span><span class="p">]</span>
+        <span class="n">direccion</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;direccion&#39;</span><span class="p">]</span>
+        <span class="n">telefono</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;telefono&#39;</span><span class="p">]</span>
+        <span class="n">usuario</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password_uno</span><span class="p">,</span> <span class="n">first_name</span><span class="o">=</span><span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="n">last_name</span><span class="p">,</span> <span class="n">direccion</span><span class="o">=</span><span class="n">direccion</span><span class="p">,</span> <span class="n">telefono</span><span class="o">=</span><span class="n">telefono</span><span class="p">)</span>
+        <span class="n">usuario</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s">&#39;/administracion/gestion_usuarios/&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;usuario/crear_usuario.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+<span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;usuario/crear_usuario.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gestion-de-roles">
+<h2>Gestión de Roles<a class="headerlink" href="#gestion-de-roles" title="Permalink to this headline">¶</a></h2>
+<p>&#64;login_required(login_url=&#8217;/login/&#8217;)</p>
+<p>def <strong>gestion_roles_view</strong> (request):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Permite listar todos los roles registrados en el sistema, junto con las</span>
+<span class="sd">operaciones disponibles por cada rol.</span>
+<span class="sd">Requiere estar Logueado.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">roles</span> <span class="o">=</span> <span class="n">Rol</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;roles&#39;</span><span class="p">:</span> <span class="n">roles</span><span class="p">}</span>
+<span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;rol/gestion_roles.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>&#64;login_required(login_url=&#8217;/login/&#8217;)</p>
+<p>&#64;permiso_requerido(permiso=&#8221;Crear rol&#8221;)</p>
+<p>def <strong>crear_rol_view</strong> (request):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Permite crear un nuevo rol en el sistema.</span>
+<span class="sd">Se crea un formulario y se verifica si la informacion almacenada es valida,</span>
+<span class="sd">de ser asi se crea un objeto para almacenar la informacion y se lo registra en la base de datos.</span>
+<span class="sd">Si la informacion no es valida se informa de esto para poder solicitar el re-ingreso de los datos.</span>
+<span class="sd">Requiere poseer permiso para la creación de roles.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">form</span> <span class="o">=</span> <span class="n">CrearRolForm</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">CrearRolForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+        <span class="n">nombre</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;nombre&#39;</span><span class="p">]</span>
+        <span class="n">descripcion</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;descripcion&#39;</span><span class="p">]</span>
+        <span class="n">rol</span> <span class="o">=</span> <span class="n">Rol</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="n">descripcion</span><span class="p">)</span>
+        <span class="n">rol</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s">&#39;/administracion/gestion_roles/&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;rol/crear_rol.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+<span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;rol/crear_rol.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gestion-de-tipos-atributo">
+<h2>Gestión de Tipos Atributo<a class="headerlink" href="#gestion-de-tipos-atributo" title="Permalink to this headline">¶</a></h2>
+<p>&#64;login_required(login_url=&#8217;/login/&#8217;)</p>
+<p>def <strong>gestion_tipos_atributo_view</strong> (request):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Permite listar todos los tipos atributo registrados en el sistema, junto con las</span>
+<span class="sd">operaciones disponibles por cada tipo atributo.</span>
+<span class="sd">Requiere estar Logueado.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">tipos_atributo</span> <span class="o">=</span> <span class="n">TipoAtributo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;tipos_atributo&#39;</span><span class="p">:</span> <span class="n">tipos_atributo</span><span class="p">}</span>
+<span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;tipo_atributo/gestion_tipos_atributo.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>&#64;login_required(login_url=&#8217;/login/&#8217;)</p>
+<p>&#64;permiso_requerido(permiso=&#8221;Crear tipo de atributo&#8221;)</p>
+<p>def <strong>crear_tipo_atributo_view</strong> (request):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Permite crear un nuevo tipo atributo en el sistema.</span>
+<span class="sd">Se crea un formulario y se verifica si la informacion almacenada es valida,</span>
+<span class="sd">de ser asi se crea un objeto para almacenar la informacion y se lo registra en la base de datos.</span>
+<span class="sd">Si la informacion no es valida se informa de esto para poder solicitar el re-ingreso de los datos.</span>
+<span class="sd">Requiere poseer permiso para la creación de tipos atributo.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">form</span> <span class="o">=</span> <span class="n">CrearTipoAtributoForm</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">CrearTipoAtributoForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+        <span class="n">nombre</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;nombre&#39;</span><span class="p">]</span>
+        <span class="n">descripcion</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;descripcion&#39;</span><span class="p">]</span>
+        <span class="n">tipo_dato</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;tipo_dato&#39;</span><span class="p">]</span>
+        <span class="n">tipo_atributo</span> <span class="o">=</span> <span class="n">TipoAtributo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="n">descripcion</span><span class="p">,</span> <span class="n">tipo_dato</span><span class="o">=</span><span class="n">tipo_dato</span><span class="p">)</span>
+        <span class="n">tipo_atributo</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s">&#39;/administracion/gestion_tipos_atributo/&#39;</span><span class="p">)</span>
 
-<dl class="function">
-<dt id="administracion.views.agregar_rol_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">agregar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.agregar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los roles registrados en el sistema, junto con las 
-operaciones de agregacion de rol.</p>
-</dd></dl>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;tipo_atributo/crear_tipo_atributo.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+<span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;tipo_atributo/crear_tipo_atributo.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gestion-de-proyectos">
+<h2>Gestión de Proyectos<a class="headerlink" href="#gestion-de-proyectos" title="Permalink to this headline">¶</a></h2>
+<p>&#64;login_required(login_url=&#8217;/login/&#8217;)</p>
+<p>def <strong>gestion_proyectos_view</strong> (request):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Permite listar todos los proyectos registrados en el sistema, junto con las</span>
+<span class="sd">operaciones disponibles por cada proyecto.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">proyectos</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;proyectos&#39;</span><span class="p">:</span> <span class="n">proyectos</span><span class="p">}</span>
+<span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;proyecto/gestion_proyectos.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>&#64;login_required(login_url=&#8217;/login/&#8217;)</p>
+<p>&#64;permiso_requerido(permiso=&#8221;Crear proyecto&#8221;)</p>
+<p>def <strong>crear_proyecto_view</strong> (request):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Permite crear un nuevo proyecto en el sistema.</span>
+<span class="sd">Se crea un formulario y se verifica si la informacion almacenada es valida,</span>
+<span class="sd">de ser asi se crea un objeto para almacenar la informacion y se lo registra en la base de datos.</span>
+<span class="sd">Si la informacion no es valida se informa de esto para poder solicitar el re-ingreso de los datos.</span>
+<span class="sd">Requiere poseer permiso para la creación de proyectos.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">form</span> <span class="o">=</span> <span class="n">CrearProyectoForm</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">CrearProyectoForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+        <span class="n">nombre</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;nombre&#39;</span><span class="p">]</span>
+        <span class="n">descripcion</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;descripcion&#39;</span><span class="p">]</span>
+        <span class="n">presupuesto</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;presupuesto&#39;</span><span class="p">]</span>
+        <span class="n">complejidad</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;complejidad&#39;</span><span class="p">]</span>
+        <span class="n">fecha_inicio</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;fecha_inicio&#39;</span><span class="p">]</span>
+        <span class="n">usuario_lider</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;usuario_lider&#39;</span><span class="p">]</span>
 
-<dl class="function">
-<dt id="administracion.views.confirmacion_agregar_permiso_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">confirmacion_agregar_permiso_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#confirmacion_agregar_permiso_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.confirmacion_agregar_permiso_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite agregar un permiso previamente seleccionado a un rol existente en el 
-sistema.</p>
-</dd></dl>
+        <span class="n">lider</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">usuario_lider</span><span class="p">)</span>
 
-<dl class="function">
-<dt id="administracion.views.confirmacion_agregar_rol_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">confirmacion_agregar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#confirmacion_agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.confirmacion_agregar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite agregar un rol previamente seleccionado a un usuario existente en el 
-sistema.</p>
-</dd></dl>
+        <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="n">descripcion</span><span class="p">,</span> <span class="n">presupuesto</span><span class="o">=</span><span class="n">presupuesto</span><span class="p">,</span> <span class="n">complejidad</span><span class="o">=</span><span class="n">complejidad</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">fecha_inicio</span><span class="p">,</span> <span class="n">usuario_lider</span><span class="o">=</span><span class="n">lider</span><span class="p">)</span>
+        <span class="n">proyecto</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s">&#39;/administracion/gestion_proyectos/&#39;</span><span class="p">)</span>
 
-<dl class="function">
-<dt id="administracion.views.crear_rol_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">crear_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#crear_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.crear_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite crear un nuevo rol en el sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.crear_tipo_atributo_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">crear_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#crear_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.crear_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite crear un nuevo tipo atributo en el sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.crear_usuario_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">crear_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#crear_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.crear_usuario_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite crear un nuevo usuario en el sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.eliminar_rol_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">eliminar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#eliminar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.eliminar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite eliminar un rol existente en el sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.eliminar_tipo_atributo_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">eliminar_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#eliminar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.eliminar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite eliminar un tipo atributo existente en el sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.eliminar_usuario_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">eliminar_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#eliminar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.eliminar_usuario_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite eliminar un usuario existente en el sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.gestion_roles_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">gestion_roles_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#gestion_roles_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.gestion_roles_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los roles registrados en el sistema, junto con las 
-operaciones disponibles por cada rol.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.gestion_tipos_atributo_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">gestion_tipos_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#gestion_tipos_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.gestion_tipos_atributo_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los tipos atributo registrados en el sistema, junto con las 
-operaciones disponibles por cada tipo atributo.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.gestion_usuarios_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">gestion_usuarios_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#gestion_usuarios_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.gestion_usuarios_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los usuarios registrados en el sistema, junto con las 
-operaciones disponibles por cada usuario.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.modificar_rol_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">modificar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#modificar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.modificar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite modificar un rol existente en el sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.modificar_tipo_atributo_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">modificar_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#modificar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.modificar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite modificar un tipo atributo existente en el sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.modificar_usuario_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">modificar_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#modificar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.modificar_usuario_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite modificar un usuario existente en el sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.permisos_rol_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">permisos_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#permisos_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.permisos_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los permisos pertenecientes a un rol existente en el sistema, 
-junto con las operaciones de agregacion de permisos y eliminacion de permisos.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.quitar_permiso_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">quitar_permiso_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#quitar_permiso_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.quitar_permiso_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite quitar un permiso previamente seleccionado de un rol existente en el 
-sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.quitar_rol_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">quitar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#quitar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.quitar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite quitar un rol previamente seleccionado de un usuario existente en el 
-sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.roles_usuario_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">roles_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#roles_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.roles_usuario_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los roles pertenecientes a un usuario existente en el sistema, 
-junto con las operaciones de agregacion de roles y eliminacion de roles.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.visualizar_rol_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">visualizar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#visualizar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.visualizar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite visualizar todos los campos de un rol existente en el sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.visualizar_tipo_atributo_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">visualizar_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#visualizar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.visualizar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite visualizar todos los campos de un tipo atributo existente en el sistema.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="administracion.views.visualizar_usuario_view">
-<tt class="descclassname">administracion.views.</tt><tt class="descname">visualizar_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#visualizar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.visualizar_usuario_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite visualizar todos los campos de un usuario existente en el sistema.</p>
-</dd></dl>
-
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;proyecto/crear_proyecto.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">}</span>
+<span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;proyecto/crear_proyecto.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -211,12 +245,20 @@ junto con las operaciones de agregacion de roles y eliminacion de roles.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Views</a><ul>
+<li><a class="reference internal" href="#gestion-de-usuarios">Gestión de Usuarios</a></li>
+<li><a class="reference internal" href="#gestion-de-roles">Gestión de Roles</a></li>
+<li><a class="reference internal" href="#gestion-de-tipos-atributo">Gestión de Tipos Atributo</a></li>
+<li><a class="reference internal" href="#gestion-de-proyectos">Gestión de Proyectos</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="models.html"
-                        title="previous chapter">Models</a></p>
-  <h4>Next topic</h4>
   <p class="topless"><a href="forms.html"
-                        title="next chapter">Forms</a></p>
+                        title="previous chapter">Forms</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/modules/views.txt"
@@ -246,13 +288,7 @@ junto con las operaciones de agregacion de roles y eliminacion de roles.</p>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="forms.html" title="Forms"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="models.html" title="Models"
              >previous</a> |</li>
         <li><a href="../index.html">sap 1.0.0 documentation</a> &raquo;</li> 
       </ul>
