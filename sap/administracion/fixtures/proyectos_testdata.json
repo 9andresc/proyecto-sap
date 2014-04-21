@@ -1,0 +1,327 @@
+[
+{
+    "pk": 1, 
+    "model": "administracion.proyecto", 
+    "fields": {
+        "comite_de_cambios": [
+            2
+        ], 
+        "roles": [
+            1
+        ], 
+        "fases": [
+            1
+        ], 
+        "usuario_lider": 1, 
+        "fecha_inicio": "2014-04-19", 
+        "complejidad": 0, 
+        "presupuesto": 0.0, 
+        "descripcion": "", 
+        "nombre": "Proyecto 1", 
+        "usuarios": [
+            1, 
+            2
+        ], 
+        "estado": 1
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.proyecto", 
+    "fields": {
+        "comite_de_cambios": [], 
+        "roles": [], 
+        "fases": [], 
+        "usuario_lider": 2, 
+        "fecha_inicio": "2014-04-19", 
+        "complejidad": 0, 
+        "presupuesto": 0.0, 
+        "descripcion": "", 
+        "nombre": "Proyecto 2", 
+        "usuarios": [], 
+        "estado": 0
+    }
+},
+{
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "gustavo", 
+        "first_name": "Gustavo", 
+        "last_name": "Cabral", 
+        "roles": [
+            1
+        ], 
+        "telefono": "0972-953303", 
+        "is_active": true, 
+        "direccion": "Fernando", 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2014-04-18T21:39:55.891Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$uxaQwo4CAKjM$GRrWX0FFge65ZEAzrRcJvOtAB0ucGrANN+kW9MhWwZ0=", 
+        "estado": 1, 
+        "email": "andrescabral.c@gmail.com", 
+        "date_joined": "2014-04-14T02:58:31.740Z"
+    }
+},
+{
+    "pk": 2, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "rodrigo", 
+        "first_name": "Rodrigo", 
+        "last_name": "Santos", 
+        "roles": [
+            2
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-04-17T04:47:31.954Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$YFe4Jp1eS1Ts$Iy9nEr0p962OcH4/qel48kQUUnqiC/DInyDq5CYXe3c=", 
+        "estado": 1, 
+        "email": "rodrigo@gmail.com", 
+        "date_joined": "2014-04-17T04:47:08.569Z"
+    }
+},
+{
+    "pk": 1, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [
+            1
+        ], 
+        "fecha_inicio": "2014-04-19", 
+        "duracion": 5, 
+        "descripcion": "Describe la fase 1.", 
+        "nombre": "Fase 1", 
+        "estado": 0
+    }
+},
+{
+    "pk": 1, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Tiene todos los permisos del modulo de administraci\u00f3n.", 
+        "nombre": "Administrador", 
+        "permisos": [
+            32, 
+            29, 
+            35, 
+            26, 
+            20,  
+            22, 
+            28, 
+            31, 
+            34, 
+            25, 
+            24, 
+            21, 
+            33, 
+            30, 
+            36, 
+            27, 
+            23
+        ]
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee todos los permisos de gesti\u00f3n de usuarios.", 
+        "nombre": "Usuario", 
+        "permisos": [
+            1, 
+            2, 
+            3, 
+            4, 
+            5, 
+            6, 
+            7, 
+            8
+        ]
+    }
+},
+{
+    "pk": 1, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear usuario"
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar usuario"
+    }
+},
+{
+    "pk": 3, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar usuario"
+    }
+},
+{
+    "pk": 4, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar usuario"
+    }
+},
+{
+    "pk": 5, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Cambiar contrasenha"
+    }
+},
+{
+    "pk": 6, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar roles de usuario"
+    }
+},
+{
+    "pk": 7, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar rol a usuario"
+    }
+},
+{
+    "pk": 8, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar rol de usuario"
+    }
+},
+{
+    "pk": 20, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear proyecto"
+    }
+},
+{
+    "pk": 21, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar proyecto"
+    }
+},
+{
+    "pk": 22, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar proyecto"
+    }
+},
+{
+    "pk": 23, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar proyecto"
+    }
+},
+{
+    "pk": 24, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Iniciar proyecto"
+    }
+},
+{
+    "pk": 25, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar usuarios de proyecto"
+    }
+},
+{
+    "pk": 26, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar usuario a proyecto"
+    }
+},
+{
+    "pk": 27, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar usuario de proyecto"
+    }
+},
+{
+    "pk": 28, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar comite de proyecto"
+    }
+},
+{
+    "pk": 29, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar miembro a comite"
+    }
+},
+{
+    "pk": 30, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar miembro de comite"
+    }
+},
+{
+    "pk": 31, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar fases de proyecto"
+    }
+},
+{
+    "pk": 32, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar fase a proyecto"
+    }
+},
+{
+    "pk": 33, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar fase de proyecto"
+    }
+},
+{
+    "pk": 34, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar roles de proyecto"
+    }
+},
+{
+    "pk": 35, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar rol a proyecto"
+    }
+},
+{
+    "pk": 36, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar rol de proyecto"
+    }
+}
+]
