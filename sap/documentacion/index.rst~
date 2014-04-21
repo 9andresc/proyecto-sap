@@ -26,13 +26,10 @@ Contenido del Modulo de Administracion:
    modules/models.rst
    modules/views.rst
    modules/forms.rst
-   modules/urls.rst
-   modules/admin.rst
 
-Indices y Tablas
-================
 
-* :ref:`genindex`
-* :ref:`modindex`
+Buscar una palabra clave
+========================
+
 * :ref:`search`
 

@@ -23,7 +23,7 @@ import os
 # -- General configuration ------------------------------------------------
 
 # documentation root, use os.path.abspath to make it absolute, like shown here
-sys.path.insert(0,'/home/santos/git/proyecto-sap/sap')
+sys.path.insert(0,'/home/santos/git/proyecto-sap/sap/documentacion')
 # setup Django
 import sap.settings
 from django.conf import settings

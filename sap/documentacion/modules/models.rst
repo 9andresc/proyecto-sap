@@ -1,5 +1,197 @@
 Models
 =======
+
+Import::
+
+	from django.db import models
+	from django.contrib.auth.models import User
  
-.. automodule:: administracion.models
-    :members:
+    
+Permisos
+********
+
+class **Permiso** (args, kwargs)::
+
+    """
+    Clase que describe la estructura de cada instancia de un Permiso, los atributos 
+    que posee un permiso son:
+    
+    nombre: nombre del permiso.
+    """
+    nombre = models.CharField(max_length=50, blank=False)
+    
+    def __unicode__(self):
+        return self.nombre
+    
+    class Meta:
+        ordering = ["nombre"]
+
+
+Roles
+*****
+
+class **Rol** (args, kwargs)::
+
+    """
+    Clase que describe la estructura de cada instancia de un Rol, los atributos 
+    que posee un rol son:
+
+    nombre: nombre del rol.
+    descripción: breve descripción del rol.
+    permisos: permisos que posee el rol.
+    """
+    nombre = models.CharField(max_length=50, blank=False)
+    descripcion = models.TextField(blank=True)
+    permisos = models.ManyToManyField(Permiso, blank=False)
+    
+    def __unicode__(self):
+        return self.nombre
+    
+    class Meta:
+        ordering = ["nombre"]
+
+
+Tipos Atributo
+**************
+
+class **TipoAtributo** (args, kwargs)::
+
+    """
+    Clase que describe la estructura de cada instancia de un Tipo atributo, los atributos 
+    que posee un tipo atributo son:
+
+    nombre: nombre del tipo atributo.
+    tipo de dato: el tipo de dato al que corresponde.
+    descripción: una breve descripción del tipo atributo.
+    valor: valor que posee el tipo atributo.
+    """
+    nombre = models.CharField(max_length=50, blank=False)
+    tipo_dato  = models.IntegerField(max_length=30,choices= TIPO_DATO, default=0)
+    descripcion = models.TextField(blank=True)
+    valor = models.CharField(max_length=50, blank=True)
+    
+    def __unicode__(self):
+        return self.nombre
+    
+    class Meta:
+        ordering = ["nombre"]
+   
+	TIPO_DATO = (
+   			(0, "Numerico"),
+    			(1, "Fecha"),
+    			(2, "Texto"),
+    			(3, "Logico"),
+		    ) 
+
+
+Fases
+*****
+
+class **Fase** (args, kwargs)::
+
+    """
+    Clase que describe la estructura de cada instancia de una Fase, los atributos 
+    que posee una fase son:
+
+    nombre: nombre de la fase.
+    descripción: una breve descripción sobre la fase.
+    estado: estado actual de la fase.
+    fecha de inicio: fecha de inicio de la fase.
+    duración: duración de la fase.
+    roles: roles asociados a la fase.
+    """
+    nombre = models.CharField(max_length=20)
+    descripcion = models.TextField(blank=True)
+    estado = models.IntegerField(max_length=30, choices=ESTADOS_FASE, default=0)
+    fecha_inicio = models.DateField(null=True)
+    duracion = models.IntegerField(null=True, blank=True, default=0)
+    roles = models.ManyToManyField(Rol, null=True, blank=True)
+    
+    def __unicode__(self):
+        return self.nombre
+    
+    class Meta:
+        ordering = ["nombre"]
+
+	ESTADOS_FASE = (
+  			  	(0, "Inactivo"),
+   				 (1, "En curso"),
+   				 (2, "Finalizada"),
+		        )
+
+
+Proyectos
+*********
+
+class **Proyecto** (args, kwargs)::
+
+    """
+    Clase que describe la estructura de cada instancia de un Proyecto, los atributos 
+    que posee un proyecto son:
+
+    nombre: nombre del proyecto.
+    descripción: una breve descripción sobre el proyecto.
+    fecha de inicio: fecha de inicio del proyecto. 
+    estado: estado actual del proyecto.
+    presupuesto: presupuesto total del proyecto.
+    complejidad: nivel de complejidad del proyecto.
+    usuario lider: usuario lider del proyecto.
+    usuarios: usuarios que participan en el proyecto.
+    comite de cambios: comite encargado de aprobar o rechazar solicitudes de cambio.
+    roles: roles asociados al proyecto.
+    fases: fases asociadas al proyecto.
+    """
+    nombre = models.CharField(max_length=50, blank=False)
+    descripcion = models.TextField(blank=True)
+    fecha_inicio = models.DateField()
+    estado = models.IntegerField(max_length=30, choices=ESTADOS_PROYECTO, default=0)
+    presupuesto = models.FloatField(null=True, blank=True, default=0)
+    complejidad = models.IntegerField(null=True, blank=True, default=0)
+    usuario_lider = models.ForeignKey(User, null=True, blank=True)
+    usuarios = models.ManyToManyField(User, related_name='usuarios_proyecto', blank=True)
+    comite_de_cambios = models.ManyToManyField(User, related_name='comite_de_cambios_proyecto', blank=True)
+    roles = models.ManyToManyField(Rol, related_name='roles_proyecto', null=True, blank=True)
+    fases = models.ManyToManyField(Fase, related_name='fases_proyecto', null=True, blank=True)
+    
+    def __unicode__(self):
+        return self.nombre
+    
+    class Meta:
+        ordering = ["nombre"]
+
+	ESTADOS_PROYECTO = (
+  				  	(0, "Inactivo"),
+   				 	(1, "En Curso"),
+    					(2, "Finalizado"),
+		 	   )
+
+
+Usuario
+*******
+
+class *django.contrib.auth.models.* **User** (args, kwargs)::
+
+    """
+    Clase que describe la estructura de cada instancia de un usuario, 
+    extendimos la clase User de django y le agregamos los atributos 
+    adicionales que necesitabamos, los atributos que posee cada usuario son:
+
+    Nombre de usuario: nickname del usuario.
+    Email: dirección de correo electronico del usuario.
+    Nombre/s: nombre real o nombres reales del usuario.
+    Apellido/s: apellido/s del usuario.
+    Estado: registra el estado del usuario.
+    Dirección: ubicación donde reside el usuario.
+    Teléfono: numero telefonico del usuario.
+    Roles: roles que tiene asignado el usuario.
+    """
+
+	ESTADOS_USUARIO = (
+  	 			 (0, "Activo"),
+  	 			 (1, "Inactivo"),
+			  )
+
+    User.add_to_class('estado', models.IntegerField(max_length=30, choices=ESTADOS_USUARIO, default=1))
+    User.add_to_class('telefono', models.CharField(max_length=100, blank=True))
+    User.add_to_class('direccion', models.CharField(max_length=100, blank=True))
+    User.add_to_class('roles', models.ManyToManyField(Rol, null=True, blank=True))
