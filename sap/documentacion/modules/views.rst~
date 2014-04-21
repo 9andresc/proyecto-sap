@@ -163,6 +163,20 @@ def **eliminar_usuario_view** (request, id_usuario)::
         return render_to_response('usuario/eliminar_usuario.html', ctx, context_instance=RequestContext(request))
   
 
+ @login_required(login_url='/login/')
+
+@permiso_requerido(permiso="Visualizar usuario")
+
+def **visualizar_usuario_view** (request, id_usuario)::
+
+    """
+    Permite visualizar todos los campos de un usuario existente en el sistema.
+    """
+    usuario = User.objects.get(id=id_usuario)
+    ctx = {'usuario': usuario}
+    return render_to_response('usuario/visualizar_usuario.html', ctx, context_instance=RequestContext(request))
+ 
+
 Gestión de Roles
 ****************
 
@@ -261,6 +275,20 @@ def **eliminar_rol_view** (request, id_rol)::
     if request.method == "GET":
         ctx = {'rol':rol}
         return render_to_response('rol/eliminar_rol.html', ctx, context_instance=RequestContext(request))
+
+
+@login_required(login_url='/login/')
+
+@permiso_requerido(permiso="Visualizar rol")
+
+def **visualizar_rol_view** (request, id_rol)::
+
+    """
+    Permite visualizar todos los campos de un rol existente en el sistema.
+    """
+    rol = Rol.objects.get(id=id_rol)
+    ctx = {'rol': rol}
+    return render_to_response('rol/visualizar_rol.html', ctx, context_instance=RequestContext(request)) 
 
 
 Gestión de Tipos Atributo
@@ -366,6 +394,20 @@ def **eliminar_tipo_atributo_view** (request, id_tipo_atributo)::
     if request.method == "GET":
         ctx = {'tipo_atributo':tipo_atributo}
         return render_to_response('tipo_atributo/eliminar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+
+
+@login_required(login_url='/login/')
+
+@permiso_requerido(permiso="Visualizar tipo de atributo")
+
+def **visualizar_tipo_atributo_view** (request, id_tipo_atributo)::
+
+    """
+    Permite visualizar todos los campos de un tipo atributo existente en el sistema.
+    """
+    tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
+    ctx = {'tipo_atributo': tipo_atributo}
+    return render_to_response('tipo_atributo/visualizar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
 
 
 Gestión de Proyectos
