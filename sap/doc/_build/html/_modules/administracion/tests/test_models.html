@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>administracion.tests.test_models &mdash; sap 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="sap 1.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">sap 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for administracion.tests.test_models</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span> <span class="nn">administracion.models</span> <span class="kn">import</span> <span class="n">Permiso</span><span class="p">,</span> <span class="n">Rol</span><span class="p">,</span> <span class="n">TipoAtributo</span><span class="p">,</span> <span class="n">Proyecto</span>
+
+<div class="viewcode-block" id="PermisoTest"><a class="viewcode-back" href="../../../administracion.tests.html#administracion.tests.test_models.PermisoTest">[docs]</a><span class="k">class</span> <span class="nc">PermisoTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="PermisoTest.crear_permiso"><a class="viewcode-back" href="../../../administracion.tests.html#administracion.tests.test_models.PermisoTest.crear_permiso">[docs]</a>    <span class="k">def</span> <span class="nf">crear_permiso</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nombre</span><span class="o">=</span><span class="s">&quot;Un permiso&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Permiso</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="PermisoTest.test_creacion_permiso"><a class="viewcode-back" href="../../../administracion.tests.html#administracion.tests.test_models.PermisoTest.test_creacion_permiso">[docs]</a>    <span class="k">def</span> <span class="nf">test_creacion_permiso</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&quot;Prueba de creacion de la clase Permiso&quot;</span>
+        <span class="k">print</span> <span class="s">&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crear_permiso</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Permiso</span><span class="p">),</span> <span class="s">&quot;La variable p no es instancia de la clase Permiso.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">__unicode__</span><span class="p">(),</span> <span class="n">p</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="s">&quot;El campo nombre de la variable p no coincide con el valor retornado por la funcion __unicode__().&quot;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&quot;Prueba de creacion de la clase Permiso sin errores</span><span class="se">\n</span><span class="s">&quot;</span>
+        </div></div>
+<div class="viewcode-block" id="RolTest"><a class="viewcode-back" href="../../../administracion.tests.html#administracion.tests.test_models.RolTest">[docs]</a><span class="k">class</span> <span class="nc">RolTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="RolTest.crear_rol"><a class="viewcode-back" href="../../../administracion.tests.html#administracion.tests.test_models.RolTest.crear_rol">[docs]</a>    <span class="k">def</span> <span class="nf">crear_rol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nombre</span><span class="o">=</span><span class="s">&quot;Un rol&quot;</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s">&quot;Descripcion de un rol.&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Rol</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="n">descripcion</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="RolTest.test_creacion_rol"><a class="viewcode-back" href="../../../administracion.tests.html#administracion.tests.test_models.RolTest.test_creacion_rol">[docs]</a>    <span class="k">def</span> <span class="nf">test_creacion_rol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&quot;Prueba de creacion de la clase Rol&quot;</span>
+        <span class="k">print</span> <span class="s">&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crear_rol</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Rol</span><span class="p">),</span> <span class="s">&quot;La variable r no es instancia de la clase Rol.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">__unicode__</span><span class="p">(),</span> <span class="n">r</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="s">&quot;El campo nombre de la variable r no coincide con el valor retornado por la funcion __unicode__().&quot;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&quot;Prueba de creacion de la clase Rol sin errores</span><span class="se">\n</span><span class="s">&quot;</span>
+        </div></div>
+<div class="viewcode-block" id="TipoAtributoTest"><a class="viewcode-back" href="../../../administracion.tests.html#administracion.tests.test_models.TipoAtributoTest">[docs]</a><span class="k">class</span> <span class="nc">TipoAtributoTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TipoAtributoTest.crear_tipo_atributo"><a class="viewcode-back" href="../../../administracion.tests.html#administracion.tests.test_models.TipoAtributoTest.crear_tipo_atributo">[docs]</a>    <span class="k">def</span> <span class="nf">crear_tipo_atributo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nombre</span><span class="o">=</span><span class="s">&quot;Un tipo de atributo&quot;</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s">&quot;Descripcion de un tipo de atributo.&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TipoAtributo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="n">descripcion</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="TipoAtributoTest.test_creacion_tipo_atributo"><a class="viewcode-back" href="../../../administracion.tests.html#administracion.tests.test_models.TipoAtributoTest.test_creacion_tipo_atributo">[docs]</a>    <span class="k">def</span> <span class="nf">test_creacion_tipo_atributo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&quot;Prueba de creacion de la clase TipoAtributo&quot;</span>
+        <span class="k">print</span> <span class="s">&quot;&quot;</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crear_tipo_atributo</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">TipoAtributo</span><span class="p">),</span> <span class="s">&quot;La variable t no es instancia de la clase TipoAtributo.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">__unicode__</span><span class="p">(),</span> <span class="n">t</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="s">&quot;El campo nombre de la variable t no coincide con el valor retornado por la funcion __unicode__().&quot;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&quot;Prueba de creacion de la clase TipoAtributo sin errores</span><span class="se">\n</span><span class="s">&quot;</span>
+        </div></div>
+<div class="viewcode-block" id="ProyectoTest"><a class="viewcode-back" href="../../../administracion.tests.html#administracion.tests.test_models.ProyectoTest">[docs]</a><span class="k">class</span> <span class="nc">ProyectoTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="ProyectoTest.crear_proyecto"><a class="viewcode-back" href="../../../administracion.tests.html#administracion.tests.test_models.ProyectoTest.crear_proyecto">[docs]</a>    <span class="k">def</span> <span class="nf">crear_proyecto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nombre</span><span class="o">=</span><span class="s">&quot;Un proyecto&quot;</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="s">&quot;Descripcion de un proyecto.&quot;</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="s">&quot;2014-12-19&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="n">descripcion</span><span class="p">,</span> <span class="n">fecha_inicio</span><span class="o">=</span><span class="n">fecha_inicio</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="ProyectoTest.test_creacion_proyecto"><a class="viewcode-back" href="../../../administracion.tests.html#administracion.tests.test_models.ProyectoTest.test_creacion_proyecto">[docs]</a>    <span class="k">def</span> <span class="nf">test_creacion_proyecto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&quot;Prueba de creacion de la clase Proyecto&quot;</span>
+        <span class="k">print</span> <span class="s">&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crear_proyecto</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Proyecto</span><span class="p">),</span> <span class="s">&quot;La variable p no es instancia de la clase Proyecto.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">__unicode__</span><span class="p">(),</span> <span class="n">p</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="s">&quot;El campo nombre de la variable p no coincide con el valor retornado por la funcion __unicode__().&quot;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&quot;Prueba de creacion de la clase Proyecto sin errores</span><span class="se">\n</span><span class="s">&quot;</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">sap 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Rodrigo Santos | Gustavo Cabral.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
