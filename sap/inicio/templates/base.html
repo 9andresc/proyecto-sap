@@ -15,6 +15,11 @@
 	<script src="/static/aplicaciones/js/jquery.min.js"></script>
 	<script src="/static/aplicaciones/bootstrap/js/bootstrap.min.js"></script>
 	<script src="/static/aplicaciones/bootstrap/js/bootstrap-datepicker.js"></script>
+	<style type="text/css">
+		.black {
+    		color: black;
+		}
+	</style>
 </head>
 <body>
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -40,6 +45,7 @@
                 			<li><a href="{% url 'vista_gestion_roles' %}">Gestionar roles</a></li>
                 			<li><a href="{% url 'vista_gestion_tipos_atributo' %}">Gestionar tipos atributo</a></li>
                 			<li><a href="{% url 'vista_gestion_proyectos' %}">Gestionar proyectos</a></li>
+                			<li><a href="{% url 'vista_gestion_fases' %}">Gestionar fases</a></li>
               			</ul>
             		</li>
 					{% else %}

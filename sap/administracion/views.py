@@ -791,3 +791,33 @@ def iniciar_proyecto_view(request, id_proyecto):
     else:
         ctx = {'proyecto':proyecto, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'lider_valido':lider_valido, 'comite_valido':comite_valido, 'fases_valido':fases_valido, 'roles_valido':roles_valido}
         return render_to_response('proyecto/iniciar_proyecto.html', ctx, context_instance=RequestContext(request))
+    
+@login_required(login_url='/login/')
+def gestion_fases_view(request):
+
+    fases = Fase.objects.all()
+    ctx = {'fases': fases}
+    return render_to_response('fase/gestion_fases.html', ctx, context_instance=RequestContext(request))
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
