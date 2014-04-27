@@ -1,5 +1,6 @@
 from administracion.models import Rol, Permiso
-from django.http.response import HttpResponseRedirect
+from django.template import RequestContext
+from django.shortcuts import render_to_response
 from functools import wraps
 
 def permiso_requerido(permiso):
@@ -11,6 +12,7 @@ def permiso_requerido(permiso):
                 for perm in permisos:
                     if perm.nombre == permiso:
                         return func(request, *args, **kwargs)
-            return HttpResponseRedirect('/acceso_denegado/')
+            ctx = {'permiso':permiso}
+            return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
         return wraps(func)(inner_decorator)
     return decorator
