@@ -1,3 +1,4 @@
+import datetime
 from django import forms
 from django.contrib.auth.models import User
 from administracion.models import Rol
@@ -28,7 +29,7 @@ class CrearUsuarioForm(forms.Form):
             usuario = User.objects.get(username=username)
         except User.DoesNotExist:
             return username
-        raise forms.ValidationError('Nombre de usuario ya registrado')
+        raise forms.ValidationError('Nombre de usuario ya registrado.')
     
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -36,18 +37,18 @@ class CrearUsuarioForm(forms.Form):
             User.objects.get(email=email)
         except User.DoesNotExist:
             return email
-        raise forms.ValidationError('Email ya registrado')
+        raise forms.ValidationError('Email ya registrado.')
     
     def clean_password_dos(self):
         password_dos = self.cleaned_data['password_dos']
         if 'password_uno' in self.cleaned_data:
             password_uno = self.cleaned_data['password_uno']
         else:
-            raise forms.ValidationError('Las claves no coinciden')
+            raise forms.ValidationError('Las claves no coinciden.')
         if password_dos == password_uno:
             pass
         else:
-            raise forms.ValidationError('Las claves no coinciden')
+            raise forms.ValidationError('Las claves no coinciden.')
     
     
         
@@ -70,7 +71,7 @@ class ModificarUsuarioForm(forms.Form):
                 return username
         except User.DoesNotExist:
             return username
-        raise forms.ValidationError('Nombre de usuario ya registrado')
+        raise forms.ValidationError('Nombre de usuario ya registrado.')
         
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -80,7 +81,7 @@ class ModificarUsuarioForm(forms.Form):
                 return email
         except User.DoesNotExist:
             return email
-        raise forms.ValidationError('Email ya registrado')
+        raise forms.ValidationError('Email ya registrado.')
     
 class CambiarContrasenhaForm(forms.Form):
     password_uno = forms.CharField(label="Contrasenha", required=True)
@@ -91,11 +92,11 @@ class CambiarContrasenhaForm(forms.Form):
         if 'password_uno' in self.cleaned_data:
             password_uno = self.cleaned_data['password_uno']
         else:
-            raise forms.ValidationError('Las claves no coinciden')
+            raise forms.ValidationError('Las claves no coinciden.')
         if password_dos == password_uno:
             pass
         else:
-            raise forms.ValidationError('Las claves no coinciden')
+            raise forms.ValidationError('Las claves no coinciden.')
     
         
 class CrearRolForm(forms.Form):
@@ -111,7 +112,7 @@ class CrearRolForm(forms.Form):
             rol = Rol.objects.get(nombre=nombre)
         except Rol.DoesNotExist:
             return nombre
-        raise forms.ValidationError('Nombre de rol ya registrado')
+        raise forms.ValidationError('Nombre de rol ya registrado.')
 
 class ModificarRolForm(forms.Form):
     """
@@ -128,7 +129,7 @@ class ModificarRolForm(forms.Form):
                 return nombre 
         except Rol.DoesNotExist:
             return nombre 
-        raise forms.ValidationError('Nombre de rol ya registrado')
+        raise forms.ValidationError('Nombre de rol ya registrado.')
 
 class CrearTipoAtributoForm(forms.Form):
     """
@@ -144,7 +145,7 @@ class CrearTipoAtributoForm(forms.Form):
             tipo_atributo = TipoAtributo.objects.get(nombre=nombre)
         except TipoAtributo.DoesNotExist:
             return nombre
-        raise forms.ValidationError('Nombre de tipo atributo ya registrado')
+        raise forms.ValidationError('Nombre de tipo atributo ya registrado.')
 
 class ModificarTipoAtributoForm(forms.Form):
     """
@@ -162,7 +163,7 @@ class ModificarTipoAtributoForm(forms.Form):
                 return nombre 
         except TipoAtributo.DoesNotExist:
             return nombre 
-        raise forms.ValidationError('Nombre de tipo atributo ya registrado')
+        raise forms.ValidationError('Nombre de tipo atributo ya registrado.')
     
 def opcion_lider():
     usuarios = User.objects.all()
@@ -190,7 +191,28 @@ class CrearProyectoForm(forms.Form):
             proyecto = Proyecto.objects.get(nombre=nombre)
         except Proyecto.DoesNotExist:
             return nombre
-        raise forms.ValidationError('Nombre de proyecto ya registrado')
+        raise forms.ValidationError('Nombre de proyecto ya registrado.')
+    
+    def clean_complejidad(self):
+        complejidad = self.cleaned_data['complejidad']
+        if complejidad > 0 and complejidad <= 10:
+            return complejidad
+        else:
+            raise forms.ValidationError('El valor de la complejidad debe estar en el rango [1, 10].')
+        
+    def clean_presupuesto(self):
+        presupuesto = self.cleaned_data['presupuesto']
+        if presupuesto >= 0:
+            return presupuesto
+        else:
+            raise forms.ValidationError('El valor del presupuesto debe ser igual o mayor a cero.')
+        
+    def clean_fecha_inicio(self):
+        fecha_inicio = self.cleaned_data['fecha_inicio']
+        if fecha_inicio >= datetime.date.today():
+            return fecha_inicio
+        else:
+            raise forms.ValidationError('La fecha introducida es anterior a la fecha actual. Ingrese una fecha posterior.')
 
 class ModificarProyectoForm(forms.Form):
     """
@@ -211,4 +233,26 @@ class ModificarProyectoForm(forms.Form):
                 return nombre 
         except Proyecto.DoesNotExist:
             return nombre 
-        raise forms.ValidationError('Nombre de proyecto ya registrado')
+        raise forms.ValidationError('Nombre de proyecto ya registrado.')
+    
+    def clean_complejidad(self):
+        complejidad = self.cleaned_data['complejidad']
+        if complejidad > 0 and complejidad <= 10:
+            return complejidad
+        else:
+            raise forms.ValidationError('El valor de la complejidad debe estar en el rango [1, 10].')
+        
+    def clean_presupuesto(self):
+        presupuesto = self.cleaned_data['presupuesto']
+        if presupuesto >= 0:
+            return presupuesto
+        else:
+            raise forms.ValidationError('El valor del presupuesto debe ser igual o mayor a cero.')
+        
+    def clean_fecha_inicio(self):
+        nombre = self.cleaned_data['nombre']
+        fecha_inicio = self.cleaned_data['fecha_inicio']
+        if fecha_inicio >= datetime.date.today() or fecha_inicio == Proyecto.objects.get(nombre=nombre).fecha_inicio:
+            return fecha_inicio
+        else:
+            raise forms.ValidationError('La fecha introducida es distinta a la fecha original o anterior a la fecha actual. Ingrese una fecha valida.')

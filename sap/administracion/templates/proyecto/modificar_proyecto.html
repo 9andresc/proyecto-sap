@@ -21,13 +21,7 @@
   							<li><b>{{ field.label }}</b></li>
   								{% for error in field.errors %}
     								<ul>
-    									{% if error == "This field is required." %}
-      										<li>No has ingresado este campo.</li>
-      									{% elif error == "Enter a valid date."%}
-      										<li>Ingresa una fecha válida. Formato: día/mes/año. Ejemplo: 14/12/2014.</li>
-      									{% else %}
-      										<li>{{ error }}</li>
-      									{% endif %}
+      									<li>{{ error }}</li>
     								</ul>
     							{% endfor %}
   							</li>
@@ -65,13 +59,8 @@
         <br>
         
         <div class="input-group">
-			<span class="input-group-addon"><b>Fecha de inicio</b></span>
-            <input type="text" class="form-control" value="{{ proyecto.fecha_inicio }}" disabled="disabled">
-        </div>
-        <br>
-        <div class="input-group">
-			<span class="input-group-addon"><b>Modificar fecha de inicio</b></span>
-            <input type="text" class="form-control" placeholder="Elija una fecha" id="fecha" name="fecha_inicio">
+			<span class="input-group-addon"><b>* Fecha de inicio</b></span>
+            <input type="text" class="form-control" value="{{ proyecto.fecha_inicio|date:"d/m/Y" }}" id="fecha" name="fecha_inicio">
         </div>
         <script type="text/javascript">
             // When the document is ready
@@ -86,12 +75,12 @@
         <br>
         
         <div class="input-group">
-			<span class="input-group-addon"><b>Presupuesto</b></span>
-			<input type="text" class="form-control" id="presupuesto" name="presupuesto" value="{{ proyecto.presupuesto }}">
+			<span class="input-group-addon"><b>* Presupuesto</b></span>
+			<input type="text" class="form-control" id="presupuesto" name="presupuesto" value="{{ proyecto.presupuesto|stringformat:"f" }}">
         </div>
         <br>
         <div class="input-group">
-			<span class="input-group-addon"><b>Complejidad</b></span>
+			<span class="input-group-addon"><b>* Complejidad</b></span>
 			<input type="text" class="form-control" id="complejidad" name="complejidad" value="{{ proyecto.complejidad }}">
         </div>
 		<br>

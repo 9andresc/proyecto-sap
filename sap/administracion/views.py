@@ -496,7 +496,7 @@ def eliminar_proyecto_view(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     valido = True
-    if proyecto.estado == 2:
+    if proyecto.estado == 2 or proyecto.estado == 1:
         valido = False
     if request.method == "POST":
         if valido == True:

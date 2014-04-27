@@ -40,7 +40,7 @@
         <br>
         <div class="input-group">
 			<span class="input-group-addon"><b>Presupuesto</b></span>
-			<input type="text" class="form-control" id="presupuesto" name="presupuesto" value="{{ proyecto.presupuesto }}" disabled="disabled">
+			<input type="text" class="form-control" id="presupuesto" name="presupuesto" value="{{ proyecto.presupuesto|stringformat:"f" }}" disabled="disabled">
         </div>
         <br>
         <div class="input-group">
