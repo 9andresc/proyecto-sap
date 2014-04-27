@@ -3,7 +3,7 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if valido %}
+		{% if inicio_valido %}
 			<div class="panel panel-success">
       			<div class="panel-heading">
         			<h3 class="panel-title">¡Éxito!</h3>
@@ -18,14 +18,24 @@
         			<h3 class="panel-title">¡Alto ahí!</h3>
       			</div>
       			<div class="panel-body">
-        			El proyecto {{ proyecto.nombre }} no cumple con todos los requisitos para iniciar. A continuación, un listado de todos los requisitos a cumplir:
+        			El proyecto {{ proyecto.nombre }} no cumple con todos los requisitos para iniciar. A continuación, un listado de todos los requisitos no cumplidos:
 					<br><br>
 					<ul class="list-styled">
+						{% if estado_valido == False %}
 						<li>El proyecto debe estar en estado Inactivo.</li>
+						{% endif %}
+						{% if lider_valido == False %}
 						<li>El proyecto debe poseer un lider.</li>
+						{% endif %}
+						{% if comite_valido == False %}
         				<li>El proyecto debe poseer al menos un miembro en su comite de cambios.</li>
+        				{% endif %}
+        				{% if fases_valido == False %}
         				<li>El proyecto debe poseer al menos una fase.</li>
+        				{% endif %}
+        				{% if roles_valido == False %}
         				<li>El proyecto debe poseer al menos un rol.</li>
+        				{% endif %}
 					</ul>        			
       			</div>
       		</div>

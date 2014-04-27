@@ -759,13 +759,35 @@ def iniciar_proyecto_view(request, id_proyecto):
         - El proyecto debe poseer al menos un rol.
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
-    valido = False
-    if proyecto.estado == 0 and proyecto.usuario_lider and proyecto.comite_de_cambios.count() > 0 and proyecto.fases.count() > 0 and proyecto.roles.count() > 0:
-        valido = True
+    inicio_valido = True
+    estado_valido = True
+    comite_valido = True
+    fases_valido = True
+    roles_valido = True
+    
+    if proyecto.estado != 0:
+        estado_valido = False
+        inicio_valido = False
+    if proyecto.usuario_lider:
+        lider_valido = True
+    else:
+        lider_valido = False
+        inicio_valido = False
+    if proyecto.comite_de_cambios.count() == 0:
+        comite_valido = False
+        inicio_valido = False
+    if proyecto.fases.count() == 0:
+        fases_valido = False
+        inicio_valido = False
+    if proyecto.roles.count() == 0:
+        roles_valido = False
+        inicio_valido = False
+    
+    if inicio_valido:
         proyecto.estado = 1
         proyecto.save()
-        ctx = {'proyecto':proyecto, 'valido':valido}
+        ctx = {'proyecto':proyecto, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'lider_valido':lider_valido, 'comite_valido':comite_valido, 'fases_valido':fases_valido, 'roles_valido':roles_valido}
         return render_to_response('proyecto/iniciar_proyecto.html', ctx, context_instance=RequestContext(request))
     else:
-        ctx = {'proyecto':proyecto, 'valido':valido}
+        ctx = {'proyecto':proyecto, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'lider_valido':lider_valido, 'comite_valido':comite_valido, 'fases_valido':fases_valido, 'roles_valido':roles_valido}
         return render_to_response('proyecto/iniciar_proyecto.html', ctx, context_instance=RequestContext(request))
