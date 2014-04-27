@@ -1,0 +1,527 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>administracion.tests package &mdash; sap 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="sap 1.0.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">sap 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="administracion-tests-package">
+<h1>administracion.tests package<a class="headerlink" href="#administracion-tests-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-administracion.tests.test_forms">
+<span id="administracion-tests-test-forms-module"></span><h2>administracion.tests.test_forms module<a class="headerlink" href="#module-administracion.tests.test_forms" title="Permalink to this headline">¶</a></h2>
+<p>from django.test import TestCase
+from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm</p>
+<dl class="docutils">
+<dt>class CrearUsuarioFormTest(TestCase):</dt>
+<dd><dl class="first last docutils">
+<dt>def test_formulario_valido(self):</dt>
+<dd>data = {&#8216;username&#8217;: &#8216;rodrigo&#8217;, &#8216;email&#8217;: <a class="reference external" href="mailto:'rodrigo&#37;&#52;&#48;gmail&#46;com">'rodrigo<span>&#64;</span>gmail<span>&#46;</span>com</a>&#8216;, &#8216;password_uno&#8217;: &#8216;santos&#8217;, &#8216;password_dos&#8217;: &#8216;santos&#8217;, &#8216;first_name&#8217;: &#8216;Rodrigo&#8217;, &#8216;last_name&#8217;: &#8216;Santos&#8217;,}
+form = CrearUsuarioForm(data=data)
+self.assertTrue(form.is_valid(), &#8220;El formulario de creacion de usuario no resulto valido.&#8221;)</dd>
+<dt>def test_formulario_invalido(self):</dt>
+<dd>data = {&#8216;username&#8217;: &#8216;rodrigo&#8217;, &#8216;email&#8217;: <a class="reference external" href="mailto:'rodrigo&#37;&#52;&#48;gmail&#46;com">'rodrigo<span>&#64;</span>gmail<span>&#46;</span>com</a>&#8216;, &#8216;password_uno&#8217;: &#8216;santosss&#8217;, &#8216;password_dos&#8217;: &#8216;santos&#8217;, &#8216;first_name&#8217;: &#8216;Rodrigo&#8217;, &#8216;last_name&#8217;: &#8216;Santos&#8217;,}
+form = CrearUsuarioForm(data=data)
+self.assertFalse(form.is_valid(), &#8220;El formulario de creacion de usuario resulto valido.&#8221;)</dd>
+</dl>
+</dd>
+<dt>class ModificarUsuarioFormTest(TestCase):</dt>
+<dd><dl class="first last docutils">
+<dt>def test_formulario_valido(self):</dt>
+<dd>data = {&#8216;username&#8217;: &#8216;rodrigo&#8217;, &#8216;email&#8217;: <a class="reference external" href="mailto:'rodrigo&#37;&#52;&#48;gmail&#46;com">'rodrigo<span>&#64;</span>gmail<span>&#46;</span>com</a>&#8216;, &#8216;password_uno&#8217;: &#8216;santos&#8217;, &#8216;password_dos&#8217;: &#8216;santos&#8217;, &#8216;first_name&#8217;: &#8216;Rodrigo&#8217;, &#8216;last_name&#8217;: &#8216;Santos&#8217;,}
+form = ModificarUsuarioForm(data=data)
+self.assertTrue(form.is_valid(), &#8220;El formulario de modificacion de usuario no resulto valido.&#8221;)</dd>
+<dt>def test_formulario_invalido(self):</dt>
+<dd>data = {&#8216;username&#8217;: &#8216;rodrigo&#8217;, &#8216;email&#8217;: &#8216;rodrigogmail.com&#8217;, &#8216;first_name&#8217;: &#8216;Rodrigo&#8217;, &#8216;last_name&#8217;: &#8216;Santos&#8217;,}
+form = ModificarUsuarioForm(data=data)
+self.assertFalse(form.is_valid(), &#8220;El formulario de modificacion de usuario resulto valido.&#8221;)</dd>
+</dl>
+</dd>
+<dt>class CambiarContrasenhaFormTest(TestCase):</dt>
+<dd><dl class="first last docutils">
+<dt>def test_formulario_valido(self):</dt>
+<dd>data = {&#8216;password_uno&#8217;: &#8216;santos&#8217;, &#8216;password_dos&#8217;: &#8216;santos&#8217;}
+form = CambiarContrasenhaForm(data=data)
+self.assertTrue(form.is_valid(), &#8220;El formulario de cambio de contrasenha no resulto valido.&#8221;)</dd>
+<dt>def test_formulario_invalido(self):</dt>
+<dd>data = {&#8216;password_uno&#8217;: &#8216;santoss&#8217;, &#8216;password_dos&#8217;: &#8216;santos&#8217;}
+form = CambiarContrasenhaForm(data=data)
+self.assertFalse(form.is_valid(), &#8220;El formulario de cambio de contrasenha resulto valido.&#8221;)</dd>
+</dl>
+</dd>
+<dt>class CrearRolFormTest(TestCase):</dt>
+<dd><p class="first">fixtures = [&#8216;roles_testdata.json&#8217;]</p>
+<dl class="last docutils">
+<dt>def test_formulario_valido(self):</dt>
+<dd>data = {&#8216;nombre&#8217;: &#8216;Rol&#8217;, &#8216;descripcion&#8217;: &#8216;Descripcion de un rol.&#8217;}
+form = CrearRolForm(data=data)
+self.assertTrue(form.is_valid(), &#8220;El formulario de creacion de rol no resulto valido.&#8221;)</dd>
+<dt>def test_formulario_invalido(self):</dt>
+<dd>data = {&#8216;nombre&#8217;: &#8216;Administrador&#8217;, &#8216;descripcion&#8217;: &#8216;Posee todos los permisos del modulo de administracion.&#8217;}
+form = CrearRolForm(data=data)
+self.assertFalse(form.is_valid(), &#8220;El formulario de creacion de rol resulto valido.&#8221;)</dd>
+</dl>
+</dd>
+<dt>class ModificarRolFormTest(TestCase):</dt>
+<dd><p class="first">fixtures = [&#8216;roles_testdata.json&#8217;]</p>
+<dl class="last docutils">
+<dt>def test_formulario_valido(self):</dt>
+<dd>data = {&#8216;nombre&#8217;: &#8216;Rol&#8217;, &#8216;descripcion&#8217;: &#8216;Descripcion de un rol.&#8217;}
+form = ModificarRolForm(data=data)
+self.assertTrue(form.is_valid(), &#8220;El formulario de modificacion de rol no resulto valido.&#8221;)</dd>
+<dt>def test_formulario_invalido(self):</dt>
+<dd>data = {&#8216;nombre&#8217;: &#8216;Administrador&#8217;, &#8216;descripcion&#8217;: &#8216;Posee todos los permisos del modulo de administracion.&#8217;}
+form = ModificarRolForm(data=data)
+self.assertFalse(form.is_valid(), &#8220;El formulario de modificacion de rol resulto valido.&#8221;)</dd>
+</dl>
+</dd>
+<dt>class CrearTipoAtributoFormTest(TestCase):</dt>
+<dd><dl class="first last docutils">
+<dt>def test_formulario_valido(self):</dt>
+<dd>data = {&#8216;nombre&#8217;: &#8216;Fecha de creacion&#8217;, &#8216;descripcion&#8217;: &#8216;Descripcion de un tipo de atributo.&#8217;}
+form = CrearTipoAtributoForm(data=data)
+self.assertTrue(form.is_valid(), &#8220;El formulario de creacion de tipo de atributo no resulto valido.&#8221;)</dd>
+<dt>def test_formulario_invalido(self):</dt>
+<dd>data = {&#8216;nombre&#8217;: &#8216;Fecha de vencimiento&#8217;, &#8216;descripcion&#8217;: &#8216;Describe la fecha de vencimiento de un item.&#8217;}
+form = CrearTipoAtributoForm(data=data)
+self.assertFalse(form.is_valid(), &#8220;El formulario de creacion de tipo de atributo resulto valido.&#8221;)</dd>
+</dl>
+</dd>
+<dt>class ModificarTipoAtributoFormTest(TestCase):</dt>
+<dd><dl class="first last docutils">
+<dt>def test_formulario_valido(self):</dt>
+<dd>data = {&#8216;nombre&#8217;: &#8216;Fecha de creacion&#8217;, &#8216;descripcion&#8217;: &#8216;Descripcion de un tipo de atributo.&#8217;}
+form = ModificarTipoAtributoForm(data=data)
+self.assertTrue(form.is_valid(), &#8220;El formulario de modificacion de tipo de atributo no resulto valido.&#8221;)</dd>
+<dt>def test_formulario_invalido(self):</dt>
+<dd>data = {&#8216;nombre&#8217;: &#8216;Fecha de vencimiento&#8217;, &#8216;descripcion&#8217;: &#8216;Describe la fecha de vencimiento de un item.&#8217;}
+form = ModificarTipoAtributoForm(data=data)
+self.assertFalse(form.is_valid(), &#8220;El formulario de modificacion de tipo de atributo resulto valido.&#8221;)</dd>
+</dl>
+</dd>
+</dl>
+</div>
+<div class="section" id="module-administracion.tests.test_models">
+<span id="administracion-tests-test-models-module"></span><h2>administracion.tests.test_models module<a class="headerlink" href="#module-administracion.tests.test_models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="administracion.tests.test_models.PermisoTest">
+<em class="property">class </em><tt class="descclassname">administracion.tests.test_models.</tt><tt class="descname">PermisoTest</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_models.html#PermisoTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_models.PermisoTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="administracion.tests.test_models.PermisoTest.crear_permiso">
+<tt class="descname">crear_permiso</tt><big>(</big><em>nombre='Un permiso'</em><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_models.html#PermisoTest.crear_permiso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_models.PermisoTest.crear_permiso" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_models.PermisoTest.test_creacion_permiso">
+<tt class="descname">test_creacion_permiso</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_models.html#PermisoTest.test_creacion_permiso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_models.PermisoTest.test_creacion_permiso" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="administracion.tests.test_models.ProyectoTest">
+<em class="property">class </em><tt class="descclassname">administracion.tests.test_models.</tt><tt class="descname">ProyectoTest</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_models.html#ProyectoTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_models.ProyectoTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="administracion.tests.test_models.ProyectoTest.crear_proyecto">
+<tt class="descname">crear_proyecto</tt><big>(</big><em>nombre='Un proyecto'</em>, <em>descripcion='Descripcion de un proyecto.'</em>, <em>fecha_inicio='2014-12-19'</em><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_models.html#ProyectoTest.crear_proyecto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_models.ProyectoTest.crear_proyecto" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_models.ProyectoTest.test_creacion_proyecto">
+<tt class="descname">test_creacion_proyecto</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_models.html#ProyectoTest.test_creacion_proyecto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_models.ProyectoTest.test_creacion_proyecto" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="administracion.tests.test_models.RolTest">
+<em class="property">class </em><tt class="descclassname">administracion.tests.test_models.</tt><tt class="descname">RolTest</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_models.html#RolTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_models.RolTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="administracion.tests.test_models.RolTest.crear_rol">
+<tt class="descname">crear_rol</tt><big>(</big><em>nombre='Un rol'</em>, <em>descripcion='Descripcion de un rol.'</em><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_models.html#RolTest.crear_rol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_models.RolTest.crear_rol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_models.RolTest.test_creacion_rol">
+<tt class="descname">test_creacion_rol</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_models.html#RolTest.test_creacion_rol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_models.RolTest.test_creacion_rol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="administracion.tests.test_models.TipoAtributoTest">
+<em class="property">class </em><tt class="descclassname">administracion.tests.test_models.</tt><tt class="descname">TipoAtributoTest</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_models.html#TipoAtributoTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_models.TipoAtributoTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="method">
+<dt id="administracion.tests.test_models.TipoAtributoTest.crear_tipo_atributo">
+<tt class="descname">crear_tipo_atributo</tt><big>(</big><em>nombre='Un tipo de atributo'</em>, <em>descripcion='Descripcion de un tipo de atributo.'</em><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_models.html#TipoAtributoTest.crear_tipo_atributo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_models.TipoAtributoTest.crear_tipo_atributo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_models.TipoAtributoTest.test_creacion_tipo_atributo">
+<tt class="descname">test_creacion_tipo_atributo</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_models.html#TipoAtributoTest.test_creacion_tipo_atributo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_models.TipoAtributoTest.test_creacion_tipo_atributo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-administracion.tests.test_views">
+<span id="administracion-tests-test-views-module"></span><h2>administracion.tests.test_views module<a class="headerlink" href="#module-administracion.tests.test_views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="administracion.tests.test_views.ProyectoTestCase">
+<em class="property">class </em><tt class="descclassname">administracion.tests.test_views.</tt><tt class="descname">ProyectoTestCase</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="attribute">
+<dt id="administracion.tests.test_views.ProyectoTestCase.fixtures">
+<tt class="descname">fixtures</tt><em class="property"> = ['proyectos_testdata.json']</em><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_comite_proyecto_view">
+<tt class="descname">test_comite_proyecto_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_comite_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_comite_proyecto_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_confirmacion_proyecto_agregar_fase_view">
+<tt class="descname">test_confirmacion_proyecto_agregar_fase_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_confirmacion_proyecto_agregar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_confirmacion_proyecto_agregar_fase_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_confirmacion_proyecto_agregar_miembro_view">
+<tt class="descname">test_confirmacion_proyecto_agregar_miembro_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_confirmacion_proyecto_agregar_miembro_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_confirmacion_proyecto_agregar_miembro_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_confirmacion_proyecto_agregar_rol_view">
+<tt class="descname">test_confirmacion_proyecto_agregar_rol_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_confirmacion_proyecto_agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_confirmacion_proyecto_agregar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_confirmacion_proyecto_agregar_usuario_view">
+<tt class="descname">test_confirmacion_proyecto_agregar_usuario_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_confirmacion_proyecto_agregar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_confirmacion_proyecto_agregar_usuario_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_crear_proyecto_view">
+<tt class="descname">test_crear_proyecto_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_crear_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_crear_proyecto_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_eliminar_proyecto_view">
+<tt class="descname">test_eliminar_proyecto_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_eliminar_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_eliminar_proyecto_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_fases_proyecto_view">
+<tt class="descname">test_fases_proyecto_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_fases_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_fases_proyecto_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_gestion_proyectos_view">
+<tt class="descname">test_gestion_proyectos_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_gestion_proyectos_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_gestion_proyectos_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_iniciar_proyecto_view">
+<tt class="descname">test_iniciar_proyecto_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_iniciar_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_iniciar_proyecto_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_modificar_proyecto_view">
+<tt class="descname">test_modificar_proyecto_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_modificar_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_modificar_proyecto_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_proyecto_quitar_fase_view">
+<tt class="descname">test_proyecto_quitar_fase_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_proyecto_quitar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_proyecto_quitar_fase_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_proyecto_quitar_miembro_view">
+<tt class="descname">test_proyecto_quitar_miembro_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_proyecto_quitar_miembro_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_proyecto_quitar_miembro_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_proyecto_quitar_rol_view">
+<tt class="descname">test_proyecto_quitar_rol_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_proyecto_quitar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_proyecto_quitar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_proyecto_quitar_usuario_view">
+<tt class="descname">test_proyecto_quitar_usuario_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_proyecto_quitar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_proyecto_quitar_usuario_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_roles_proyecto_view">
+<tt class="descname">test_roles_proyecto_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_roles_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_roles_proyecto_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.ProyectoTestCase.test_usuarios_proyecto_view">
+<tt class="descname">test_usuarios_proyecto_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#ProyectoTestCase.test_usuarios_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.ProyectoTestCase.test_usuarios_proyecto_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="administracion.tests.test_views.RolTestCase">
+<em class="property">class </em><tt class="descclassname">administracion.tests.test_views.</tt><tt class="descname">RolTestCase</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#RolTestCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.RolTestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="attribute">
+<dt id="administracion.tests.test_views.RolTestCase.fixtures">
+<tt class="descname">fixtures</tt><em class="property"> = ['usuarios_testdata.json']</em><a class="headerlink" href="#administracion.tests.test_views.RolTestCase.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.RolTestCase.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#RolTestCase.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.RolTestCase.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.RolTestCase.test_agregar_permiso_view">
+<tt class="descname">test_agregar_permiso_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#RolTestCase.test_agregar_permiso_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.RolTestCase.test_agregar_permiso_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.RolTestCase.test_confirmacion_agregar_permiso_view">
+<tt class="descname">test_confirmacion_agregar_permiso_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#RolTestCase.test_confirmacion_agregar_permiso_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.RolTestCase.test_confirmacion_agregar_permiso_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.RolTestCase.test_crear_rol_view">
+<tt class="descname">test_crear_rol_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#RolTestCase.test_crear_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.RolTestCase.test_crear_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.RolTestCase.test_eliminar_rol_view">
+<tt class="descname">test_eliminar_rol_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#RolTestCase.test_eliminar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.RolTestCase.test_eliminar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.RolTestCase.test_gestion_roles_view">
+<tt class="descname">test_gestion_roles_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#RolTestCase.test_gestion_roles_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.RolTestCase.test_gestion_roles_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.RolTestCase.test_modificar_rol_view">
+<tt class="descname">test_modificar_rol_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#RolTestCase.test_modificar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.RolTestCase.test_modificar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.RolTestCase.test_permisos_rol_view">
+<tt class="descname">test_permisos_rol_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#RolTestCase.test_permisos_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.RolTestCase.test_permisos_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.RolTestCase.test_quitar_permiso_view">
+<tt class="descname">test_quitar_permiso_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#RolTestCase.test_quitar_permiso_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.RolTestCase.test_quitar_permiso_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="administracion.tests.test_views.TipoAtributoTestCase">
+<em class="property">class </em><tt class="descclassname">administracion.tests.test_views.</tt><tt class="descname">TipoAtributoTestCase</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#TipoAtributoTestCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.TipoAtributoTestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="attribute">
+<dt id="administracion.tests.test_views.TipoAtributoTestCase.fixtures">
+<tt class="descname">fixtures</tt><em class="property"> = ['tipos_atributo_testdata.json']</em><a class="headerlink" href="#administracion.tests.test_views.TipoAtributoTestCase.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.TipoAtributoTestCase.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#TipoAtributoTestCase.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.TipoAtributoTestCase.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.TipoAtributoTestCase.test_crear_tipo_atributo_view">
+<tt class="descname">test_crear_tipo_atributo_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#TipoAtributoTestCase.test_crear_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.TipoAtributoTestCase.test_crear_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.TipoAtributoTestCase.test_eliminar_tipo_atributo_view">
+<tt class="descname">test_eliminar_tipo_atributo_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#TipoAtributoTestCase.test_eliminar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.TipoAtributoTestCase.test_eliminar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.TipoAtributoTestCase.test_gestion_tipos_atributo_view">
+<tt class="descname">test_gestion_tipos_atributo_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#TipoAtributoTestCase.test_gestion_tipos_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.TipoAtributoTestCase.test_gestion_tipos_atributo_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.TipoAtributoTestCase.test_modificar_tipo_atributo_view">
+<tt class="descname">test_modificar_tipo_atributo_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#TipoAtributoTestCase.test_modificar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.TipoAtributoTestCase.test_modificar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="administracion.tests.test_views.UserTestCase">
+<em class="property">class </em><tt class="descclassname">administracion.tests.test_views.</tt><tt class="descname">UserTestCase</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#UserTestCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.UserTestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></tt></p>
+<dl class="attribute">
+<dt id="administracion.tests.test_views.UserTestCase.fixtures">
+<tt class="descname">fixtures</tt><em class="property"> = ['usuarios_testdata.json']</em><a class="headerlink" href="#administracion.tests.test_views.UserTestCase.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.UserTestCase.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#UserTestCase.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.UserTestCase.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.UserTestCase.test_agregar_rol_view">
+<tt class="descname">test_agregar_rol_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#UserTestCase.test_agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.UserTestCase.test_agregar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.UserTestCase.test_confirmacion_agregar_rol_view">
+<tt class="descname">test_confirmacion_agregar_rol_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#UserTestCase.test_confirmacion_agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.UserTestCase.test_confirmacion_agregar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.UserTestCase.test_crear_usuario_view">
+<tt class="descname">test_crear_usuario_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#UserTestCase.test_crear_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.UserTestCase.test_crear_usuario_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.UserTestCase.test_eliminar_usuario_view">
+<tt class="descname">test_eliminar_usuario_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#UserTestCase.test_eliminar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.UserTestCase.test_eliminar_usuario_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.UserTestCase.test_gestion_usuarios_view">
+<tt class="descname">test_gestion_usuarios_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#UserTestCase.test_gestion_usuarios_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.UserTestCase.test_gestion_usuarios_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.UserTestCase.test_modificar_usuario_view">
+<tt class="descname">test_modificar_usuario_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#UserTestCase.test_modificar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.UserTestCase.test_modificar_usuario_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.UserTestCase.test_quitar_rol_view">
+<tt class="descname">test_quitar_rol_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#UserTestCase.test_quitar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.UserTestCase.test_quitar_rol_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="administracion.tests.test_views.UserTestCase.test_roles_usuario_view">
+<tt class="descname">test_roles_usuario_view</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/administracion/tests/test_views.html#UserTestCase.test_roles_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.tests.test_views.UserTestCase.test_roles_usuario_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-administracion.tests">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-administracion.tests" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">administracion.tests package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-administracion.tests.test_forms">administracion.tests.test_forms module</a></li>
+<li><a class="reference internal" href="#module-administracion.tests.test_models">administracion.tests.test_models module</a></li>
+<li><a class="reference internal" href="#module-administracion.tests.test_views">administracion.tests.test_views module</a></li>
+<li><a class="reference internal" href="#module-administracion.tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/administracion.tests.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">sap 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Rodrigo Santos | Gustavo Cabral.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
