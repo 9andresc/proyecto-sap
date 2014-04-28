@@ -42,7 +42,7 @@
       								<ul class="dropdown-menu">
         								<li><a href="{% url 'vista_modificar_fase' id_fase=f.id %}"><span class="glyphicon glyphicon-edit"></span> Modificar</a></li>
         								<li><a href="{% url 'vista_eliminar_fase' id_fase=f.id %}"><span class="glyphicon glyphicon-trash"></span> Eliminar</a></li>
-        								<li><a href="#"><span class="glyphicon glyphicon-search"></span> Visualizar</a></li>
+        								<li><a href="{% url 'vista_visualizar_fase' id_fase=f.id %}"><span class="glyphicon glyphicon-search"></span> Visualizar</a></li>
         								<li class="divider"></li>
         								<li><a href="#"><span class="glyphicon glyphicon-cog"></span> Roles</a></li>
       								</ul>

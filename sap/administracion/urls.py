@@ -13,7 +13,7 @@ from administracion.views import roles_proyecto_view, proyecto_agregar_rol_view,
 from administracion.views import comite_proyecto_view, proyecto_agregar_miembro_view, confirmacion_proyecto_agregar_miembro_view, proyecto_quitar_miembro_view
 from administracion.views import iniciar_proyecto_view
 # -------------- Vistas de fases -------------- #
-from administracion.views import gestion_fases_view, crear_fase_view, modificar_fase_view, eliminar_fase_view
+from administracion.views import gestion_fases_view, crear_fase_view, modificar_fase_view, eliminar_fase_view, visualizar_fase_view
 
 urlpatterns = patterns('',
     url(r'^administracion/gestion_usuarios/$', gestion_usuarios_view, name="vista_gestion_usuarios"),
@@ -66,4 +66,5 @@ urlpatterns = patterns('',
     url(r'^administracion/gestion_fases/crear_fase/$', crear_fase_view, name="vista_crear_fase"),
     url(r'^administracion/gestion_fases/modificar_fase/(?P<id_fase>.*)/$', modificar_fase_view, name="vista_modificar_fase"),
     url(r'^administracion/gestion_fases/eliminar_fase/(?P<id_fase>.*)/$', eliminar_fase_view, name="vista_eliminar_fase"),
+    url(r'^administracion/gestion_fases/fase/(?P<id_fase>.*)/$', visualizar_fase_view, name="vista_visualizar_fase"),
 )

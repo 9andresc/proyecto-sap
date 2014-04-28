@@ -870,7 +870,13 @@ def eliminar_fase_view(request, id_fase):
         ctx = {'fase':fase, 'valido':valido}
         return render_to_response('fase/eliminar_fase.html', ctx, context_instance=RequestContext(request))
     
-    
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar fase")
+def visualizar_fase_view(request, id_fase):
+
+    fase = Fase.objects.get(id=id_fase)
+    ctx = {'fase': fase}
+    return render_to_response('fase/visualizar_fase.html', ctx, context_instance=RequestContext(request))
     
     
     
