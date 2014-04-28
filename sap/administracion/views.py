@@ -851,7 +851,24 @@ def modificar_fase_view(request, id_fase):
     ctx = {'form': form, 'fase': fase}
     return render_to_response('fase/modificar_fase.html', ctx, context_instance=RequestContext(request))
 
-    
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Eliminar fase")
+def eliminar_fase_view(request, id_fase):
+
+    fase = Fase.objects.get(id=id_fase)
+    valido = True
+    if fase.estado == 2 or fase.estado == 1:
+        valido = False
+    if request.method == "POST":
+        if valido == True:
+            fase.delete()
+            return HttpResponseRedirect('/administracion/gestion_fases/')
+        else:
+            ctx = {'fase':fase, 'valido':valido}
+            return render_to_response('fase/eliminar_fase.html', ctx, context_instance=RequestContext(request))
+    if request.method == "GET":
+        ctx = {'fase':fase, 'valido':valido}
+        return render_to_response('fase/eliminar_fase.html', ctx, context_instance=RequestContext(request))
     
     
     
