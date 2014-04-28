@@ -921,7 +921,16 @@ def confirmacion_fase_agregar_rol_view(request, id_fase, id_rol):
     ctx = {'fase':fase, 'rol':rol, 'valido':valido}
     return render_to_response('fase/confirmacion_agregar_rol.html', ctx, context_instance=RequestContext(request))  
     
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar rol de fase")
+def fase_quitar_rol_view(request, id_fase, id_rol):
     
+    fase = Fase.objects.get(id=id_fase)
+    rol = Rol.objects.get(id=id_rol)
+    fase.roles.remove(rol)
+    fase.save()
+    ctx = {'fase':fase, 'rol':rol}
+    return render_to_response('fase/quitar_rol.html', ctx, context_instance=RequestContext(request))
     
     
     
