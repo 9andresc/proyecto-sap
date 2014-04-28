@@ -7,7 +7,7 @@
 		<h1><small>Roles de la fase {{ fase.nombre }}</small></h1>
 		<a class="btn btn-default" href="{% url 'vista_fase_agregar_rol' id_fase=fase.id %}"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
 		<br><br>
-		{% if fases %}
+		{% if roles %}
 			<div class="table-responsive"> 
         		<table class="table table-hover">
             		<thead>

@@ -904,8 +904,22 @@ def fase_agregar_rol_view(request, id_fase):
     ctx = {'fase':fase, 'proyecto':proyecto, 'roles':roles}
     return render_to_response('fase/agregar_rol.html', ctx, context_instance=RequestContext(request))
     
-    
-    
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Agregar rol a fase")
+def confirmacion_fase_agregar_rol_view(request, id_fase, id_rol):
+
+    valido = False
+    fase = Fase.objects.get(id=id_fase)
+    rol = Rol.objects.get(id=id_rol)
+    try:
+        role = fase.roles.get(id=id_rol)
+    except Rol.DoesNotExist:
+        valido = True      
+    if valido:
+        fase.roles.add(rol)
+        fase.save()
+    ctx = {'fase':fase, 'rol':rol, 'valido':valido}
+    return render_to_response('fase/confirmacion_agregar_rol.html', ctx, context_instance=RequestContext(request))  
     
     
     
