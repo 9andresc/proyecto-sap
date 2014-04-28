@@ -878,8 +878,14 @@ def visualizar_fase_view(request, id_fase):
     ctx = {'fase': fase}
     return render_to_response('fase/visualizar_fase.html', ctx, context_instance=RequestContext(request))
     
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar roles de fase")
+def roles_fase_view(request, id_fase):
     
-    
+    fase = Fase.objects.get(id=id_fase)
+    roles = Rol.objects.filter(fase__id=id_fase)
+    ctx = {'fase':fase, 'roles':roles}
+    return render_to_response('fase/roles_fase.html', ctx, context_instance=RequestContext(request))
     
     
     
