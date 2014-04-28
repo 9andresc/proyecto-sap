@@ -1,12 +1,15 @@
 {% extends "base.html" %}
-{% block title %}SAP - Crear proyecto{% endblock %}
+{% block title %}SAP - Crear fase{% endblock %}
 {% block content %}
 <div class="jumbotron">
-<!-- datepicker script -->
-            <script>
-                $(".input-group.date").datepicker({ autoclose: true, todayHighlight: true });
-            </script>
-	<h1><small>Crear proyecto</small></h1>
+	
+	<!-- datepicker script -->
+    <script>
+    	$(".input-group.date").datepicker({ autoclose: true, todayHighlight: true });
+    </script>
+    <!-- end datepicker script -->
+    
+	<h1><small>Crear fase</small></h1>
 	<form class="form-horizontal" method="POST">
 		{% csrf_token %}
 		
@@ -40,16 +43,7 @@
 		<p class="text-muted">Campos obligatorios (*)</p>
 		<div class="input-group">
 			<span class="input-group-addon"><b>* Nombre</b></span>
-			<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del proyecto">
-        </div>
-        <br>
-        <div class="input-group">
-			<span class="input-group-addon"><b>* Lider</b></span>
-			<select class="form-control" id="usuario_lider" name="usuario_lider">
-				{% for eleccion in form.usuario_lider.field.choices %}
-					<option value="{{ eleccion.0 }}">{{ eleccion.1 }}</option>
-				{% endfor %}
-			</select>
+			<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de la fase">
         </div>
         <br>
         <div class="input-group">
@@ -75,19 +69,14 @@
         <br>
         
         <div class="input-group">
-			<span class="input-group-addon"><b>* Presupuesto</b></span>
-			<input type="text" class="form-control" id="presupuesto" name="presupuesto" value="0" >
-        </div>
-        <br>
-        <div class="input-group">
-			<span class="input-group-addon"><b>* Complejidad</b></span>
-			<input type="text" class="form-control" id="complejidad" name="complejidad"  value="1">
+			<span class="input-group-addon"><b>* Duracion</b></span>
+			<input type="text" class="form-control" id="duracion" name="duracion"  value="1">
         </div>
         
         <br>
         <button type="submit" class="btn btn-success">Crear</button>
 	</form>
 	<br>
-	<a class="btn btn-default" href="{% url 'vista_gestion_proyectos' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de proyectos</a>
+	<a class="btn btn-default" href="{% url 'vista_gestion_fases' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases</a>
 </div>
 {% endblock %}

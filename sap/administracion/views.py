@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm
+from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm
 from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase
 from inicio.decorators import permiso_requerido
 
@@ -803,28 +803,24 @@ def gestion_fases_view(request):
 @permiso_requerido(permiso="Crear fase")
 def crear_fase_view(request):
     
-    form = CrearProyectoForm()
+    form = CrearFaseForm()
     if request.method == "POST":
-        form = CrearProyectoForm(request.POST)
+        form = CrearFaseForm(request.POST)
         if form.is_valid():
             nombre = form.cleaned_data['nombre']
             descripcion = form.cleaned_data['descripcion']
-            presupuesto = form.cleaned_data['presupuesto']
-            complejidad = form.cleaned_data['complejidad']
+            duracion = form.cleaned_data['duracion']
             fecha_inicio = form.cleaned_data['fecha_inicio']
-            usuario_lider = form.cleaned_data['usuario_lider']
             
-            lider = User.objects.get(id=usuario_lider)
-            
-            proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, presupuesto=presupuesto, complejidad=complejidad, fecha_inicio=fecha_inicio, usuario_lider=lider)
-            proyecto.save()
-            return HttpResponseRedirect('/administracion/gestion_proyectos/')
+            fase = Fase.objects.create(nombre=nombre, descripcion=descripcion, duracion=duracion, fecha_inicio=fecha_inicio)
+            fase.save()
+            return HttpResponseRedirect('/administracion/gestion_fases/')
             
         else:
             ctx = {'form':form}
-            return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
+            return render_to_response('fase/crear_fase.html', ctx, context_instance=RequestContext(request))
     ctx = {'form':form}
-    return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
+    return render_to_response('fase/crear_fase.html', ctx, context_instance=RequestContext(request))
     
     
     
