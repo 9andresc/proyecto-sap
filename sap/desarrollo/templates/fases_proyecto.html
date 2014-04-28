@@ -1,48 +1,45 @@
 {% extends "base.html" %}
-{% block title %}SAP - Desarrollo{% endblock %}
+{% block title %}SAP - Fases del proyecto {{ proyecto.nombre }}{% endblock %}
 {% block content %}
 
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1><small>Proyectos</small></h1>
+		<h1><small>Fases del proyecto {{ proyecto.nombre }}</small></h1>
 		<br>
-		{% if proyectos %}
+		{% if fases %}
 			<div class="table-responsive"> 
         		<table class="table table-hover">
             		<thead>
                 		<tr>
                     		<th>ID</th>
-                    		<th>Nombre de proyecto</th>   
+                    		<th>Nombre de fase</th>
                     		<th>Estado</th>
-                    		<th>Líder</th>
                     		<th>Fecha de inicio</th>
                     		<th></th>
                     	</tr>
                     </thead>
                 	<tbody>
-                		{% for p in proyectos %}
+                		{% for f in fases %}
                 			<tr>
-                    			<td>{{ p.id }}</td>
-                    			<td>{{ p.nombre }}</td>
+                    			<td>{{ f.id }}</td>
+                    			<td>{{ f.nombre }}</td>
                     			<td>
-                    			{% ifequal p.estado 0 %}
+                    			{% ifequal f.estado 0 %}
 									Inactivo
 								{% endifequal %}
-								{% ifequal p.estado 1 %}
+								{% ifequal f.estado 1 %}
 									En curso
 								{% endifequal %}
-								{% ifequal p.estado 2 %}
+								{% ifequal f.estado 2 %}
 									Finalizado
 								{% endifequal %}
                     			</td>
-                    			<td>{{ p.usuario_lider.username }}</td>
-                    			<td>{{ p.fecha_inicio }}</td>
+                    			<td>{{ f.fecha_inicio }}</td>
                     			<td>
                     			<div class="btn-group">
       								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
       								<ul class="dropdown-menu">
-        								<li><a href="{% url 'vista_desarrollo_fases_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-cog"></span> Fases</a></li>
-        								<li><a href="#"><span class="glyphicon glyphicon-usd"></span> Costo total</a></li>
+        								<li><a href="#"><span class="glyphicon glyphicon-cog"></span> Items</a></li>
         								<li><a href="#"><span class="glyphicon glyphicon-stop"></span> Finalizar</a></li>
       								</ul>
     							</div>
@@ -53,8 +50,10 @@
         		</table>
     		</div>
     	{% else %}
-    		<h3>No existen proyectos en curso.</h3>
+    		<h3>No posee fases.</h3>
     	{% endif %}
 	</div>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_desarrollo' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver al módulo de desarrollo</a>
 </div>
 {% endblock %}
