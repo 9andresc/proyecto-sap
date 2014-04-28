@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm
+from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm, ModificarFaseForm
 from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase
 from inicio.decorators import permiso_requerido
 
@@ -822,7 +822,35 @@ def crear_fase_view(request):
     ctx = {'form':form}
     return render_to_response('fase/crear_fase.html', ctx, context_instance=RequestContext(request))
     
-    
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Modificar fase")
+def modificar_fase_view(request, id_fase):
+
+    fase = Fase.objects.get(id=id_fase)
+    if request.method == "POST":
+        form = ModificarFaseForm(data=request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            duracion = form.cleaned_data['duracion']
+            fecha_inicio = form.cleaned_data['fecha_inicio']
+            
+            fase.nombre = nombre
+            fase.descripcion = descripcion
+            fase.duracion = duracion
+            fase.fecha_inicio = fecha_inicio
+            fase.save()
+            return HttpResponseRedirect('/administracion/gestion_fases/fase/%s'%fase.id)
+            
+    if request.method == "GET":
+        form = ModificarFaseForm(initial={
+            'nombre': fase.nombre,
+            'descripcion': fase.descripcion,
+            'presupuesto': fase.duracion,
+            })
+    ctx = {'form': form, 'fase': fase}
+    return render_to_response('fase/modificar_fase.html', ctx, context_instance=RequestContext(request))
+
     
     
     

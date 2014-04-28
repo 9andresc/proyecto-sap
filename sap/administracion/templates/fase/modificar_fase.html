@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}SAP - Modificar fase {{ fase.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<h1><small>Modificar fase</small></h1>
+	<form class="form-horizontal" method="POST">
+		{% csrf_token %}
+		
+		<!-- Manejo de errores del formulario -->
+    	{% if form.errors %}
+    	<div class="panel panel-warning">
+    		<div class="panel-heading">
+    			<h3 class="panel-title">¡Alto ahí!</h3>
+            </div>
+            <div class="panel-body">
+            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
+            	<br>
+            	<ul class="list-unstyled">
+            		{% for field in form %}
+            			{% if field.errors %} 
+  							<li><b>{{ field.label }}</b></li>
+  								{% for error in field.errors %}
+    								<ul>
+      									<li>{{ error }}</li>
+    								</ul>
+    							{% endfor %}
+  							</li>
+  						{% endif %}
+  					{% endfor %}
+				</ul>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Fin del manejo de errores del formulario -->
+        
+        <p class="text-muted">Campos obligatorios (*)</p>
+		<div class="input-group">
+			<span class="input-group-addon"><b>* Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ fase.nombre }}">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion">{{ fase.descripcion }}</textarea>
+        </div>
+        <br>
+        
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Fecha de inicio</b></span>
+            <input type="text" class="form-control" value="{{ fase.fecha_inicio|date:"d/m/Y" }}" id="fecha" name="fecha_inicio">
+        </div>
+        <script type="text/javascript">
+            // When the document is ready
+            $(document).ready(function () {
+                
+                $('#fecha').datepicker({
+                    format: "dd/mm/yyyy"
+                });  
+            
+            });
+        </script>
+        <br>
+        
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Duración</b></span>
+			<input type="text" class="form-control" id="duracion" name="duracion" value="{{ fase.duracion }}">
+        </div>
+		<br>
+        <button type="submit" class="btn btn-success">Modificar</button>
+	</form>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_gestion_fases' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases</a>
+</div>
+{% endblock %}
