@@ -584,7 +584,7 @@ def fases_proyecto_view(request, id_proyecto):
     junto con las operaciones de agregacion de fases y eliminacion de fases.
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
-    fases = Fase.objects.filter(fases_proyecto__id=id_proyecto)
+    fases = proyecto.fases.all()
     ctx = {'proyecto':proyecto, 'fases':fases}
     return render_to_response('proyecto/fases_proyecto.html', ctx, context_instance=RequestContext(request))
 
@@ -606,17 +606,24 @@ def confirmacion_proyecto_agregar_fase_view(request, id_proyecto, id_fase):
     Permite agregar una fase previamente seleccionada a un proyecto existente en el 
     sistema.
     """
-    valido = False
+    valido_uno = False
+    valido_dos = False
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fase = Fase.objects.get(id=id_fase)
     try:
-        fas = proyecto.fases.get(id=id_fase)
+        phase = proyecto.fases.get(id=id_fase)
     except Fase.DoesNotExist:
-        valido = True      
-    if valido:
+        valido_uno = True
+    try:
+        project = fase.proyecto
+    except Proyecto.DoesNotExist:
+        valido_dos = True
+    if fase.proyecto == None:
+        valido_dos = True      
+    if valido_uno and valido_dos:
         proyecto.fases.add(fase)
         proyecto.save()
-    ctx = {'proyecto':proyecto, 'fase':fase, 'valido':valido}
+    ctx = {'proyecto':proyecto, 'fase':fase, 'valido_uno':valido_uno, 'valido_dos':valido_dos}
     return render_to_response('proyecto/confirmacion_agregar_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -628,7 +635,8 @@ def proyecto_quitar_fase_view(request, id_proyecto, id_fase):
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fase = Fase.objects.get(id=id_fase)
-    proyecto.fases.remove(fase)
+    fase.proyecto = None
+    fase.save()
     proyecto.save()
     ctx = {'proyecto':proyecto, 'fase':fase}
     return render_to_response('proyecto/quitar_fase.html', ctx, context_instance=RequestContext(request))
@@ -887,7 +895,14 @@ def roles_fase_view(request, id_fase):
     ctx = {'fase':fase, 'roles':roles}
     return render_to_response('fase/roles_fase.html', ctx, context_instance=RequestContext(request))
     
-    
+@login_required(login_url='/login/')
+def fase_agregar_rol_view(request, id_fase):
+
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = fase.proyecto
+    roles = proyecto.roles.all()
+    ctx = {'fase':fase, 'proyecto':proyecto, 'roles':roles}
+    return render_to_response('fase/agregar_rol.html', ctx, context_instance=RequestContext(request))
     
     
     

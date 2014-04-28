@@ -49,29 +49,6 @@ class TipoAtributo(models.Model):
     class Meta:
         ordering = ["nombre"]
 
-ESTADOS_FASE = (
-    (0, "Inactivo"),
-    (1, "En curso"),
-    (2, "Finalizada"),
-)
-
-class Fase(models.Model):
-    """
-    Clase que especifica los atributos de las Fases.
-    """
-    nombre = models.CharField(max_length=20)
-    descripcion = models.TextField(blank=True)
-    estado = models.IntegerField(max_length=30, choices=ESTADOS_FASE, default=0)
-    fecha_inicio = models.DateField(null=True)
-    duracion = models.IntegerField(null=True, blank=True, default=0)
-    roles = models.ManyToManyField(Rol, null=True, blank=True)
-    
-    def __unicode__(self):
-        return self.nombre
-    
-    class Meta:
-        ordering = ["nombre"]
-
 ESTADOS_PROYECTO = (
     (0, "Inactivo"),
     (1, "En Curso"),
@@ -92,7 +69,30 @@ class Proyecto(models.Model):
     usuarios = models.ManyToManyField(User, related_name='usuarios_proyecto', blank=True)
     comite_de_cambios = models.ManyToManyField(User, related_name='comite_de_cambios_proyecto', blank=True)
     roles = models.ManyToManyField(Rol, related_name='roles_proyecto', null=True, blank=True)
-    fases = models.ManyToManyField(Fase, related_name='fases_proyecto', null=True, blank=True)
+    
+    def __unicode__(self):
+        return self.nombre
+    
+    class Meta:
+        ordering = ["nombre"]
+
+ESTADOS_FASE = (
+    (0, "Inactivo"),
+    (1, "En curso"),
+    (2, "Finalizada"),
+)
+
+class Fase(models.Model):
+    """
+    Clase que especifica los atributos de las Fases.
+    """
+    nombre = models.CharField(max_length=20)
+    descripcion = models.TextField(blank=True)
+    estado = models.IntegerField(max_length=30, choices=ESTADOS_FASE, default=0)
+    fecha_inicio = models.DateField(null=True)
+    duracion = models.IntegerField(null=True, blank=True, default=0)
+    roles = models.ManyToManyField(Rol, null=True, blank=True)
+    proyecto = models.ForeignKey(Proyecto, related_name="fases", null=True, blank=True)
     
     def __unicode__(self):
         return self.nombre

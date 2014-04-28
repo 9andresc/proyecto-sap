@@ -5,7 +5,7 @@
 <div class="jumbotron">
 	<div class="bs-example">
 		<h1><small>Roles de la fase {{ fase.nombre }}</small></h1>
-		<a class="btn btn-default" href="{% url 'vista_proyecto_agregar_rol' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
+		<a class="btn btn-default" href="{% url 'vista_fase_agregar_rol' id_fase=fase.id %}"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
 		<br><br>
 		{% if fases %}
 			<div class="table-responsive"> 
