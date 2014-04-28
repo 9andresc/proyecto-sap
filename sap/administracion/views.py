@@ -799,8 +799,32 @@ def gestion_fases_view(request):
     ctx = {'fases': fases}
     return render_to_response('fase/gestion_fases.html', ctx, context_instance=RequestContext(request))
     
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Crear fase")
+def crear_fase_view(request):
     
-    
+    form = CrearProyectoForm()
+    if request.method == "POST":
+        form = CrearProyectoForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            presupuesto = form.cleaned_data['presupuesto']
+            complejidad = form.cleaned_data['complejidad']
+            fecha_inicio = form.cleaned_data['fecha_inicio']
+            usuario_lider = form.cleaned_data['usuario_lider']
+            
+            lider = User.objects.get(id=usuario_lider)
+            
+            proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, presupuesto=presupuesto, complejidad=complejidad, fecha_inicio=fecha_inicio, usuario_lider=lider)
+            proyecto.save()
+            return HttpResponseRedirect('/administracion/gestion_proyectos/')
+            
+        else:
+            ctx = {'form':form}
+            return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
+    ctx = {'form':form}
+    return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
     
     
     
