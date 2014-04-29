@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}SAP - Gestión de tipos de item{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Gestión tipos de item</small></h1>
+		<a class="btn btn-default" href="{% url 'vista_crear_fase' %}"><span class="glyphicon glyphicon-record"></span> Crear</a>
+		<br><br>
+		{% if fases %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre de fase</th>
+                    		<th>Estado</th>
+                    		<th>Fecha de inicio</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for f in fases %}
+                			<tr>
+                    			<td>{{ f.id }}</td>
+                    			<td>{{ f.nombre }}</td>
+                    			<td>
+                    			{% ifequal f.estado 0 %}
+									Inactivo
+								{% endifequal %}
+								{% ifequal f.estado 1 %}
+									En curso
+								{% endifequal %}
+								{% ifequal f.estado 2 %}
+									Finalizado
+								{% endifequal %}
+                    			</td>
+                    			<td>{{ f.fecha_inicio }}</td>
+                    			<td>
+                    			<div class="btn-group">
+      								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
+      								<ul class="dropdown-menu">
+        								<li><a href="{% url 'vista_modificar_fase' id_fase=f.id %}"><span class="glyphicon glyphicon-edit"></span> Modificar</a></li>
+        								<li><a href="{% url 'vista_eliminar_fase' id_fase=f.id %}"><span class="glyphicon glyphicon-trash"></span> Eliminar</a></li>
+        								<li><a href="{% url 'vista_visualizar_fase' id_fase=f.id %}"><span class="glyphicon glyphicon-search"></span> Visualizar</a></li>
+        								<li class="divider"></li>
+        								<li><a href="{% url 'vista_roles_fase' id_fase=f.id %}"><span class="glyphicon glyphicon-cog"></span> Roles</a></li>
+      								</ul>
+    							</div>
+                    			</td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No existen fases.</h3>
+    	{% endif %}
+	</div>
+</div>
+{% endblock %}

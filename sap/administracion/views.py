@@ -5,7 +5,7 @@ from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm, ModificarFaseForm
-from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase
+from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase, TipoItem
 from inicio.decorators import permiso_requerido
 
 @login_required(login_url='/login/')
@@ -931,7 +931,17 @@ def fase_quitar_rol_view(request, id_fase, id_rol):
     fase.save()
     ctx = {'fase':fase, 'rol':rol}
     return render_to_response('fase/quitar_rol.html', ctx, context_instance=RequestContext(request))
-    
+  
+@login_required(login_url='/login/')
+def gestion_tipos_item_view(request):
+    """
+    Permite listar todos los tipos de item registrados en el sistema, junto con las 
+    operaciones disponibles por cada tipo de item.
+    """
+    tipos_item = TipoItem.objects.all()
+    ctx = {'tipos_item': tipos_item}
+    return render_to_response('tipo_item/gestion_tipos_item.html', ctx, context_instance=RequestContext(request))
+  
     
     
     

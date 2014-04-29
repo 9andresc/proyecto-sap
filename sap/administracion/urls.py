@@ -15,6 +15,8 @@ from administracion.views import iniciar_proyecto_view
 # -------------- Vistas de fases -------------- #
 from administracion.views import gestion_fases_view, crear_fase_view, modificar_fase_view, eliminar_fase_view, visualizar_fase_view
 from administracion.views import roles_fase_view, fase_agregar_rol_view, confirmacion_fase_agregar_rol_view, fase_quitar_rol_view
+# -------------- Vistas de tipos de item -------------- #
+from administracion.views import gestion_tipos_item_view
 
 urlpatterns = patterns('',
     url(r'^administracion/gestion_usuarios/$', gestion_usuarios_view, name="vista_gestion_usuarios"),
@@ -72,4 +74,5 @@ urlpatterns = patterns('',
     url(r'^administracion/gestion_fases/agregar_rol/fase/(?P<id_fase>.*)/$', fase_agregar_rol_view, name="vista_fase_agregar_rol"),
     url(r'^administracion/gestion_fases/confirmacion_agregar_rol/fase/(?P<id_fase>.*)/(?P<id_rol>.*)/$', confirmacion_fase_agregar_rol_view, name="vista_confirmacion_fase_agregar_rol"),
     url(r'^administracion/gestion_fases/quitar_rol/fase/(?P<id_fase>.*)/(?P<id_rol>.*)/$', fase_quitar_rol_view, name="vista_fase_quitar_rol"),
+    url(r'^administracion/gestion_tipos_item/$', gestion_tipos_item_view, name="vista_gestion_tipos_item"),  
 )
