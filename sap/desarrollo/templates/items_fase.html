@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}SAP - Items de la fase {{ fase.nombre }}{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Items de la fase {{ fase.nombre }}</small></h1>
+		<a class="btn btn-default" href="/desarrollo/items/crear_item/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-record"></span> Crear</a>
+		<br><br>
+		{% if items %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre de item</th>
+                    		<th>Estado</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for i in items %}
+                			<tr>
+                    			<td>{{ i.id }}</td>
+                    			<td>{{ i.nombre }}</td>
+                    			<td>
+                    			{% ifequal i.estado 0 %}
+									En construcción
+								{% endifequal %}
+								{% ifequal i.estado 1 %}
+									Aprobado
+								{% endifequal %}
+								{% ifequal i.estado 2 %}
+									Bloqueado
+								{% endifequal %}
+								{% ifequal i.estado 3 %}
+									En revisión
+								{% endifequal %}
+								{% ifequal i.estado 4 %}
+									Eliminado
+								{% endifequal %}
+                    			</td>
+                    			<td>
+                    			<div class="btn-group">
+      								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
+      								<ul class="dropdown-menu">
+        								<li><a href="#"><span class="glyphicon glyphicon-edit"></span> Modificar</a></li>
+        								<li><a href="#"><span class="glyphicon glyphicon-trash"></span> Eliminar</a></li>
+        								<li><a href="#"><span class="glyphicon glyphicon-search"></span> Visualizar</a></li>
+        								<li><a href="#"><span class="glyphicon glyphicon-usd"></span> Calcular costo de impacto</a></li>
+        								<li><a href="#"><span class="glyphicon glyphicon-certificate"></span> Aprobar</a></li>
+        								<li class="divider"></li>
+        								<li><a href="#"><span class="glyphicon glyphicon-random"></span> Relaciones</a></li>
+        								<li><a href="#"><span class="glyphicon glyphicon-paperclip"></span> Archivos</a></li>
+      								</ul>
+    							</div>
+                    			</td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No posee items.</h3>
+    	{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_desarrollo_fases_proyecto' id_proyecto=proyecto.id  %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases por proyecto</a>
+</div>
+{% endblock %}
