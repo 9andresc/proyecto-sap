@@ -99,6 +99,20 @@ class Fase(models.Model):
     
     class Meta:
         ordering = ["nombre"]
+        
+class TipoItem(models.Model):
+    """
+    Clase que especifica los atributos de los Tipos item
+    """
+    nombre = models.CharField(max_length=50, blank=False)
+    descripcion = models.TextField(blank=True)
+    tipos_atributo = models.ManyToManyField(TipoAtributo, null=True, blank=True)
+    
+    def __unicode__(self):
+        return self.nombre
+    
+    class Meta:
+        ordering = ["nombre"]
 
 ESTADOS_USUARIO = (
     (0, "Activo"),
