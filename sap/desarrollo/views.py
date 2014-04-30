@@ -44,6 +44,36 @@ def fases_proyecto_view(request, id_proyecto):
     return render_to_response('fases_proyecto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Iniciar fase")
+def iniciar_fase_view(request, id_fase, id_proyecto):
+    
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    inicio_valido = True
+    estado_valido = True
+    items_valido = True
+    roles_valido = True
+    
+    if fase.estado != 0:
+        estado_valido = False
+        inicio_valido = False
+    if fase.items.count() == 0:
+        items_valido = False
+        inicio_valido = False
+    if fase.roles.count() == 0:
+        roles_valido = False
+        inicio_valido = False
+    
+    if inicio_valido:
+        fase.estado = 1
+        fase.save()
+        ctx = {'fase':fase, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'items_valido':items_valido, 'roles_valido':roles_valido, 'proyecto':proyecto}
+        return render_to_response('iniciar_fase.html', ctx, context_instance=RequestContext(request))
+    else:
+        ctx = {'fase':fase, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'items_valido':items_valido, 'roles_valido':roles_valido, 'proyecto':proyecto}
+        return render_to_response('iniciar_fase.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar items de fase")
 def items_fase_view(request, id_fase, id_proyecto):
     
