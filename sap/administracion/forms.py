@@ -333,4 +333,19 @@ class CrearTipoItemForm(forms.Form):
             tipo_item = TipoItem.objects.get(nombre=nombre)
         except TipoItem.DoesNotExist:
             return nombre
-        raise forms.ValidationError('Nombre de tipo de item ya registrado.')    
+        raise forms.ValidationError('Nombre de tipo de item ya registrado.')  
+    
+class ModificarTipoItemForm(forms.Form):
+
+    nombre = forms.CharField(label="Nombre de tipo de item", required=True)
+    descripcion = forms.CharField(label="Descripcion", required=False)
+
+    def clean_nombre(self): 
+        nombre = self.cleaned_data['nombre'] 
+        try: 
+            tipo_item = TipoItem.objects.get(nombre=nombre) 
+            if tipo_item.nombre == nombre:
+                return nombre 
+        except TipoItem.DoesNotExist:
+            return nombre 
+        raise forms.ValidationError('Nombre de tipo de item ya registrado.')  

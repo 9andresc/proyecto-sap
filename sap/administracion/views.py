@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm
+from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm, ModificarTipoItemForm
 from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase, TipoItem
 from inicio.decorators import permiso_requerido
 
@@ -965,6 +965,29 @@ def crear_tipo_item_view(request):
     ctx = {'form':form}
     return render_to_response('tipo_item/crear_tipo_item.html', ctx, context_instance=RequestContext(request))
     
-    
-    
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Modificar tipo de item")
+def modificar_tipo_item_view(request, id_tipo_item):
+
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    if request.method == "POST":
+        form = ModificarTipoItemForm(data=request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            
+            tipo_item.nombre = nombre
+            tipo_item.descripcion = descripcion
+
+            tipo_item.save()
+            return HttpResponseRedirect('/administracion/gestion_tipos_item/tipo_item/%s'%tipo_item.id)
+            
+    if request.method == "GET":
+        form = ModificarTipoItemForm(initial={
+            'nombre': tipo_item.nombre,
+            'descripcion': tipo_item.descripcion,
+            })
+    ctx = {'form': form, 'tipo_item': tipo_item}
+    return render_to_response('tipo_item/modificar_tipo_item.html', ctx, context_instance=RequestContext(request))
+  
     
