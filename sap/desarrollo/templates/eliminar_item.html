@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}SAP - Item {{ item.nombre }}{% endblock %}
+{% block title %}SAP - Eliminación del item {{ item.nombre }}{% endblock %}
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
@@ -10,14 +10,6 @@
 			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ item.nombre }}" disabled="disabled">
         </div>
         <br>
-        {% for v in versiones %}
-        	{{ v.id }}
-        	<br>
-        	{{ v.nombre }}
-        	<br>
-        	{{ v.costo }}
-        	<br>
-        {% endfor %}
         <div class="input-group">
 			<span class="input-group-addon"><b>Estado</b></span>
 			{% ifequal item.estado 0 %}
@@ -51,9 +43,35 @@
 			<span class="input-group-addon"><b>Costo</b></span>
 			<input type="text" class="form-control" id="costo" name="costo" value="{{ item.costo|stringformat:"f" }}" disabled="disabled">
         </div>
-        
-		<br>
-		<a class="btn btn-default" href="/desarrollo/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
+        <br>
+		
+		{% if valido %}
+			<form action="" method="POST">
+				{% csrf_token %}
+				<div class="panel panel-danger">
+    				<div class="panel-heading">
+    					<h3 class="panel-title">¡Atención!</h3>
+            		</div>
+            		<div class="panel-body">
+            			<h3 class="panel-title">¿Realmente desea eliminar el item {{ item.nombre }}?</h3>
+						<br>
+						<a type="button" class="btn btn-default" href="/desarrollo/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/">Cancelar</a>
+        				<button type="submit" class="btn btn-danger">Eliminar</button>
+			    	</div>
+        		</div>
+        	</form>
+        {% else %}
+        	<div class="panel panel-warning">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Alto ahí!</h3>
+      			</div>
+      			<div class="panel-body">
+        			El item {{ item.nombre }} se encuentra en uno de los siguientes estados: Aprobado, Bloqueado o Eliminado. Por lo tanto, no puede ser eliminado.
+      			</div>
+      		</div>
+      		<br>
+      		<a class="btn btn-default" href="/desarrollo/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
+        {% endif %}
 	</div>
 </div>
 {% endblock %}

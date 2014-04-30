@@ -94,11 +94,33 @@ def modificar_item_view(request, id_item, id_fase, id_proyecto):
     return render_to_response('modificar_item.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Eliminar item")
+def eliminar_item_view(request, id_item, id_fase, id_proyecto):
+
+    item = Item.objects.get(id=id_item)
+    fase = Fase.objects.get(id=id_fase[0])
+    proyecto = Proyecto.objects.get(id=id_proyecto[0])
+    valido = True
+    if item.estado == 1 or item.estado == 2 or item.estado == 4:
+        valido = False
+    if request.method == "POST":
+        if valido == True:
+            item.delete()
+            return HttpResponseRedirect('/desarrollo/items/fase/%s/proyecto/%s/'%(fase.id, proyecto.id))
+        else:
+            ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'valido':valido}
+            return render_to_response('eliminar_item.html', ctx, context_instance=RequestContext(request))
+    if request.method == "GET":
+        ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'valido':valido}
+        return render_to_response('eliminar_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
 @permiso_requerido(permiso="Visualizar item")
 def visualizar_item_view(request, id_item, id_fase, id_proyecto):
 
-    item = Item.objects.get(id=id_item[0])
+    item = Item.objects.get(id=id_item)
+    versiones = item.history.all()
     fase = Fase.objects.get(id=id_fase[0])
     proyecto = Proyecto.objects.get(id=id_proyecto[0])
-    ctx = {'item':item, 'fase': fase, 'proyecto':proyecto}
+    ctx = {'item':item, 'fase': fase, 'proyecto':proyecto, 'versiones':versiones}
     return render_to_response('visualizar_item.html', ctx, context_instance=RequestContext(request))
