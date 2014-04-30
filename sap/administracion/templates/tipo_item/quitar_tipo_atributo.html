@@ -1,10 +1,18 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}SAP - Confirmación{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		<div class="panel panel-success">
+      		<div class="panel-heading">
+        		<h3 class="panel-title">¡Éxito!</h3>
+      		</div>
+      		<div class="panel-body">
+        		El tipo de atributo {{ tipo_atributo.nombre }} fue desasignado del tipo de item {{ tipo_item.nombre }}.
+      		</div>
+      	</div>
+		<br>
+		<a class="btn btn-default" href="{% url 'vista_tipos_atributo_tipo_item' id_tipo_item=tipo_item.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de tipos de atributo del tipo de item {{ tipo_item.nombre }}</a>
+	</div>
+</div>
+{% endblock %}

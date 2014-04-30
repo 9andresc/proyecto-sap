@@ -13,23 +13,23 @@
             		<thead>
                 		<tr>
                     		<th>ID</th>
-                    		<th>Nombre del tipo de atributo</th>
+                    		<th>Nombre del Tipo de atributo</th>
                     		<th></th>
                     	</tr>
                     </thead>
                 	<tbody>
-                		{% for t in tipos_atributo %}
+                		{% for a in tipos_atributo %}
                 			<tr>
-                    			<td>{{ t.id }}</td>
-                    			<td>{{ t.nombre }}</td>
-                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_tipos_item/quitar_tipo_atributo/tipo_item/{{ tipo_item.id }}/{{ t.id }}/"><span class="glyphicon glyphicon-minus"></span> Quitar</a></td>
+                    			<td>{{ a.id }}</td>
+                    			<td>{{ a.nombre }}</td>
+                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_tipos_item/quitar_tipo_atributo/tipo_item/{{ tipo_item.id }}/{{ a.id }}/"><span class="glyphicon glyphicon-minus"></span> Quitar</a></td>
                 			</tr>
                 		{% endfor %}
                 	</tbody>
         		</table>
     		</div>
     	{% else %}
-    		<h3>No posee permisos.</h3>
+    		<h3>No posee tipos de atributo.</h3>
     	{% endif %}
 	</div>
 	<br>
