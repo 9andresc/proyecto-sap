@@ -997,4 +997,17 @@ def visualizar_tipo_item_view(request, id_tipo_item):
     tipo_item = TipoItem.objects.get(id=id_tipo_item)
     ctx = {'tipo_item': tipo_item}
     return render_to_response('tipo_item/visualizar_tipo_item.html', ctx, context_instance=RequestContext(request))
-      
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Eliminar tipo de item")
+def eliminar_tipo_item_view(request, id_tipo_item):
+    """
+    Permite eliminar un tipo de item existente en el sistema.
+    """
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    if request.method == "POST":
+        TipoItem.objects.get(id=id_tipo_item).delete()
+        return HttpResponseRedirect('/administracion/gestion_tipos_item/')
+    if request.method == "GET":
+        ctx = {'tipo_item':tipo_item}
+        return render_to_response('tipo_item/eliminar_tipo_item.html', ctx, context_instance=RequestContext(request))
