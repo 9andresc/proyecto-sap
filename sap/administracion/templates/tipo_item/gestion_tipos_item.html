@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}SAP - Gestión de tipos de item{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Gestión de tipos de item</small></h1>
+		<a class="btn btn-default" href="{% url 'vista_crear_tipo_item' %}"><span class="glyphicon glyphicon-record"></span> Crear</a>
+		<br><br>
+		{% if tipos_item %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre de tipo de item</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for t in tipos_item %}
+                			<tr>
+                    			<td>{{ t.id }}</td>
+                    			<td>{{ t.nombre }}</td>
+                    			<td>
+                    			<div class="btn-group">
+      								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
+      								<ul class="dropdown-menu">
+        								<li><a href="{% url 'vista_modificar_tipo_item' id_tipo_item=t.id %}"><span class="glyphicon glyphicon-edit"></span> Modificar</a></li>
+        								<li><a href="{% url 'vista_eliminar_tipo_item' id_tipo_item=t.id %}"><span class="glyphicon glyphicon-trash"></span> Eliminar</a></li>
+        								<li><a href="{% url 'vista_visualizar_tipo_item' id_tipo_item=t.id %}"><span class="glyphicon glyphicon-search"></span> Visualizar</a></li>
+        								<li class="divider"></li>
+        								<li><a href="{% url 'vista_tipos_atributo_tipo_item' id_tipo_item=t.id %}"><span class="glyphicon glyphicon-cog"></span> Tipos de atributo</a></li>
+      								</ul>
+    							</div>
+                    			</td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No existen fases.</h3>
+    	{% endif %}
+	</div>
+</div>
+{% endblock %}

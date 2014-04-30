@@ -13,7 +13,11 @@ from administracion.views import roles_proyecto_view, proyecto_agregar_rol_view,
 from administracion.views import comite_proyecto_view, proyecto_agregar_miembro_view, confirmacion_proyecto_agregar_miembro_view, proyecto_quitar_miembro_view
 from administracion.views import iniciar_proyecto_view
 # -------------- Vistas de fases -------------- #
-from administracion.views import gestion_fases_view, crear_fase_view
+from administracion.views import gestion_fases_view, crear_fase_view, modificar_fase_view, eliminar_fase_view, visualizar_fase_view
+from administracion.views import roles_fase_view, fase_agregar_rol_view, confirmacion_fase_agregar_rol_view, fase_quitar_rol_view
+# -------------- Vistas de tipos de item -------------- #
+from administracion.views import gestion_tipos_item_view, crear_tipo_item_view, modificar_tipo_item_view,visualizar_tipo_item_view, eliminar_tipo_item_view
+from administracion.views import tipos_atributo_tipo_item_view, agregar_tipo_atributo_view, confirmacion_agregar_tipo_atributo_view, quitar_tipo_atributo_view
 
 urlpatterns = patterns('',
     url(r'^administracion/gestion_usuarios/$', gestion_usuarios_view, name="vista_gestion_usuarios"),
@@ -64,4 +68,21 @@ urlpatterns = patterns('',
     url(r'^administracion/gestion_proyectos/iniciar_proyecto/(?P<id_proyecto>.*)/$', iniciar_proyecto_view, name="vista_iniciar_proyecto"),
     url(r'^administracion/gestion_fases/$', gestion_fases_view, name="vista_gestion_fases"),
     url(r'^administracion/gestion_fases/crear_fase/$', crear_fase_view, name="vista_crear_fase"),
+    url(r'^administracion/gestion_fases/modificar_fase/(?P<id_fase>.*)/$', modificar_fase_view, name="vista_modificar_fase"),
+    url(r'^administracion/gestion_fases/eliminar_fase/(?P<id_fase>.*)/$', eliminar_fase_view, name="vista_eliminar_fase"),
+    url(r'^administracion/gestion_fases/fase/(?P<id_fase>.*)/$', visualizar_fase_view, name="vista_visualizar_fase"),
+    url(r'^administracion/gestion_fases/roles/fase/(?P<id_fase>.*)/$', roles_fase_view, name="vista_roles_fase"),
+    url(r'^administracion/gestion_fases/agregar_rol/fase/(?P<id_fase>.*)/$', fase_agregar_rol_view, name="vista_fase_agregar_rol"),
+    url(r'^administracion/gestion_fases/confirmacion_agregar_rol/fase/(?P<id_fase>.*)/(?P<id_rol>.*)/$', confirmacion_fase_agregar_rol_view, name="vista_confirmacion_fase_agregar_rol"),
+    url(r'^administracion/gestion_fases/quitar_rol/fase/(?P<id_fase>.*)/(?P<id_rol>.*)/$', fase_quitar_rol_view, name="vista_fase_quitar_rol"),
+    url(r'^administracion/gestion_tipos_item/$', gestion_tipos_item_view, name="vista_gestion_tipos_item"),  
+    url(r'^administracion/gestion_tipos_item/crear_tipo_item/$', crear_tipo_item_view, name="vista_crear_tipo_item"), 
+    url(r'^administracion/gestion_tipos_item/modificar_tipo_item/(?P<id_tipo_item>.*)/$', modificar_tipo_item_view, name="vista_modificar_tipo_item"),
+    url(r'^administracion/gestion_tipos_item/tipo_item/(?P<id_tipo_item>.*)/$', visualizar_tipo_item_view, name="vista_visualizar_tipo_item"),
+    url(r'^administracion/gestion_tipos_item/eliminar_tipo_item/(?P<id_tipo_item>.*)/$', eliminar_tipo_item_view, name="vista_eliminar_tipo_item"),
+    url(r'^administracion/gestion_tipos_item/tipos_atributo/tipo_item/(?P<id_tipo_item>.*)/$', tipos_atributo_tipo_item_view, name="vista_tipos_atributo_tipo_item"),
+    url(r'^administracion/gestion_tipos_item/agregar_tipo_atributo/tipo_item/(?P<id_tipo_item>.*)/$', agregar_tipo_atributo_view, name="vista_agregar_tipo_atributo"),
+    url(r'^administracion/gestion_tipos_item/confirmacion_agregar_tipo_atributo/tipo_item/(?P<id_tipo_item>.*)/(?P<id_tipo_atributo>.*)/$', confirmacion_agregar_tipo_atributo_view, name="vista_confirmacion_agregar_tipo_atributo"),
+    url(r'^administracion/gestion_tipos_item/quitar_tipo_atributo/tipo_item/(?P<id_tipo_item>.*)/(?P<id_tipo_atributo>.*)/$', quitar_tipo_atributo_view, name="vista_quitar_agregar_tipo_atributo"),
+    
 )

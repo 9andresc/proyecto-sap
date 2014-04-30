@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm
-from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase
+from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm, ModificarTipoItemForm
+from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase, TipoItem
 from inicio.decorators import permiso_requerido
 
 @login_required(login_url='/login/')
@@ -584,7 +584,7 @@ def fases_proyecto_view(request, id_proyecto):
     junto con las operaciones de agregacion de fases y eliminacion de fases.
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
-    fases = Fase.objects.filter(fases_proyecto__id=id_proyecto)
+    fases = proyecto.fases.all()
     ctx = {'proyecto':proyecto, 'fases':fases}
     return render_to_response('proyecto/fases_proyecto.html', ctx, context_instance=RequestContext(request))
 
@@ -606,17 +606,24 @@ def confirmacion_proyecto_agregar_fase_view(request, id_proyecto, id_fase):
     Permite agregar una fase previamente seleccionada a un proyecto existente en el 
     sistema.
     """
-    valido = False
+    valido_uno = False
+    valido_dos = False
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fase = Fase.objects.get(id=id_fase)
     try:
-        fas = proyecto.fases.get(id=id_fase)
+        phase = proyecto.fases.get(id=id_fase)
     except Fase.DoesNotExist:
-        valido = True      
-    if valido:
+        valido_uno = True
+    try:
+        project = fase.proyecto
+    except Proyecto.DoesNotExist:
+        valido_dos = True
+    if fase.proyecto == None:
+        valido_dos = True      
+    if valido_uno and valido_dos:
         proyecto.fases.add(fase)
         proyecto.save()
-    ctx = {'proyecto':proyecto, 'fase':fase, 'valido':valido}
+    ctx = {'proyecto':proyecto, 'fase':fase, 'valido_uno':valido_uno, 'valido_dos':valido_dos}
     return render_to_response('proyecto/confirmacion_agregar_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -628,7 +635,8 @@ def proyecto_quitar_fase_view(request, id_proyecto, id_fase):
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fase = Fase.objects.get(id=id_fase)
-    proyecto.fases.remove(fase)
+    fase.proyecto = None
+    fase.save()
     proyecto.save()
     ctx = {'proyecto':proyecto, 'fase':fase}
     return render_to_response('proyecto/quitar_fase.html', ctx, context_instance=RequestContext(request))
@@ -803,45 +811,258 @@ def gestion_fases_view(request):
 @permiso_requerido(permiso="Crear fase")
 def crear_fase_view(request):
     
-    form = CrearProyectoForm()
+    form = CrearFaseForm()
     if request.method == "POST":
-        form = CrearProyectoForm(request.POST)
+        form = CrearFaseForm(request.POST)
         if form.is_valid():
             nombre = form.cleaned_data['nombre']
             descripcion = form.cleaned_data['descripcion']
-            presupuesto = form.cleaned_data['presupuesto']
-            complejidad = form.cleaned_data['complejidad']
+            duracion = form.cleaned_data['duracion']
             fecha_inicio = form.cleaned_data['fecha_inicio']
-            usuario_lider = form.cleaned_data['usuario_lider']
             
-            lider = User.objects.get(id=usuario_lider)
-            
-            proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, presupuesto=presupuesto, complejidad=complejidad, fecha_inicio=fecha_inicio, usuario_lider=lider)
-            proyecto.save()
-            return HttpResponseRedirect('/administracion/gestion_proyectos/')
+            fase = Fase.objects.create(nombre=nombre, descripcion=descripcion, duracion=duracion, fecha_inicio=fecha_inicio)
+            fase.save()
+            return HttpResponseRedirect('/administracion/gestion_fases/')
             
         else:
             ctx = {'form':form}
-            return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
+            return render_to_response('fase/crear_fase.html', ctx, context_instance=RequestContext(request))
     ctx = {'form':form}
-    return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
+    return render_to_response('fase/crear_fase.html', ctx, context_instance=RequestContext(request))
     
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Modificar fase")
+def modificar_fase_view(request, id_fase):
+
+    fase = Fase.objects.get(id=id_fase)
+    if request.method == "POST":
+        form = ModificarFaseForm(data=request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            duracion = form.cleaned_data['duracion']
+            fecha_inicio = form.cleaned_data['fecha_inicio']
+            
+            fase.nombre = nombre
+            fase.descripcion = descripcion
+            fase.duracion = duracion
+            fase.fecha_inicio = fecha_inicio
+            fase.save()
+            return HttpResponseRedirect('/administracion/gestion_fases/fase/%s'%fase.id)
+            
+    if request.method == "GET":
+        form = ModificarFaseForm(initial={
+            'nombre': fase.nombre,
+            'descripcion': fase.descripcion,
+            'presupuesto': fase.duracion,
+            })
+    ctx = {'form': form, 'fase': fase}
+    return render_to_response('fase/modificar_fase.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Eliminar fase")
+def eliminar_fase_view(request, id_fase):
+
+    fase = Fase.objects.get(id=id_fase)
+    valido = True
+    if fase.estado == 2 or fase.estado == 1:
+        valido = False
+    if request.method == "POST":
+        if valido == True:
+            fase.delete()
+            return HttpResponseRedirect('/administracion/gestion_fases/')
+        else:
+            ctx = {'fase':fase, 'valido':valido}
+            return render_to_response('fase/eliminar_fase.html', ctx, context_instance=RequestContext(request))
+    if request.method == "GET":
+        ctx = {'fase':fase, 'valido':valido}
+        return render_to_response('fase/eliminar_fase.html', ctx, context_instance=RequestContext(request))
     
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar fase")
+def visualizar_fase_view(request, id_fase):
+
+    fase = Fase.objects.get(id=id_fase)
+    ctx = {'fase': fase}
+    return render_to_response('fase/visualizar_fase.html', ctx, context_instance=RequestContext(request))
     
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar roles de fase")
+def roles_fase_view(request, id_fase):
     
+    fase = Fase.objects.get(id=id_fase)
+    roles = Rol.objects.filter(fase__id=id_fase)
+    ctx = {'fase':fase, 'roles':roles}
+    return render_to_response('fase/roles_fase.html', ctx, context_instance=RequestContext(request))
     
+@login_required(login_url='/login/')
+def fase_agregar_rol_view(request, id_fase):
+
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = fase.proyecto
+    roles = proyecto.roles.all()
+    ctx = {'fase':fase, 'proyecto':proyecto, 'roles':roles}
+    return render_to_response('fase/agregar_rol.html', ctx, context_instance=RequestContext(request))
     
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Agregar rol a fase")
+def confirmacion_fase_agregar_rol_view(request, id_fase, id_rol):
+
+    valido = False
+    fase = Fase.objects.get(id=id_fase)
+    rol = Rol.objects.get(id=id_rol)
+    try:
+        role = fase.roles.get(id=id_rol)
+    except Rol.DoesNotExist:
+        valido = True      
+    if valido:
+        fase.roles.add(rol)
+        fase.save()
+    ctx = {'fase':fase, 'rol':rol, 'valido':valido}
+    return render_to_response('fase/confirmacion_agregar_rol.html', ctx, context_instance=RequestContext(request))  
     
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar rol de fase")
+def fase_quitar_rol_view(request, id_fase, id_rol):
     
+    fase = Fase.objects.get(id=id_fase)
+    rol = Rol.objects.get(id=id_rol)
+    fase.roles.remove(rol)
+    fase.save()
+    ctx = {'fase':fase, 'rol':rol}
+    return render_to_response('fase/quitar_rol.html', ctx, context_instance=RequestContext(request))
+  
+@login_required(login_url='/login/')
+def gestion_tipos_item_view(request):
+    """
+    Permite listar todos los tipos de item registrados en el sistema, junto con las 
+    operaciones disponibles por cada tipo de item.
+    """
+    tipos_item = TipoItem.objects.all()
+    ctx = {'tipos_item': tipos_item}
+    return render_to_response('tipo_item/gestion_tipos_item.html', ctx, context_instance=RequestContext(request))
+  
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Crear tipo de item")
+def crear_tipo_item_view(request):
+    """
+    Permite crear un nuevo tipo de item en el sistema.
+    """
+    form = CrearTipoItemForm()
+    if request.method == "POST":
+        form = CrearTipoItemForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            
+            tipo_item = TipoItem.objects.create(nombre=nombre, descripcion=descripcion)
+            tipo_item.save()
+            return HttpResponseRedirect('/administracion/gestion_tipos_item/')
+            
+        else:
+            ctx = {'form':form}
+            return render_to_response('tipo_item/crear_tipo_item.html', ctx, context_instance=RequestContext(request))
+    ctx = {'form':form}
+    return render_to_response('tipo_item/crear_tipo_item.html', ctx, context_instance=RequestContext(request))
     
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Modificar tipo de item")
+def modificar_tipo_item_view(request, id_tipo_item):
+
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    if request.method == "POST":
+        form = ModificarTipoItemForm(data=request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            
+            tipo_item.nombre = nombre
+            tipo_item.descripcion = descripcion
+
+            tipo_item.save()
+            return HttpResponseRedirect('/administracion/gestion_tipos_item/tipo_item/%s'%tipo_item.id)
+            
+    if request.method == "GET":
+        form = ModificarTipoItemForm(initial={
+            'nombre': tipo_item.nombre,
+            'descripcion': tipo_item.descripcion,
+            })
+    ctx = {'form': form, 'tipo_item': tipo_item}
+    return render_to_response('tipo_item/modificar_tipo_item.html', ctx, context_instance=RequestContext(request))
+  
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar fase")
+def visualizar_tipo_item_view(request, id_tipo_item):
+
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    ctx = {'tipo_item': tipo_item}
+    return render_to_response('tipo_item/visualizar_tipo_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Eliminar tipo de item")
+def eliminar_tipo_item_view(request, id_tipo_item):
+    """
+    Permite eliminar un tipo de item existente en el sistema.
+    """
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    if request.method == "POST":
+        TipoItem.objects.get(id=id_tipo_item).delete()
+        return HttpResponseRedirect('/administracion/gestion_tipos_item/')
+    if request.method == "GET":
+        ctx = {'tipo_item':tipo_item}
+        return render_to_response('tipo_item/eliminar_tipo_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar tipos de atributo de tipo de item")
+
+def tipos_atributo_tipo_item_view(request, id_tipo_item):
+    id_tipoitem=id_tipo_item
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    tipos_atributo = TipoAtributo.objects.filter(tipoitem__id=id_tipoitem)
+    ctx = {'tipo_item':tipo_item, 'tipos_atributo':tipos_atributo}
+    return render_to_response('tipo_item/tipos_atributo_tipo_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+def agregar_tipo_atributo_view(request, id_tipo_item):
+    """
+
+    """
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    tipos_atributo = TipoAtributo.objects.all()
+    ctx = {'tipo_item':tipo_item, 'tipos_atributo':tipos_atributo}
+    return render_to_response('tipo_item/agregar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Agregar tipo de atributo a tipo de item")
+def confirmacion_agregar_tipo_atributo_view(request, id_tipo_item, id_tipo_atributo):
+    """
+    Permite agregar un tipo de atributo previamente seleccionado a un tipo de item existente en el 
+    sistema.
+    """
+    valido = False
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
+    try:
+        tipo_atribut = tipo_item.tipos_atributo.get(id=id_tipo_atributo)
+    except TipoAtributo.DoesNotExist:
+        valido = True      
+    if valido:
+        tipo_item.tipos_atributo.add(tipo_atributo)
+        tipo_item.save()
+    ctx = {'tipo_item':tipo_item, 'tipo_atributo':tipo_atributo, 'valido':valido}
+    return render_to_response('tipo_item/confirmacion_agregar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar tipo atributo de tipo de item")
+def quitar_tipo_atributo_view(request, id_tipo_item, id_tipo_atributo):
+    """
+    Permite quitar un tipo de atributo previamente seleccionado de un tipo de item existente en el 
+    sistema.
+    """
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
+    tipo_item.tipos_atributo.remove(tipo_atributo)
+    tipo_item.save()
+    ctx = {'tipo_item':tipo_item, 'tipo_atributo':tipo_atributo}
+    return render_to_response('tipo_item/quitar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+ 

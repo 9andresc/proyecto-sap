@@ -1,15 +1,12 @@
 {% extends "base.html" %}
-{% block title %}SAP - Crear fase{% endblock %}
+{% block title %}SAP - Crear tipo de item{% endblock %}
 {% block content %}
 <div class="jumbotron">
-	
-	<!-- datepicker script -->
-    <script>
-    	$(".input-group.date").datepicker({ autoclose: true, todayHighlight: true });
-    </script>
-    <!-- end datepicker script -->
-    
-	<h1><small>Crear fase</small></h1>
+<!-- datepicker script -->
+            <script>
+                $(".input-group.date").datepicker({ autoclose: true, todayHighlight: true });
+            </script>
+	<h1><small>Crear tipo de item</small></h1>
 	<form class="form-horizontal" method="POST">
 		{% csrf_token %}
 		
@@ -43,40 +40,17 @@
 		<p class="text-muted">Campos obligatorios (*)</p>
 		<div class="input-group">
 			<span class="input-group-addon"><b>* Nombre</b></span>
-			<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de la fase">
+			<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del tipo de item">
         </div>
         <br>
         <div class="input-group">
 			<span class="input-group-addon"><b>Descripción</b></span>
 			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción del proyecto"></textarea>
-        </div>
-        <br>
-
-		<div class="input-group">
-			<span class="input-group-addon"><b>* Fecha de inicio</b></span>
-            <input type="text" class="form-control" placeholder="Elija una fecha" id="fecha" name="fecha_inicio">
-        </div>
-        <script type="text/javascript">
-            // When the document is ready
-            $(document).ready(function () {
-                
-                $('#fecha').datepicker({
-                    format: "dd/mm/yyyy"
-                });  
-            
-            });
-        </script>
-        <br>
-        
-        <div class="input-group">
-			<span class="input-group-addon"><b>* Duracion</b></span>
-			<input type="text" class="form-control" id="duracion" name="duracion"  value="1">
-        </div>
-        
+        </div>  
         <br>
         <button type="submit" class="btn btn-success">Crear</button>
 	</form>
 	<br>
-	<a class="btn btn-default" href="{% url 'vista_gestion_fases' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases</a>
+	<a class="btn btn-default" href="{% url 'vista_gestion_tipos_item' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de tipos de item</a>
 </div>
 {% endblock %}
