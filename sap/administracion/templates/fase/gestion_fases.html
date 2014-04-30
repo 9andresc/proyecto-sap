@@ -40,6 +40,7 @@
                     			</td>
                     			<td>{{ f.fecha_inicio }}</td>
                     			<td>
+                    			{% if modificar_fase or eliminar_fase or visualizar_fase or gestionar_roles %}
                     			<div class="btn-group">
       								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
       								<ul class="dropdown-menu">
@@ -58,6 +59,7 @@
       									{% endif %}
       								</ul>
     							</div>
+    							{% endif %}
                     			</td>
                 			</tr>
                 		{% endfor %}
