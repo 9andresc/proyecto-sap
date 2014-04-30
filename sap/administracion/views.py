@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm, ModificarFaseForm
+from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm
 from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase, TipoItem
 from inicio.decorators import permiso_requerido
 
@@ -942,6 +942,28 @@ def gestion_tipos_item_view(request):
     ctx = {'tipos_item': tipos_item}
     return render_to_response('tipo_item/gestion_tipos_item.html', ctx, context_instance=RequestContext(request))
   
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Crear tipo de item")
+def crear_tipo_item_view(request):
+    """
+    Permite crear un nuevo tipo de item en el sistema.
+    """
+    form = CrearTipoItemForm()
+    if request.method == "POST":
+        form = CrearTipoItemForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            
+            tipo_item = TipoItem.objects.create(nombre=nombre, descripcion=descripcion)
+            tipo_item.save()
+            return HttpResponseRedirect('/administracion/gestion_tipos_item/')
+            
+        else:
+            ctx = {'form':form}
+            return render_to_response('tipo_item/crear_tipo_item.html', ctx, context_instance=RequestContext(request))
+    ctx = {'form':form}
+    return render_to_response('tipo_item/crear_tipo_item.html', ctx, context_instance=RequestContext(request))
     
     
     

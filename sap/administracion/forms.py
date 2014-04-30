@@ -5,6 +5,7 @@ from administracion.models import Rol
 from administracion.models import TipoAtributo, TIPO_DATO
 from administracion.models import Proyecto, ESTADOS_PROYECTO
 from administracion.models import Fase
+from administracion.models import TipoItem
 
 class CustomDateField(forms.DateField):
     def __init__(self, *args, **kwargs):
@@ -318,3 +319,18 @@ class ModificarFaseForm(forms.Form):
             return fecha_inicio
         else:
             raise forms.ValidationError('La fecha introducida es distinta a la fecha original o anterior a la fecha actual. Ingrese una fecha valida.')
+      
+class CrearTipoItemForm(forms.Form):
+    """
+    Formulario utilizado para la creacion de un tipo de item.
+    """
+    nombre = forms.CharField(label="Nombre de tipo de item", required=True)
+    descripcion = forms.CharField(label="Descripcion", required=False)
+  
+    def clean_nombre(self):
+        nombre = self.cleaned_data['nombre']
+        try:
+            tipo_item = TipoItem.objects.get(nombre=nombre)
+        except TipoItem.DoesNotExist:
+            return nombre
+        raise forms.ValidationError('Nombre de tipo de item ya registrado.')    
