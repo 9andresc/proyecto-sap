@@ -15,6 +15,26 @@ def desarrollo_view(request):
     return render_to_response('desarrollo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Calcular costo de proyecto")
+def calcular_costo_view(request, id_proyecto):
+    
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fases = proyecto.fases.all()
+    fases_valido = False
+    items_valido = False
+    costo_total = 0
+    if fases:
+        fases_valido = True
+        for f in fases:
+            items = f.items.all()
+            if items:
+                items_valido = True
+                for i in items:
+                    costo_total = costo_total + i.costo
+    ctx = {'proyecto':proyecto, 'fases_valido':fases_valido, 'items_valido':items_valido, 'costo_total':costo_total}
+    return render_to_response('costo_total.html', ctx, context_instance=RequestContext(request))
+            
+@login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar fases de proyecto")
 def fases_proyecto_view(request, id_proyecto):
     
