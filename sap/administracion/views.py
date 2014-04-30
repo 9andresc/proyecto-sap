@@ -990,4 +990,11 @@ def modificar_tipo_item_view(request, id_tipo_item):
     ctx = {'form': form, 'tipo_item': tipo_item}
     return render_to_response('tipo_item/modificar_tipo_item.html', ctx, context_instance=RequestContext(request))
   
-    
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar fase")
+def visualizar_tipo_item_view(request, id_tipo_item):
+
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    ctx = {'tipo_item': tipo_item}
+    return render_to_response('tipo_item/visualizar_tipo_item.html', ctx, context_instance=RequestContext(request))
+      
