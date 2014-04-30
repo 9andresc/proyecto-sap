@@ -10,14 +10,6 @@
 			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ item.nombre }}" disabled="disabled">
         </div>
         <br>
-        {% for v in versiones %}
-        	{{ v.id }}
-        	<br>
-        	{{ v.nombre }}
-        	<br>
-        	{{ v.costo }}
-        	<br>
-        {% endfor %}
         <div class="input-group">
 			<span class="input-group-addon"><b>Estado</b></span>
 			{% ifequal item.estado 0 %}

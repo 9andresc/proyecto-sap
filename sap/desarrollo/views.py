@@ -202,8 +202,7 @@ def eliminar_item_view(request, id_item, id_fase, id_proyecto):
 def visualizar_item_view(request, id_item, id_fase, id_proyecto):
 
     item = Item.objects.get(id=id_item)
-    versiones = item.history.all()
     fase = Fase.objects.get(id=id_fase[0])
     proyecto = Proyecto.objects.get(id=id_proyecto[0])
-    ctx = {'item':item, 'fase': fase, 'proyecto':proyecto, 'versiones':versiones}
+    ctx = {'item':item, 'fase': fase, 'proyecto':proyecto}
     return render_to_response('visualizar_item.html', ctx, context_instance=RequestContext(request))
