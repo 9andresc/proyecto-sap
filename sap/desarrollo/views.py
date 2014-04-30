@@ -53,9 +53,27 @@ def calcular_costo_view(request, id_proyecto):
 @permiso_requerido(permiso="Gestionar fases de proyecto")
 def fases_proyecto_view(request, id_proyecto):
     
+    iniciar_fase = False
+    finalizar_fase = False
+    gestionar_items = False
+    roles = request.user.roles.all()
+    for r in roles:
+        for p in r.permisos.all():
+            if p.nombre == 'Iniciar fase':
+                iniciar_fase = True
+            elif p.nombre == 'Finalizar fase':
+                finalizar_fase = True
+            elif p.nombre == 'Gestionar items de fase':
+                gestionar_items = True
+                
+            if iniciar_fase and finalizar_fase and gestionar_items:
+                break
+        if iniciar_fase and finalizar_fase and gestionar_items:
+                break
+    
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fases = proyecto.fases.all()
-    ctx = {'proyecto':proyecto, 'fases':fases}
+    ctx = {'proyecto':proyecto, 'fases':fases, 'iniciar_fase':iniciar_fase, 'finalizar_fase':finalizar_fase, 'gestionar_items':gestionar_items}
     return render_to_response('fases_proyecto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
