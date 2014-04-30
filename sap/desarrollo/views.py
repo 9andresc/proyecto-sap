@@ -143,10 +143,31 @@ def finalizar_fase_view(request, id_fase, id_proyecto):
 @permiso_requerido(permiso="Gestionar items de fase")
 def items_fase_view(request, id_fase, id_proyecto):
     
+    crear_item = False
+    modificar_item = False
+    eliminar_item = False
+    visualizar_item = False
+    roles = request.user.roles.all()
+    for r in roles:
+        for p in r.permisos.all():
+            if p.nombre == 'Crear item':
+                crear_item = True
+            elif p.nombre == 'Modificar item':
+                modificar_item = True
+            elif p.nombre == 'Eliminar item':
+                eliminar_item = True
+            elif p.nombre == 'Visualizar item':
+                visualizar_item = True
+                
+            if crear_item and modificar_item and eliminar_item and visualizar_item:
+                break
+        if crear_item and modificar_item and eliminar_item and visualizar_item:
+            break
+    
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fase = Fase.objects.get(id=id_fase)
     items = fase.items.all()
-    ctx = {'proyecto':proyecto, 'fase':fase, 'items':items}
+    ctx = {'proyecto':proyecto, 'fase':fase, 'items':items, 'crear_item':crear_item, 'modificar_item':modificar_item, 'eliminar_item':eliminar_item, 'visualizar_item':visualizar_item}
     return render_to_response('items_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
