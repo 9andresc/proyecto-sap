@@ -10,8 +10,23 @@ from inicio.decorators import permiso_requerido
 @login_required(login_url='/login/')
 def desarrollo_view(request):
     
+    calcular_costo = False
+    gestionar_fases = False
+    roles = request.user.roles.all()
+    for r in roles:
+        for p in r.permisos.all():
+            if p.nombre == 'Calcular costo de proyecto':
+                calcular_costo = True
+            elif p.nombre == 'Gestionar fases de proyecto':
+                gestionar_fases = True
+                
+            if calcular_costo and gestionar_fases:
+                break
+        if calcular_costo and gestionar_fases:
+                break
+            
     proyectos = Proyecto.objects.filter(estado=1)
-    ctx = {'proyectos': proyectos}
+    ctx = {'proyectos': proyectos, 'calcular_costo':calcular_costo, 'gestionar_fases':gestionar_fases}
     return render_to_response('desarrollo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
