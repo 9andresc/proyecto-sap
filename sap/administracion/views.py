@@ -803,8 +803,32 @@ def iniciar_proyecto_view(request, id_proyecto):
 @login_required(login_url='/login/')
 def gestion_fases_view(request):
 
+    crear_fase = False
+    modificar_fase = False
+    eliminar_fase = False
+    visualizar_fase = False
+    gestionar_roles = False
+    roles = request.user.roles.all()
+    for r in roles:
+        for p in r.permisos.all():
+            if p.nombre == 'Crear fase':
+                crear_fase = True
+            elif p.nombre == 'Modificar fase':
+                modificar_fase = True
+            elif p.nombre == 'Eliminar fase':
+                eliminar_fase = True
+            elif p.nombre == 'Visualizar fase':
+                visualizar_fase = True
+            elif p.nombre == 'Gestionar roles de fase':
+                gestionar_roles = True
+                
+            if crear_fase and modificar_fase and eliminar_fase and visualizar_fase and gestionar_roles:
+                break
+        if crear_fase and modificar_fase and eliminar_fase and visualizar_fase and gestionar_roles:
+                break
+            
     fases = Fase.objects.all()
-    ctx = {'fases': fases}
+    ctx = {'fases':fases, 'crear_fase':crear_fase, 'modificar_fase':modificar_fase, 'eliminar_fase':eliminar_fase, 'visualizar_fase':visualizar_fase, 'gestionar_roles':gestionar_roles}
     return render_to_response('fase/gestion_fases.html', ctx, context_instance=RequestContext(request))
     
 @login_required(login_url='/login/')
