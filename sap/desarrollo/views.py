@@ -72,6 +72,39 @@ def iniciar_fase_view(request, id_fase, id_proyecto):
     else:
         ctx = {'fase':fase, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'items_valido':items_valido, 'roles_valido':roles_valido, 'proyecto':proyecto}
         return render_to_response('iniciar_fase.html', ctx, context_instance=RequestContext(request))
+    
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Finalizar fase")
+def finalizar_fase_view(request, id_fase, id_proyecto):
+    
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    finalizado_valido = True
+    estado_valido = True
+    
+    if fase.estado != 1:
+        estado_valido = False
+        finalizado_valido = False
+    
+    if estado_valido:
+        finalizado_valido = True
+        items = fase.items.all()
+        for i in items:
+            if i.estado != 2:
+                finalizado_valido = False
+                break
+            
+        if finalizado_valido:
+            fase.estado = 2
+            fase.save()
+            ctx = {'fase':fase, 'finalizado_valido':finalizado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto}
+            return render_to_response('finalizar_fase.html', ctx, context_instance=RequestContext(request))
+        else:
+            ctx = {'fase':fase, 'finalizado_valido':finalizado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto}
+            return render_to_response('finalizar_fase.html', ctx, context_instance=RequestContext(request))
+    else:
+        ctx = {'fase':fase, 'finalizado_valido':finalizado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto}
+        return render_to_response('finalizar_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar items de fase")
