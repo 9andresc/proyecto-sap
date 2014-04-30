@@ -17,6 +17,7 @@ from administracion.views import gestion_fases_view, crear_fase_view, modificar_
 from administracion.views import roles_fase_view, fase_agregar_rol_view, confirmacion_fase_agregar_rol_view, fase_quitar_rol_view
 # -------------- Vistas de tipos de item -------------- #
 from administracion.views import gestion_tipos_item_view, crear_tipo_item_view, modificar_tipo_item_view,visualizar_tipo_item_view, eliminar_tipo_item_view
+from administracion.views import tipos_atributo_tipo_item_view, agregar_tipo_atributo_view, confirmacion_agregar_tipo_atributo_view, quitar_tipo_atributo_view
 
 urlpatterns = patterns('',
     url(r'^administracion/gestion_usuarios/$', gestion_usuarios_view, name="vista_gestion_usuarios"),
@@ -79,5 +80,9 @@ urlpatterns = patterns('',
     url(r'^administracion/gestion_tipos_item/modificar_tipo_item/(?P<id_tipo_item>.*)/$', modificar_tipo_item_view, name="vista_modificar_tipo_item"),
     url(r'^administracion/gestion_tipos_item/tipo_item/(?P<id_tipo_item>.*)/$', visualizar_tipo_item_view, name="vista_visualizar_tipo_item"),
     url(r'^administracion/gestion_tipos_item/eliminar_tipo_item/(?P<id_tipo_item>.*)/$', eliminar_tipo_item_view, name="vista_eliminar_tipo_item"),
-   
+    url(r'^administracion/gestion_tipos_item/tipos_atributo/tipo_item/(?P<id_tipo_item>.*)/$', tipos_atributo_tipo_item_view, name="vista_tipos_atributo_tipo_item"),
+    url(r'^administracion/gestion_tipos_item/agregar_tipo_atributo/tipo_item/(?P<id_tipo_item>.*)/$', agregar_tipo_atributo_view, name="vista_agregar_tipo_atributo"),
+    url(r'^administracion/gestion_tipos_item/confirmacion_agregar_tipo_atributo/tipo_item/(?P<id_tipo_item>.*)/(?P<id_tipo_atributo>.*)/$', confirmacion_agregar_tipo_atributo_view, name="vista_confirmacion_agregar_tipo_atributo"),
+    url(r'^administracion/gestion_tipos_item/quitar_tipo_atributo/tipo_item/(?P<id_tipo_item>.*)/(?P<id_tipo_atributo>.*)/$', quitar_tipo_atributo_view, name="vista_quitar_agregar_tipo_atributo"),
+    
 )

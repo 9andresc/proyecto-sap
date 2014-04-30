@@ -1011,3 +1011,61 @@ def eliminar_tipo_item_view(request, id_tipo_item):
     if request.method == "GET":
         ctx = {'tipo_item':tipo_item}
         return render_to_response('tipo_item/eliminar_tipo_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar tipos de atributo de tipo de item")
+def tipos_atributo_tipo_item_view(request, id_tipo_item):
+    """
+    Permite listar todos los tipos de atributos pertenecientes a un tipo de item existente en el sistema, 
+    junto con las operaciones de agregacion de tipos de atributos y eliminacion de tipos de atributos.
+    """
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    tipos_atributo = TipoAtributo.objects.filter(tipo_item__id=id_tipo_item)
+    ctx = {'tipo_item':tipo_item, 'tipos_atributo':tipos_atributo}
+    return render_to_response('tipo_item/tipos_atributo_tipo_item.html', ctx, context_instance=RequestContext(request))
+
+
+@login_required(login_url='/login/')
+def agregar_tipo_atributo_view(request, id_tipo_item):
+    """
+
+    """
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    tipos_atributo = TipoAtributo.objects.all()
+    ctx = {'tipo_item':tipo_item, 'tipos_atributo':tipos_atributo}
+    return render_to_response('tipo_item/agregar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Agregar tipo de atributo a tipo de item")
+def confirmacion_agregar_tipo_atributo_view(request, id_tipo_item, id_tipo_atributo):
+    """
+    Permite agregar un tipo de atributo previamente seleccionado a un tipo de item existente en el 
+    sistema.
+    """
+    valido = False
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
+    try:
+        tipo_atribut = tipo_item.permisos.get(id=id_tipo_atributo)
+    except TipoAtributo.DoesNotExist:
+        valido = True      
+    if valido:
+        tipo_item.tipos_atributo.add(tipo_atributo)
+        tipo_item.save()
+    ctx = {'tipo_item':tipo_item, 'tipo_atributo':tipo_atributo, 'valido':valido}
+    return render_to_response('tipo_item/confirmacion_agregar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+    
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar tipo_atributo de tipo de item")
+def quitar_tipo_atributo_view(request, id_tipo_item, id_tipo_atributo):
+    """
+    Permite quitar un tipo de atributo previamente seleccionado de un tipo de item existente en el 
+    sistema.
+    """
+    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
+    tipo_item.tipos_atributo.remove(tipo_atributo)
+    tipo_item.save()
+    ctx = {'tipo_item':tipo_item, 'tipo_atributo':tipo_atributo}
+    return render_to_response('tipo_item/quitar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+ 
