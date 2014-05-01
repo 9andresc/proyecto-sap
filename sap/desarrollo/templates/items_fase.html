@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}SAP - Items de la fase {{ fase.nombre }}{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Items de la fase {{ fase.nombre }}</small></h1>
+		{% if crear_item %}
+		<a class="btn btn-default" href="/desarrollo/items/crear_item/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-record"></span> Crear</a>
+		<br>
+		{% endif %}
+		<br>
+		{% if items %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre de item</th>
+                    		<th>Estado</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for i in items %}
+                			<tr>
+                    			<td>{{ i.id }}</td>
+                    			<td>{{ i.nombre }}</td>
+                    			<td>
+                    			{% ifequal i.estado 0 %}
+									En construcción
+								{% endifequal %}
+								{% ifequal i.estado 1 %}
+									Aprobado
+								{% endifequal %}
+								{% ifequal i.estado 2 %}
+									Bloqueado
+								{% endifequal %}
+								{% ifequal i.estado 3 %}
+									En revisión
+								{% endifequal %}
+								{% ifequal i.estado 4 %}
+									Eliminado
+								{% endifequal %}
+                    			</td>
+                    			<td>
+                    			{% if modificar_item or eliminar_item or visualizar_item %}
+                    			<div class="btn-group">
+      								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
+      								<ul class="dropdown-menu">
+      									{% if modificar_item %}
+        								<li><a href="/desarrollo/items/modificar_item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-edit"></span> Modificar</a></li>
+        								{% endif %}
+        								{% if eliminar_item %}
+        								<li><a href="/desarrollo/items/eliminar_item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-trash"></span> Eliminar</a></li>
+        								{% endif %}
+        								{% if visualizar_item %}
+        								<li><a href="/desarrollo/items/item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-search"></span> Visualizar</a></li>
+      									{% endif %}
+      								</ul>
+    							</div>
+    							{% endif %}
+                    			</td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No posee items.</h3>
+    	{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_desarrollo_fases_proyecto' id_proyecto=proyecto.id  %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
+</div>
+{% endblock %}
