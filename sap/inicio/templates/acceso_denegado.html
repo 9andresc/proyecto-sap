@@ -7,7 +7,11 @@
 			<h3 class="panel-title">¡Alto ahí!</h3>
 		</div>
 		<div class="panel-body">
+			{% if permiso %}
 			No tienes el permiso "{{ permiso }}" para acceder a esta funcionalidad. Consulta con el administrador para obtener permisos.
+			{% elif no_es_miembro %}
+			No puedes realizar acciones sobre este proyecto, ya que, no eres miembro del mismo. Consulta con el líder del proyecto para obtener el permiso.
+			{% endif %}
 		</div>
 	</div>
 	<br>

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm, ModificarFaseForm
 from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase
-from inicio.decorators import permiso_requerido
+from inicio.decorators import permiso_requerido, miembro_proyecto
 
 @login_required(login_url='/login/')
 def gestion_usuarios_view(request):
@@ -452,6 +452,7 @@ def crear_proyecto_view(request):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Modificar proyecto")
+@miembro_proyecto()
 def modificar_proyecto_view(request, id_proyecto):
     """
     Permite modificar un proyecto existente en el sistema.
@@ -490,6 +491,7 @@ def modificar_proyecto_view(request, id_proyecto):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Eliminar proyecto")
+@miembro_proyecto()
 def eliminar_proyecto_view(request, id_proyecto):
     """
     Permite eliminar un proyecto existente en el sistema.
@@ -511,6 +513,7 @@ def eliminar_proyecto_view(request, id_proyecto):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Visualizar proyecto")
+@miembro_proyecto()
 def visualizar_proyecto_view(request, id_proyecto):
     """
     Permite visualizar todos los campos de un proyecto existente en el sistema.
@@ -521,6 +524,7 @@ def visualizar_proyecto_view(request, id_proyecto):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar usuarios de proyecto")
+@miembro_proyecto()
 def usuarios_proyecto_view(request, id_proyecto):
     """
     Permite listar todos los usuarios pertenecientes a un proyecto existente en el sistema, 
@@ -544,6 +548,7 @@ def proyecto_agregar_usuario_view(request, id_proyecto):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar usuario a proyecto")
+@miembro_proyecto()
 def confirmacion_proyecto_agregar_usuario_view(request, id_proyecto, id_usuario):
     """
     Permite agregar un usuario previamente seleccionado a un proyecto existente en el 
@@ -564,6 +569,7 @@ def confirmacion_proyecto_agregar_usuario_view(request, id_proyecto, id_usuario)
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar usuario de proyecto")
+@miembro_proyecto()
 def proyecto_quitar_usuario_view(request, id_proyecto, id_usuario):
     """
     Permite quitar un usuario previamente seleccionado de un proyecto existente en el 
@@ -578,6 +584,7 @@ def proyecto_quitar_usuario_view(request, id_proyecto, id_usuario):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar fases de proyecto")
+@miembro_proyecto()
 def fases_proyecto_view(request, id_proyecto):
     """
     Permite listar todas las fases pertenecientes a un proyecto existente en el sistema, 
@@ -601,6 +608,7 @@ def proyecto_agregar_fase_view(request, id_proyecto):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar fase a proyecto")
+@miembro_proyecto()
 def confirmacion_proyecto_agregar_fase_view(request, id_proyecto, id_fase):
     """
     Permite agregar una fase previamente seleccionada a un proyecto existente en el 
@@ -628,6 +636,7 @@ def confirmacion_proyecto_agregar_fase_view(request, id_proyecto, id_fase):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar fase de proyecto")
+@miembro_proyecto()
 def proyecto_quitar_fase_view(request, id_proyecto, id_fase):
     """
     Permite quitar una fase previamente seleccionada de un proyecto existente en el 
@@ -643,6 +652,7 @@ def proyecto_quitar_fase_view(request, id_proyecto, id_fase):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar roles de proyecto")
+@miembro_proyecto()
 def roles_proyecto_view(request, id_proyecto):
     """
     Permite listar todos los roles pertenecientes a un proyecto existente en el sistema, 
@@ -666,6 +676,7 @@ def proyecto_agregar_rol_view(request, id_proyecto):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar rol a proyecto")
+@miembro_proyecto()
 def confirmacion_proyecto_agregar_rol_view(request, id_proyecto, id_rol):
     """
     Permite agregar un rol previamente seleccionado a un proyecto existente en el 
@@ -686,6 +697,7 @@ def confirmacion_proyecto_agregar_rol_view(request, id_proyecto, id_rol):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar rol de proyecto")
+@miembro_proyecto()
 def proyecto_quitar_rol_view(request, id_proyecto, id_rol):
     """
     Permite quitar un rol previamente seleccionado de un proyecto existente en el 
@@ -700,6 +712,7 @@ def proyecto_quitar_rol_view(request, id_proyecto, id_rol):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar comite de proyecto")
+@miembro_proyecto()
 def comite_proyecto_view(request, id_proyecto):
     """
     Permite listar todos los miembros del comite de cambios perteneciente a un proyecto existente en el sistema, 
@@ -723,6 +736,7 @@ def proyecto_agregar_miembro_view(request, id_proyecto):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar miembro a comite")
+@miembro_proyecto()
 def confirmacion_proyecto_agregar_miembro_view(request, id_proyecto, id_usuario):
     """
     Permite agregar un usuario previamente seleccionado al comite de cambios de un proyecto existente en el 
@@ -743,6 +757,7 @@ def confirmacion_proyecto_agregar_miembro_view(request, id_proyecto, id_usuario)
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar miembro de comite")
+@miembro_proyecto()
 def proyecto_quitar_miembro_view(request, id_proyecto, id_usuario):
     """
     Permite quitar un usuario previamente seleccionado del comite de cambios de un proyecto existente en el 
@@ -757,6 +772,7 @@ def proyecto_quitar_miembro_view(request, id_proyecto, id_usuario):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Iniciar proyecto")
+@miembro_proyecto()
 def iniciar_proyecto_view(request, id_proyecto):
     """
     Permite arrancar un proyecto si es que se cumplen todas las condiciones mencionadas abajo:
