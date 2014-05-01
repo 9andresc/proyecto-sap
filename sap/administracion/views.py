@@ -1024,7 +1024,7 @@ def fase_agregar_rol_view(request, id_fase):
     La vista del listado de roles del proyecto ligado a la fase. Para acceder a esta vista se deben cumplir los siguientes
     requisitos:
     - El usuario debe estar logueado.
-    Esta vista permite al usuario listar todos los roles del proyecto al cual esta ligada la fase, además, el template relacionado concede 
+    Esta vista permite al usuario listar todos los roles del proyecto al cual esta ligada la fase, ademas, el template relacionado concede 
     las opciones para agregar un rol seleccionado.
     La vista recibe los siguientes parametros:
     - request: contiene informacion sobre la sesion actual.
