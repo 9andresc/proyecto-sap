@@ -818,7 +818,18 @@ def iniciar_proyecto_view(request, id_proyecto):
     
 @login_required(login_url='/login/')
 def gestion_fases_view(request):
-
+    """
+    La vista del listado de fases del sistema. Para acceder a esta vista se deben cumplir los siguientes
+    requisitos:
+    - El usuario debe estar logueado.
+    Esta vista permite al usuario listar y conocer las opciones de las fases del sistema.
+    Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+    los botones de accion sobre cada fase.
+    La vista recibe los siguientes parametros:
+    - request: contiene informacion sobre la sesion actual.
+    La vista retorna lo siguiente:
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
     crear_fase = False
     modificar_fase = False
     eliminar_fase = False
@@ -850,7 +861,20 @@ def gestion_fases_view(request):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear fase")
 def crear_fase_view(request):
-    
+    """
+    La vista para crear una fase. Para acceder a esta vista se deben cumplir los siguientes
+    requisitos:
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Crear fase.
+    Esta vista permite al usuario crear una fase en el sistema, para lograr esto, se verifica la validez de cada campo ingresado 
+    y luego se crea la fase de acuerdo a los campos ingresados. 
+    La vista recibe los siguientes parametros:
+    - request: contiene informacion sobre la sesion actual.
+    La vista retorna lo siguiente:
+    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
+    """
     form = CrearFaseForm()
     if request.method == "POST":
         form = CrearFaseForm(request.POST)
@@ -874,7 +898,22 @@ def crear_fase_view(request):
 @permiso_requerido(permiso="Modificar fase")
 @fase_miembro_proyecto()
 def modificar_fase_view(request, id_fase):
-
+    """
+    La vista para modificar una fase. Para acceder a esta vista se deben cumplir los siguientes
+    requisitos:
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Modificar item.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    Esta vista permite al usuario modificar una fase previamente seleccionada, para lograr esto, 
+    se verifica la validez de cada campo modificado y luego se guarda la fase de acuerdo a los campos ingresados.
+    La vista recibe los siguientes parametros:
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    La vista retorna lo siguiente:
+    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
+    """
     fase = Fase.objects.get(id=id_fase)
     if request.method == "POST":
         form = ModificarFaseForm(data=request.POST)
@@ -904,7 +943,23 @@ def modificar_fase_view(request, id_fase):
 @permiso_requerido(permiso="Eliminar fase")
 @fase_miembro_proyecto()
 def eliminar_fase_view(request, id_fase):
-
+    """
+    La vista para eliminar una fase. Para acceder a esta vista se deben cumplir los siguientes
+    requisitos:
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Eliminar fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    Esta vista permite al usuario eliminar una fase previamente seleccionada, para lograr esto, 
+    se verifica si la fase cumple las siguientes condiciones:
+    - La fase debe estar en estado Inactivo.
+    La vista recibe los siguientes parametros:
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    La vista retorna lo siguiente:
+    - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
+    """
     fase = Fase.objects.get(id=id_fase)
     valido = True
     if fase.estado == 2 or fase.estado == 1:
@@ -924,7 +979,19 @@ def eliminar_fase_view(request, id_fase):
 @permiso_requerido(permiso="Visualizar fase")
 @fase_miembro_proyecto()
 def visualizar_fase_view(request, id_fase):
-
+    """
+    La vista para visualizar una fase. Para acceder a esta vista se deben cumplir los siguientes
+    requisitos:
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Visualizar fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    Esta vista permite al usuario visualizar todos los campos guardados de una fase previamente seleccionada.
+    La vista recibe los siguientes parametros:
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    La vista retorna lo siguiente:
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+    """
     fase = Fase.objects.get(id=id_fase)
     ctx = {'fase': fase}
     return render_to_response('fase/visualizar_fase.html', ctx, context_instance=RequestContext(request))
@@ -933,7 +1000,19 @@ def visualizar_fase_view(request, id_fase):
 @permiso_requerido(permiso="Gestionar roles de fase")
 @fase_miembro_proyecto()
 def roles_fase_view(request, id_fase):
-    
+    """
+    La vista del listado de roles por fase. Para acceder a esta vista se deben cumplir los siguientes
+    requisitos:
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Gestionar roles de fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    Esta vista permite al usuario listar y conocer las opciones de los roles de la fase previamente seleccionada.
+    La vista recibe los siguientes parametros:
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    La vista retorna lo siguiente:
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
     fase = Fase.objects.get(id=id_fase)
     roles = Rol.objects.filter(fase__id=id_fase)
     ctx = {'fase':fase, 'roles':roles}
@@ -941,7 +1020,18 @@ def roles_fase_view(request, id_fase):
     
 @login_required(login_url='/login/')
 def fase_agregar_rol_view(request, id_fase):
-
+    """
+    La vista del listado de roles del proyecto ligado a la fase. Para acceder a esta vista se deben cumplir los siguientes
+    requisitos:
+    - El usuario debe estar logueado.
+    Esta vista permite al usuario listar todos los roles del proyecto al cual esta ligada la fase, además, el template relacionado concede 
+    las opciones para agregar un rol seleccionado.
+    La vista recibe los siguientes parametros:
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    La vista retorna lo siguiente:
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
     fase = Fase.objects.get(id=id_fase)
     proyecto = fase.proyecto
     roles = proyecto.roles.all()
@@ -952,7 +1042,21 @@ def fase_agregar_rol_view(request, id_fase):
 @permiso_requerido(permiso="Agregar rol a fase")
 @fase_miembro_proyecto()
 def confirmacion_fase_agregar_rol_view(request, id_fase, id_rol):
-
+    """
+    La vista de confirmacion de agregacion de un rol a una fase. Para acceder a esta vista se deben cumplir los siguientes
+    requisitos:
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Agregar rol a fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    Esta vista permite al usuario agregar un rol seleccionado a la fase seleccionada previamente. Se verifica si el rol a agregar ya 
+    pertenece a la fase, en cuyo caso se cancelara la operacion.
+    La vista recibe los siguientes parametros:
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    - id_rol: el identificador del rol.
+    La vista retorna lo siguiente:
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
     valido = False
     fase = Fase.objects.get(id=id_fase)
     rol = Rol.objects.get(id=id_rol)
@@ -970,7 +1074,20 @@ def confirmacion_fase_agregar_rol_view(request, id_fase, id_rol):
 @permiso_requerido(permiso="Quitar rol de fase")
 @fase_miembro_proyecto()
 def fase_quitar_rol_view(request, id_fase, id_rol):
-    
+    """
+    La vista para quitar un rol de una fase. Para acceder a esta vista se deben cumplir los siguientes
+    requisitos:
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Quitar rol de fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    Esta vista permite al usuario quitar un rol seleccionado de la fase seleccionada previamente.
+    La vista recibe los siguientes parametros:
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    - id_rol: el identificador del rol.
+    La vista retorna lo siguiente:
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
     fase = Fase.objects.get(id=id_fase)
     rol = Rol.objects.get(id=id_rol)
     fase.roles.remove(rol)
