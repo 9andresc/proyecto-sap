@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm, ModificarFaseForm
 from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase
-from inicio.decorators import permiso_requerido, miembro_proyecto
+from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto
 
 @login_required(login_url='/login/')
 def gestion_usuarios_view(request):
@@ -872,6 +872,7 @@ def crear_fase_view(request):
     
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Modificar fase")
+@fase_miembro_proyecto()
 def modificar_fase_view(request, id_fase):
 
     fase = Fase.objects.get(id=id_fase)
@@ -901,6 +902,7 @@ def modificar_fase_view(request, id_fase):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Eliminar fase")
+@fase_miembro_proyecto()
 def eliminar_fase_view(request, id_fase):
 
     fase = Fase.objects.get(id=id_fase)
@@ -920,6 +922,7 @@ def eliminar_fase_view(request, id_fase):
     
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Visualizar fase")
+@fase_miembro_proyecto()
 def visualizar_fase_view(request, id_fase):
 
     fase = Fase.objects.get(id=id_fase)
@@ -928,6 +931,7 @@ def visualizar_fase_view(request, id_fase):
     
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar roles de fase")
+@fase_miembro_proyecto()
 def roles_fase_view(request, id_fase):
     
     fase = Fase.objects.get(id=id_fase)
@@ -946,6 +950,7 @@ def fase_agregar_rol_view(request, id_fase):
     
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar rol a fase")
+@fase_miembro_proyecto()
 def confirmacion_fase_agregar_rol_view(request, id_fase, id_rol):
 
     valido = False
@@ -963,6 +968,7 @@ def confirmacion_fase_agregar_rol_view(request, id_fase, id_rol):
     
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar rol de fase")
+@fase_miembro_proyecto()
 def fase_quitar_rol_view(request, id_fase, id_rol):
     
     fase = Fase.objects.get(id=id_fase)
@@ -971,8 +977,3 @@ def fase_quitar_rol_view(request, id_fase, id_rol):
     fase.save()
     ctx = {'fase':fase, 'rol':rol}
     return render_to_response('fase/quitar_rol.html', ctx, context_instance=RequestContext(request))
-    
-    
-    
-    
-    

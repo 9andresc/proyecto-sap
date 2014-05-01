@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from administracion.models import Proyecto, Fase
 from desarrollo.models import Item
 from desarrollo.forms import CrearItemForm, ModificarItemForm
-from inicio.decorators import permiso_requerido
+from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto
 
 @login_required(login_url='/login/')
 def desarrollo_view(request):
@@ -31,6 +31,7 @@ def desarrollo_view(request):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Calcular costo de proyecto")
+@miembro_proyecto()
 def calcular_costo_view(request, id_proyecto):
     
     proyecto = Proyecto.objects.get(id=id_proyecto)
@@ -51,6 +52,7 @@ def calcular_costo_view(request, id_proyecto):
             
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar fases de proyecto")
+@miembro_proyecto()
 def fases_proyecto_view(request, id_proyecto):
     
     iniciar_fase = False
@@ -78,6 +80,7 @@ def fases_proyecto_view(request, id_proyecto):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Iniciar fase")
+@fase_miembro_proyecto()
 def iniciar_fase_view(request, id_fase, id_proyecto):
     
     fase = Fase.objects.get(id=id_fase)
@@ -108,6 +111,7 @@ def iniciar_fase_view(request, id_fase, id_proyecto):
     
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Finalizar fase")
+@fase_miembro_proyecto()
 def finalizar_fase_view(request, id_fase, id_proyecto):
     
     fase = Fase.objects.get(id=id_fase)
@@ -141,6 +145,7 @@ def finalizar_fase_view(request, id_fase, id_proyecto):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar items de fase")
+@fase_miembro_proyecto()
 def items_fase_view(request, id_fase, id_proyecto):
     
     crear_item = False
