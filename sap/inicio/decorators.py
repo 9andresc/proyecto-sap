@@ -44,3 +44,18 @@ def fase_miembro_proyecto():
             return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
         return wraps(func)(inner_decorator)
     return decorator
+
+def item_miembro_proyecto():
+    def decorator(func):
+        def inner_decorator(request, id_item, id_fase, *args, **kwargs):
+            fase = Fase.objects.get(id=id_fase)
+            if fase.proyecto or fase.proyecto != None:
+                proyecto = Proyecto.objects.get(id=fase.proyecto.id)
+                for u in proyecto.usuarios.all():
+                    if request.user.id == u.id:
+                        return func(request, id_item, id_fase, *args, **kwargs)
+            fase_no_es_miembro = True
+            ctx = {'fase_no_es_miembro':fase_no_es_miembro}
+            return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
+        return wraps(func)(inner_decorator)
+    return decorator

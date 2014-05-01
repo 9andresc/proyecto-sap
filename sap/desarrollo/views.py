@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from administracion.models import Proyecto, Fase
 from desarrollo.models import Item
 from desarrollo.forms import CrearItemForm, ModificarItemForm
-from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto
+from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto, item_miembro_proyecto
 
 @login_required(login_url='/login/')
 def desarrollo_view(request):
@@ -87,7 +87,7 @@ def fases_proyecto_view(request, id_proyecto):
     - Debe ser miembro del proyecto en cuestion.
     Esta vista permite al usuario listar y conocer las opciones de desarrollo de las fases del proyecto seleccionado.
     Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
-    los botones de acción sobre cada fase.
+    los botones de accion sobre cada fase.
     La vista recibe los siguientes parametros:
     - request: contiene informacion sobre la sesion actual.
     - id_proyecto: el identificador del proyecto.
@@ -132,7 +132,7 @@ def iniciar_fase_view(request, id_fase, id_proyecto):
     - Debe poseer al menos un item.
     - Debe poseer al menos un rol.
     La vista recibe los siguientes parametros:
-    - request: contiene información sobre la sesion actual.
+    - request: contiene informacion sobre la sesion actual.
     - id_fase: el identificador de la fase.
     - id_proyecto: el identificador del proyecto.
     La vista retorna lo siguiente:
@@ -178,7 +178,7 @@ def finalizar_fase_view(request, id_fase, id_proyecto):
     - Debe estar en estado En curso.
     - Todos sus items deben estar en estado Bloqueado.
     La vista recibe los siguientes parametros:
-    - request: contiene información sobre la sesion actual.
+    - request: contiene informacion sobre la sesion actual.
     - id_fase: el identificador de la fase.
     - id_proyecto: el identificador del proyecto.
     La vista retorna lo siguiente:
@@ -225,7 +225,7 @@ def items_fase_view(request, id_fase, id_proyecto):
     - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
     Esta vista permite al usuario listar y conocer las opciones de desarrollo de los items de la fase seleccionada.
     Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
-    los botones de acción sobre cada item.
+    los botones de accion sobre cada item.
     La vista recibe los siguientes parametros:
     - request: contiene informacion sobre la sesion actual.
     - id_fase: el identificador de la fase.
@@ -274,7 +274,7 @@ def crear_item_view(request, id_fase, id_proyecto):
     se verifica la validez de cada campo ingresado y luego se crea el item de acuerdo a los campos ingresados y 
     se almacena en la fase. 
     La vista recibe los siguientes parametros:
-    - request: contiene información sobre la sesion actual.
+    - request: contiene informacion sobre la sesion actual.
     - id_fase: el identificador de la fase.
     - id_proyecto: el identificador del proyecto.
     La vista retorna lo siguiente:
@@ -307,7 +307,7 @@ def crear_item_view(request, id_fase, id_proyecto):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Modificar item")
-@fase_miembro_proyecto()
+@item_miembro_proyecto()
 def modificar_item_view(request, id_item, id_fase, id_proyecto):
     """
     La vista para modificar un item. Para acceder a esta vista se deben cumplir los siguientes
@@ -318,7 +318,7 @@ def modificar_item_view(request, id_item, id_fase, id_proyecto):
     Esta vista permite al usuario modificar un item de la fase previamente seleccionada, para lograr esto, 
     se verifica la validez de cada campo modificado y luego se guarda el item de acuerdo a los campos ingresados.
     La vista recibe los siguientes parametros:
-    - request: contiene información sobre la sesion actual.
+    - request: contiene informacion sobre la sesion actual.
     - id_item: el identificador del item.
     - id_fase: el identificador de la fase.
     - id_proyecto: el identificador del proyecto.
@@ -327,7 +327,7 @@ def modificar_item_view(request, id_item, id_fase, id_proyecto):
     generado en la vista, al template correspondiente.
     - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del item modificado. 
     """
-    item = Item.objects.get(id=id_item[0])
+    item = Item.objects.get(id=id_item)
     fase = Fase.objects.get(id=id_fase[0])
     proyecto = Proyecto.objects.get(id=id_proyecto[0])
     form = ModificarItemForm()
@@ -358,7 +358,7 @@ def modificar_item_view(request, id_item, id_fase, id_proyecto):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Eliminar item")
-@fase_miembro_proyecto()
+@item_miembro_proyecto()
 def eliminar_item_view(request, id_item, id_fase, id_proyecto):
     """
     La vista para eliminar un item. Para acceder a esta vista se deben cumplir los siguientes
@@ -370,7 +370,7 @@ def eliminar_item_view(request, id_item, id_fase, id_proyecto):
     se verifica si el item cumple las siguientes condiciones:
     - El item debe estar en estado En construccion o En revision.
     La vista recibe los siguientes parametros:
-    - request: contiene información sobre la sesion actual.
+    - request: contiene informacion sobre la sesion actual.
     - id_item: el identificador del item.
     - id_fase: el identificador de la fase.
     - id_proyecto: el identificador del proyecto.
@@ -398,7 +398,7 @@ def eliminar_item_view(request, id_item, id_fase, id_proyecto):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Visualizar item")
-@fase_miembro_proyecto()
+@item_miembro_proyecto()
 def visualizar_item_view(request, id_item, id_fase, id_proyecto):
     """
     La vista para visualizar un item. Para acceder a esta vista se deben cumplir los siguientes
@@ -408,7 +408,7 @@ def visualizar_item_view(request, id_item, id_fase, id_proyecto):
     - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
     Esta vista permite al usuario visualizar todos los campos guardados de un item de la fase previamente seleccionada.
     La vista recibe los siguientes parametros:
-    - request: contiene información sobre la sesion actual.
+    - request: contiene informacion sobre la sesion actual.
     - id_item: el identificador del item.
     - id_fase: el identificador de la fase.
     - id_proyecto: el identificador del proyecto.
