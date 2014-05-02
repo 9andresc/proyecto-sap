@@ -2,6 +2,7 @@
 {% block title %}SAP - Modificar item {{ item.nombre }}{% endblock %}
 {% block content %}
 <div class="jumbotron">
+
 	<h1><small>Modificar item</small></h1>
 	<form class="form-horizontal" method="POST">
 		{% csrf_token %}
@@ -54,6 +55,22 @@
 			<input type="text" class="form-control" id="costo" name="costo" value="{{ item.costo|stringformat:"f" }}">
         </div>
 		<br>
+		{% for a in atributos %}
+			<div class="input-group">
+				<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+				{% if a.tipo_atributo.tipo_dato == 0 %}
+					<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"f" }}">
+				{% elif a.tipo_atributo.tipo_dato == 1 %}
+					<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}">
+				{% elif a.tipo_atributo.tipo_dato == 2 %}
+					<textarea rows="3" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">{{ a.valor_texto }}</textarea>
+				{% else %}
+					<input type="checkbox" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_logico }}">
+				{% endif %}
+			</div>
+			<br>
+		{% endfor %}
+		
         <button type="submit" class="btn btn-success">Modificar</button>
 	</form>
 	<br>

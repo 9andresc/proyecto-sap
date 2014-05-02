@@ -40,6 +40,15 @@
         </div>
         <br>
         <div class="input-group">
+			<span class="input-group-addon"><b>* Tipo de item</b></span>
+			<select class="form-control" id="tipo_item" name="tipo_item">
+				{% for eleccion in form.tipo_item.field.choices %}
+					<option value="{{ eleccion.0 }}">{{ eleccion.1 }}</option>
+				{% endfor %}
+			</select>
+        </div>
+        <br>
+        <div class="input-group">
 			<span class="input-group-addon"><b>Descripción</b></span>
 			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción del item"></textarea>
         </div>

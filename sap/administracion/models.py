@@ -41,14 +41,13 @@ class TipoAtributo(models.Model):
     nombre = models.CharField(max_length=50, blank=False)
     tipo_dato  = models.IntegerField(max_length=30,choices= TIPO_DATO, default=0)
     descripcion = models.TextField(blank=True)
-    valor = models.CharField(max_length=50, blank=True)
     
     def __unicode__(self):
         return self.nombre
     
     class Meta:
         ordering = ["nombre"]
-
+    
 ESTADOS_PROYECTO = (
     (0, "Inactivo"),
     (1, "En Curso"),
@@ -69,7 +68,7 @@ class Proyecto(models.Model):
     usuarios = models.ManyToManyField(User, related_name='usuarios_proyecto', blank=True)
     comite_de_cambios = models.ManyToManyField(User, related_name='comite_de_cambios_proyecto', blank=True)
     roles = models.ManyToManyField(Rol, related_name='roles_proyecto', null=True, blank=True)
-    
+  
     def __unicode__(self):
         return self.nombre
     
@@ -107,12 +106,21 @@ class TipoItem(models.Model):
     nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=True)
     tipos_atributo = models.ManyToManyField(TipoAtributo, null=True, blank=True)
-    
+
     def __unicode__(self):
         return self.nombre
     
     class Meta:
         ordering = ["nombre"]
+
+class ValorAtributo(models.Model):
+    item = models.ForeignKey('desarrollo.Item', related_name="valores", null=True, blank=True)
+    tipo_item = models.ForeignKey(TipoItem, null=True, blank=True)
+    tipo_atributo = models.ForeignKey(TipoAtributo, null=True, blank=True)
+    valor_fecha = models.DateField(null=True)
+    valor_numerico = models.DecimalField(max_digits=30, decimal_places=10, null=True)
+    valor_logico = models.NullBooleanField()
+    valor_texto = models.CharField(max_length=300, blank=True)
 
 ESTADOS_USUARIO = (
     (0, "Activo"),

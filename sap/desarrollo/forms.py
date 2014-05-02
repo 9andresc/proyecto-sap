@@ -1,4 +1,13 @@
 from django import forms
+from administracion.models import TipoItem
+
+def opcion_tipo_item():
+    tipos_item = TipoItem.objects.all()
+    resultado = []
+    for tipo_item in tipos_item: 
+        tupla = (tipo_item.id, tipo_item.nombre)
+        resultado.append(tupla)
+    return resultado
 
 class CrearItemForm(forms.Form):
 
@@ -6,6 +15,7 @@ class CrearItemForm(forms.Form):
     descripcion = forms.CharField(label="Descripcion", required=False)
     complejidad = forms.IntegerField(label="Complejidad", required=True)
     costo = forms.FloatField(label="Costo", required=True)
+    tipo_item = forms.ChoiceField(label="Tipo de item", choices=(opcion_tipo_item()), required=True)
     
     def clean_complejidad(self):
         complejidad = self.cleaned_data['complejidad']
