@@ -1,6 +1,7 @@
 from django.db import models
 from simple_history.models import HistoricalRecords
 from administracion.models import Fase
+from administracion.models import TipoItem
 
 ESTADOS_ITEM = (
     (0, "En construccion"),
@@ -22,6 +23,7 @@ class Item(models.Model):
     estado = models.IntegerField(max_length=30, choices=ESTADOS_ITEM, default=0)
     archivos = models.FileField(upload_to=content_file_name)
     fase = models.ForeignKey(Fase, related_name="items", null=True, blank=True)
+    tipo_item = models.ForeignKey(TipoItem, related_name="items", null=True, blank=True)
     
     history = HistoricalRecords()
     

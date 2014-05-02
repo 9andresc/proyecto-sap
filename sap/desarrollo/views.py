@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response
 from django.http.response import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-from administracion.models import Proyecto, Fase
+from administracion.models import Proyecto, Fase, TipoItem, ValorAtributo
 from desarrollo.models import Item
 from desarrollo.forms import CrearItemForm, ModificarItemForm
 from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto, item_miembro_proyecto
@@ -292,9 +292,16 @@ def crear_item_view(request, id_fase, id_proyecto):
             descripcion = form.cleaned_data['descripcion']
             complejidad = form.cleaned_data['complejidad']
             costo = form.cleaned_data['costo']
+            tipo_item = form.cleaned_data['tipo_item']
             
-            item = Item.objects.create(nombre=nombre, descripcion=descripcion, complejidad=complejidad, costo=costo)
+            tipo_item = TipoItem.objects.get(id=tipo_item)
+            
+            item = Item.objects.create(nombre=nombre, descripcion=descripcion, complejidad=complejidad, costo=costo, tipo_item=tipo_item)
             item.save()
+            tipos_atributo = tipo_item.tipos_atributo.all()
+            for tipo_atributo in tipos_atributo:
+                valor_atributo = ValorAtributo.objects.create(item=item, tipo_item=tipo_item, tipo_atributo=tipo_atributo)
+                valor_atributo.save()
             fase.items.add(item)
             fase.save()
             return HttpResponseRedirect('/desarrollo/items/fase/%s/proyecto/%s/'%(fase.id, proyecto.id))
@@ -328,8 +335,15 @@ def modificar_item_view(request, id_item, id_fase, id_proyecto):
     - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del item modificado. 
     """
     item = Item.objects.get(id=id_item)
-    fase = Fase.objects.get(id=id_fase[0])
+    identificador_fase = []
+    for s in id_fase.split('/'):
+        if s.isdigit():
+            identificador_fase.append(s)
+            break
+    
+    fase = Fase.objects.get(id=identificador_fase[0])
     proyecto = Proyecto.objects.get(id=id_proyecto[0])
+    atributos = ValorAtributo.objects.filter(item__id=id_item)
     form = ModificarItemForm()
     if request.method == "POST":
         form = ModificarItemForm(request.POST)
@@ -339,6 +353,22 @@ def modificar_item_view(request, id_item, id_fase, id_proyecto):
             complejidad = form.cleaned_data['complejidad']
             costo = form.cleaned_data['costo']
             
+            for a in atributos:
+                for key, value in request.POST.iteritems():
+                    if a.tipo_atributo.nombre == key:
+                        if a.tipo_atributo.tipo_dato == 0:
+                            a.valor_numerico = value
+                            a.save()
+                        elif a.tipo_atributo.tipo_dato == 1:
+                            a.valor_fecha = value
+                            a.save()
+                        elif a.tipo_atributo.tipo_dato == 2:
+                            a.valor_texto = value
+                            a.save()
+                        else:
+                            a.valor_logico = value
+                            a.save()
+                        
             item.nombre = nombre
             item.descripcion = descripcion
             item.complejidad = complejidad
@@ -353,7 +383,7 @@ def modificar_item_view(request, id_item, id_fase, id_proyecto):
             'costo': item.costo,
             'complejidad': item.complejidad,
             })
-    ctx = {'form':form, 'item':item, 'fase':fase, 'proyecto':proyecto}
+    ctx = {'form':form, 'item':item, 'fase':fase, 'proyecto':proyecto, 'atributos':atributos}
     return render_to_response('modificar_item.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -380,7 +410,13 @@ def eliminar_item_view(request, id_item, id_fase, id_proyecto):
     - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. 
     """
     item = Item.objects.get(id=id_item)
-    fase = Fase.objects.get(id=id_fase[0])
+    identificador_fase = []
+    for s in id_fase.split('/'):
+        if s.isdigit():
+            identificador_fase.append(s)
+            break
+    
+    fase = Fase.objects.get(id=identificador_fase[0])
     proyecto = Proyecto.objects.get(id=id_proyecto[0])
     valido = True
     if item.estado == 1 or item.estado == 2 or item.estado == 4:
@@ -416,7 +452,7 @@ def visualizar_item_view(request, id_item, id_fase, id_proyecto):
     - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
     """
     item = Item.objects.get(id=id_item)
-    fase = Fase.objects.get(id=id_fase[0])
-    proyecto = Proyecto.objects.get(id=id_proyecto[0])
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
     ctx = {'item':item, 'fase': fase, 'proyecto':proyecto}
     return render_to_response('visualizar_item.html', ctx, context_instance=RequestContext(request))

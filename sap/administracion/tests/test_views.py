@@ -164,6 +164,13 @@ class UserTestCase(TestCase):
         self.assertFalse(rol, "Se ha encontrado el rol recientemente quitado del usuario.")
         print "Quitar rol de usuario sin errores\n"
         
+        def run(self, result=None):
+            if result is None: result = self.defaultTestResult()
+            try:
+                super(UserTestCase, self).run(result)
+            except KeyboardInterrupt:
+                result.stop()
+        
 class RolTestCase(TestCase):
     fixtures = ['usuarios_testdata.json']
     
@@ -314,6 +321,13 @@ class RolTestCase(TestCase):
         self.assertFalse(permiso, "Se ha encontrado el permiso recientemente quitado del rol.")
         print "Quitar permiso de rol sin errores\n"
         
+        def run(self, result=None):
+            if result is None: result = self.defaultTestResult()
+            try:
+                super(RolTestCase, self).run(result)
+            except KeyboardInterrupt:
+                result.stop()
+        
 class TipoAtributoTestCase(TestCase):
     fixtures = ['tipos_atributo_testdata.json']
     
@@ -399,6 +413,13 @@ class TipoAtributoTestCase(TestCase):
         
         self.assertFalse(tipo_atributo, "Se ha encontrado el tipo de atributo recientemente eliminado.")
         print "Eliminacion de tipo de atributo sin errores\n"
+        
+        def run(self, result=None):
+            if result is None: result = self.defaultTestResult()
+            try:
+                super(TipoAtributoTestCase, self).run(result)
+            except KeyboardInterrupt:
+                result.stop()
 
 class ProyectoTestCase(TestCase):
     fixtures = ['proyectos_testdata.json']
@@ -694,4 +715,10 @@ class ProyectoTestCase(TestCase):
         self.assertEqual(response.status_code, 200, "[GET] La pagina para iniciar proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
         print "Iniciar proyecto sin errores\n"
-    
+        
+        def run(self, result=None):
+            if result is None: result = self.defaultTestResult()
+            try:
+                super(ProyectoTestCase, self).run(result)
+            except KeyboardInterrupt:
+                result.stop()

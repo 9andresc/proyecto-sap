@@ -5,7 +5,7 @@ from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm, ModificarTipoItemForm
-from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase, TipoItem
+from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase, TipoItem, ValorAtributo
 from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto
 
 @login_required(login_url='/login/')
@@ -431,6 +431,10 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
     Permite modificar un tipo atributo existente en el sistema.
     """
     tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
+    atributos = ValorAtributo.objects.filter(tipo_atributo__id=id_tipo_atributo)
+    valido = True
+    if atributos:
+        valido = False
     if request.method == "POST":
         form = ModificarTipoAtributoForm(data=request.POST)
         if form.is_valid():
@@ -449,7 +453,7 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
             'descripcion': tipo_atributo.descripcion,
             'tipo_dato': tipo_atributo.tipo_dato,
             })
-    ctx = {'form': form, 'tipo_atributo': tipo_atributo}
+    ctx = {'form': form, 'tipo_atributo': tipo_atributo, 'valido':valido}
     return render_to_response('tipo_atributo/modificar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -459,11 +463,15 @@ def eliminar_tipo_atributo_view(request, id_tipo_atributo):
     Permite eliminar un tipo atributo existente en el sistema.
     """
     tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
+    atributos = ValorAtributo.objects.filter(tipo_atributo__id=id_tipo_atributo)
+    valido = True
+    if atributos:
+        valido = False
     if request.method == "POST":
         TipoAtributo.objects.get(id=id_tipo_atributo).delete()
         return HttpResponseRedirect('/administracion/gestion_tipos_atributo/')
     if request.method == "GET":
-        ctx = {'tipo_atributo':tipo_atributo}
+        ctx = {'tipo_atributo':tipo_atributo, 'valido':valido}
         return render_to_response('tipo_atributo/eliminar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -540,8 +548,12 @@ def crear_proyecto_view(request):
             usuario_lider = form.cleaned_data['usuario_lider']
             
             lider = User.objects.get(id=usuario_lider)
+            rol_lider = Rol.objects.get(nombre="Lider de proyecto")
+            lider.roles.add(rol_lider)
             
             proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, presupuesto=presupuesto, complejidad=complejidad, fecha_inicio=fecha_inicio, usuario_lider=lider)
+            proyecto.roles.add(rol_lider)
+            proyecto.usuarios.add(lider)
             proyecto.save()
             return HttpResponseRedirect('/administracion/gestion_proyectos/')
             
@@ -603,7 +615,10 @@ def eliminar_proyecto_view(request, id_proyecto):
         valido = False
     if request.method == "POST":
         if valido == True:
-            Proyecto.objects.get(id=id_proyecto).delete()
+            proyecto = Proyecto.objects.get(id=id_proyecto)
+            rol_lider = Rol.objects.get(nombre="Lider de proyecto")
+            proyecto.usuario_lider.roles.remove(rol_lider)
+            proyecto.delete()
             return HttpResponseRedirect('/administracion/gestion_proyectos/')
         else:
             ctx = {'proyecto':proyecto, 'valido':valido}
@@ -1359,7 +1374,12 @@ def quitar_tipo_atributo_view(request, id_tipo_item, id_tipo_atributo):
     """
     tipo_item = TipoItem.objects.get(id=id_tipo_item)
     tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
-    tipo_item.tipos_atributo.remove(tipo_atributo)
-    tipo_item.save()
-    ctx = {'tipo_item':tipo_item, 'tipo_atributo':tipo_atributo}
+    atributos = ValorAtributo.objects.filter(tipo_atributo__id=id_tipo_atributo)
+    valido = True
+    if atributos:
+        valido = False
+    if valido:
+        tipo_item.tipos_atributo.remove(tipo_atributo)
+        tipo_item.save()
+    ctx = {'tipo_item':tipo_item, 'tipo_atributo':tipo_atributo, 'valido':valido}
     return render_to_response('tipo_item/quitar_tipo_atributo.html', ctx, context_instance=RequestContext(request))

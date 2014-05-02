@@ -2,6 +2,7 @@
 {% block title %}SAP - Eliminación del tipo de atributo {{ tipo_atributo.nombre }}{% endblock %}
 {% block content %}
 <div class="jumbotron">
+	{% if valido %}
 	<div class="bs-example">
 		<h1><small>Detalles del tipo de atributo</small></h1>
 		
@@ -49,5 +50,17 @@
         	</div>
         </form>
 	</div>
+	{% else %}
+		<div class="panel panel-warning">
+      		<div class="panel-heading">
+        		<h3 class="panel-title">¡Alto ahí!</h3>
+      		</div>
+      		<div class="panel-body">
+        		El tipo de atributo {{ tipo_atributo.nombre }} no puede ser eliminado porque ya está ligado a un tipo de item e item.
+      		</div>
+      	</div>
+      	<br>
+      	<a class="btn btn-default" href="{% url 'vista_gestion_tipos_atributo' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de tipos de atributo</a>
+	{% endif %}
 </div>
 {% endblock %}
