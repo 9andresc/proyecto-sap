@@ -49,8 +49,8 @@
         								{% if visualizar_usuario %}
         								<li><a href="{% url 'vista_visualizar_usuario' id_usuario=u.id %}"><span class="glyphicon glyphicon-search"></span> Visualizar</a></li>
         								{% endif %}
-        								<li class="divider"></li>
         								{% if gestionar_roles %}
+        								<li class="divider"></li>
         								<li><a href="{% url 'vista_roles_usuario' id_usuario=u.id %}"><span class="glyphicon glyphicon-cog"></span> Roles</a></li>
       									{% endif %}
       								</ul>
