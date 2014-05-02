@@ -452,7 +452,8 @@ def visualizar_item_view(request, id_item, id_fase, id_proyecto):
     - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
     """
     item = Item.objects.get(id=id_item)
+    atributos = ValorAtributo.objects.filter(item__id=id_item)
     fase = Fase.objects.get(id=id_fase)
     proyecto = Proyecto.objects.get(id=id_proyecto)
-    ctx = {'item':item, 'fase': fase, 'proyecto':proyecto}
+    ctx = {'item':item, 'fase': fase, 'proyecto':proyecto, 'atributos':atributos}
     return render_to_response('visualizar_item.html', ctx, context_instance=RequestContext(request))
