@@ -5,8 +5,11 @@
 <div class="jumbotron">
 	<div class="bs-example">
 		<h1><small>Gestión de usuarios</small></h1>
+		{% if crear_usuario %}
 		<a class="btn btn-sm btn-default" href="{% url 'vista_crear_usuario' %}"><span class="glyphicon glyphicon-record"></span> Crear</a>
-		<br><br>
+		<br>
+		{% endif %}
+		<br>
 		{% if usuarios %}
 			<div class="table-responsive"> 
         		<table class="table table-hover">
@@ -15,9 +18,7 @@
                     		<th>ID</th>
                     		<th>Nombre de usuario</th>
                     		<th>Email</th>
-                    		<th></th>
-                    		<th></th>
-                    		<th></th>
+                    		<th>Estado</th>
                     		<th></th>
                     	</tr>
                     </thead>
@@ -27,10 +28,35 @@
                     			<td>{{ u.id }}</td>
                     			<td>{{ u.username }}</td>
                     			<td>{{ u.email }}</td>
-                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_usuarios/modificar_usuario/{{ u.id }}/"><span class="glyphicon glyphicon-edit"></span> Modificar</a></td>
-                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_usuarios/eliminar_usuario/{{ u.id }}/"><span class="glyphicon glyphicon-trash"></span> Eliminar</a></td>
-                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_usuarios/roles/usuario/{{ u.id }}/"><span class="glyphicon glyphicon-cog"></span> Roles</a></td>
-                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_usuarios/usuario/{{ u.id }}/"><span class="glyphicon glyphicon-search"></span> Visualizar</a></td>
+                    			<td>
+                    			{% ifequal u.estado 0 %}
+									Activo
+								{% endifequal %}
+								{% ifequal u.estado 1 %}
+									Inactivo
+								{% endifequal %}
+                    			<td>
+                    			{% if modificar_usuario or eliminar_usuario or visualizar_usuario or gestionar_roles %}
+                    			<div class="btn-group">
+      								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
+      								<ul class="dropdown-menu">
+      									{% if modificar_usuario %}
+        								<li><a href="{% url 'vista_modificar_usuario' id_usuario=u.id %}"><span class="glyphicon glyphicon-edit"></span> Modificar</a></li>
+        								{% endif %}
+        								{% if eliminar_usuario %}
+        								<li><a href="{% url 'vista_eliminar_usuario' id_usuario=u.id %}"><span class="glyphicon glyphicon-trash"></span> Eliminar</a></li>
+        								{% endif %}
+        								{% if visualizar_usuario %}
+        								<li><a href="{% url 'vista_visualizar_usuario' id_usuario=u.id %}"><span class="glyphicon glyphicon-search"></span> Visualizar</a></li>
+        								{% endif %}
+        								<li class="divider"></li>
+        								{% if gestionar_roles %}
+        								<li><a href="{% url 'vista_roles_usuario' id_usuario=u.id %}"><span class="glyphicon glyphicon-cog"></span> Roles</a></li>
+      									{% endif %}
+      								</ul>
+    							</div>
+    							{% endif %}
+                    			</td>
                 			</tr>
                 		{% endfor %}
                 	</tbody>

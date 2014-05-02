@@ -14,10 +14,34 @@ def gestion_usuarios_view(request):
     Permite listar todos los usuarios registrados en el sistema, junto con las 
     operaciones disponibles por cada usuario.
     """
+    crear_usuario = False
+    modificar_usuario = False
+    eliminar_usuario = False
+    visualizar_usuario = False
+    gestionar_roles = False
+    roles = request.user.roles.all()
+    for r in roles:
+        for p in r.permisos.all():
+            if p.nombre == 'Crear usuario':
+                crear_usuario = True
+            elif p.nombre == 'Modificar usuario':
+                modificar_usuario = True
+            elif p.nombre == 'Eliminar usuario':
+                eliminar_usuario = True
+            elif p.nombre == 'Visualizar usuario':
+                visualizar_usuario = True
+            elif p.nombre == 'Gestionar roles de usuario':
+                gestionar_roles = True
+                
+            if crear_usuario and modificar_usuario and eliminar_usuario and visualizar_usuario and gestionar_roles:
+                break
+        if crear_usuario and modificar_usuario and eliminar_usuario and visualizar_usuario and gestionar_roles:
+                break
+            
     usuarios = User.objects.all()
-    ctx = {'usuarios': usuarios}
+    ctx = {'usuarios':usuarios, 'crear_usuario':crear_usuario, 'modificar_usuario':modificar_usuario, 'eliminar_usuario':eliminar_usuario, 'visualizar_usuario':visualizar_usuario, 'gestionar_roles':gestionar_roles}
     return render_to_response('usuario/gestion_usuarios.html', ctx, context_instance=RequestContext(request))
-
+   
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear usuario")
 def crear_usuario_view(request):
@@ -192,9 +216,30 @@ def gestion_roles_view(request):
     Permite listar todos los roles registrados en el sistema, junto con las 
     operaciones disponibles por cada rol.
     """
+    crear_rol = False
+    modificar_rol = False
+    eliminar_rol = False
+    visualizar_rol = False
+    roles = request.user.roles.all()
+    for r in roles:
+        for p in r.permisos.all():
+            if p.nombre == 'Crear rol':
+                crear_rol = True
+            elif p.nombre == 'Modificar rol':
+                modificar_rol = True
+            elif p.nombre == 'Eliminar rol':
+                eliminar_rol = True
+            elif p.nombre == 'Visualizar rol':
+                visualizar_rol = True
+                
+            if crear_rol and modificar_rol and eliminar_rol and visualizar_rol:
+                break
+        if crear_rol and modificar_rol and eliminar_rol and visualizar_rol:
+                break
+            
     roles = Rol.objects.all()
-    ctx = {'roles': roles}
-    return render_to_response('rol/gestion_roles.html', ctx, context_instance=RequestContext(request))
+    ctx = {'roles':roles, 'crear_rol':crear_rol, 'modificar_rol':modificar_rol, 'eliminar_rol':eliminar_rol, 'visualizar_rol':visualizar_rol}
+    return render_to_response('rol/gestion_roles.html', ctx, context_instance=RequestContext(request))   
     
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear rol")
@@ -331,10 +376,30 @@ def gestion_tipos_atributo_view(request):
     Permite listar todos los tipos atributo registrados en el sistema, junto con las 
     operaciones disponibles por cada tipo atributo.
     """
+    crear_tipo_de_atributo = False
+    modificar_tipo_de_atributo = False
+    eliminar_tipo_de_atributo = False
+    visualizar_tipo_de_atributo = False
+    roles = request.user.roles.all()
+    for r in roles:
+        for p in r.permisos.all():
+            if p.nombre == 'Crear tipo de atributo':
+                crear_tipo_de_atributo = True
+            elif p.nombre == 'Modificar tipo de atributo':
+                modificar_tipo_de_atributo = True
+            elif p.nombre == 'Eliminar tipo de atributo':
+                eliminar_tipo_de_atributo = True
+            elif p.nombre == 'Visualizar tipo de atributo':
+                visualizar_tipo_de_atributo = True
+                
+            if crear_tipo_de_atributo and modificar_tipo_de_atributo and eliminar_tipo_de_atributo and visualizar_tipo_de_atributo:
+                break
+        if crear_tipo_de_atributo and modificar_tipo_de_atributo and eliminar_tipo_de_atributo and visualizar_tipo_de_atributo:
+                break
+            
     tipos_atributo = TipoAtributo.objects.all()
-    ctx = {'tipos_atributo': tipos_atributo}
-    return render_to_response('tipo_atributo/gestion_tipos_atributo.html', ctx, context_instance=RequestContext(request)) 
-  
+    ctx = {'tipos_atributo':tipos_atributo, 'crear_tipo_de_atributo':crear_tipo_de_atributo, 'modificar_tipo_de_atributo':modificar_tipo_de_atributo, 'eliminar_tipo_de_atributo':eliminar_tipo_de_atributo, 'visualizar_tipo_de_atributo':visualizar_tipo_de_atributo}
+    return render_to_response('tipo_atributo/gestion_tipos_atributo.html', ctx, context_instance=RequestContext(request))  
   
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear tipo de atributo")
@@ -417,8 +482,44 @@ def gestion_proyectos_view(request):
     Permite listar todos los proyectos registrados en el sistema, junto con las 
     operaciones disponibles por cada proyecto.
     """
+    crear_proyecto = False
+    modificar_proyecto = False
+    eliminar_proyecto = False
+    visualizar_proyecto = False
+    gestionar_usuarios = False
+    gestionar_fases = False
+    gestionar_roles = False
+    gestionar_comite = False
+    iniciar_proyecto = False
+    roles = request.user.roles.all()
+    for r in roles:
+        for p in r.permisos.all():
+            if p.nombre == 'Crear proyecto':
+                crear_proyecto = True
+            elif p.nombre == 'Modificar proyecto':
+                modificar_proyecto = True
+            elif p.nombre == 'Eliminar proyecto':
+                eliminar_proyecto = True
+            elif p.nombre == 'Visualizar proyecto':
+                visualizar_proyecto = True
+            elif p.nombre == 'Gestionar usuarios de proyecto':
+                gestionar_usuarios = True
+            elif p.nombre == 'Gestionar fases de proyecto':
+                gestionar_fases = True
+            elif p.nombre == 'Gestionar comite de proyecto':
+                gestionar_comite = True
+            elif p.nombre == 'Gestionar roles de proyecto':
+                gestionar_roles = True
+            elif p.nombre == 'Iniciar proyecto':
+                iniciar_proyecto = True
+                    
+            if crear_proyecto and modificar_proyecto and eliminar_proyecto and visualizar_proyecto and gestionar_usuarios and gestionar_fases and gestionar_roles and gestionar_comite and iniciar_proyecto:
+                break
+        if crear_proyecto and modificar_proyecto and eliminar_proyecto and visualizar_proyecto and gestionar_usuarios and gestionar_fases and gestionar_roles and gestionar_comite and iniciar_proyecto:
+                break
+            
     proyectos = Proyecto.objects.all()
-    ctx = {'proyectos': proyectos}
+    ctx = {'proyectos':proyectos, 'crear_proyecto':crear_proyecto, 'modificar_proyecto':modificar_proyecto, 'eliminar_proyecto':eliminar_proyecto, 'visualizar_proyecto':visualizar_proyecto,'gestionar_usuarios':gestionar_usuarios, 'gestionar_fases':gestionar_fases, 'gestionar_roles':gestionar_roles, 'gestionar_comite':gestionar_comite, 'iniciar_proyecto':iniciar_proyecto}
     return render_to_response('proyecto/gestion_proyectos.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1098,13 +1199,47 @@ def fase_quitar_rol_view(request, id_fase, id_rol):
 @login_required(login_url='/login/')
 def gestion_tipos_item_view(request):
     """
-    Permite listar todos los tipos de item registrados en el sistema, junto con las 
-    operaciones disponibles por cada tipo de item.
+    La vista del listado de tipos de item del sistema. Para acceder a esta vista se deben cumplir los siguientes
+    requisitos:
+    - El usuario debe estar logueado.
+    Esta vista permite al usuario listar y conocer las opciones de las fases del sistema.
+    Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+    los botones de accion sobre cada fase.
+    La vista recibe los siguientes parametros:
+    - request: contiene informacion sobre la sesion actual.
+    La vista retorna lo siguiente:
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
+    crear_tipo_de_item = False
+    modificar_tipo_de_item = False
+    eliminar_tipo_de_item = False
+    visualizar_tipo_de_item = False
+    gestionar_tipos_de_atributo = False
+    roles = request.user.roles.all()
+    for r in roles:
+        for p in r.permisos.all():
+            if p.nombre == 'Crear tipo de item':
+                crear_tipo_de_item = True
+            elif p.nombre == 'Modificar tipo de item':
+                modificar_tipo_de_item = True
+            elif p.nombre == 'Eliminar tipo de item':
+                eliminar_tipo_de_item = True
+            elif p.nombre == 'Visualizar tipo de item':
+                visualizar_tipo_de_item = True
+            elif p.nombre == 'Gestionar tipos de atributo de tipo de item':
+                gestionar_tipos_de_atributo = True
+                
+            if crear_tipo_de_item and modificar_tipo_de_item and eliminar_tipo_de_item and visualizar_tipo_de_item and gestionar_tipos_de_atributo:
+                break
+        if crear_tipo_de_item and modificar_tipo_de_item and eliminar_tipo_de_item and visualizar_tipo_de_item and gestionar_tipos_de_atributo:
+                break
+            
     tipos_item = TipoItem.objects.all()
-    ctx = {'tipos_item': tipos_item}
+    ctx = {'tipos_item':tipos_item, 'crear_tipo_de_item':crear_tipo_de_item, 'modificar_tipo_de_item':modificar_tipo_de_item, 'eliminar_tipo_de_item':eliminar_tipo_de_item, 'visualizar_tipo_de_item':visualizar_tipo_de_item, 'gestionar_tipos_de_atributo':gestionar_tipos_de_atributo}
     return render_to_response('tipo_item/gestion_tipos_item.html', ctx, context_instance=RequestContext(request))
   
+
+   
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear tipo de item")
 def crear_tipo_item_view(request):
