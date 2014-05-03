@@ -1,0 +1,358 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Views &mdash; sap 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="sap 3.0 documentation" href="../index.html" />
+    <link rel="up" title="Contenido del Modulo de Desarrollo" href="../desarrollo.html" />
+    <link rel="next" title="Forms" href="forms.html" />
+    <link rel="prev" title="Models" href="models.html" /> 
+  </head>
+  <body>
+      <div class="header"><h1 class="heading"><a href="../index.html">
+          <span>sap 3.0 documentation</span></a></h1>
+        <h2 class="heading"><span>Views</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="models.html">Models</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="forms.html">Forms</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="views">
+<h1>Views<a class="headerlink" href="#views" title="Permalink to this headline">¶</a></h1>
+<p>Import:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render_to_response</span>
+<span class="kn">from</span> <span class="nn">django.http.response</span> <span class="kn">import</span> <span class="n">HttpResponseRedirect</span>
+<span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">RequestContext</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">administracion.models</span> <span class="kn">import</span> <span class="n">Proyecto</span><span class="p">,</span> <span class="n">Fase</span><span class="p">,</span> <span class="n">TipoItem</span><span class="p">,</span> <span class="n">ValorAtributo</span>
+<span class="kn">from</span> <span class="nn">desarrollo.models</span> <span class="kn">import</span> <span class="n">Item</span>
+<span class="kn">from</span> <span class="nn">desarrollo.forms</span> <span class="kn">import</span> <span class="n">CrearItemForm</span><span class="p">,</span> <span class="n">ModificarItemForm</span>
+<span class="kn">from</span> <span class="nn">inicio.decorators</span> <span class="kn">import</span> <span class="n">permiso_requerido</span><span class="p">,</span> <span class="n">miembro_proyecto</span><span class="p">,</span> <span class="n">fase_miembro_proyecto</span><span class="p">,</span> <span class="n">item_miembro_proyecto</span>
+</pre></div>
+</div>
+<span class="target" id="module-desarrollo.views"></span><dl class="function">
+<dt id="desarrollo.views.calcular_costo_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">calcular_costo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#calcular_costo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.calcular_costo_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del calculo del costo total de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Calcular costo de proyecto.
+    - Debe ser miembro del proyecto en cuestion.
+    
+Esta vista permite al usuario conocer el costo total del proyecto seleccionado, para lograr esto, se recorren 
+todas las fases y todos los items, y se suman los costos individuales de cada item hasta terminar el ciclo de 
+recorrido por las fases del proyecto.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desarrollo.views.crear_item_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">crear_item_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#crear_item_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.crear_item_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para crear un item. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Crear item.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+Esta vista permite al usuario crear y agregar un item a la fase previamente seleccionada, para lograr esto, 
+se verifica la validez de cada campo ingresado y luego se crea el item de acuerdo a los campos ingresados y 
+se almacena en la fase. 
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desarrollo.views.desarrollo_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">desarrollo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#desarrollo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.desarrollo_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del modulo de desarrollo. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+        - El usuario debe estar logueado.
+        
+Esta vista permite al usuario listar y conocer las opciones de los proyectos puestos en marcha.
+Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+los botones de accion sobre cada proyecto.
+  
+La vista recibe los siguientes parametros:
+
+        - request: contiene informacion sobre la sesion actual.
+    
+La vista retorna lo siguiente:
+
+        - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desarrollo.views.eliminar_item_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">eliminar_item_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#eliminar_item_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.eliminar_item_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para eliminar un item. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Eliminar item.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+Esta vista permite al usuario eliminar un item de la fase previamente seleccionada, para lograr esto, 
+se verifica si el item cumple las siguientes condiciones:
+
+    - El item debe estar en estado En construccion o En revision.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_item: el identificador del item.
+    - id_fase: el identificador de la fase.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desarrollo.views.fases_proyecto_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">fases_proyecto_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#fases_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.fases_proyecto_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de fases por proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Gestionar fases de proyecto.
+    - Debe ser miembro del proyecto en cuestion.
+    
+Esta vista permite al usuario listar y conocer las opciones de desarrollo de las fases del proyecto seleccionado.
+Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+los botones de accion sobre cada fase.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desarrollo.views.finalizar_fase_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">finalizar_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#finalizar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.finalizar_fase_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para finalizar una fase. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Finalizar fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+Esta vista permite al usuario finalizar una fase si es que cumple con las siguientes condiciones:
+
+    - Debe estar en estado En curso.
+    - Todos sus items deben estar en estado Bloqueado.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desarrollo.views.iniciar_fase_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">iniciar_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#iniciar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.iniciar_fase_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para iniciar una fase. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Iniciar fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+Esta vista permite al usuario iniciar una fase si es que cumple con las siguientes condiciones:
+
+    - Debe estar en estado Inactivo.
+    - Debe poseer al menos un item.
+    - Debe poseer al menos un rol.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desarrollo.views.items_fase_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">items_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#items_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.items_fase_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de items por fase. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Gestionar items de fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+Esta vista permite al usuario listar y conocer las opciones de desarrollo de los items de la fase seleccionada.
+Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+los botones de accion sobre cada item.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desarrollo.views.modificar_item_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">modificar_item_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#modificar_item_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.modificar_item_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para modificar un item. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Modificar item.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+Esta vista permite al usuario modificar un item de la fase previamente seleccionada, para lograr esto, 
+se verifica la validez de cada campo modificado y luego se guarda el item de acuerdo a los campos ingresados.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_item: el identificador del item.
+    - id_fase: el identificador de la fase.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:    
+
+    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del item modificado. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desarrollo.views.visualizar_item_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">visualizar_item_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#visualizar_item_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.visualizar_item_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para visualizar un item. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Visualizar item.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+
+Esta vista permite al usuario visualizar todos los campos guardados de un item de la fase previamente seleccionada.
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_item: el identificador del item.
+    - id_fase: el identificador de la fase.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="models.html">Models</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="forms.html">Forms</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright 2014, Rodrigo Santos | Gustavo Cabral.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -10,16 +10,24 @@ from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_
 @login_required(login_url='/login/')
 def desarrollo_view(request):
     """
-    La vista del modulo de desarrollo. Para acceder a esta vista se deben cumplir los siguientes 
-    requisitos:
-    - El usuario debe estar logueado.
-    Esta vista presenta una lista de todos los proyectos puestos en marcha.
-    Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
-    los botones de accion sobre cada proyecto.
-    La vista recibe los siguientes parmetros:
-    - request: contiene informacin sobre la sesion actual.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto generado en la vista al template correspondiente. 
+    ::
+    
+        La vista del modulo de desarrollo. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+                - El usuario debe estar logueado.
+                
+        Esta vista permite al usuario listar y conocer las opciones de los proyectos puestos en marcha.
+        Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+        los botones de accion sobre cada proyecto.
+          
+        La vista recibe los siguientes parametros:
+    
+                - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+      
+                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     calcular_costo = False
     gestionar_fases = False
@@ -45,19 +53,27 @@ def desarrollo_view(request):
 @miembro_proyecto()
 def calcular_costo_view(request, id_proyecto):
     """
-    La vista del calculo del costo total de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Calcular costo de proyecto.
-    - Debe ser miembro del proyecto en cuestion.
-    Esta vista permite al usuario conocer el costo total del proyecto seleccionado, para lograr esto, se recorren 
-    todas las fases y todos los items, y se suman los costos individuales de cada item hasta terminar el ciclo de 
-    recorrido por las fases del proyecto.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_proyecto: el identificador del proyecto.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    ::
+    
+        La vista del calculo del costo total de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Calcular costo de proyecto.
+            - Debe ser miembro del proyecto en cuestion.
+            
+        Esta vista permite al usuario conocer el costo total del proyecto seleccionado, para lograr esto, se recorren 
+        todas las fases y todos los items, y se suman los costos individuales de cada item hasta terminar el ciclo de 
+        recorrido por las fases del proyecto.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+    
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fases = proyecto.fases.all()
@@ -80,19 +96,27 @@ def calcular_costo_view(request, id_proyecto):
 @miembro_proyecto()
 def fases_proyecto_view(request, id_proyecto):
     """
-    La vista del listado de fases por proyecto. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Gestionar fases de proyecto.
-    - Debe ser miembro del proyecto en cuestion.
-    Esta vista permite al usuario listar y conocer las opciones de desarrollo de las fases del proyecto seleccionado.
-    Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
-    los botones de accion sobre cada fase.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_proyecto: el identificador del proyecto.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    ::
+    
+        La vista del listado de fases por proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar fases de proyecto.
+            - Debe ser miembro del proyecto en cuestion.
+            
+        Esta vista permite al usuario listar y conocer las opciones de desarrollo de las fases del proyecto seleccionado.
+        Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+        los botones de accion sobre cada fase.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+    
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     iniciar_fase = False
     finalizar_fase = False
@@ -122,21 +146,30 @@ def fases_proyecto_view(request, id_proyecto):
 @fase_miembro_proyecto()
 def iniciar_fase_view(request, id_fase, id_proyecto):
     """
-    La vista para iniciar una fase. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Iniciar fase.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario iniciar una fase si es que cumple con las siguientes condiciones:
-    - Debe estar en estado Inactivo.
-    - Debe poseer al menos un item.
-    - Debe poseer al menos un rol.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    - id_proyecto: el identificador del proyecto.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    ::
+    
+        La vista para iniciar una fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Iniciar fase.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario iniciar una fase si es que cumple con las siguientes condiciones:
+        
+            - Debe estar en estado Inactivo.
+            - Debe poseer al menos un item.
+            - Debe poseer al menos un rol.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     fase = Fase.objects.get(id=id_fase)
     proyecto = Proyecto.objects.get(id=id_proyecto)
@@ -169,20 +202,29 @@ def iniciar_fase_view(request, id_fase, id_proyecto):
 @fase_miembro_proyecto()
 def finalizar_fase_view(request, id_fase, id_proyecto):
     """
-    La vista para finalizar una fase. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Finalizar fase.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario finalizar una fase si es que cumple con las siguientes condiciones:
-    - Debe estar en estado En curso.
-    - Todos sus items deben estar en estado Bloqueado.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    - id_proyecto: el identificador del proyecto.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    ::
+    
+        La vista para finalizar una fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Finalizar fase.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario finalizar una fase si es que cumple con las siguientes condiciones:
+        
+            - Debe estar en estado En curso.
+            - Todos sus items deben estar en estado Bloqueado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     fase = Fase.objects.get(id=id_fase)
     proyecto = Proyecto.objects.get(id=id_proyecto)
@@ -218,20 +260,28 @@ def finalizar_fase_view(request, id_fase, id_proyecto):
 @fase_miembro_proyecto()
 def items_fase_view(request, id_fase, id_proyecto):
     """
-    La vista del listado de items por fase. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Gestionar items de fase.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario listar y conocer las opciones de desarrollo de los items de la fase seleccionada.
-    Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
-    los botones de accion sobre cada item.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    - id_proyecto: el identificador del proyecto.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    ::
+    
+        La vista del listado de items por fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar items de fase.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario listar y conocer las opciones de desarrollo de los items de la fase seleccionada.
+        Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+        los botones de accion sobre cada item.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     crear_item = False
     modificar_item = False
@@ -265,22 +315,30 @@ def items_fase_view(request, id_fase, id_proyecto):
 @fase_miembro_proyecto()
 def crear_item_view(request, id_fase, id_proyecto):
     """
-    La vista para crear un item. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Crear item.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario crear y agregar un item a la fase previamente seleccionada, para lograr esto, 
-    se verifica la validez de cada campo ingresado y luego se crea el item de acuerdo a los campos ingresados y 
-    se almacena en la fase. 
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    - id_proyecto: el identificador del proyecto.
-    La vista retorna lo siguiente:
-    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
-    generado en la vista, al template correspondiente.
-    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. 
+    ::
+    
+        La vista para crear un item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Crear item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario crear y agregar un item a la fase previamente seleccionada, para lograr esto, 
+        se verifica la validez de cada campo ingresado y luego se crea el item de acuerdo a los campos ingresados y 
+        se almacena en la fase. 
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. 
     """
     identificador_fase = []
     for s in id_fase.split('/'):
@@ -322,22 +380,30 @@ def crear_item_view(request, id_fase, id_proyecto):
 @item_miembro_proyecto()
 def modificar_item_view(request, id_item, id_fase, id_proyecto):
     """
-    La vista para modificar un item. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Modificar item.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario modificar un item de la fase previamente seleccionada, para lograr esto, 
-    se verifica la validez de cada campo modificado y luego se guarda el item de acuerdo a los campos ingresados.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_item: el identificador del item.
-    - id_fase: el identificador de la fase.
-    - id_proyecto: el identificador del proyecto.
-    La vista retorna lo siguiente:
-    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
-    generado en la vista, al template correspondiente.
-    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del item modificado. 
+    ::
+    
+        La vista para modificar un item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Modificar item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario modificar un item de la fase previamente seleccionada, para lograr esto, 
+        se verifica la validez de cada campo modificado y luego se guarda el item de acuerdo a los campos ingresados.
+    
+        La vista recibe los siguientes parametros:
+    
+            - request: contiene informacion sobre la sesion actual.
+            - id_item: el identificador del item.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:    
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del item modificado. 
     """
     item = Item.objects.get(id=id_item)
     identificador_fase = []
@@ -403,23 +469,32 @@ def modificar_item_view(request, id_item, id_fase, id_proyecto):
 @item_miembro_proyecto()
 def eliminar_item_view(request, id_item, id_fase, id_proyecto):
     """
-    La vista para eliminar un item. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Eliminar item.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario eliminar un item de la fase previamente seleccionada, para lograr esto, 
-    se verifica si el item cumple las siguientes condiciones:
-    - El item debe estar en estado En construccion o En revision.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_item: el identificador del item.
-    - id_fase: el identificador de la fase.
-    - id_proyecto: el identificador del proyecto.
-    La vista retorna lo siguiente:
-    - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
-    generado en la vista, al template correspondiente.
-    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. 
+    ::
+    
+        La vista para eliminar un item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Eliminar item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario eliminar un item de la fase previamente seleccionada, para lograr esto, 
+        se verifica si el item cumple las siguientes condiciones:
+        
+            - El item debe estar en estado En construccion o En revision.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_item: el identificador del item.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. 
     """
     item = Item.objects.get(id=id_item)
     atributos = ValorAtributo.objects.filter(item__id=id_item)
@@ -450,19 +525,26 @@ def eliminar_item_view(request, id_item, id_fase, id_proyecto):
 @item_miembro_proyecto()
 def visualizar_item_view(request, id_item, id_fase, id_proyecto):
     """
-    La vista para visualizar un item. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Visualizar item.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario visualizar todos los campos guardados de un item de la fase previamente seleccionada.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_item: el identificador del item.
-    - id_fase: el identificador de la fase.
-    - id_proyecto: el identificador del proyecto.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+    ::
+    
+        La vista para visualizar un item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Visualizar item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+        Esta vista permite al usuario visualizar todos los campos guardados de un item de la fase previamente seleccionada.
+        La vista recibe los siguientes parametros:
+    
+            - request: contiene informacion sobre la sesion actual.
+            - id_item: el identificador del item.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
     """
     item = Item.objects.get(id=id_item)
     atributos = ValorAtributo.objects.filter(item__id=id_item)

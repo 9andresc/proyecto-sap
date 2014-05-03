@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>desarrollo.forms &mdash; sap 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="sap 3.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+      <div class="header"><h1 class="heading"><a href="../../index.html">
+          <span>sap 3.0 documentation</span></a></h1>
+        <h2 class="heading"><span>desarrollo.forms</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        <a class="uplink" href="../../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <h1>Source code for desarrollo.forms</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
+<span class="kn">from</span> <span class="nn">administracion.models</span> <span class="kn">import</span> <span class="n">TipoItem</span>
+
+<span class="k">def</span> <span class="nf">opcion_tipo_item</span><span class="p">():</span>
+    <span class="n">tipos_item</span> <span class="o">=</span> <span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">resultado</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tipo_item</span> <span class="ow">in</span> <span class="n">tipos_item</span><span class="p">:</span> 
+        <span class="n">tupla</span> <span class="o">=</span> <span class="p">(</span><span class="n">tipo_item</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">tipo_item</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>
+        <span class="n">resultado</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tupla</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">resultado</span>
+
+<div class="viewcode-block" id="CrearItemForm"><a class="viewcode-back" href="../../moduloDES/forms.html#desarrollo.forms.CrearItemForm">[docs]</a><span class="k">class</span> <span class="nc">CrearItemForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la creacion de un item.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del item que deben </span>
+<span class="sd">        ingresarse estableciendo como required=True, si es indispensable</span>
+<span class="sd">        completar ese atributo para la creacion del item o caso </span>
+<span class="sd">        contrario required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se verifica mediante una funcion que el valor de la complejidad sea valido.</span>
+<span class="sd">        </span>
+<span class="sd">        Se verifica mediante una funcion que el valor del costo sea valido.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de item&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">complejidad</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Complejidad&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">costo</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">FloatField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Costo&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">tipo_item</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Tipo de item&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="n">opcion_tipo_item</span><span class="p">()),</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">clean_complejidad</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">complejidad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;complejidad&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">complejidad</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">complejidad</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">complejidad</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;El valor de la complejidad debe estar en el rango [1, 10].&#39;</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">clean_costo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">costo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;costo&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">costo</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">costo</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;El valor del costo debe ser igual o mayor a cero.&#39;</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="ModificarItemForm"><a class="viewcode-back" href="../../moduloDES/forms.html#desarrollo.forms.ModificarItemForm">[docs]</a><span class="k">class</span> <span class="nc">ModificarItemForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la modificacion de un item.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del item que deben </span>
+<span class="sd">        ingresarse sin posibilidad de dejar el campo vacio estableciendo</span>
+<span class="sd">        como required=True, caso contrarios required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se verifica mediante una funcion que el valor de la complejidad sea valido.</span>
+<span class="sd">        </span>
+<span class="sd">        Se verifica mediante una funcion que el valor del costo sea valido.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de item&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">complejidad</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Complejidad&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">costo</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">FloatField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Costo&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">clean_complejidad</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">complejidad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;complejidad&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">complejidad</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">complejidad</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">complejidad</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;El valor de la complejidad debe estar en el rango [1, 10].&#39;</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">clean_costo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">costo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;costo&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">costo</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">costo</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;El valor del costo debe ser igual o mayor a cero.&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        <a class="uplink" href="../../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright 2014, Rodrigo Santos | Gustavo Cabral.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

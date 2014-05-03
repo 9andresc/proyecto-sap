@@ -1,0 +1,603 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>desarrollo.views &mdash; sap 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="sap 3.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+      <div class="header"><h1 class="heading"><a href="../../index.html">
+          <span>sap 3.0 documentation</span></a></h1>
+        <h2 class="heading"><span>desarrollo.views</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        <a class="uplink" href="../../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <h1>Source code for desarrollo.views</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render_to_response</span>
+<span class="kn">from</span> <span class="nn">django.http.response</span> <span class="kn">import</span> <span class="n">HttpResponseRedirect</span>
+<span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">RequestContext</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">administracion.models</span> <span class="kn">import</span> <span class="n">Proyecto</span><span class="p">,</span> <span class="n">Fase</span><span class="p">,</span> <span class="n">TipoItem</span><span class="p">,</span> <span class="n">ValorAtributo</span>
+<span class="kn">from</span> <span class="nn">desarrollo.models</span> <span class="kn">import</span> <span class="n">Item</span>
+<span class="kn">from</span> <span class="nn">desarrollo.forms</span> <span class="kn">import</span> <span class="n">CrearItemForm</span><span class="p">,</span> <span class="n">ModificarItemForm</span>
+<span class="kn">from</span> <span class="nn">inicio.decorators</span> <span class="kn">import</span> <span class="n">permiso_requerido</span><span class="p">,</span> <span class="n">miembro_proyecto</span><span class="p">,</span> <span class="n">fase_miembro_proyecto</span><span class="p">,</span> <span class="n">item_miembro_proyecto</span>
+
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s">&#39;/login/&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="desarrollo_view"><a class="viewcode-back" href="../../moduloDES/views.html#desarrollo.views.desarrollo_view">[docs]</a><span class="k">def</span> <span class="nf">desarrollo_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        La vista del modulo de desarrollo. Para acceder a esta vista se deben cumplir los siguientes</span>
+<span class="sd">        requisitos:</span>
+<span class="sd">    </span>
+<span class="sd">                - El usuario debe estar logueado.</span>
+<span class="sd">                </span>
+<span class="sd">        Esta vista permite al usuario listar y conocer las opciones de los proyectos puestos en marcha.</span>
+<span class="sd">        Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) </span>
+<span class="sd">        los botones de accion sobre cada proyecto.</span>
+<span class="sd">          </span>
+<span class="sd">        La vista recibe los siguientes parametros:</span>
+<span class="sd">    </span>
+<span class="sd">                - request: contiene informacion sobre la sesion actual.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista retorna lo siguiente:</span>
+<span class="sd">      </span>
+<span class="sd">                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">calcular_costo</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">gestionar_fases</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">roles</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">roles</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">roles</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">permisos</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">nombre</span> <span class="o">==</span> <span class="s">&#39;Calcular costo de proyecto&#39;</span><span class="p">:</span>
+                <span class="n">calcular_costo</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">nombre</span> <span class="o">==</span> <span class="s">&#39;Gestionar fases de proyecto&#39;</span><span class="p">:</span>
+                <span class="n">gestionar_fases</span> <span class="o">=</span> <span class="bp">True</span>
+                
+            <span class="k">if</span> <span class="n">calcular_costo</span> <span class="ow">and</span> <span class="n">gestionar_fases</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">calcular_costo</span> <span class="ow">and</span> <span class="n">gestionar_fases</span><span class="p">:</span>
+                <span class="k">break</span>
+            
+    <span class="n">proyectos</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">estado</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;proyectos&#39;</span><span class="p">:</span> <span class="n">proyectos</span><span class="p">,</span> <span class="s">&#39;calcular_costo&#39;</span><span class="p">:</span><span class="n">calcular_costo</span><span class="p">,</span> <span class="s">&#39;gestionar_fases&#39;</span><span class="p">:</span><span class="n">gestionar_fases</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;desarrollo.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</div>
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s">&#39;/login/&#39;</span><span class="p">)</span>
+<span class="nd">@permiso_requerido</span><span class="p">(</span><span class="n">permiso</span><span class="o">=</span><span class="s">&quot;Calcular costo de proyecto&quot;</span><span class="p">)</span>
+<span class="nd">@miembro_proyecto</span><span class="p">()</span>
+<div class="viewcode-block" id="calcular_costo_view"><a class="viewcode-back" href="../../moduloDES/views.html#desarrollo.views.calcular_costo_view">[docs]</a><span class="k">def</span> <span class="nf">calcular_costo_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_proyecto</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        La vista del calculo del costo total de un proyecto. Para acceder a esta vista se deben cumplir los siguientes</span>
+<span class="sd">        requisitos:</span>
+<span class="sd">        </span>
+<span class="sd">            - El usuario debe estar logueado.</span>
+<span class="sd">            - El usuario debe poseer el permiso: Calcular costo de proyecto.</span>
+<span class="sd">            - Debe ser miembro del proyecto en cuestion.</span>
+<span class="sd">            </span>
+<span class="sd">        Esta vista permite al usuario conocer el costo total del proyecto seleccionado, para lograr esto, se recorren </span>
+<span class="sd">        todas las fases y todos los items, y se suman los costos individuales de cada item hasta terminar el ciclo de </span>
+<span class="sd">        recorrido por las fases del proyecto.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista recibe los siguientes parametros:</span>
+<span class="sd">        </span>
+<span class="sd">            - request: contiene informacion sobre la sesion actual.</span>
+<span class="sd">            - id_proyecto: el identificador del proyecto.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista retorna lo siguiente:</span>
+<span class="sd">    </span>
+<span class="sd">            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_proyecto</span><span class="p">)</span>
+    <span class="n">fases</span> <span class="o">=</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">fases</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">fases_valido</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">items_valido</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">costo_total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">fases</span><span class="p">:</span>
+        <span class="n">fases_valido</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fases</span><span class="p">:</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">items</span><span class="p">:</span>
+                <span class="n">items_valido</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+                    <span class="n">costo_total</span> <span class="o">=</span> <span class="n">costo_total</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">costo</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">,</span> <span class="s">&#39;fases_valido&#39;</span><span class="p">:</span><span class="n">fases_valido</span><span class="p">,</span> <span class="s">&#39;items_valido&#39;</span><span class="p">:</span><span class="n">items_valido</span><span class="p">,</span> <span class="s">&#39;costo_total&#39;</span><span class="p">:</span><span class="n">costo_total</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;costo_total.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+            </div>
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s">&#39;/login/&#39;</span><span class="p">)</span>
+<span class="nd">@permiso_requerido</span><span class="p">(</span><span class="n">permiso</span><span class="o">=</span><span class="s">&quot;Gestionar fases de proyecto&quot;</span><span class="p">)</span>
+<span class="nd">@miembro_proyecto</span><span class="p">()</span>
+<div class="viewcode-block" id="fases_proyecto_view"><a class="viewcode-back" href="../../moduloDES/views.html#desarrollo.views.fases_proyecto_view">[docs]</a><span class="k">def</span> <span class="nf">fases_proyecto_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_proyecto</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        La vista del listado de fases por proyecto. Para acceder a esta vista se deben cumplir los siguientes</span>
+<span class="sd">        requisitos:</span>
+<span class="sd">        </span>
+<span class="sd">            - El usuario debe estar logueado.</span>
+<span class="sd">            - El usuario debe poseer el permiso: Gestionar fases de proyecto.</span>
+<span class="sd">            - Debe ser miembro del proyecto en cuestion.</span>
+<span class="sd">            </span>
+<span class="sd">        Esta vista permite al usuario listar y conocer las opciones de desarrollo de las fases del proyecto seleccionado.</span>
+<span class="sd">        Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) </span>
+<span class="sd">        los botones de accion sobre cada fase.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista recibe los siguientes parametros:</span>
+<span class="sd">        </span>
+<span class="sd">            - request: contiene informacion sobre la sesion actual.</span>
+<span class="sd">            - id_proyecto: el identificador del proyecto.</span>
+<span class="sd">    </span>
+<span class="sd">        La vista retorna lo siguiente:</span>
+<span class="sd">        </span>
+<span class="sd">            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">iniciar_fase</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">finalizar_fase</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">gestionar_items</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">roles</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">roles</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">roles</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">permisos</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">nombre</span> <span class="o">==</span> <span class="s">&#39;Iniciar fase&#39;</span><span class="p">:</span>
+                <span class="n">iniciar_fase</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">nombre</span> <span class="o">==</span> <span class="s">&#39;Finalizar fase&#39;</span><span class="p">:</span>
+                <span class="n">finalizar_fase</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">nombre</span> <span class="o">==</span> <span class="s">&#39;Gestionar items de fase&#39;</span><span class="p">:</span>
+                <span class="n">gestionar_items</span> <span class="o">=</span> <span class="bp">True</span>
+                
+            <span class="k">if</span> <span class="n">iniciar_fase</span> <span class="ow">and</span> <span class="n">finalizar_fase</span> <span class="ow">and</span> <span class="n">gestionar_items</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">iniciar_fase</span> <span class="ow">and</span> <span class="n">finalizar_fase</span> <span class="ow">and</span> <span class="n">gestionar_items</span><span class="p">:</span>
+                <span class="k">break</span>
+    
+    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_proyecto</span><span class="p">)</span>
+    <span class="n">fases</span> <span class="o">=</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">fases</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">,</span> <span class="s">&#39;fases&#39;</span><span class="p">:</span><span class="n">fases</span><span class="p">,</span> <span class="s">&#39;iniciar_fase&#39;</span><span class="p">:</span><span class="n">iniciar_fase</span><span class="p">,</span> <span class="s">&#39;finalizar_fase&#39;</span><span class="p">:</span><span class="n">finalizar_fase</span><span class="p">,</span> <span class="s">&#39;gestionar_items&#39;</span><span class="p">:</span><span class="n">gestionar_items</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;fases_proyecto.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</div>
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s">&#39;/login/&#39;</span><span class="p">)</span>
+<span class="nd">@permiso_requerido</span><span class="p">(</span><span class="n">permiso</span><span class="o">=</span><span class="s">&quot;Iniciar fase&quot;</span><span class="p">)</span>
+<span class="nd">@fase_miembro_proyecto</span><span class="p">()</span>
+<div class="viewcode-block" id="iniciar_fase_view"><a class="viewcode-back" href="../../moduloDES/views.html#desarrollo.views.iniciar_fase_view">[docs]</a><span class="k">def</span> <span class="nf">iniciar_fase_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_fase</span><span class="p">,</span> <span class="n">id_proyecto</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        La vista para iniciar una fase. Para acceder a esta vista se deben cumplir los siguientes</span>
+<span class="sd">        requisitos:</span>
+<span class="sd">    </span>
+<span class="sd">            - El usuario debe estar logueado.</span>
+<span class="sd">            - El usuario debe poseer el permiso: Iniciar fase.</span>
+<span class="sd">            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.</span>
+<span class="sd">            </span>
+<span class="sd">        Esta vista permite al usuario iniciar una fase si es que cumple con las siguientes condiciones:</span>
+<span class="sd">        </span>
+<span class="sd">            - Debe estar en estado Inactivo.</span>
+<span class="sd">            - Debe poseer al menos un item.</span>
+<span class="sd">            - Debe poseer al menos un rol.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista recibe los siguientes parametros:</span>
+<span class="sd">        </span>
+<span class="sd">            - request: contiene informacion sobre la sesion actual.</span>
+<span class="sd">            - id_fase: el identificador de la fase.</span>
+<span class="sd">            - id_proyecto: el identificador del proyecto.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista retorna lo siguiente:</span>
+<span class="sd">        </span>
+<span class="sd">            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fase</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_fase</span><span class="p">)</span>
+    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_proyecto</span><span class="p">)</span>
+    <span class="n">inicio_valido</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">estado_valido</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">items_valido</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">roles_valido</span> <span class="o">=</span> <span class="bp">True</span>
+    
+    <span class="k">if</span> <span class="n">fase</span><span class="o">.</span><span class="n">estado</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">estado_valido</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">inicio_valido</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="n">fase</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">items_valido</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">inicio_valido</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="n">fase</span><span class="o">.</span><span class="n">roles</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">roles_valido</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">inicio_valido</span> <span class="o">=</span> <span class="bp">False</span>
+    
+    <span class="k">if</span> <span class="n">inicio_valido</span><span class="p">:</span>
+        <span class="n">fase</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">fase</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;fase&#39;</span><span class="p">:</span><span class="n">fase</span><span class="p">,</span> <span class="s">&#39;inicio_valido&#39;</span><span class="p">:</span><span class="n">inicio_valido</span><span class="p">,</span> <span class="s">&#39;estado_valido&#39;</span><span class="p">:</span><span class="n">estado_valido</span><span class="p">,</span> <span class="s">&#39;items_valido&#39;</span><span class="p">:</span><span class="n">items_valido</span><span class="p">,</span> <span class="s">&#39;roles_valido&#39;</span><span class="p">:</span><span class="n">roles_valido</span><span class="p">,</span> <span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;iniciar_fase.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;fase&#39;</span><span class="p">:</span><span class="n">fase</span><span class="p">,</span> <span class="s">&#39;inicio_valido&#39;</span><span class="p">:</span><span class="n">inicio_valido</span><span class="p">,</span> <span class="s">&#39;estado_valido&#39;</span><span class="p">:</span><span class="n">estado_valido</span><span class="p">,</span> <span class="s">&#39;items_valido&#39;</span><span class="p">:</span><span class="n">items_valido</span><span class="p">,</span> <span class="s">&#39;roles_valido&#39;</span><span class="p">:</span><span class="n">roles_valido</span><span class="p">,</span> <span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;iniciar_fase.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+    </div>
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s">&#39;/login/&#39;</span><span class="p">)</span>
+<span class="nd">@permiso_requerido</span><span class="p">(</span><span class="n">permiso</span><span class="o">=</span><span class="s">&quot;Finalizar fase&quot;</span><span class="p">)</span>
+<span class="nd">@fase_miembro_proyecto</span><span class="p">()</span>
+<div class="viewcode-block" id="finalizar_fase_view"><a class="viewcode-back" href="../../moduloDES/views.html#desarrollo.views.finalizar_fase_view">[docs]</a><span class="k">def</span> <span class="nf">finalizar_fase_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_fase</span><span class="p">,</span> <span class="n">id_proyecto</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        La vista para finalizar una fase. Para acceder a esta vista se deben cumplir los siguientes</span>
+<span class="sd">        requisitos:</span>
+<span class="sd">    </span>
+<span class="sd">            - El usuario debe estar logueado.</span>
+<span class="sd">            - El usuario debe poseer el permiso: Finalizar fase.</span>
+<span class="sd">            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.</span>
+<span class="sd">            </span>
+<span class="sd">        Esta vista permite al usuario finalizar una fase si es que cumple con las siguientes condiciones:</span>
+<span class="sd">        </span>
+<span class="sd">            - Debe estar en estado En curso.</span>
+<span class="sd">            - Todos sus items deben estar en estado Bloqueado.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista recibe los siguientes parametros:</span>
+<span class="sd">        </span>
+<span class="sd">            - request: contiene informacion sobre la sesion actual.</span>
+<span class="sd">            - id_fase: el identificador de la fase.</span>
+<span class="sd">            - id_proyecto: el identificador del proyecto.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista retorna lo siguiente:</span>
+<span class="sd">        </span>
+<span class="sd">            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fase</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_fase</span><span class="p">)</span>
+    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_proyecto</span><span class="p">)</span>
+    <span class="n">finalizado_valido</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">estado_valido</span> <span class="o">=</span> <span class="bp">True</span>
+    
+    <span class="k">if</span> <span class="n">fase</span><span class="o">.</span><span class="n">estado</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">estado_valido</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">finalizado_valido</span> <span class="o">=</span> <span class="bp">False</span>
+    
+    <span class="k">if</span> <span class="n">estado_valido</span><span class="p">:</span>
+        <span class="n">finalizado_valido</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">fase</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">estado</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">finalizado_valido</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">break</span>
+            
+        <span class="k">if</span> <span class="n">finalizado_valido</span><span class="p">:</span>
+            <span class="n">fase</span><span class="o">.</span><span class="n">estado</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">fase</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;fase&#39;</span><span class="p">:</span><span class="n">fase</span><span class="p">,</span> <span class="s">&#39;finalizado_valido&#39;</span><span class="p">:</span><span class="n">finalizado_valido</span><span class="p">,</span> <span class="s">&#39;estado_valido&#39;</span><span class="p">:</span><span class="n">estado_valido</span><span class="p">,</span> <span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;finalizar_fase.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;fase&#39;</span><span class="p">:</span><span class="n">fase</span><span class="p">,</span> <span class="s">&#39;finalizado_valido&#39;</span><span class="p">:</span><span class="n">finalizado_valido</span><span class="p">,</span> <span class="s">&#39;estado_valido&#39;</span><span class="p">:</span><span class="n">estado_valido</span><span class="p">,</span> <span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;finalizar_fase.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;fase&#39;</span><span class="p">:</span><span class="n">fase</span><span class="p">,</span> <span class="s">&#39;finalizado_valido&#39;</span><span class="p">:</span><span class="n">finalizado_valido</span><span class="p">,</span> <span class="s">&#39;estado_valido&#39;</span><span class="p">:</span><span class="n">estado_valido</span><span class="p">,</span> <span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;finalizar_fase.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</div>
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s">&#39;/login/&#39;</span><span class="p">)</span>
+<span class="nd">@permiso_requerido</span><span class="p">(</span><span class="n">permiso</span><span class="o">=</span><span class="s">&quot;Gestionar items de fase&quot;</span><span class="p">)</span>
+<span class="nd">@fase_miembro_proyecto</span><span class="p">()</span>
+<div class="viewcode-block" id="items_fase_view"><a class="viewcode-back" href="../../moduloDES/views.html#desarrollo.views.items_fase_view">[docs]</a><span class="k">def</span> <span class="nf">items_fase_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_fase</span><span class="p">,</span> <span class="n">id_proyecto</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        La vista del listado de items por fase. Para acceder a esta vista se deben cumplir los siguientes</span>
+<span class="sd">        requisitos:</span>
+<span class="sd">        </span>
+<span class="sd">            - El usuario debe estar logueado.</span>
+<span class="sd">            - El usuario debe poseer el permiso: Gestionar items de fase.</span>
+<span class="sd">            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.</span>
+<span class="sd">            </span>
+<span class="sd">        Esta vista permite al usuario listar y conocer las opciones de desarrollo de los items de la fase seleccionada.</span>
+<span class="sd">        Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) </span>
+<span class="sd">        los botones de accion sobre cada item.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista recibe los siguientes parametros:</span>
+<span class="sd">        </span>
+<span class="sd">            - request: contiene informacion sobre la sesion actual.</span>
+<span class="sd">            - id_fase: el identificador de la fase.</span>
+<span class="sd">            - id_proyecto: el identificador del proyecto.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista retorna lo siguiente:</span>
+<span class="sd">        </span>
+<span class="sd">            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">crear_item</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">modificar_item</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">eliminar_item</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">visualizar_item</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">roles</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">roles</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">roles</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">permisos</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">nombre</span> <span class="o">==</span> <span class="s">&#39;Crear item&#39;</span><span class="p">:</span>
+                <span class="n">crear_item</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">nombre</span> <span class="o">==</span> <span class="s">&#39;Modificar item&#39;</span><span class="p">:</span>
+                <span class="n">modificar_item</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">nombre</span> <span class="o">==</span> <span class="s">&#39;Eliminar item&#39;</span><span class="p">:</span>
+                <span class="n">eliminar_item</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">nombre</span> <span class="o">==</span> <span class="s">&#39;Visualizar item&#39;</span><span class="p">:</span>
+                <span class="n">visualizar_item</span> <span class="o">=</span> <span class="bp">True</span>
+                
+            <span class="k">if</span> <span class="n">crear_item</span> <span class="ow">and</span> <span class="n">modificar_item</span> <span class="ow">and</span> <span class="n">eliminar_item</span> <span class="ow">and</span> <span class="n">visualizar_item</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">crear_item</span> <span class="ow">and</span> <span class="n">modificar_item</span> <span class="ow">and</span> <span class="n">eliminar_item</span> <span class="ow">and</span> <span class="n">visualizar_item</span><span class="p">:</span>
+            <span class="k">break</span>
+    
+    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_proyecto</span><span class="p">)</span>
+    <span class="n">fase</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_fase</span><span class="p">)</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">fase</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">,</span> <span class="s">&#39;fase&#39;</span><span class="p">:</span><span class="n">fase</span><span class="p">,</span> <span class="s">&#39;items&#39;</span><span class="p">:</span><span class="n">items</span><span class="p">,</span> <span class="s">&#39;crear_item&#39;</span><span class="p">:</span><span class="n">crear_item</span><span class="p">,</span> <span class="s">&#39;modificar_item&#39;</span><span class="p">:</span><span class="n">modificar_item</span><span class="p">,</span> <span class="s">&#39;eliminar_item&#39;</span><span class="p">:</span><span class="n">eliminar_item</span><span class="p">,</span> <span class="s">&#39;visualizar_item&#39;</span><span class="p">:</span><span class="n">visualizar_item</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;items_fase.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</div>
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s">&#39;/login/&#39;</span><span class="p">)</span>
+<span class="nd">@permiso_requerido</span><span class="p">(</span><span class="n">permiso</span><span class="o">=</span><span class="s">&quot;Crear item&quot;</span><span class="p">)</span>
+<span class="nd">@fase_miembro_proyecto</span><span class="p">()</span>
+<div class="viewcode-block" id="crear_item_view"><a class="viewcode-back" href="../../moduloDES/views.html#desarrollo.views.crear_item_view">[docs]</a><span class="k">def</span> <span class="nf">crear_item_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_fase</span><span class="p">,</span> <span class="n">id_proyecto</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        La vista para crear un item. Para acceder a esta vista se deben cumplir los siguientes</span>
+<span class="sd">        requisitos:</span>
+<span class="sd">    </span>
+<span class="sd">            - El usuario debe estar logueado.</span>
+<span class="sd">            - El usuario debe poseer el permiso: Crear item.</span>
+<span class="sd">            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.</span>
+<span class="sd">            </span>
+<span class="sd">        Esta vista permite al usuario crear y agregar un item a la fase previamente seleccionada, para lograr esto, </span>
+<span class="sd">        se verifica la validez de cada campo ingresado y luego se crea el item de acuerdo a los campos ingresados y </span>
+<span class="sd">        se almacena en la fase. </span>
+<span class="sd">            </span>
+<span class="sd">        La vista recibe los siguientes parametros:</span>
+<span class="sd">        </span>
+<span class="sd">            - request: contiene informacion sobre la sesion actual.</span>
+<span class="sd">            - id_fase: el identificador de la fase.</span>
+<span class="sd">            - id_proyecto: el identificador del proyecto.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista retorna lo siguiente:</span>
+<span class="sd">        </span>
+<span class="sd">            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, </span>
+<span class="sd">            generado en la vista, al template correspondiente.</span>
+<span class="sd">            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fase</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_fase</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_proyecto</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">CrearItemForm</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">CrearItemForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">nombre</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;nombre&#39;</span><span class="p">]</span>
+            <span class="n">descripcion</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;descripcion&#39;</span><span class="p">]</span>
+            <span class="n">complejidad</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;complejidad&#39;</span><span class="p">]</span>
+            <span class="n">costo</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;costo&#39;</span><span class="p">]</span>
+            <span class="n">tipo_item</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;tipo_item&#39;</span><span class="p">]</span>
+            
+            <span class="n">tipo_item</span> <span class="o">=</span> <span class="n">TipoItem</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tipo_item</span><span class="p">)</span>
+            
+            <span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">,</span> <span class="n">descripcion</span><span class="o">=</span><span class="n">descripcion</span><span class="p">,</span> <span class="n">complejidad</span><span class="o">=</span><span class="n">complejidad</span><span class="p">,</span> <span class="n">costo</span><span class="o">=</span><span class="n">costo</span><span class="p">,</span> <span class="n">tipo_item</span><span class="o">=</span><span class="n">tipo_item</span><span class="p">)</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">tipos_atributo</span> <span class="o">=</span> <span class="n">tipo_item</span><span class="o">.</span><span class="n">tipos_atributo</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">tipo_atributo</span> <span class="ow">in</span> <span class="n">tipos_atributo</span><span class="p">:</span>
+                <span class="n">valor_atributo</span> <span class="o">=</span> <span class="n">ValorAtributo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="n">item</span><span class="p">,</span> <span class="n">tipo_item</span><span class="o">=</span><span class="n">tipo_item</span><span class="p">,</span> <span class="n">tipo_atributo</span><span class="o">=</span><span class="n">tipo_atributo</span><span class="p">)</span>
+                <span class="n">valor_atributo</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">fase</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">fase</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s">&#39;/desarrollo/items/fase/</span><span class="si">%s</span><span class="s">/proyecto/</span><span class="si">%s</span><span class="s">/&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">fase</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+            
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">,</span> <span class="s">&#39;fase&#39;</span><span class="p">:</span><span class="n">fase</span><span class="p">,</span> <span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;crear_item.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">,</span> <span class="s">&#39;fase&#39;</span><span class="p">:</span><span class="n">fase</span><span class="p">,</span> <span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;crear_item.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</div>
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s">&#39;/login/&#39;</span><span class="p">)</span>
+<span class="nd">@permiso_requerido</span><span class="p">(</span><span class="n">permiso</span><span class="o">=</span><span class="s">&quot;Modificar item&quot;</span><span class="p">)</span>
+<span class="nd">@item_miembro_proyecto</span><span class="p">()</span>
+<div class="viewcode-block" id="modificar_item_view"><a class="viewcode-back" href="../../moduloDES/views.html#desarrollo.views.modificar_item_view">[docs]</a><span class="k">def</span> <span class="nf">modificar_item_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_item</span><span class="p">,</span> <span class="n">id_fase</span><span class="p">,</span> <span class="n">id_proyecto</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        La vista para modificar un item. Para acceder a esta vista se deben cumplir los siguientes</span>
+<span class="sd">        requisitos:</span>
+<span class="sd">    </span>
+<span class="sd">            - El usuario debe estar logueado.</span>
+<span class="sd">            - El usuario debe poseer el permiso: Modificar item.</span>
+<span class="sd">            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.</span>
+<span class="sd">            </span>
+<span class="sd">        Esta vista permite al usuario modificar un item de la fase previamente seleccionada, para lograr esto, </span>
+<span class="sd">        se verifica la validez de cada campo modificado y luego se guarda el item de acuerdo a los campos ingresados.</span>
+<span class="sd">    </span>
+<span class="sd">        La vista recibe los siguientes parametros:</span>
+<span class="sd">    </span>
+<span class="sd">            - request: contiene informacion sobre la sesion actual.</span>
+<span class="sd">            - id_item: el identificador del item.</span>
+<span class="sd">            - id_fase: el identificador de la fase.</span>
+<span class="sd">            - id_proyecto: el identificador del proyecto.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista retorna lo siguiente:    </span>
+<span class="sd">        </span>
+<span class="sd">            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, </span>
+<span class="sd">            generado en la vista, al template correspondiente.</span>
+<span class="sd">            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del item modificado. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_item</span><span class="p">)</span>
+    <span class="n">identificador_fase</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">id_fase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">identificador_fase</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="k">break</span>
+    
+    <span class="n">fase</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">identificador_fase</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_proyecto</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">atributos</span> <span class="o">=</span> <span class="n">ValorAtributo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">item__id</span><span class="o">=</span><span class="n">id_item</span><span class="p">)</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">ModificarItemForm</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ModificarItemForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">nombre</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;nombre&#39;</span><span class="p">]</span>
+            <span class="n">descripcion</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;descripcion&#39;</span><span class="p">]</span>
+            <span class="n">complejidad</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;complejidad&#39;</span><span class="p">]</span>
+            <span class="n">costo</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;costo&#39;</span><span class="p">]</span>
+            
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">atributos</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">tipo_atributo</span><span class="o">.</span><span class="n">nombre</span> <span class="o">==</span> <span class="n">key</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">tipo_atributo</span><span class="o">.</span><span class="n">tipo_dato</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">a</span><span class="o">.</span><span class="n">valor_numerico</span> <span class="o">=</span> <span class="n">value</span>
+                            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">tipo_atributo</span><span class="o">.</span><span class="n">tipo_dato</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">a</span><span class="o">.</span><span class="n">valor_fecha</span> <span class="o">=</span> <span class="n">value</span>
+                            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">tipo_atributo</span><span class="o">.</span><span class="n">tipo_dato</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                            <span class="n">a</span><span class="o">.</span><span class="n">valor_texto</span> <span class="o">=</span> <span class="n">value</span>
+                            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">a</span><span class="o">.</span><span class="n">valor_logico</span> <span class="o">=</span> <span class="n">value</span>
+                            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                        
+            <span class="n">item</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">nombre</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">descripcion</span> <span class="o">=</span> <span class="n">descripcion</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">complejidad</span> <span class="o">=</span> <span class="n">complejidad</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">costo</span> <span class="o">=</span> <span class="n">costo</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s">&#39;/desarrollo/items/item/</span><span class="si">%s</span><span class="s">/fase/</span><span class="si">%s</span><span class="s">/proyecto/</span><span class="si">%s</span><span class="s">/&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">fase</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;GET&quot;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ModificarItemForm</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="p">{</span>
+            <span class="s">&#39;nombre&#39;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span>
+            <span class="s">&#39;descripcion&#39;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">descripcion</span><span class="p">,</span>
+            <span class="s">&#39;costo&#39;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">costo</span><span class="p">,</span>
+            <span class="s">&#39;complejidad&#39;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">complejidad</span><span class="p">,</span>
+            <span class="p">})</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;form&#39;</span><span class="p">:</span><span class="n">form</span><span class="p">,</span> <span class="s">&#39;item&#39;</span><span class="p">:</span><span class="n">item</span><span class="p">,</span> <span class="s">&#39;fase&#39;</span><span class="p">:</span><span class="n">fase</span><span class="p">,</span> <span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">,</span> <span class="s">&#39;atributos&#39;</span><span class="p">:</span><span class="n">atributos</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;modificar_item.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</div>
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s">&#39;/login/&#39;</span><span class="p">)</span>
+<span class="nd">@permiso_requerido</span><span class="p">(</span><span class="n">permiso</span><span class="o">=</span><span class="s">&quot;Eliminar item&quot;</span><span class="p">)</span>
+<span class="nd">@item_miembro_proyecto</span><span class="p">()</span>
+<div class="viewcode-block" id="eliminar_item_view"><a class="viewcode-back" href="../../moduloDES/views.html#desarrollo.views.eliminar_item_view">[docs]</a><span class="k">def</span> <span class="nf">eliminar_item_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_item</span><span class="p">,</span> <span class="n">id_fase</span><span class="p">,</span> <span class="n">id_proyecto</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        La vista para eliminar un item. Para acceder a esta vista se deben cumplir los siguientes</span>
+<span class="sd">        requisitos:</span>
+<span class="sd">        </span>
+<span class="sd">            - El usuario debe estar logueado.</span>
+<span class="sd">            - El usuario debe poseer el permiso: Eliminar item.</span>
+<span class="sd">            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.</span>
+<span class="sd">            </span>
+<span class="sd">        Esta vista permite al usuario eliminar un item de la fase previamente seleccionada, para lograr esto, </span>
+<span class="sd">        se verifica si el item cumple las siguientes condiciones:</span>
+<span class="sd">        </span>
+<span class="sd">            - El item debe estar en estado En construccion o En revision.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista recibe los siguientes parametros:</span>
+<span class="sd">        </span>
+<span class="sd">            - request: contiene informacion sobre la sesion actual.</span>
+<span class="sd">            - id_item: el identificador del item.</span>
+<span class="sd">            - id_fase: el identificador de la fase.</span>
+<span class="sd">            - id_proyecto: el identificador del proyecto.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista retorna lo siguiente:</span>
+<span class="sd">        </span>
+<span class="sd">            - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, </span>
+<span class="sd">            generado en la vista, al template correspondiente.</span>
+<span class="sd">            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_item</span><span class="p">)</span>
+    <span class="n">identificador_fase</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">id_fase</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">identificador_fase</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="k">break</span>
+    
+    <span class="n">fase</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">identificador_fase</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_proyecto</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">valido</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">estado</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">item</span><span class="o">.</span><span class="n">estado</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">item</span><span class="o">.</span><span class="n">estado</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">valido</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">valido</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s">&#39;/desarrollo/items/fase/</span><span class="si">%s</span><span class="s">/proyecto/</span><span class="si">%s</span><span class="s">/&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">fase</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">proyecto</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;item&#39;</span><span class="p">:</span><span class="n">item</span><span class="p">,</span> <span class="s">&#39;fase&#39;</span><span class="p">:</span><span class="n">fase</span><span class="p">,</span> <span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">,</span> <span class="s">&#39;valido&#39;</span><span class="p">:</span><span class="n">valido</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;eliminar_item.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;GET&quot;</span><span class="p">:</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;item&#39;</span><span class="p">:</span><span class="n">item</span><span class="p">,</span> <span class="s">&#39;fase&#39;</span><span class="p">:</span><span class="n">fase</span><span class="p">,</span> <span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">,</span> <span class="s">&#39;valido&#39;</span><span class="p">:</span><span class="n">valido</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;eliminar_item.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+</div>
+<span class="nd">@login_required</span><span class="p">(</span><span class="n">login_url</span><span class="o">=</span><span class="s">&#39;/login/&#39;</span><span class="p">)</span>
+<span class="nd">@permiso_requerido</span><span class="p">(</span><span class="n">permiso</span><span class="o">=</span><span class="s">&quot;Visualizar item&quot;</span><span class="p">)</span>
+<span class="nd">@item_miembro_proyecto</span><span class="p">()</span>
+<div class="viewcode-block" id="visualizar_item_view"><a class="viewcode-back" href="../../moduloDES/views.html#desarrollo.views.visualizar_item_view">[docs]</a><span class="k">def</span> <span class="nf">visualizar_item_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_item</span><span class="p">,</span> <span class="n">id_fase</span><span class="p">,</span> <span class="n">id_proyecto</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        La vista para visualizar un item. Para acceder a esta vista se deben cumplir los siguientes</span>
+<span class="sd">        requisitos:</span>
+<span class="sd">    </span>
+<span class="sd">            - El usuario debe estar logueado.</span>
+<span class="sd">            - El usuario debe poseer el permiso: Visualizar item.</span>
+<span class="sd">            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.</span>
+<span class="sd">    </span>
+<span class="sd">        Esta vista permite al usuario visualizar todos los campos guardados de un item de la fase previamente seleccionada.</span>
+<span class="sd">        La vista recibe los siguientes parametros:</span>
+<span class="sd">    </span>
+<span class="sd">            - request: contiene informacion sobre la sesion actual.</span>
+<span class="sd">            - id_item: el identificador del item.</span>
+<span class="sd">            - id_fase: el identificador de la fase.</span>
+<span class="sd">            - id_proyecto: el identificador del proyecto.</span>
+<span class="sd">            </span>
+<span class="sd">        La vista retorna lo siguiente:</span>
+<span class="sd">        </span>
+<span class="sd">            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_item</span><span class="p">)</span>
+    <span class="n">atributos</span> <span class="o">=</span> <span class="n">ValorAtributo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">item__id</span><span class="o">=</span><span class="n">id_item</span><span class="p">)</span>
+    <span class="n">fase</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_fase</span><span class="p">)</span>
+    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">Proyecto</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_proyecto</span><span class="p">)</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;item&#39;</span><span class="p">:</span><span class="n">item</span><span class="p">,</span> <span class="s">&#39;fase&#39;</span><span class="p">:</span> <span class="n">fase</span><span class="p">,</span> <span class="s">&#39;proyecto&#39;</span><span class="p">:</span><span class="n">proyecto</span><span class="p">,</span> <span class="s">&#39;atributos&#39;</span><span class="p">:</span><span class="n">atributos</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;visualizar_item.html&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">context_instance</span><span class="o">=</span><span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">))</span></div>
+</pre></div>
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        <a class="uplink" href="../../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright 2014, Rodrigo Santos | Gustavo Cabral.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

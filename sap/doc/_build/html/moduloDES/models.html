@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Models &mdash; sap 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="sap 3.0 documentation" href="../index.html" />
+    <link rel="up" title="Contenido del Modulo de Desarrollo" href="../desarrollo.html" />
+    <link rel="next" title="Views" href="views.html" />
+    <link rel="prev" title="Contenido del Modulo de Desarrollo" href="../desarrollo.html" /> 
+  </head>
+  <body>
+      <div class="header"><h1 class="heading"><a href="../index.html">
+          <span>sap 3.0 documentation</span></a></h1>
+        <h2 class="heading"><span>Models</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="../desarrollo.html">Contenido del Modulo de Desarrollo</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="views.html">Views</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="models">
+<h1>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h1>
+<p>Import:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">simple_history.models</span> <span class="kn">import</span> <span class="n">HistoricalRecords</span>
+<span class="kn">from</span> <span class="nn">administracion.models</span> <span class="kn">import</span> <span class="n">Fase</span>
+</pre></div>
+</div>
+<span class="target" id="module-desarrollo.models"></span><dl class="class">
+<dt id="desarrollo.models.HistoricalItem">
+<em class="property">class </em><tt class="descclassname">desarrollo.models.</tt><tt class="descname">HistoricalItem</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#desarrollo.models.HistoricalItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>HistoricalItem(id, nombre, descripcion, costo, complejidad, estado, archivos, fase_id, tipo_item_id, history_id, history_date, history_user_id, history_type)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="desarrollo.models.Item">
+<em class="property">class </em><tt class="descclassname">desarrollo.models.</tt><tt class="descname">Item</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/models.html#Item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.models.Item" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de un Item, los atributos 
+que posee un Item son:
+
+nombre: nombre del item.
+descripcion: una breve descripcion sobre el item.
+costo: costo del item.
+complejidad: complejidad respectiva del item.
+estado: estado actual del item.
+archivos: historial del item..
+fase: fase en la que esta el item.
+tipo_item: tipo de item vinculado al item.
+</pre></div>
+</div>
+<dl class="method">
+<dt id="desarrollo.models.Item.save_without_historical_record">
+<tt class="descname">save_without_historical_record</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#desarrollo.models.Item.save_without_historical_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Caution! Make sure you know what you&#8217;re doing before you use this method.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="../desarrollo.html">Contenido del Modulo de Desarrollo</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="views.html">Views</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright 2014, Rodrigo Santos | Gustavo Cabral.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

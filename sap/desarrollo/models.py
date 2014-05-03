@@ -15,7 +15,21 @@ def content_file_name(instance, filename):
     return '/'.join(['content', instance.nombre, filename])
 
 class Item(models.Model):
+    """
+    ::
     
+        Clase que describe la estructura de cada instancia de un Item, los atributos 
+        que posee un Item son:
+
+        nombre: nombre del item.
+        descripcion: una breve descripcion sobre el item.
+        costo: costo del item.
+        complejidad: complejidad respectiva del item.
+        estado: estado actual del item.
+        archivos: historial del item..
+        fase: fase en la que esta el item.
+        tipo_item: tipo de item vinculado al item.
+    """
     nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=True)
     costo = models.FloatField(null=True, blank=True, default=0)

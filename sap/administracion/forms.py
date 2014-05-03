@@ -14,7 +14,20 @@ class CustomDateField(forms.DateField):
 
 class CrearUsuarioForm(forms.Form):
     """
-    Formulario utilizado para la creacion de un usuario.
+    ::
+    
+        Formulario utilizado para la creacion de un usuario.
+        
+        Se especifican todos los atributos del usuario que deben 
+        ingresarse estableciendo como required=True, si es indispensable
+        completar ese atributo para la creacion del usuario o caso contrarios 
+        required=False.
+        
+        Se utilizan funciones para verificar que el nombre no este registrado
+        en el sistema, ni tampoco el email.
+        
+        Por ultimo se revisa que los dos campos de contrasenha coincidan.
+        
     """
     username = forms.CharField(label="Nombre de usuario", required=True)
     email = forms.EmailField(label="Email", required=True)
@@ -56,7 +69,19 @@ class CrearUsuarioForm(forms.Form):
         
 class ModificarUsuarioForm(forms.Form):
     """
-    Formulario utilizado para la modificacion de un usuario.
+    ::
+    
+        Formulario utilizado para la modificacion de un usuario.
+        
+        Se especifican todos los atributos del usuario que deben 
+        ingresarse sin posibilidad de dejar el campo vacio estableciendo
+        como required=True, caso contrarios required=False.
+        
+        Se utilizan funciones para verificar que el nombre no este registrado
+        en el sistema, ni tampoco el email.
+        
+        Por ultimo se revisa que los dos campos de contrasenha coincidan y se procede a reemplazar la contrasenha.
+
     """
     username = forms.CharField(label="Nombre de usuario", widget=forms.TextInput(), required=True)
     email = forms.EmailField(label="Email", widget=forms.TextInput(), required=True)
@@ -103,7 +128,18 @@ class CambiarContrasenhaForm(forms.Form):
         
 class CrearRolForm(forms.Form):
     """
-    Formulario utilizado para la creacion de un rol.
+    ::
+    
+        Formulario utilizado para la creacion de un rol.
+        
+        Se especifican todos los atributos del rol que deben 
+        ingresarse estableciendo como required=True, si es indispensable
+        completar ese atributo para la creacion del rol o caso contrarios 
+        required=False.
+        
+        Se utilizan funciones para verificar que el nombre no este registrado
+        en el sistema.
+        
     """
     nombre = forms.CharField(label="Nombre de rol", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
@@ -118,7 +154,17 @@ class CrearRolForm(forms.Form):
 
 class ModificarRolForm(forms.Form):
     """
-    Formulario utilizado para la modificacion de un rol.
+    ::
+    
+        Formulario utilizado para la modificacion de un rol.
+        
+        Se especifican todos los atributos del rol que deben 
+        ingresarse sin posibilidad de dejar el campo vacio estableciendo
+        como required=True, caso contrarios required=False.
+        
+        Se utilizan funciones para verificar que el nombre no este registrado
+        en el sistema.
+        
     """
     nombre = forms.CharField(label="Nombre de rol", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
@@ -135,7 +181,18 @@ class ModificarRolForm(forms.Form):
 
 class CrearTipoAtributoForm(forms.Form):
     """
-    Formulario utilizado para la creacion de un tipo atributo.
+    ::
+    
+        Formulario utilizado para la creacion de un tipo atributo.
+        
+        Se especifican todos los atributos del tipo atributo que deben 
+        ingresarse estableciendo como required=True, si es indispensable
+        completar ese atributo para la creacion del tipo atributo o caso 
+        contrario required=False.
+        
+        Se utilizan funciones para verificar que el nombre no este registrado
+        en el sistema.
+        
     """
     nombre = forms.CharField(label="Nombre de tipo atributo", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
@@ -151,7 +208,17 @@ class CrearTipoAtributoForm(forms.Form):
 
 class ModificarTipoAtributoForm(forms.Form):
     """
-    Formulario utilizado para la modificacion de un tipo atributo.
+    ::
+    
+        Formulario utilizado para la modificacion de un tipo atributo.
+        
+        Se especifican todos los atributos del tipo atributo que deben 
+        ingresarse sin posibilidad de dejar el campo vacio estableciendo
+        como required=True, caso contrarios required=False.
+        
+        Se utilizan funciones para verificar que el nombre no este registrado
+        en el sistema.
+        
     """
     nombre = forms.CharField(label="Nombre de tipo atributo", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
@@ -178,7 +245,23 @@ def opcion_lider():
     
 class CrearProyectoForm(forms.Form):
     """
-    Formulario utilizado para la creacion de un proyecto.
+    ::
+    
+        Formulario utilizado para la creacion de un proyecto.
+        
+        Se especifican todos los atributos del proyecto que deben 
+        ingresarse estableciendo como required=True, si es indispensable
+        completar ese atributo para la creacion del proyecto o caso 
+        contrario required=False.
+        
+        Se utiliza una funcion opcion lider, para listar todos los usuarios 
+        registrados y que se pueda elegir a uno como lider del proyecto.
+        
+        Se utilizan funciones para verificar que el nombre no este registrado
+        en el sistema.
+        
+        Se utiliza una funciona para verificar que la fecha ingresada sea valida.
+        
     """
     nombre = forms.CharField(label="Nombre de proyecto", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
@@ -218,7 +301,22 @@ class CrearProyectoForm(forms.Form):
 
 class ModificarProyectoForm(forms.Form):
     """
-    Formulario utilizado para la modificacion de un proyecto.
+    ::
+    
+        Formulario utilizado para la modificacion de un proyecto.
+        
+        Se especifican todos los atributos del proyecto que deben 
+        ingresarse sin posibilidad de dejar el campo vacio estableciendo
+        como required=True, caso contrarios required=False.
+        
+        Se utiliza una funcion opcion lider, para listar todos los usuarios 
+        registrados y que se pueda elegir a uno como nuevo lider del proyecto.
+        
+        Se utilizan funciones para verificar que el nombre no este registrado
+        en el sistema.
+        
+        Se utiliza una funciona para verificar que la fecha ingresada sea valida.
+        
     """
     nombre = forms.CharField(label="Nombre de proyecto", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
@@ -260,7 +358,22 @@ class ModificarProyectoForm(forms.Form):
             raise forms.ValidationError('La fecha introducida es distinta a la fecha original o anterior a la fecha actual. Ingrese una fecha valida.')
         
 class CrearFaseForm(forms.Form):
-
+    """
+    ::
+    
+        Formulario utilizado para la creacion de una fase.
+        
+        Se especifican todos los atributos de la fase que deben 
+        ingresarse estableciendo como required=True, si es indispensable
+        completar ese atributo para la creacion de la fase o caso 
+        contrario required=False.
+        
+        Se utilizan funciones para verificar que el nombre no este registrado
+        en el sistema.
+        
+        Se utiliza una funciona para verificar que la fecha ingresada sea valida.
+        
+    """
     nombre = forms.CharField(label="Nombre de fase", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
     duracion = forms.IntegerField(label="Duracion", required=True)
@@ -289,7 +402,21 @@ class CrearFaseForm(forms.Form):
             raise forms.ValidationError('La fecha introducida es anterior a la fecha actual. Ingrese una fecha posterior.')
         
 class ModificarFaseForm(forms.Form):
-
+    """
+    ::
+    
+        Formulario utilizado para la modificacion de una fase.
+        
+        Se especifican todos los atributos de la fase que deben 
+        ingresarse sin posibilidad de dejar el campo vacio estableciendo
+        como required=True, caso contrarios required=False.
+        
+        Se utilizan funciones para verificar que el nombre no este registrado
+        en el sistema.
+        
+        Se utiliza una funciona para verificar que la fecha ingresada sea valida.
+        
+    """
     nombre = forms.CharField(label="Nombre de fase", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
     duracion = forms.IntegerField(label="Duracion", required=True)
@@ -322,7 +449,18 @@ class ModificarFaseForm(forms.Form):
       
 class CrearTipoItemForm(forms.Form):
     """
-    Formulario utilizado para la creacion de un tipo de item.
+    ::
+    
+        Formulario utilizado para la creacion de un tipo de item.
+        
+        Se especifican todos los atributos del tipo de item que deben 
+        ingresarse estableciendo como required=True, si es indispensable
+        completar ese atributo para la creacion del tipo de item o caso 
+        contrario required=False.
+        
+        Se utilizan funciones para verificar que el nombre no este registrado
+        en el sistema.
+        
     """
     nombre = forms.CharField(label="Nombre de tipo de item", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
@@ -336,7 +474,19 @@ class CrearTipoItemForm(forms.Form):
         raise forms.ValidationError('Nombre de tipo de item ya registrado.')  
     
 class ModificarTipoItemForm(forms.Form):
-
+    """
+    ::
+    
+        Formulario utilizado para la modificacion de un tipo de item.
+        
+        Se especifican todos los atributos del tipo de item que deben 
+        ingresarse sin posibilidad de dejar el campo vacio estableciendo
+        como required=True, caso contrarios required=False.
+        
+        Se utilizan funciones para verificar que el nombre no este registrado
+        en el sistema.
+        
+    """
     nombre = forms.CharField(label="Nombre de tipo de item", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
 
