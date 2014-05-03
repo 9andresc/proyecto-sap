@@ -23,9 +23,23 @@ Contenidos:
 
 
    
+Contenido del Modulo de Desarrollo:
+===================================
+
+.. toctree::
+   :maxdepth: 4
+
+   moduloDES/models.rst
+   moduloDES/views.rst
+   moduloDES/forms.rst
 
 
 
+Indice y busqueda por palabra clave
+===========================================
+
+* :ref:`genindex`
+* :ref:`search`
 
 
 
