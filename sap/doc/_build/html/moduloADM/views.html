@@ -65,94 +65,325 @@
 <span class="target" id="module-administracion.views"></span><dl class="function">
 <dt id="administracion.views.agregar_permiso_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">agregar_permiso_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#agregar_permiso_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.agregar_permiso_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los permisos registrados en el sistema, junto con las 
-operaciones de agregacion de permiso.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de permisos ligados al rol. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    
+Esta vista permite al usuario listar todos los permisos del sistema, ademas, el template relacionado concede 
+las opciones para agregar un permiso seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_rol: el identificador del rol.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.agregar_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">agregar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.agregar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los roles registrados en el sistema, junto con las 
-operaciones de agregacion de rol.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de roles ligados al usuario. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    
+Esta vista permite al usuario listar todos los roles sistema, ademas, el template relacionado concede 
+las opciones para agregar un rol seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_usuario: el identificador del usuario.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.agregar_tipo_atributo_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">agregar_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#agregar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.agregar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de tipos de atributo ligados al tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    
+Esta vista permite al usuario listar todos los tipos de atributo del sistema, ademas, el template relacionado concede 
+las opciones para agregar un tipo de atributo seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_tipo_item: el identificador del tipo de item.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.cambiar_contrasenha_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">cambiar_contrasenha_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#cambiar_contrasenha_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.cambiar_contrasenha_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para cambiar la contrasenha de un usuario. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Cambiar contrasenha.
+    
+Esta vista permite al usuario cambiar su contrasenha una vez logueado, para lograr esto, 
+se verifica la validez de cada campo modificado y luego se guarda la contrasenha de acuerdo a los campos ingresados.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_usuario: el identificador del usuario.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del usuario modificada. 
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.comite_proyecto_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">comite_proyecto_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#comite_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.comite_proyecto_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los miembros del comite de cambios perteneciente a un proyecto existente en el sistema, 
-junto con las operaciones de agregacion de miembros y eliminacion de miembros.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de miembros del comite de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Gestionar comite de proyecto.
+    - El usuario debe ser miembro del proyecto.
+    
+Esta vista permite al usuario listar y conocer las opciones del comite de un proyecto previamente seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.confirmacion_agregar_permiso_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">confirmacion_agregar_permiso_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#confirmacion_agregar_permiso_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.confirmacion_agregar_permiso_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite agregar un permiso previamente seleccionado a un rol existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista de confirmacion de agregacion de un permiso a un rol. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Agregar permiso a rol.
+    
+Esta vista permite al usuario agregar un permiso seleccionado a el rol seleccionado previamente. Se verifica si el permiso a agregar ya 
+pertenece al rol, en cuyo caso se cancelara la operacion.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_rol: el identificador del rol.
+    - id_permiso: el identificador del permiso.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.confirmacion_agregar_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">confirmacion_agregar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#confirmacion_agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.confirmacion_agregar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite agregar un rol previamente seleccionado a un usuario existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista de confirmacion de agregacion de un rol a un usuario. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Agregar rol a usuario.
+    
+Esta vista permite al usuario agregar un rol seleccionado a el usuario seleccionado previamente. Se verifica si el rol a agregar ya 
+pertenece al usuario, en cuyo caso se cancelara la operacion.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_usuario: el identificador del usuario.
+    - id_rol: el identificador del rol.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.confirmacion_agregar_tipo_atributo_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">confirmacion_agregar_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#confirmacion_agregar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.confirmacion_agregar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite agregar un tipo de atributo previamente seleccionado a un tipo de item existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista de confirmacion de agregacion de un tipo de atributo a un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Agregar tipo de atributo a tipo de item.
+    
+Esta vista permite al usuario agregar un tipo de atributo seleccionado a el tipo de item seleccionado previamente. Se verifica si el tipo de atributo a agregar ya 
+pertenece al tipo de item, en cuyo caso se cancelara la operacion.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_tipo_item: el identificador del tipo de item.
+    - id_tipo_atributo: el identificador del tipo de atributo.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.confirmacion_fase_agregar_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">confirmacion_fase_agregar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#confirmacion_fase_agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.confirmacion_fase_agregar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>La vista de confirmacion de agregacion de un rol a una fase. Para acceder a esta vista se deben cumplir los siguientes
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista de confirmacion de agregacion de un rol a una fase. Para acceder a esta vista se deben cumplir los siguientes
 requisitos:
-- El usuario debe estar logueado.
-- El usuario debe poseer el permiso: Agregar rol a fase.
-- El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Agregar rol a fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
 Esta vista permite al usuario agregar un rol seleccionado a la fase seleccionada previamente. Se verifica si el rol a agregar ya 
 pertenece a la fase, en cuyo caso se cancelara la operacion.
+
 La vista recibe los siguientes parametros:
-- request: contiene informacion sobre la sesion actual.
-- id_fase: el identificador de la fase.
-- id_rol: el identificador del rol.
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    - id_rol: el identificador del rol.
+    
 La vista retorna lo siguiente:
-- render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.</p>
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.confirmacion_proyecto_agregar_fase_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">confirmacion_proyecto_agregar_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#confirmacion_proyecto_agregar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.confirmacion_proyecto_agregar_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite agregar una fase previamente seleccionada a un proyecto existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista de confirmacion de agregacion de una fase a un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Agregar fase a proyecto.
+    - El usuario debe ser miembro del proyecto.
+    
+Esta vista permite al usuario agregar una fase seleccionada a un proyecto seleccionado previamente. Se verifica si la fase a agregar ya 
+pertenece al proyecto, en cuyo caso se cancelara la operacion.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    - id_fase: el identificador de la fase.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.confirmacion_proyecto_agregar_miembro_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">confirmacion_proyecto_agregar_miembro_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#confirmacion_proyecto_agregar_miembro_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.confirmacion_proyecto_agregar_miembro_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite agregar un usuario previamente seleccionado al comite de cambios de un proyecto existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista de confirmacion de agregacion de un usuario al comite de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Agregar miembro al comite.
+    - El usuario debe ser miembro del proyecto.
+    
+Esta vista permite al usuario agregar un usuario seleccionado al comite seleccionado previamente. Se verifica si el usuario a agregar ya 
+pertenece al comite, en cuyo caso se cancelara la operacion.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    - id_usuario: el identificador del usuario.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.confirmacion_proyecto_agregar_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">confirmacion_proyecto_agregar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#confirmacion_proyecto_agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.confirmacion_proyecto_agregar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite agregar un rol previamente seleccionado a un proyecto existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista de confirmacion de agregacion de un rol a un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Agregar rol a proyecto.
+    - El usuario debe ser miembro del proyecto.
+    
+Esta vista permite al usuario agregar un rol seleccionado a un proyecto seleccionado previamente. Se verifica si el rol a agregar ya 
+pertenece al proyecto, en cuyo caso se cancelara la operacion.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    - id_rol: el identificador del rol.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.confirmacion_proyecto_agregar_usuario_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">confirmacion_proyecto_agregar_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#confirmacion_proyecto_agregar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.confirmacion_proyecto_agregar_usuario_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite agregar un usuario previamente seleccionado a un proyecto existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista de confirmacion de agregacion de un usuario a un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Agregar usuario a proyecto.
+    - El usuario debe ser miembro del proyecto.
+    
+Esta vista permite al usuario agregar un usuario seleccionado a un proyecto seleccionado previamente. Se verifica si el usuario a agregar ya 
+pertenece al proyecto, en cuyo caso se cancelara la operacion.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    - id_usuario: el identificador del usuario.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -308,90 +539,231 @@ La vista retorna lo siguiente:
 <dl class="function">
 <dt id="administracion.views.eliminar_fase_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">eliminar_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#eliminar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.eliminar_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>La vista para eliminar una fase. Para acceder a esta vista se deben cumplir los siguientes
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para eliminar una fase. Para acceder a esta vista se deben cumplir los siguientes
 requisitos:
-- El usuario debe estar logueado.
-- El usuario debe poseer el permiso: Eliminar fase.
-- El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Eliminar fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
 Esta vista permite al usuario eliminar una fase previamente seleccionada, para lograr esto, 
 se verifica si la fase cumple las siguientes condiciones:
-- La fase debe estar en estado Inactivo.
+
+    - La fase debe estar en estado Inactivo.
+    
 La vista recibe los siguientes parametros:
-- request: contiene informacion sobre la sesion actual.
-- id_fase: el identificador de la fase.
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    
 La vista retorna lo siguiente:
-- render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
-generado en la vista, al template correspondiente.
-- HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases.</p>
+
+    - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.eliminar_proyecto_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">eliminar_proyecto_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#eliminar_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.eliminar_proyecto_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite eliminar un proyecto existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para eliminar un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Eliminar proyecto.
+    - El usuario debe ser miembro del proyecto.
+    
+Esta vista permite al usuario eliminar un proyecto previamente seleccionada, para lograr esto, 
+se verifica si el proyecto cumple las siguientes condiciones:
+
+    - El proyecto debe estar en estado Finalizado.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.eliminar_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">eliminar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#eliminar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.eliminar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite eliminar un rol existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para eliminar un rol. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Eliminar rol.
+    
+Esta vista permite al usuario eliminar un rol previamente seleccionado.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_rol: el identificador del rol.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.eliminar_tipo_atributo_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">eliminar_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#eliminar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.eliminar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite eliminar un tipo atributo existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para eliminar un tipo de atributo. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Eliminar tipo de atributo.
+    
+Esta vista permite al usuario eliminar un tipo de atributo previamente seleccionado.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_tipo_atributo: el identificador del tipo de atributo.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.eliminar_tipo_item_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">eliminar_tipo_item_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#eliminar_tipo_item_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.eliminar_tipo_item_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite eliminar un tipo de item existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para eliminar un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Eliminar tipo de item.
+    
+Esta vista permite al usuario eliminar un tipo de item previamente seleccionado.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_tipo_item: el identificador del tipo de item.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.eliminar_usuario_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">eliminar_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#eliminar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.eliminar_usuario_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite eliminar un usuario existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para eliminar un usuario. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Eliminar usuario.
+    
+Esta vista permite al usuario eliminar un usuario previamente seleccionado.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_usuario: el identificador del usuario.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.fase_agregar_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">fase_agregar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#fase_agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.fase_agregar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>La vista del listado de roles del proyecto ligado a la fase. Para acceder a esta vista se deben cumplir los siguientes
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de roles del proyecto ligado a la fase. Para acceder a esta vista se deben cumplir los siguientes
 requisitos:
-- El usuario debe estar logueado.
+
+    - El usuario debe estar logueado.
+    
 Esta vista permite al usuario listar todos los roles del proyecto al cual esta ligada la fase, ademas, el template relacionado concede 
 las opciones para agregar un rol seleccionado.
+
 La vista recibe los siguientes parametros:
-- request: contiene informacion sobre la sesion actual.
-- id_fase: el identificador de la fase.
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    
 La vista retorna lo siguiente:
-- render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.</p>
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.fase_quitar_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">fase_quitar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#fase_quitar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.fase_quitar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>La vista para quitar un rol de una fase. Para acceder a esta vista se deben cumplir los siguientes
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para quitar un rol de una fase. Para acceder a esta vista se deben cumplir los siguientes
 requisitos:
-- El usuario debe estar logueado.
-- El usuario debe poseer el permiso: Quitar rol de fase.
-- El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Quitar rol de fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+
 Esta vista permite al usuario quitar un rol seleccionado de la fase seleccionada previamente.
+
 La vista recibe los siguientes parametros:
-- request: contiene informacion sobre la sesion actual.
-- id_fase: el identificador de la fase.
-- id_rol: el identificador del rol.
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    - id_rol: el identificador del rol.
+    
 La vista retorna lo siguiente:
-- render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.</p>
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.fases_proyecto_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">fases_proyecto_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#fases_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.fases_proyecto_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todas las fases pertenecientes a un proyecto existente en el sistema, 
-junto con las operaciones de agregacion de fases y eliminacion de fases.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de fases por proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Gestionar fases de proyecto.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+Esta vista permite al usuario listar y conocer las opciones de las fases de un proyecto previamente seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -529,221 +901,733 @@ La vista retorna lo siguiente:
 <dl class="function">
 <dt id="administracion.views.iniciar_proyecto_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">iniciar_proyecto_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#iniciar_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.iniciar_proyecto_view" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Permite arrancar un proyecto si es que se cumplen todas las condiciones mencionadas abajo:</dt>
-<dd><ul class="first last simple">
-<li>El proyecto debe estar en estado Inactivo.</li>
-<li>El proyecto debe poseer un lider.</li>
-<li>El proyecto debe poseer al menos un miembro en su comite de cambios.</li>
-<li>El proyecto debe poseer al menos una fase.</li>
-<li>El proyecto debe poseer al menos un rol.</li>
-</ul>
-</dd>
-</dl>
+<dd><div class="highlight-python"><div class="highlight"><pre>Para acceder a esta vista se deben cumplir los siguientes requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Iniciar proyecto.
+    - El usuario debe ser miembro del proyecto.
+    
+Permite arrancar un proyecto si es que se cumplen todas las condiciones mencionadas abajo:
+
+    - El proyecto debe estar en estado Inactivo.
+    - El proyecto debe poseer un lider.
+    - El proyecto debe poseer al menos un miembro en su comite de cambios.
+    - El proyecto debe poseer al menos una fase.
+    - El proyecto debe poseer al menos un rol.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.modificar_fase_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">modificar_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#modificar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.modificar_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>La vista para modificar una fase. Para acceder a esta vista se deben cumplir los siguientes
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para modificar una fase. Para acceder a esta vista se deben cumplir los siguientes
 requisitos:
-- El usuario debe estar logueado.
-- El usuario debe poseer el permiso: Modificar item.
-- El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Modificar fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
 Esta vista permite al usuario modificar una fase previamente seleccionada, para lograr esto, 
 se verifica la validez de cada campo modificado y luego se guarda la fase de acuerdo a los campos ingresados.
+
 La vista recibe los siguientes parametros:
-- request: contiene informacion sobre la sesion actual.
-- id_fase: el identificador de la fase.
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    
 La vista retorna lo siguiente:
-- render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
-generado en la vista, al template correspondiente.
-- HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada.</p>
+
+    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.modificar_proyecto_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">modificar_proyecto_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#modificar_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.modificar_proyecto_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite modificar un proyecto existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para modificar un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Modificar proyecto.
+    - El usuario debe ser miembro del proyecto que se quiere modificar.
+    
+Esta vista permite al usuario modificar un proyecto previamente seleccionada, para lograr esto, 
+se verifica la validez de cada campo modificado y luego se guarda el proyecto de acuerdo a los campos ingresados.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.modificar_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">modificar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#modificar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.modificar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite modificar un rol existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para modificar un rol. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Modificar rol.
+    
+Esta vista permite al usuario modificar un rol previamente seleccionado, para lograr esto, 
+se verifica la validez de cada campo modificado y luego se guarda el rol de acuerdo a los campos ingresados.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_rol: el identificador del rol.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del usuario modificada. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.modificar_tipo_atributo_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">modificar_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#modificar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.modificar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite modificar un tipo atributo existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para modificar un tipo de atributo. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Modificar tipo de atributo.
+    
+Esta vista permite al usuario modificar un tipo de atributo previamente seleccionada, para lograr esto, 
+se verifica la validez de cada campo modificado y luego se guarda el tipo de atributo de acuerdo a los campos ingresados.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_tipo_atributo: el identificador del tipo de atributo.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del usuario modificada. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.modificar_tipo_item_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">modificar_tipo_item_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#modificar_tipo_item_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.modificar_tipo_item_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para modificar un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Modificar tipo de item.
+    
+Esta vista permite al usuario modificar un tipo de item previamente seleccionada, para lograr esto, 
+se verifica la validez de cada campo modificado y luego se guarda el tipo de item de acuerdo a los campos ingresados.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_tipo_item: el identificador del tipo de item.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.modificar_usuario_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">modificar_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#modificar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.modificar_usuario_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite modificar un usuario existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para modificar un usuario. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Modificar usuario.
+    
+Esta vista permite al usuario modificar un usuario previamente seleccionado, para lograr esto, 
+se verifica la validez de cada campo modificado y luego se guarda el usuario de acuerdo a los campos ingresados.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_usuario: el identificador del usuario.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+    generado en la vista, al template correspondiente.
+    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del usuario modificada. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.permisos_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">permisos_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#permisos_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.permisos_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los permisos pertenecientes a un rol existente en el sistema, 
-junto con las operaciones de agregacion de permisos y eliminacion de permisos.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de permisos por rol. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Gestionar permisos de rol.
+    
+Esta vista permite al usuario listar y conocer las opciones de los permisos del rol previamente seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_rol: el identificador del rol.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.proyecto_agregar_fase_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">proyecto_agregar_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#proyecto_agregar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.proyecto_agregar_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todas las fases registradas en el sistema, junto con las 
-operaciones de agregacion de fase.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de fases ligadas al proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    
+Esta vista permite al usuario listar todas las fases ligadas al proyecto, ademas, el template relacionado concede 
+las opciones para agregar una fase seleccionada.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.proyecto_agregar_miembro_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">proyecto_agregar_miembro_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#proyecto_agregar_miembro_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.proyecto_agregar_miembro_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los usuarios registrados en el sistema, junto con las 
-operaciones de agregacion de usuario.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de miembros del comite del proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    
+Esta vista permite al usuario listar todos los miembros del comite del proyecto, ademas, el template relacionado concede 
+las opciones para agregar un nuevo usuario al comite.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.proyecto_agregar_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">proyecto_agregar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#proyecto_agregar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.proyecto_agregar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los roles registrados en el sistema, junto con las 
-operaciones de agregacion de rol.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de roles ligados al proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    
+Esta vista permite al usuario listar todos los roles ligados al proyecto, ademas, el template relacionado concede 
+las opciones para agregar un rol seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.proyecto_agregar_usuario_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">proyecto_agregar_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#proyecto_agregar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.proyecto_agregar_usuario_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los usuarios registrados en el sistema, junto con las 
-operaciones de agregacion de usuario.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de usuarios miembros del proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    
+Esta vista permite al usuario listar todos los usuarios miembros del proyecto, ademas, el template relacionado concede 
+las opciones para agregar un usuario seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.proyecto_quitar_fase_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">proyecto_quitar_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#proyecto_quitar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.proyecto_quitar_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite quitar una fase previamente seleccionada de un proyecto existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para quitar una fase de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Quitar fase de proyecto.
+    - El usuario debe pertenecer al proyecto.
+    
+Esta vista permite al usuario quitar una fase seleccionada de un proyecto seleccionado previamente.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador de la proyecto.
+    - id_fase: el identificador del fase.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.proyecto_quitar_miembro_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">proyecto_quitar_miembro_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#proyecto_quitar_miembro_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.proyecto_quitar_miembro_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite quitar un usuario previamente seleccionado del comite de cambios de un proyecto existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para quitar un usuario de la lista de miembros del comite de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Quitar miembro del comite.
+    - El usuario debe pertenecer al proyecto.
+    
+Esta vista permite al usuario quitar un usuario seleccionado del comite de un proyecto seleccionado previamente.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador de la proyecto.
+    - id_usuario: el identificador del usuario.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.proyecto_quitar_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">proyecto_quitar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#proyecto_quitar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.proyecto_quitar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite quitar un rol previamente seleccionado de un proyecto existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para quitar un rol de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Quitar rol de proyecto.
+    - El usuario debe pertenecer al proyecto.
+    
+Esta vista permite al usuario quitar un rol seleccionado de un proyecto seleccionado previamente.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador de la proyecto.
+    - id_rol: el identificador del rol.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.proyecto_quitar_usuario_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">proyecto_quitar_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#proyecto_quitar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.proyecto_quitar_usuario_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite quitar un usuario previamente seleccionado de un proyecto existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para quitar un usuario de la lista de miembros de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Quitar usuario de proyecto.
+    - El usuario debe pertenecer al proyecto.
+    
+Esta vista permite al usuario quitar un usuario seleccionado de un proyecto seleccionado previamente.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador de la proyecto.
+    - id_usuario: el identificador del usuario.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.quitar_permiso_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">quitar_permiso_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#quitar_permiso_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.quitar_permiso_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite quitar un permiso previamente seleccionado de un rol existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para quitar un permiso de un rol. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Quitar permiso de rol.
+
+Esta vista permite al usuario quitar un permiso seleccionado de un rol seleccionado previamente.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_rol: el identificador de la rol.
+    - id_permiso: el identificador del permiso.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.quitar_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">quitar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#quitar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.quitar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite quitar un rol previamente seleccionado de un usuario existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para quitar un rol de un usuario. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Quitar rol de usuario.
+
+Esta vista permite al usuario quitar un rol seleccionado de un usuario seleccionado previamente.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_usuario: el identificador de la usuario.
+    - id_rol: el identificador del rol.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.quitar_tipo_atributo_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">quitar_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#quitar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.quitar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite quitar un tipo de atributo previamente seleccionado de un tipo de item existente en el 
-sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para quitar un tipo de atributo de un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Quitar tipo de atributo de tipo de item.
+
+Esta vista permite al usuario quitar un tipo de atributo seleccionado del tipo de item seleccionado previamente.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_tipo_item: el identificador de la tipo de item.
+    - id_tipo_atributo: el identificador del tipo de atributo.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.roles_fase_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">roles_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#roles_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.roles_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>La vista del listado de roles por fase. Para acceder a esta vista se deben cumplir los siguientes
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de roles por fase. Para acceder a esta vista se deben cumplir los siguientes
 requisitos:
-- El usuario debe estar logueado.
-- El usuario debe poseer el permiso: Gestionar roles de fase.
-- El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Gestionar roles de fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
 Esta vista permite al usuario listar y conocer las opciones de los roles de la fase previamente seleccionada.
+
 La vista recibe los siguientes parametros:
-- request: contiene informacion sobre la sesion actual.
-- id_fase: el identificador de la fase.
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    
 La vista retorna lo siguiente:
-- render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.</p>
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.roles_proyecto_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">roles_proyecto_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#roles_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.roles_proyecto_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los roles pertenecientes a un proyecto existente en el sistema, 
-junto con las operaciones de agregacion de roles y eliminacion de roles.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de roles por proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Gestionar roles de proyecto.
+    - El usuario debe ser miembro del proyecto.
+    
+Esta vista permite al usuario listar y conocer las opciones de los roles del proyecto previamente seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.roles_usuario_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">roles_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#roles_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.roles_usuario_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los roles pertenecientes a un usuario existente en el sistema, 
-junto con las operaciones de agregacion de roles y eliminacion de roles.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de roles por usuario. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Gestionar roles de usuario.
+    
+Esta vista permite al usuario listar y conocer las opciones de los roles del usuario previamente seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_usuario: el identificador del usuario.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.tipos_atributo_tipo_item_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">tipos_atributo_tipo_item_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#tipos_atributo_tipo_item_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.tipos_atributo_tipo_item_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de tipos de atributo del tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Gestionar tipos de atributo de tipo de item.
+    
+Esta vista permite al usuario listar y conocer las opciones de los tipos de atributo del item previamente seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_tipo_item: el identificador del tipo de item.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.usuarios_proyecto_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">usuarios_proyecto_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#usuarios_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.usuarios_proyecto_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite listar todos los usuarios pertenecientes a un proyecto existente en el sistema, 
-junto con las operaciones de agregacion de usuarios y eliminacion de usuarios.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista del listado de usuarios por proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Gestionar usuarios de proyecto.
+    - El usuario debe ser miembro del proyecto.
+    
+Esta vista permite al usuario listar y conocer las opciones de los usuarios que componen el proyecto previamente seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.visualizar_fase_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">visualizar_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#visualizar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.visualizar_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>La vista para visualizar una fase. Para acceder a esta vista se deben cumplir los siguientes
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para visualizar una fase. Para acceder a esta vista se deben cumplir los siguientes
 requisitos:
-- El usuario debe estar logueado.
-- El usuario debe poseer el permiso: Visualizar fase.
-- El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Visualizar fase.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
 Esta vista permite al usuario visualizar todos los campos guardados de una fase previamente seleccionada.
+
 La vista recibe los siguientes parametros:
-- request: contiene informacion sobre la sesion actual.
-- id_fase: el identificador de la fase.
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_fase: el identificador de la fase.
+    
 La vista retorna lo siguiente:
-- render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.</p>
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.visualizar_proyecto_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">visualizar_proyecto_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#visualizar_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.visualizar_proyecto_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite visualizar todos los campos de un proyecto existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para visualizar un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Visualizar proyecto.
+    - El usuario debe ser miembro del proyecto que desea visualizar.
+    
+Esta vista permite al usuario visualizar todos los campos guardados de un proyecto previamente seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.visualizar_rol_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">visualizar_rol_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#visualizar_rol_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.visualizar_rol_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite visualizar todos los campos de un rol existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para visualizar un rol. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Visualizar rol.
+    
+Esta vista permite al usuario visualizar todos los campos guardados de un rol previamente seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_rol: el identificador del rol.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.visualizar_tipo_atributo_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">visualizar_tipo_atributo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#visualizar_tipo_atributo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.visualizar_tipo_atributo_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite visualizar todos los campos de un tipo atributo existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para visualizar un tipo de atributo. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Visualizar tipo de atributo.
+    
+Esta vista permite al usuario visualizar todos los campos guardados de un tipo de atributo previamente seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_tipo_atributo: el identificador del tipo de atributo.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="administracion.views.visualizar_tipo_item_view">
+<tt class="descclassname">administracion.views.</tt><tt class="descname">visualizar_tipo_item_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#visualizar_tipo_item_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.visualizar_tipo_item_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para visualizar un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Visualizar tipo de item.
+    
+Esta vista permite al usuario visualizar todos los campos guardados de un tipo de item previamente seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_tipo_item: el identificador del tipo de item.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="administracion.views.visualizar_usuario_view">
 <tt class="descclassname">administracion.views.</tt><tt class="descname">visualizar_usuario_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/views.html#visualizar_usuario_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.views.visualizar_usuario_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Permite visualizar todos los campos de un usuario existente en el sistema.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para visualizar un usuario. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Visualizar usuario.
+    
+Esta vista permite al usuario visualizar todos los campos guardados de un usuario previamente seleccionado.
+
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_usuario: el identificador del usuario.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+</pre></div>
+</div>
 </dd></dl>
 
 </div>

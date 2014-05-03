@@ -60,7 +60,21 @@
     <span class="k">return</span> <span class="s">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39;content&#39;</span><span class="p">,</span> <span class="n">instance</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="n">filename</span><span class="p">])</span>
 
 <div class="viewcode-block" id="Item"><a class="viewcode-back" href="../../moduloDES/models.html#desarrollo.models.Item">[docs]</a><span class="k">class</span> <span class="nc">Item</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Clase que describe la estructura de cada instancia de un Item, los atributos </span>
+<span class="sd">        que posee un Item son:</span>
+
+<span class="sd">        nombre: nombre del item.</span>
+<span class="sd">        descripcion: una breve descripcion sobre el item.</span>
+<span class="sd">        costo: costo del item.</span>
+<span class="sd">        complejidad: complejidad respectiva del item.</span>
+<span class="sd">        estado: estado actual del item.</span>
+<span class="sd">        archivos: historial del item..</span>
+<span class="sd">        fase: fase en la que esta el item.</span>
+<span class="sd">        tipo_item: tipo de item vinculado al item.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">costo</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">FloatField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>

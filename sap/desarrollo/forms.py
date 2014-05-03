@@ -11,7 +11,18 @@ def opcion_tipo_item():
 
 class CrearItemForm(forms.Form):
     """
-    Formulario utilizado para la creacion de un item.
+    ::
+    
+        Formulario utilizado para la creacion de un item.
+        
+        Se especifican todos los atributos del item que deben 
+        ingresarse estableciendo como required=True, si es indispensable
+        completar ese atributo para la creacion del item o caso 
+        contrario required=False.
+        
+        Se verifica mediante una funcion que el valor de la complejidad sea valido.
+        
+        Se verifica mediante una funcion que el valor del costo sea valido.
     """
     nombre = forms.CharField(label="Nombre de item", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
@@ -34,7 +45,19 @@ class CrearItemForm(forms.Form):
             raise forms.ValidationError('El valor del costo debe ser igual o mayor a cero.')
         
 class ModificarItemForm(forms.Form):
-
+    """
+    ::
+    
+        Formulario utilizado para la modificacion de un item.
+        
+        Se especifican todos los atributos del item que deben 
+        ingresarse sin posibilidad de dejar el campo vacio estableciendo
+        como required=True, caso contrarios required=False.
+        
+        Se verifica mediante una funcion que el valor de la complejidad sea valido.
+        
+        Se verifica mediante una funcion que el valor del costo sea valido.
+    """
     nombre = forms.CharField(label="Nombre de item", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
     complejidad = forms.IntegerField(label="Complejidad", required=True)

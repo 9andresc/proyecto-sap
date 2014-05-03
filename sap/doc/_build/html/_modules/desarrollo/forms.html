@@ -56,7 +56,18 @@
 
 <div class="viewcode-block" id="CrearItemForm"><a class="viewcode-back" href="../../moduloDES/forms.html#desarrollo.forms.CrearItemForm">[docs]</a><span class="k">class</span> <span class="nc">CrearItemForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Formulario utilizado para la creacion de un item.</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la creacion de un item.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del item que deben </span>
+<span class="sd">        ingresarse estableciendo como required=True, si es indispensable</span>
+<span class="sd">        completar ese atributo para la creacion del item o caso </span>
+<span class="sd">        contrario required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se verifica mediante una funcion que el valor de la complejidad sea valido.</span>
+<span class="sd">        </span>
+<span class="sd">        Se verifica mediante una funcion que el valor del costo sea valido.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de item&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -78,8 +89,20 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;El valor del costo debe ser igual o mayor a cero.&#39;</span><span class="p">)</span>
         </div>
-<span class="k">class</span> <span class="nc">ModificarItemForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
-
+<div class="viewcode-block" id="ModificarItemForm"><a class="viewcode-back" href="../../moduloDES/forms.html#desarrollo.forms.ModificarItemForm">[docs]</a><span class="k">class</span> <span class="nc">ModificarItemForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la modificacion de un item.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del item que deben </span>
+<span class="sd">        ingresarse sin posibilidad de dejar el campo vacio estableciendo</span>
+<span class="sd">        como required=True, caso contrarios required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se verifica mediante una funcion que el valor de la complejidad sea valido.</span>
+<span class="sd">        </span>
+<span class="sd">        Se verifica mediante una funcion que el valor del costo sea valido.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de item&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">complejidad</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Complejidad&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -97,7 +120,7 @@
         <span class="k">if</span> <span class="n">costo</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">costo</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;El valor del costo debe ser igual o mayor a cero.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;El valor del costo debe ser igual o mayor a cero.&#39;</span><span class="p">)</span></div>
 </pre></div>
 
       </div>

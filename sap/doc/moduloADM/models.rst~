@@ -6,8 +6,25 @@ Import::
 	from django.db import models
 	from django.contrib.auth.models import User
    
-Modelos
------------
+
 
 .. automodule:: administracion.models
     :members:
+
+class *django.contrib.auth.models.* **User** (args, kwargs)
+
+::
+
+	    Clase que describe la estructura de cada instancia de un usuario, 
+	    extendimos la clase User de django y le agregamos los atributos 
+	    adicionales que necesitabamos, los atributos que posee cada usuario son:
+
+	    Nombre de usuario: nickname del usuario.
+	    Email: dirección de correo electronico del usuario.
+	    Nombre/s: nombre real o nombres reales del usuario.
+	    Apellido/s: apellido/s del usuario.
+	    Estado: registra el estado del usuario.
+	    Dirección: ubicación donde reside el usuario.
+	    Teléfono: numero telefonico del usuario.
+	    Roles: roles que tiene asignado el usuario.
+

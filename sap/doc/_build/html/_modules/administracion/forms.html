@@ -59,7 +59,20 @@
 
 <div class="viewcode-block" id="CrearUsuarioForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.CrearUsuarioForm">[docs]</a><span class="k">class</span> <span class="nc">CrearUsuarioForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Formulario utilizado para la creacion de un usuario.</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la creacion de un usuario.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del usuario que deben </span>
+<span class="sd">        ingresarse estableciendo como required=True, si es indispensable</span>
+<span class="sd">        completar ese atributo para la creacion del usuario o caso contrarios </span>
+<span class="sd">        required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
+<span class="sd">        en el sistema, ni tampoco el email.</span>
+<span class="sd">        </span>
+<span class="sd">        Por ultimo se revisa que los dos campos de contrasenha coincidan.</span>
+<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">username</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de usuario&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Email&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -101,7 +114,19 @@
         </div>
 <div class="viewcode-block" id="ModificarUsuarioForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.ModificarUsuarioForm">[docs]</a><span class="k">class</span> <span class="nc">ModificarUsuarioForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Formulario utilizado para la modificacion de un usuario.</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la modificacion de un usuario.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del usuario que deben </span>
+<span class="sd">        ingresarse sin posibilidad de dejar el campo vacio estableciendo</span>
+<span class="sd">        como required=True, caso contrarios required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
+<span class="sd">        en el sistema, ni tampoco el email.</span>
+<span class="sd">        </span>
+<span class="sd">        Por ultimo se revisa que los dos campos de contrasenha coincidan y se procede a reemplazar la contrasenha.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">username</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de usuario&quot;</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Email&quot;</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -148,7 +173,18 @@
         
 <div class="viewcode-block" id="CrearRolForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.CrearRolForm">[docs]</a><span class="k">class</span> <span class="nc">CrearRolForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Formulario utilizado para la creacion de un rol.</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la creacion de un rol.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del rol que deben </span>
+<span class="sd">        ingresarse estableciendo como required=True, si es indispensable</span>
+<span class="sd">        completar ese atributo para la creacion del rol o caso contrarios </span>
+<span class="sd">        required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
+<span class="sd">        en el sistema.</span>
+<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de rol&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -163,7 +199,17 @@
 </div>
 <div class="viewcode-block" id="ModificarRolForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.ModificarRolForm">[docs]</a><span class="k">class</span> <span class="nc">ModificarRolForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Formulario utilizado para la modificacion de un rol.</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la modificacion de un rol.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del rol que deben </span>
+<span class="sd">        ingresarse sin posibilidad de dejar el campo vacio estableciendo</span>
+<span class="sd">        como required=True, caso contrarios required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
+<span class="sd">        en el sistema.</span>
+<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de rol&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -180,7 +226,18 @@
 </div>
 <div class="viewcode-block" id="CrearTipoAtributoForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.CrearTipoAtributoForm">[docs]</a><span class="k">class</span> <span class="nc">CrearTipoAtributoForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Formulario utilizado para la creacion de un tipo atributo.</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la creacion de un tipo atributo.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del tipo atributo que deben </span>
+<span class="sd">        ingresarse estableciendo como required=True, si es indispensable</span>
+<span class="sd">        completar ese atributo para la creacion del tipo atributo o caso </span>
+<span class="sd">        contrario required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
+<span class="sd">        en el sistema.</span>
+<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de tipo atributo&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -196,7 +253,17 @@
 </div>
 <div class="viewcode-block" id="ModificarTipoAtributoForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.ModificarTipoAtributoForm">[docs]</a><span class="k">class</span> <span class="nc">ModificarTipoAtributoForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Formulario utilizado para la modificacion de un tipo atributo.</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la modificacion de un tipo atributo.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del tipo atributo que deben </span>
+<span class="sd">        ingresarse sin posibilidad de dejar el campo vacio estableciendo</span>
+<span class="sd">        como required=True, caso contrarios required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
+<span class="sd">        en el sistema.</span>
+<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de tipo atributo&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -223,7 +290,23 @@
     
 <div class="viewcode-block" id="CrearProyectoForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.CrearProyectoForm">[docs]</a><span class="k">class</span> <span class="nc">CrearProyectoForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Formulario utilizado para la creacion de un proyecto.</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la creacion de un proyecto.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del proyecto que deben </span>
+<span class="sd">        ingresarse estableciendo como required=True, si es indispensable</span>
+<span class="sd">        completar ese atributo para la creacion del proyecto o caso </span>
+<span class="sd">        contrario required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utiliza una funcion opcion lider, para listar todos los usuarios </span>
+<span class="sd">        registrados y que se pueda elegir a uno como lider del proyecto.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
+<span class="sd">        en el sistema.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utiliza una funciona para verificar que la fecha ingresada sea valida.</span>
+<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de proyecto&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -263,7 +346,22 @@
 </div>
 <div class="viewcode-block" id="ModificarProyectoForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.ModificarProyectoForm">[docs]</a><span class="k">class</span> <span class="nc">ModificarProyectoForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Formulario utilizado para la modificacion de un proyecto.</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la modificacion de un proyecto.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del proyecto que deben </span>
+<span class="sd">        ingresarse sin posibilidad de dejar el campo vacio estableciendo</span>
+<span class="sd">        como required=True, caso contrarios required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utiliza una funcion opcion lider, para listar todos los usuarios </span>
+<span class="sd">        registrados y que se pueda elegir a uno como nuevo lider del proyecto.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
+<span class="sd">        en el sistema.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utiliza una funciona para verificar que la fecha ingresada sea valida.</span>
+<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de proyecto&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -304,8 +402,23 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;La fecha introducida es distinta a la fecha original o anterior a la fecha actual. Ingrese una fecha valida.&#39;</span><span class="p">)</span>
         </div>
-<span class="k">class</span> <span class="nc">CrearFaseForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
-
+<div class="viewcode-block" id="CrearFaseForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.CrearFaseForm">[docs]</a><span class="k">class</span> <span class="nc">CrearFaseForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la creacion de una fase.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos de la fase que deben </span>
+<span class="sd">        ingresarse estableciendo como required=True, si es indispensable</span>
+<span class="sd">        completar ese atributo para la creacion de la fase o caso </span>
+<span class="sd">        contrario required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
+<span class="sd">        en el sistema.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utiliza una funciona para verificar que la fecha ingresada sea valida.</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de fase&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">duracion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Duracion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -332,9 +445,23 @@
             <span class="k">return</span> <span class="n">fecha_inicio</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;La fecha introducida es anterior a la fecha actual. Ingrese una fecha posterior.&#39;</span><span class="p">)</span>
-        
-<span class="k">class</span> <span class="nc">ModificarFaseForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
-
+        </div>
+<div class="viewcode-block" id="ModificarFaseForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.ModificarFaseForm">[docs]</a><span class="k">class</span> <span class="nc">ModificarFaseForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la modificacion de una fase.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos de la fase que deben </span>
+<span class="sd">        ingresarse sin posibilidad de dejar el campo vacio estableciendo</span>
+<span class="sd">        como required=True, caso contrarios required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
+<span class="sd">        en el sistema.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utiliza una funciona para verificar que la fecha ingresada sea valida.</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de fase&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">duracion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Duracion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -364,10 +491,21 @@
             <span class="k">return</span> <span class="n">fecha_inicio</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;La fecha introducida es distinta a la fecha original o anterior a la fecha actual. Ingrese una fecha valida.&#39;</span><span class="p">)</span>
-      
+      </div>
 <div class="viewcode-block" id="CrearTipoItemForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.CrearTipoItemForm">[docs]</a><span class="k">class</span> <span class="nc">CrearTipoItemForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Formulario utilizado para la creacion de un tipo de item.</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la creacion de un tipo de item.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del tipo de item que deben </span>
+<span class="sd">        ingresarse estableciendo como required=True, si es indispensable</span>
+<span class="sd">        completar ese atributo para la creacion del tipo de item o caso </span>
+<span class="sd">        contrario required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
+<span class="sd">        en el sistema.</span>
+<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de tipo de item&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -380,8 +518,20 @@
             <span class="k">return</span> <span class="n">nombre</span>
         <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;Nombre de tipo de item ya registrado.&#39;</span><span class="p">)</span>  
     </div>
-<span class="k">class</span> <span class="nc">ModificarTipoItemForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
-
+<div class="viewcode-block" id="ModificarTipoItemForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.ModificarTipoItemForm">[docs]</a><span class="k">class</span> <span class="nc">ModificarTipoItemForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Formulario utilizado para la modificacion de un tipo de item.</span>
+<span class="sd">        </span>
+<span class="sd">        Se especifican todos los atributos del tipo de item que deben </span>
+<span class="sd">        ingresarse sin posibilidad de dejar el campo vacio estableciendo</span>
+<span class="sd">        como required=True, caso contrarios required=False.</span>
+<span class="sd">        </span>
+<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
+<span class="sd">        en el sistema.</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de tipo de item&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
@@ -393,7 +543,7 @@
                 <span class="k">return</span> <span class="n">nombre</span> 
         <span class="k">except</span> <span class="n">TipoItem</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">nombre</span> 
-        <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;Nombre de tipo de item ya registrado.&#39;</span><span class="p">)</span>  
+        <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;Nombre de tipo de item ya registrado.&#39;</span><span class="p">)</span>  </div>
 </pre></div>
 
       </div>

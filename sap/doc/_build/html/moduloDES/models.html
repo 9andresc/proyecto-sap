@@ -65,7 +65,19 @@
 <dl class="class">
 <dt id="desarrollo.models.Item">
 <em class="property">class </em><tt class="descclassname">desarrollo.models.</tt><tt class="descname">Item</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/models.html#Item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.models.Item" title="Permalink to this definition">¶</a></dt>
-<dd><p>Item(id, nombre, descripcion, costo, complejidad, estado, archivos, fase_id, tipo_item_id)</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de un Item, los atributos 
+que posee un Item son:
+
+nombre: nombre del item.
+descripcion: una breve descripcion sobre el item.
+costo: costo del item.
+complejidad: complejidad respectiva del item.
+estado: estado actual del item.
+archivos: historial del item..
+fase: fase en la que esta el item.
+tipo_item: tipo de item vinculado al item.
+</pre></div>
+</div>
 <dl class="method">
 <dt id="desarrollo.models.Item.save_without_historical_record">
 <tt class="descname">save_without_historical_record</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#desarrollo.models.Item.save_without_historical_record" title="Permalink to this definition">¶</a></dt>

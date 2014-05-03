@@ -3,7 +3,12 @@ from django.contrib.auth.models import User
 
 class Permiso(models.Model):
     """
-    Clase que especifica los atributos de los Permisos.
+    ::
+    
+        Clase que describe la estructura de cada instancia de un Permiso, los atributos 
+        que posee un permiso son:
+    
+        nombre: nombre del permiso.
     """
     nombre = models.CharField(max_length=50, blank=False)
     
@@ -15,7 +20,14 @@ class Permiso(models.Model):
 
 class Rol(models.Model):
     """
-    Clase que especifica los atributos de los Roles.
+    ::
+    
+        Clase que describe la estructura de cada instancia de un Rol, los atributos 
+        que posee un rol son:
+
+        nombre: nombre del rol.
+        descripcion: breve descripcion del rol.
+        permisos: permisos que posee el rol.
     """
     nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=True)
@@ -36,7 +48,15 @@ TIPO_DATO = (
 
 class TipoAtributo(models.Model):
     """
-    Clase que especifica los atributos de los Tipos atributo.
+    ::
+    
+        Clase que describe la estructura de cada instancia de un Tipo atributo, los atributos 
+        que posee un tipo atributo son:
+
+        nombre: nombre del tipo atributo.
+        tipo de dato: el tipo de dato al que corresponde.
+        descripcion: una breve descripcion del tipo atributo.
+        valor: valor que posee el tipo atributo.
     """
     nombre = models.CharField(max_length=50, blank=False)
     tipo_dato  = models.IntegerField(max_length=30,choices= TIPO_DATO, default=0)
@@ -56,7 +76,22 @@ ESTADOS_PROYECTO = (
 
 class Proyecto(models.Model):
     """
-    Clase que especifica los atributos de los Proyectos.
+    ::
+    
+        Clase que describe la estructura de cada instancia de un Proyecto, los atributos 
+        que posee un proyecto son:
+
+        nombre: nombre del proyecto.
+        descripcion: una breve descripcion sobre el proyecto.
+        fecha de inicio: fecha de inicio del proyecto. 
+        estado: estado actual del proyecto.
+        presupuesto: presupuesto total del proyecto.
+        complejidad: nivel de complejidad del proyecto.
+        usuario lider: usuario lider del proyecto.
+        usuarios: usuarios que participan en el proyecto.
+        comite de cambios: comite encargado de aprobar o rechazar solicitudes de cambio.
+        roles: roles asociados al proyecto.
+        fases: fases asociadas al proyecto.
     """
     nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=True)
@@ -83,7 +118,17 @@ ESTADOS_FASE = (
 
 class Fase(models.Model):
     """
-    Clase que especifica los atributos de las Fases.
+    ::
+    
+        Clase que describe la estructura de cada instancia de una Fase, los atributos 
+        que posee una fase son:
+
+        nombre: nombre de la fase.
+        descripcion: una breve descripcion sobre la fase.
+        estado: estado actual de la fase.
+        fecha de inicio: fecha de inicio de la fase.
+        duracion: duracion de la fase.
+        roles: roles asociados a la fase.
     """
     nombre = models.CharField(max_length=20)
     descripcion = models.TextField(blank=True)
@@ -101,7 +146,14 @@ class Fase(models.Model):
         
 class TipoItem(models.Model):
     """
-    Clase que especifica los atributos de los Tipos item
+    ::
+    
+        Clase que describe la estructura de cada instancia de un Tipo de item, los atributos 
+        que posee un tipo de item son:
+
+        nombre: nombre del tipo de item.
+        descripcion: breve descripcion del tipo de item.
+        tipos_atributo: tipos de atributo que posee el tipo de item.
     """
     nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=True)
@@ -114,6 +166,17 @@ class TipoItem(models.Model):
         ordering = ["nombre"]
 
 class ValorAtributo(models.Model):
+    """
+    ::
+    
+        Clase que describe la relacion entre un tipo de atributo con un tipo de item y un item, los atributos 
+        que posee son:
+
+        item: item al que va ligado.
+        tipo_item:tipo de item al que va ligado.
+        tipo_atributo: tipo de atributo al que va ligado.
+        valor_XXX: valor del tipo de atributo, que puede ser Fecha, Numerico, Logico o Texto.
+    """
     item = models.ForeignKey('desarrollo.Item', related_name="valores", null=True, blank=True)
     tipo_item = models.ForeignKey(TipoItem, null=True, blank=True)
     tipo_atributo = models.ForeignKey(TipoAtributo, null=True, blank=True)

@@ -58,45 +58,120 @@
 <span class="target" id="module-administracion.models"></span><dl class="class">
 <dt id="administracion.models.Fase">
 <em class="property">class </em><tt class="descclassname">administracion.models.</tt><tt class="descname">Fase</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/models.html#Fase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.models.Fase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clase que especifica los atributos de las Fases.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de una Fase, los atributos 
+que posee una fase son:
+
+nombre: nombre de la fase.
+descripcion: una breve descripcion sobre la fase.
+estado: estado actual de la fase.
+fecha de inicio: fecha de inicio de la fase.
+duracion: duracion de la fase.
+roles: roles asociados a la fase.
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="class">
 <dt id="administracion.models.Permiso">
 <em class="property">class </em><tt class="descclassname">administracion.models.</tt><tt class="descname">Permiso</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/models.html#Permiso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.models.Permiso" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clase que especifica los atributos de los Permisos.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de un Permiso, los atributos 
+que posee un permiso son:
+
+nombre: nombre del permiso.
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="class">
 <dt id="administracion.models.Proyecto">
 <em class="property">class </em><tt class="descclassname">administracion.models.</tt><tt class="descname">Proyecto</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/models.html#Proyecto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.models.Proyecto" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clase que especifica los atributos de los Proyectos.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de un Proyecto, los atributos 
+que posee un proyecto son:
+
+nombre: nombre del proyecto.
+descripcion: una breve descripcion sobre el proyecto.
+fecha de inicio: fecha de inicio del proyecto. 
+estado: estado actual del proyecto.
+presupuesto: presupuesto total del proyecto.
+complejidad: nivel de complejidad del proyecto.
+usuario lider: usuario lider del proyecto.
+usuarios: usuarios que participan en el proyecto.
+comite de cambios: comite encargado de aprobar o rechazar solicitudes de cambio.
+roles: roles asociados al proyecto.
+fases: fases asociadas al proyecto.
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="class">
 <dt id="administracion.models.Rol">
 <em class="property">class </em><tt class="descclassname">administracion.models.</tt><tt class="descname">Rol</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/models.html#Rol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.models.Rol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clase que especifica los atributos de los Roles.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de un Rol, los atributos 
+que posee un rol son:
+
+nombre: nombre del rol.
+descripcion: breve descripcion del rol.
+permisos: permisos que posee el rol.
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="class">
 <dt id="administracion.models.TipoAtributo">
 <em class="property">class </em><tt class="descclassname">administracion.models.</tt><tt class="descname">TipoAtributo</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/models.html#TipoAtributo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.models.TipoAtributo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clase que especifica los atributos de los Tipos atributo.</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de un Tipo atributo, los atributos 
+que posee un tipo atributo son:
+
+nombre: nombre del tipo atributo.
+tipo de dato: el tipo de dato al que corresponde.
+descripcion: una breve descripcion del tipo atributo.
+valor: valor que posee el tipo atributo.
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="class">
 <dt id="administracion.models.TipoItem">
 <em class="property">class </em><tt class="descclassname">administracion.models.</tt><tt class="descname">TipoItem</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/models.html#TipoItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.models.TipoItem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clase que especifica los atributos de los Tipos item</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de un Tipo de item, los atributos 
+que posee un tipo de item son:
+
+nombre: nombre del tipo de item.
+descripcion: breve descripcion del tipo de item.
+tipos_atributo: tipos de atributo que posee el tipo de item.
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="class">
 <dt id="administracion.models.ValorAtributo">
 <em class="property">class </em><tt class="descclassname">administracion.models.</tt><tt class="descname">ValorAtributo</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/models.html#ValorAtributo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.models.ValorAtributo" title="Permalink to this definition">¶</a></dt>
-<dd><p>ValorAtributo(id, item_id, tipo_item_id, tipo_atributo_id, valor_fecha, valor_numerico, valor_logico, valor_texto)</p>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la relacion entre un tipo de atributo con un tipo de item y un item, los atributos 
+que posee son:
+
+item: item al que va ligado.
+tipo_item:tipo de item al que va ligado.
+tipo_atributo: tipo de atributo al que va ligado.
+valor_XXX: valor del tipo de atributo, que puede ser Fecha, Numerico, Logico o Texto.
+</pre></div>
+</div>
 </dd></dl>
 
+<p>class <em>django.contrib.auth.models.</em> <strong>User</strong> (args, kwargs)</p>
+<div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de un usuario,
+extendimos la clase User de django y le agregamos los atributos
+adicionales que necesitabamos, los atributos que posee cada usuario son:
+
+nombre de usuario: nickname del usuario.
+email: direccion de correo electronico del usuario.
+nombre/s: nombre real o nombres reales del usuario.
+apellido/s: apellido/s del usuario.
+estado: registra el estado del usuario.
+direccion: ubicacion donde reside el usuario.
+telefono: numero telefonico del usuario.
+roles: roles que tiene asignado el usuario.
+</pre></div>
+</div>
 </div>
 
 

@@ -106,7 +106,27 @@ def crear_usuario_view(request):
 @permiso_requerido(permiso="Modificar usuario")
 def modificar_usuario_view(request, id_usuario):
     """
-    Permite modificar un usuario existente en el sistema.
+    ::
+    
+        La vista para modificar un usuario. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Modificar usuario.
+            
+        Esta vista permite al usuario modificar un usuario previamente seleccionado, para lograr esto, 
+        se verifica la validez de cada campo modificado y luego se guarda el usuario de acuerdo a los campos ingresados.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_usuario: el identificador del usuario.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del usuario modificada. 
     """
     usuario = User.objects.get(id=id_usuario)
     if request.method == "POST":
@@ -142,6 +162,29 @@ def modificar_usuario_view(request, id_usuario):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Cambiar contrasenha")
 def cambiar_contrasenha_view(request, id_usuario):
+    """
+    ::
+    
+        La vista para cambiar la contrasenha de un usuario. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Cambiar contrasenha.
+            
+        Esta vista permite al usuario cambiar su contrasenha una vez logueado, para lograr esto, 
+        se verifica la validez de cada campo modificado y luego se guarda la contrasenha de acuerdo a los campos ingresados.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_usuario: el identificador del usuario.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del usuario modificada. 
+    """
     valido = True
     usuario = User.objects.get(id=id_usuario)
     if request.method == "POST":
@@ -166,7 +209,26 @@ def cambiar_contrasenha_view(request, id_usuario):
 @permiso_requerido(permiso="Eliminar usuario")
 def eliminar_usuario_view(request, id_usuario):
     """
-    Permite eliminar un usuario existente en el sistema.
+    ::
+    
+        La vista para eliminar un usuario. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Eliminar usuario.
+            
+        Esta vista permite al usuario eliminar un usuario previamente seleccionado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_usuario: el identificador del usuario.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
     """
     usuario = User.objects.get(id=id_usuario)
     if request.method == "POST":
@@ -181,7 +243,24 @@ def eliminar_usuario_view(request, id_usuario):
 @permiso_requerido(permiso="Visualizar usuario")
 def visualizar_usuario_view(request, id_usuario):
     """
-    Permite visualizar todos los campos de un usuario existente en el sistema.
+    ::
+    
+        La vista para visualizar un usuario. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Visualizar usuario.
+            
+        Esta vista permite al usuario visualizar todos los campos guardados de un usuario previamente seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_usuario: el identificador del usuario.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
     """
     usuario = User.objects.get(id=id_usuario)
     ctx = {'usuario': usuario}
@@ -191,8 +270,24 @@ def visualizar_usuario_view(request, id_usuario):
 @permiso_requerido(permiso="Gestionar roles de usuario")
 def roles_usuario_view(request, id_usuario):
     """
-    Permite listar todos los roles pertenecientes a un usuario existente en el sistema, 
-    junto con las operaciones de agregacion de roles y eliminacion de roles.
+    ::
+    
+        La vista del listado de roles por usuario. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar roles de usuario.
+            
+        Esta vista permite al usuario listar y conocer las opciones de los roles del usuario previamente seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_usuario: el identificador del usuario.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     usuario = User.objects.get(id=id_usuario)
     roles = Rol.objects.filter(user__id=id_usuario)
@@ -202,8 +297,24 @@ def roles_usuario_view(request, id_usuario):
 @login_required(login_url='/login/')
 def agregar_rol_view(request, id_usuario):
     """
-    Permite listar todos los roles registrados en el sistema, junto con las 
-    operaciones de agregacion de rol.
+    ::
+    
+        La vista del listado de roles ligados al usuario. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            
+        Esta vista permite al usuario listar todos los roles sistema, ademas, el template relacionado concede 
+        las opciones para agregar un rol seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_usuario: el identificador del usuario.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     usuario = User.objects.get(id=id_usuario)
     roles = Rol.objects.all()
@@ -214,8 +325,26 @@ def agregar_rol_view(request, id_usuario):
 @permiso_requerido(permiso="Agregar rol a usuario")
 def confirmacion_agregar_rol_view(request, id_usuario, id_rol):
     """
-    Permite agregar un rol previamente seleccionado a un usuario existente en el 
-    sistema.
+    ::
+    
+        La vista de confirmacion de agregacion de un rol a un usuario. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Agregar rol a usuario.
+            
+        Esta vista permite al usuario agregar un rol seleccionado a el usuario seleccionado previamente. Se verifica si el rol a agregar ya 
+        pertenece al usuario, en cuyo caso se cancelara la operacion.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_usuario: el identificador del usuario.
+            - id_rol: el identificador del rol.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     valido = False
     usuario = User.objects.get(id=id_usuario)
@@ -234,8 +363,25 @@ def confirmacion_agregar_rol_view(request, id_usuario, id_rol):
 @permiso_requerido(permiso="Quitar rol de usuario")
 def quitar_rol_view(request, id_usuario, id_rol):
     """
-    Permite quitar un rol previamente seleccionado de un usuario existente en el 
-    sistema.
+    ::
+    
+        La vista para quitar un rol de un usuario. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quitar rol de usuario.
+        
+        Esta vista permite al usuario quitar un rol seleccionado de un usuario seleccionado previamente.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_usuario: el identificador de la usuario.
+            - id_rol: el identificador del rol.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     usuario = User.objects.get(id=id_usuario)
     rol = Rol.objects.get(id=id_rol)
@@ -337,7 +483,27 @@ def crear_rol_view(request):
 @permiso_requerido(permiso="Modificar rol")
 def modificar_rol_view(request, id_rol):
     """
-    Permite modificar un rol existente en el sistema.
+    ::
+    
+        La vista para modificar un rol. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Modificar rol.
+            
+        Esta vista permite al usuario modificar un rol previamente seleccionado, para lograr esto, 
+        se verifica la validez de cada campo modificado y luego se guarda el rol de acuerdo a los campos ingresados.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_rol: el identificador del rol.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del usuario modificada. 
     """
     rol = Rol.objects.get(id=id_rol)
     if request.method == "POST":
@@ -362,7 +528,26 @@ def modificar_rol_view(request, id_rol):
 @permiso_requerido(permiso="Eliminar rol")
 def eliminar_rol_view(request, id_rol):
     """
-    Permite eliminar un rol existente en el sistema.
+    ::
+    
+        La vista para eliminar un rol. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Eliminar rol.
+            
+        Esta vista permite al usuario eliminar un rol previamente seleccionado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_rol: el identificador del rol.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
     """
     rol = Rol.objects.get(id=id_rol)
     if request.method == "POST":
@@ -376,7 +561,24 @@ def eliminar_rol_view(request, id_rol):
 @permiso_requerido(permiso="Visualizar rol")
 def visualizar_rol_view(request, id_rol):
     """
-    Permite visualizar todos los campos de un rol existente en el sistema.
+    ::
+    
+        La vista para visualizar un rol. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Visualizar rol.
+            
+        Esta vista permite al usuario visualizar todos los campos guardados de un rol previamente seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_rol: el identificador del rol.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
     """
     rol = Rol.objects.get(id=id_rol)
     ctx = {'rol': rol}
@@ -386,8 +588,24 @@ def visualizar_rol_view(request, id_rol):
 @permiso_requerido(permiso="Gestionar permisos de rol")
 def permisos_rol_view(request, id_rol):
     """
-    Permite listar todos los permisos pertenecientes a un rol existente en el sistema, 
-    junto con las operaciones de agregacion de permisos y eliminacion de permisos.
+    ::
+    
+        La vista del listado de permisos por rol. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar permisos de rol.
+            
+        Esta vista permite al usuario listar y conocer las opciones de los permisos del rol previamente seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_rol: el identificador del rol.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     rol = Rol.objects.get(id=id_rol)
     permisos = Permiso.objects.filter(rol__id=id_rol)
@@ -398,8 +616,24 @@ def permisos_rol_view(request, id_rol):
 @login_required(login_url='/login/')
 def agregar_permiso_view(request, id_rol):
     """
-    Permite listar todos los permisos registrados en el sistema, junto con las 
-    operaciones de agregacion de permiso.
+    ::
+    
+        La vista del listado de permisos ligados al rol. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            
+        Esta vista permite al usuario listar todos los permisos del sistema, ademas, el template relacionado concede 
+        las opciones para agregar un permiso seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_rol: el identificador del rol.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     rol = Rol.objects.get(id=id_rol)
     permisos = Permiso.objects.all()
@@ -410,8 +644,26 @@ def agregar_permiso_view(request, id_rol):
 @permiso_requerido(permiso="Agregar permiso a rol")
 def confirmacion_agregar_permiso_view(request, id_rol, id_permiso):
     """
-    Permite agregar un permiso previamente seleccionado a un rol existente en el 
-    sistema.
+    ::
+    
+        La vista de confirmacion de agregacion de un permiso a un rol. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Agregar permiso a rol.
+            
+        Esta vista permite al usuario agregar un permiso seleccionado a el rol seleccionado previamente. Se verifica si el permiso a agregar ya 
+        pertenece al rol, en cuyo caso se cancelara la operacion.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_rol: el identificador del rol.
+            - id_permiso: el identificador del permiso.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     valido = False
     rol = Rol.objects.get(id=id_rol)
@@ -430,8 +682,25 @@ def confirmacion_agregar_permiso_view(request, id_rol, id_permiso):
 @permiso_requerido(permiso="Quitar permiso de rol")
 def quitar_permiso_view(request, id_rol, id_permiso):
     """
-    Permite quitar un permiso previamente seleccionado de un rol existente en el 
-    sistema.
+    ::
+    
+        La vista para quitar un permiso de un rol. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quitar permiso de rol.
+        
+        Esta vista permite al usuario quitar un permiso seleccionado de un rol seleccionado previamente.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_rol: el identificador de la rol.
+            - id_permiso: el identificador del permiso.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     rol = Rol.objects.get(id=id_rol)
     permiso = Permiso.objects.get(id=id_permiso)
@@ -533,7 +802,27 @@ def crear_tipo_atributo_view(request):
 @permiso_requerido(permiso="Modificar tipo de atributo")
 def modificar_tipo_atributo_view(request, id_tipo_atributo):
     """
-    Permite modificar un tipo atributo existente en el sistema.
+    ::
+    
+        La vista para modificar un tipo de atributo. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Modificar tipo de atributo.
+            
+        Esta vista permite al usuario modificar un tipo de atributo previamente seleccionada, para lograr esto, 
+        se verifica la validez de cada campo modificado y luego se guarda el tipo de atributo de acuerdo a los campos ingresados.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_tipo_atributo: el identificador del tipo de atributo.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del usuario modificada. 
     """
     tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
     atributos = ValorAtributo.objects.filter(tipo_atributo__id=id_tipo_atributo)
@@ -565,7 +854,26 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
 @permiso_requerido(permiso="Eliminar tipo de atributo")
 def eliminar_tipo_atributo_view(request, id_tipo_atributo):
     """
-    Permite eliminar un tipo atributo existente en el sistema.
+    ::
+    
+        La vista para eliminar un tipo de atributo. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Eliminar tipo de atributo.
+            
+        Esta vista permite al usuario eliminar un tipo de atributo previamente seleccionado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_tipo_atributo: el identificador del tipo de atributo.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
     """
     tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
     atributos = ValorAtributo.objects.filter(tipo_atributo__id=id_tipo_atributo)
@@ -583,7 +891,24 @@ def eliminar_tipo_atributo_view(request, id_tipo_atributo):
 @permiso_requerido(permiso="Visualizar tipo de atributo")
 def visualizar_tipo_atributo_view(request, id_tipo_atributo):
     """
-    Permite visualizar todos los campos de un tipo atributo existente en el sistema.
+    ::
+    
+        La vista para visualizar un tipo de atributo. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Visualizar tipo de atributo.
+            
+        Esta vista permite al usuario visualizar todos los campos guardados de un tipo de atributo previamente seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_tipo_atributo: el identificador del tipo de atributo.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
     """
     tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
     ctx = {'tipo_atributo': tipo_atributo}
@@ -707,7 +1032,28 @@ def crear_proyecto_view(request):
 @miembro_proyecto()
 def modificar_proyecto_view(request, id_proyecto):
     """
-    Permite modificar un proyecto existente en el sistema.
+    ::
+    
+        La vista para modificar un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Modificar proyecto.
+            - El usuario debe ser miembro del proyecto que se quiere modificar.
+            
+        Esta vista permite al usuario modificar un proyecto previamente seleccionada, para lograr esto, 
+        se verifica la validez de cada campo modificado y luego se guarda el proyecto de acuerdo a los campos ingresados.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     if request.method == "POST":
@@ -746,7 +1092,30 @@ def modificar_proyecto_view(request, id_proyecto):
 @miembro_proyecto()
 def eliminar_proyecto_view(request, id_proyecto):
     """
-    Permite eliminar un proyecto existente en el sistema.
+    ::
+    
+        La vista para eliminar un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Eliminar proyecto.
+            - El usuario debe ser miembro del proyecto.
+            
+        Esta vista permite al usuario eliminar un proyecto previamente seleccionada, para lograr esto, 
+        se verifica si el proyecto cumple las siguientes condiciones:
+        
+            - El proyecto debe estar en estado Finalizado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     valido = True
@@ -771,7 +1140,25 @@ def eliminar_proyecto_view(request, id_proyecto):
 @miembro_proyecto()
 def visualizar_proyecto_view(request, id_proyecto):
     """
-    Permite visualizar todos los campos de un proyecto existente en el sistema.
+    ::
+    
+        La vista para visualizar un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Visualizar proyecto.
+            - El usuario debe ser miembro del proyecto que desea visualizar.
+            
+        Esta vista permite al usuario visualizar todos los campos guardados de un proyecto previamente seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     ctx = {'proyecto': proyecto}
@@ -782,8 +1169,25 @@ def visualizar_proyecto_view(request, id_proyecto):
 @miembro_proyecto()
 def usuarios_proyecto_view(request, id_proyecto):
     """
-    Permite listar todos los usuarios pertenecientes a un proyecto existente en el sistema, 
-    junto con las operaciones de agregacion de usuarios y eliminacion de usuarios.
+    ::
+    
+        La vista del listado de usuarios por proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar usuarios de proyecto.
+            - El usuario debe ser miembro del proyecto.
+            
+        Esta vista permite al usuario listar y conocer las opciones de los usuarios que componen el proyecto previamente seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     usuarios = User.objects.filter(usuarios_proyecto__id=id_proyecto)
@@ -793,8 +1197,24 @@ def usuarios_proyecto_view(request, id_proyecto):
 @login_required(login_url='/login/')
 def proyecto_agregar_usuario_view(request, id_proyecto):
     """
-    Permite listar todos los usuarios registrados en el sistema, junto con las 
-    operaciones de agregacion de usuario.
+    ::
+    
+        La vista del listado de usuarios miembros del proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            
+        Esta vista permite al usuario listar todos los usuarios miembros del proyecto, ademas, el template relacionado concede 
+        las opciones para agregar un usuario seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     usuarios = User.objects.all()
@@ -806,8 +1226,27 @@ def proyecto_agregar_usuario_view(request, id_proyecto):
 @miembro_proyecto()
 def confirmacion_proyecto_agregar_usuario_view(request, id_proyecto, id_usuario):
     """
-    Permite agregar un usuario previamente seleccionado a un proyecto existente en el 
-    sistema.
+    ::
+    
+        La vista de confirmacion de agregacion de un usuario a un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Agregar usuario a proyecto.
+            - El usuario debe ser miembro del proyecto.
+            
+        Esta vista permite al usuario agregar un usuario seleccionado a un proyecto seleccionado previamente. Se verifica si el usuario a agregar ya 
+        pertenece al proyecto, en cuyo caso se cancelara la operacion.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            - id_usuario: el identificador del usuario.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     valido = False
     proyecto = Proyecto.objects.get(id=id_proyecto)
@@ -827,8 +1266,26 @@ def confirmacion_proyecto_agregar_usuario_view(request, id_proyecto, id_usuario)
 @miembro_proyecto()
 def proyecto_quitar_usuario_view(request, id_proyecto, id_usuario):
     """
-    Permite quitar un usuario previamente seleccionado de un proyecto existente en el 
-    sistema.
+    ::
+    
+        La vista para quitar un usuario de la lista de miembros de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quitar usuario de proyecto.
+            - El usuario debe pertenecer al proyecto.
+            
+        Esta vista permite al usuario quitar un usuario seleccionado de un proyecto seleccionado previamente.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador de la proyecto.
+            - id_usuario: el identificador del usuario.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     usuario = User.objects.get(id=id_usuario)
@@ -842,8 +1299,25 @@ def proyecto_quitar_usuario_view(request, id_proyecto, id_usuario):
 @miembro_proyecto()
 def fases_proyecto_view(request, id_proyecto):
     """
-    Permite listar todas las fases pertenecientes a un proyecto existente en el sistema, 
-    junto con las operaciones de agregacion de fases y eliminacion de fases.
+    ::
+    
+        La vista del listado de fases por proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar fases de proyecto.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario listar y conocer las opciones de las fases de un proyecto previamente seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fases = proyecto.fases.all()
@@ -853,8 +1327,24 @@ def fases_proyecto_view(request, id_proyecto):
 @login_required(login_url='/login/')
 def proyecto_agregar_fase_view(request, id_proyecto):
     """
-    Permite listar todas las fases registradas en el sistema, junto con las 
-    operaciones de agregacion de fase.
+    ::
+    
+        La vista del listado de fases ligadas al proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            
+        Esta vista permite al usuario listar todas las fases ligadas al proyecto, ademas, el template relacionado concede 
+        las opciones para agregar una fase seleccionada.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fases = Fase.objects.all()
@@ -866,8 +1356,27 @@ def proyecto_agregar_fase_view(request, id_proyecto):
 @miembro_proyecto()
 def confirmacion_proyecto_agregar_fase_view(request, id_proyecto, id_fase):
     """
-    Permite agregar una fase previamente seleccionada a un proyecto existente en el 
-    sistema.
+    ::
+    
+        La vista de confirmacion de agregacion de una fase a un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Agregar fase a proyecto.
+            - El usuario debe ser miembro del proyecto.
+            
+        Esta vista permite al usuario agregar una fase seleccionada a un proyecto seleccionado previamente. Se verifica si la fase a agregar ya 
+        pertenece al proyecto, en cuyo caso se cancelara la operacion.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            - id_fase: el identificador de la fase.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     valido_uno = False
     valido_dos = False
@@ -894,8 +1403,26 @@ def confirmacion_proyecto_agregar_fase_view(request, id_proyecto, id_fase):
 @miembro_proyecto()
 def proyecto_quitar_fase_view(request, id_proyecto, id_fase):
     """
-    Permite quitar una fase previamente seleccionada de un proyecto existente en el 
-    sistema.
+    ::
+    
+        La vista para quitar una fase de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quitar fase de proyecto.
+            - El usuario debe pertenecer al proyecto.
+            
+        Esta vista permite al usuario quitar una fase seleccionada de un proyecto seleccionado previamente.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador de la proyecto.
+            - id_fase: el identificador del fase.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fase = Fase.objects.get(id=id_fase)
@@ -910,8 +1437,25 @@ def proyecto_quitar_fase_view(request, id_proyecto, id_fase):
 @miembro_proyecto()
 def roles_proyecto_view(request, id_proyecto):
     """
-    Permite listar todos los roles pertenecientes a un proyecto existente en el sistema, 
-    junto con las operaciones de agregacion de roles y eliminacion de roles.
+    ::
+    
+        La vista del listado de roles por proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar roles de proyecto.
+            - El usuario debe ser miembro del proyecto.
+            
+        Esta vista permite al usuario listar y conocer las opciones de los roles del proyecto previamente seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     roles = Rol.objects.filter(roles_proyecto__id=id_proyecto)
@@ -921,8 +1465,24 @@ def roles_proyecto_view(request, id_proyecto):
 @login_required(login_url='/login/')
 def proyecto_agregar_rol_view(request, id_proyecto):
     """
-    Permite listar todos los roles registrados en el sistema, junto con las 
-    operaciones de agregacion de rol.
+    ::
+    
+        La vista del listado de roles ligados al proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            
+        Esta vista permite al usuario listar todos los roles ligados al proyecto, ademas, el template relacionado concede 
+        las opciones para agregar un rol seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     roles = Rol.objects.all()
@@ -934,8 +1494,27 @@ def proyecto_agregar_rol_view(request, id_proyecto):
 @miembro_proyecto()
 def confirmacion_proyecto_agregar_rol_view(request, id_proyecto, id_rol):
     """
-    Permite agregar un rol previamente seleccionado a un proyecto existente en el 
-    sistema.
+    ::
+    
+        La vista de confirmacion de agregacion de un rol a un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Agregar rol a proyecto.
+            - El usuario debe ser miembro del proyecto.
+            
+        Esta vista permite al usuario agregar un rol seleccionado a un proyecto seleccionado previamente. Se verifica si el rol a agregar ya 
+        pertenece al proyecto, en cuyo caso se cancelara la operacion.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            - id_rol: el identificador del rol.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     valido = False
     proyecto = Proyecto.objects.get(id=id_proyecto)
@@ -955,8 +1534,26 @@ def confirmacion_proyecto_agregar_rol_view(request, id_proyecto, id_rol):
 @miembro_proyecto()
 def proyecto_quitar_rol_view(request, id_proyecto, id_rol):
     """
-    Permite quitar un rol previamente seleccionado de un proyecto existente en el 
-    sistema.
+    ::
+    
+        La vista para quitar un rol de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quitar rol de proyecto.
+            - El usuario debe pertenecer al proyecto.
+            
+        Esta vista permite al usuario quitar un rol seleccionado de un proyecto seleccionado previamente.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador de la proyecto.
+            - id_rol: el identificador del rol.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     rol = Rol.objects.get(id=id_rol)
@@ -970,8 +1567,25 @@ def proyecto_quitar_rol_view(request, id_proyecto, id_rol):
 @miembro_proyecto()
 def comite_proyecto_view(request, id_proyecto):
     """
-    Permite listar todos los miembros del comite de cambios perteneciente a un proyecto existente en el sistema, 
-    junto con las operaciones de agregacion de miembros y eliminacion de miembros.
+    ::
+    
+        La vista del listado de miembros del comite de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar comite de proyecto.
+            - El usuario debe ser miembro del proyecto.
+            
+        Esta vista permite al usuario listar y conocer las opciones del comite de un proyecto previamente seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     miembros = User.objects.filter(comite_de_cambios_proyecto__id=id_proyecto)
@@ -981,8 +1595,24 @@ def comite_proyecto_view(request, id_proyecto):
 @login_required(login_url='/login/')
 def proyecto_agregar_miembro_view(request, id_proyecto):
     """
-    Permite listar todos los usuarios registrados en el sistema, junto con las 
-    operaciones de agregacion de usuario.
+    ::
+    
+        La vista del listado de miembros del comite del proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            
+        Esta vista permite al usuario listar todos los miembros del comite del proyecto, ademas, el template relacionado concede 
+        las opciones para agregar un nuevo usuario al comite.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     usuarios = User.objects.all()
@@ -994,8 +1624,27 @@ def proyecto_agregar_miembro_view(request, id_proyecto):
 @miembro_proyecto()
 def confirmacion_proyecto_agregar_miembro_view(request, id_proyecto, id_usuario):
     """
-    Permite agregar un usuario previamente seleccionado al comite de cambios de un proyecto existente en el 
-    sistema.
+    ::
+    
+        La vista de confirmacion de agregacion de un usuario al comite de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Agregar miembro al comite.
+            - El usuario debe ser miembro del proyecto.
+            
+        Esta vista permite al usuario agregar un usuario seleccionado al comite seleccionado previamente. Se verifica si el usuario a agregar ya 
+        pertenece al comite, en cuyo caso se cancelara la operacion.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            - id_usuario: el identificador del usuario.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     valido = False
     proyecto = Proyecto.objects.get(id=id_proyecto)
@@ -1015,8 +1664,26 @@ def confirmacion_proyecto_agregar_miembro_view(request, id_proyecto, id_usuario)
 @miembro_proyecto()
 def proyecto_quitar_miembro_view(request, id_proyecto, id_usuario):
     """
-    Permite quitar un usuario previamente seleccionado del comite de cambios de un proyecto existente en el 
-    sistema.
+    ::
+    
+        La vista para quitar un usuario de la lista de miembros del comite de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quitar miembro del comite.
+            - El usuario debe pertenecer al proyecto.
+            
+        Esta vista permite al usuario quitar un usuario seleccionado del comite de un proyecto seleccionado previamente.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador de la proyecto.
+            - id_usuario: el identificador del usuario.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     usuario = User.objects.get(id=id_usuario)
@@ -1030,12 +1697,30 @@ def proyecto_quitar_miembro_view(request, id_proyecto, id_usuario):
 @miembro_proyecto()
 def iniciar_proyecto_view(request, id_proyecto):
     """
-    Permite arrancar un proyecto si es que se cumplen todas las condiciones mencionadas abajo:
-        - El proyecto debe estar en estado Inactivo.
-        - El proyecto debe poseer un lider.
-        - El proyecto debe poseer al menos un miembro en su comite de cambios.
-        - El proyecto debe poseer al menos una fase.
-        - El proyecto debe poseer al menos un rol.
+    ::
+    
+        Para acceder a esta vista se deben cumplir los siguientes requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Iniciar proyecto.
+            - El usuario debe ser miembro del proyecto.
+            
+        Permite arrancar un proyecto si es que se cumplen todas las condiciones mencionadas abajo:
+    
+            - El proyecto debe estar en estado Inactivo.
+            - El proyecto debe poseer un lider.
+            - El proyecto debe poseer al menos un miembro en su comite de cambios.
+            - El proyecto debe poseer al menos una fase.
+            - El proyecto debe poseer al menos un rol.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     inicio_valido = True
@@ -1169,20 +1854,28 @@ def crear_fase_view(request):
 @fase_miembro_proyecto()
 def modificar_fase_view(request, id_fase):
     """
-    La vista para modificar una fase. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Modificar item.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario modificar una fase previamente seleccionada, para lograr esto, 
-    se verifica la validez de cada campo modificado y luego se guarda la fase de acuerdo a los campos ingresados.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    La vista retorna lo siguiente:
-    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
-    generado en la vista, al template correspondiente.
-    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
+    ::
+    
+        La vista para modificar una fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Modificar fase.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario modificar una fase previamente seleccionada, para lograr esto, 
+        se verifica la validez de cada campo modificado y luego se guarda la fase de acuerdo a los campos ingresados.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
     """
     fase = Fase.objects.get(id=id_fase)
     if request.method == "POST":
@@ -1214,21 +1907,30 @@ def modificar_fase_view(request, id_fase):
 @fase_miembro_proyecto()
 def eliminar_fase_view(request, id_fase):
     """
-    La vista para eliminar una fase. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Eliminar fase.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario eliminar una fase previamente seleccionada, para lograr esto, 
-    se verifica si la fase cumple las siguientes condiciones:
-    - La fase debe estar en estado Inactivo.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    La vista retorna lo siguiente:
-    - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
-    generado en la vista, al template correspondiente.
-    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
+    ::
+    
+        La vista para eliminar una fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Eliminar fase.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario eliminar una fase previamente seleccionada, para lograr esto, 
+        se verifica si la fase cumple las siguientes condiciones:
+        
+            - La fase debe estar en estado Inactivo.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
     """
     fase = Fase.objects.get(id=id_fase)
     valido = True
@@ -1250,17 +1952,25 @@ def eliminar_fase_view(request, id_fase):
 @fase_miembro_proyecto()
 def visualizar_fase_view(request, id_fase):
     """
-    La vista para visualizar una fase. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Visualizar fase.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario visualizar todos los campos guardados de una fase previamente seleccionada.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+    ::
+    
+        La vista para visualizar una fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Visualizar fase.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario visualizar todos los campos guardados de una fase previamente seleccionada.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
     """
     fase = Fase.objects.get(id=id_fase)
     ctx = {'fase': fase}
@@ -1271,17 +1981,25 @@ def visualizar_fase_view(request, id_fase):
 @fase_miembro_proyecto()
 def roles_fase_view(request, id_fase):
     """
-    La vista del listado de roles por fase. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Gestionar roles de fase.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario listar y conocer las opciones de los roles de la fase previamente seleccionada.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    ::
+    
+        La vista del listado de roles por fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar roles de fase.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario listar y conocer las opciones de los roles de la fase previamente seleccionada.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     fase = Fase.objects.get(id=id_fase)
     roles = Rol.objects.filter(fase__id=id_fase)
@@ -1291,16 +2009,24 @@ def roles_fase_view(request, id_fase):
 @login_required(login_url='/login/')
 def fase_agregar_rol_view(request, id_fase):
     """
-    La vista del listado de roles del proyecto ligado a la fase. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    Esta vista permite al usuario listar todos los roles del proyecto al cual esta ligada la fase, ademas, el template relacionado concede 
-    las opciones para agregar un rol seleccionado.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    ::
+    
+        La vista del listado de roles del proyecto ligado a la fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            
+        Esta vista permite al usuario listar todos los roles del proyecto al cual esta ligada la fase, ademas, el template relacionado concede 
+        las opciones para agregar un rol seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     fase = Fase.objects.get(id=id_fase)
     proyecto = fase.proyecto
@@ -1313,19 +2039,27 @@ def fase_agregar_rol_view(request, id_fase):
 @fase_miembro_proyecto()
 def confirmacion_fase_agregar_rol_view(request, id_fase, id_rol):
     """
-    La vista de confirmacion de agregacion de un rol a una fase. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Agregar rol a fase.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario agregar un rol seleccionado a la fase seleccionada previamente. Se verifica si el rol a agregar ya 
-    pertenece a la fase, en cuyo caso se cancelara la operacion.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    - id_rol: el identificador del rol.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    ::
+    
+        La vista de confirmacion de agregacion de un rol a una fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Agregar rol a fase.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario agregar un rol seleccionado a la fase seleccionada previamente. Se verifica si el rol a agregar ya 
+        pertenece a la fase, en cuyo caso se cancelara la operacion.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_rol: el identificador del rol.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     valido = False
     fase = Fase.objects.get(id=id_fase)
@@ -1345,18 +2079,26 @@ def confirmacion_fase_agregar_rol_view(request, id_fase, id_rol):
 @fase_miembro_proyecto()
 def fase_quitar_rol_view(request, id_fase, id_rol):
     """
-    La vista para quitar un rol de una fase. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Quitar rol de fase.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    Esta vista permite al usuario quitar un rol seleccionado de la fase seleccionada previamente.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    - id_rol: el identificador del rol.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    ::
+    
+        La vista para quitar un rol de una fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quitar rol de fase.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+        
+        Esta vista permite al usuario quitar un rol seleccionado de la fase seleccionada previamente.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_rol: el identificador del rol.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     fase = Fase.objects.get(id=id_fase)
     rol = Rol.objects.get(id=id_rol)
@@ -1461,7 +2203,29 @@ def crear_tipo_item_view(request):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Modificar tipo de item")
 def modificar_tipo_item_view(request, id_tipo_item):
-
+    """
+    ::
+    
+        La vista para modificar un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Modificar tipo de item.
+            
+        Esta vista permite al usuario modificar un tipo de item previamente seleccionada, para lograr esto, 
+        se verifica la validez de cada campo modificado y luego se guarda el tipo de item de acuerdo a los campos ingresados.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_tipo_item: el identificador del tipo de item.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
+    """
     tipo_item = TipoItem.objects.get(id=id_tipo_item)
     if request.method == "POST":
         form = ModificarTipoItemForm(data=request.POST)
@@ -1486,7 +2250,26 @@ def modificar_tipo_item_view(request, id_tipo_item):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Visualizar tipo de item")
 def visualizar_tipo_item_view(request, id_tipo_item):
-
+    """
+    ::
+    
+        La vista para visualizar un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Visualizar tipo de item.
+            
+        Esta vista permite al usuario visualizar todos los campos guardados de un tipo de item previamente seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_tipo_item: el identificador del tipo de item.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+    """
     tipo_item = TipoItem.objects.get(id=id_tipo_item)
     ctx = {'tipo_item': tipo_item}
     return render_to_response('tipo_item/visualizar_tipo_item.html', ctx, context_instance=RequestContext(request))
@@ -1495,7 +2278,26 @@ def visualizar_tipo_item_view(request, id_tipo_item):
 @permiso_requerido(permiso="Eliminar tipo de item")
 def eliminar_tipo_item_view(request, id_tipo_item):
     """
-    Permite eliminar un tipo de item existente en el sistema.
+    ::
+    
+        La vista para eliminar un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Eliminar tipo de item.
+            
+        Esta vista permite al usuario eliminar un tipo de item previamente seleccionado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_tipo_item: el identificador del tipo de item.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
     """
     tipo_item = TipoItem.objects.get(id=id_tipo_item)
     if request.method == "POST":
@@ -1509,6 +2311,26 @@ def eliminar_tipo_item_view(request, id_tipo_item):
 @permiso_requerido(permiso="Gestionar tipos de atributo de tipo de item")
 
 def tipos_atributo_tipo_item_view(request, id_tipo_item):
+    """
+    ::
+    
+        La vista del listado de tipos de atributo del tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar tipos de atributo de tipo de item.
+            
+        Esta vista permite al usuario listar y conocer las opciones de los tipos de atributo del item previamente seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_tipo_item: el identificador del tipo de item.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
     id_tipoitem=id_tipo_item
     tipo_item = TipoItem.objects.get(id=id_tipo_item)
     tipos_atributo = TipoAtributo.objects.filter(tipoitem__id=id_tipoitem)
@@ -1518,7 +2340,24 @@ def tipos_atributo_tipo_item_view(request, id_tipo_item):
 @login_required(login_url='/login/')
 def agregar_tipo_atributo_view(request, id_tipo_item):
     """
-
+    ::
+    
+        La vista del listado de tipos de atributo ligados al tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            
+        Esta vista permite al usuario listar todos los tipos de atributo del sistema, ademas, el template relacionado concede 
+        las opciones para agregar un tipo de atributo seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_tipo_item: el identificador del tipo de item.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     tipo_item = TipoItem.objects.get(id=id_tipo_item)
     tipos_atributo = TipoAtributo.objects.all()
@@ -1529,8 +2368,26 @@ def agregar_tipo_atributo_view(request, id_tipo_item):
 @permiso_requerido(permiso="Agregar tipo de atributo a tipo de item")
 def confirmacion_agregar_tipo_atributo_view(request, id_tipo_item, id_tipo_atributo):
     """
-    Permite agregar un tipo de atributo previamente seleccionado a un tipo de item existente en el 
-    sistema.
+    ::
+    
+        La vista de confirmacion de agregacion de un tipo de atributo a un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Agregar tipo de atributo a tipo de item.
+            
+        Esta vista permite al usuario agregar un tipo de atributo seleccionado a el tipo de item seleccionado previamente. Se verifica si el tipo de atributo a agregar ya 
+        pertenece al tipo de item, en cuyo caso se cancelara la operacion.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_tipo_item: el identificador del tipo de item.
+            - id_tipo_atributo: el identificador del tipo de atributo.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     valido = False
     tipo_item = TipoItem.objects.get(id=id_tipo_item)
@@ -1549,8 +2406,25 @@ def confirmacion_agregar_tipo_atributo_view(request, id_tipo_item, id_tipo_atrib
 @permiso_requerido(permiso="Quitar tipo de atributo de tipo de item")
 def quitar_tipo_atributo_view(request, id_tipo_item, id_tipo_atributo):
     """
-    Permite quitar un tipo de atributo previamente seleccionado de un tipo de item existente en el 
-    sistema.
+    ::
+    
+        La vista para quitar un tipo de atributo de un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quitar tipo de atributo de tipo de item.
+        
+        Esta vista permite al usuario quitar un tipo de atributo seleccionado del tipo de item seleccionado previamente.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_tipo_item: el identificador de la tipo de item.
+            - id_tipo_atributo: el identificador del tipo de atributo.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     tipo_item = TipoItem.objects.get(id=id_tipo_item)
     tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
