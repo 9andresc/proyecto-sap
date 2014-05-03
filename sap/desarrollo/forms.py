@@ -10,7 +10,9 @@ def opcion_tipo_item():
     return resultado
 
 class CrearItemForm(forms.Form):
-
+    """
+    Formulario utilizado para la creacion de un item.
+    """
     nombre = forms.CharField(label="Nombre de item", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
     complejidad = forms.IntegerField(label="Complejidad", required=True)

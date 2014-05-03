@@ -1,5 +1,5 @@
-Contenido del Modulo de Administración:
-=======================================
+Contenido del Modulo de Administración
+======================================
 
 .. toctree::
    :maxdepth: 4

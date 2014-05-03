@@ -11,8 +11,23 @@ from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_
 @login_required(login_url='/login/')
 def gestion_usuarios_view(request):
     """
-    Permite listar todos los usuarios registrados en el sistema, junto con las 
-    operaciones disponibles por cada usuario.
+    ::
+    
+        La vista del listado de usuarios del sistema. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+                - El usuario debe estar logueado.
+                Esta vista permite al usuario listar y conocer las opciones de los usuarios del sistema.
+                Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+                los botones de accion sobre cada usuario.
+                
+        La vista recibe los siguientes parametros:
+    
+                - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+        
+                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     crear_usuario = False
     modificar_usuario = False
@@ -46,7 +61,26 @@ def gestion_usuarios_view(request):
 @permiso_requerido(permiso="Crear usuario")
 def crear_usuario_view(request):
     """
-    Permite crear un nuevo usuario en el sistema.
+    ::
+    
+        La vista para crear un usuario. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Crear usuario.
+            
+        Esta vista permite al usuario crear un usuario para lograr esto, se verifica la validez de cada campo ingresado y 
+        luego se crea el usuario de acuerdo a los campos ingresados. 
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de usuarios. 
     """
     form = CrearUsuarioForm()
     if request.method == "POST":
@@ -213,13 +247,29 @@ def quitar_rol_view(request, id_usuario, id_rol):
 @login_required(login_url='/login/')
 def gestion_roles_view(request):
     """
-    Permite listar todos los roles registrados en el sistema, junto con las 
-    operaciones disponibles por cada rol.
+    ::
+    
+        La vista del listado de roles del sistema. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+                - El usuario debe estar logueado.
+                Esta vista permite al usuario listar y conocer las opciones de los roles del sistema.
+                Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+                los botones de accion sobre cada rol.
+                
+        La vista recibe los siguientes parametros:
+    
+                - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+        
+                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     crear_rol = False
     modificar_rol = False
     eliminar_rol = False
     visualizar_rol = False
+    gestionar_permisos= False
     roles = request.user.roles.all()
     for r in roles:
         for p in r.permisos.all():
@@ -231,21 +281,42 @@ def gestion_roles_view(request):
                 eliminar_rol = True
             elif p.nombre == 'Visualizar rol':
                 visualizar_rol = True
+            elif p.nombre == 'Gestionar permisos de rol':
+                gestionar_permisos = True    
                 
-            if crear_rol and modificar_rol and eliminar_rol and visualizar_rol:
+            if crear_rol and modificar_rol and eliminar_rol and visualizar_rol and gestionar_permisos:
                 break
-        if crear_rol and modificar_rol and eliminar_rol and visualizar_rol:
+        if crear_rol and modificar_rol and eliminar_rol and visualizar_rol and gestionar_permisos:
                 break
             
     roles = Rol.objects.all()
-    ctx = {'roles':roles, 'crear_rol':crear_rol, 'modificar_rol':modificar_rol, 'eliminar_rol':eliminar_rol, 'visualizar_rol':visualizar_rol}
+    ctx = {'roles':roles, 'crear_rol':crear_rol, 'modificar_rol':modificar_rol, 'eliminar_rol':eliminar_rol, 'visualizar_rol':visualizar_rol, 'gestionar_permisos':gestionar_permisos}
     return render_to_response('rol/gestion_roles.html', ctx, context_instance=RequestContext(request))   
     
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear rol")
 def crear_rol_view(request):
     """
-    Permite crear un nuevo rol en el sistema.
+    ::
+    
+        La vista para crear un rol. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Crear rol.
+            
+        Esta vista permite al usuario crear un rol para lograr esto, se verifica la validez de cada campo ingresado y 
+        luego se crea el rol de acuerdo a los campos ingresados. 
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de usuarios. 
     """
     form = CrearRolForm()
     if request.method == "POST":
@@ -373,8 +444,23 @@ def quitar_permiso_view(request, id_rol, id_permiso):
 @login_required(login_url='/login/')
 def gestion_tipos_atributo_view(request):
     """
-    Permite listar todos los tipos atributo registrados en el sistema, junto con las 
-    operaciones disponibles por cada tipo atributo.
+    ::
+    
+        La vista del listado de tipos de atributo del sistema. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+                - El usuario debe estar logueado.
+                Esta vista permite al usuario listar y conocer las opciones de los tipos de atributo del sistema.
+                Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+                los botones de accion sobre cada tipo de atributo.
+                
+        La vista recibe los siguientes parametros:
+    
+                - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+        
+                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     crear_tipo_de_atributo = False
     modificar_tipo_de_atributo = False
@@ -405,7 +491,26 @@ def gestion_tipos_atributo_view(request):
 @permiso_requerido(permiso="Crear tipo de atributo")
 def crear_tipo_atributo_view(request):
     """
-    Permite crear un nuevo tipo atributo en el sistema.
+    ::
+    
+        La vista para crear un tipo de atributo. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Crear tipo de atributo.
+            
+        Esta vista permite al usuario crear un tipo de atributo para lograr esto, se verifica la validez de cada campo ingresado y 
+        luego se crea el tipo de atributo de acuerdo a los campos ingresados. 
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de usuarios. 
     """
     form = CrearTipoAtributoForm()
     if request.method == "POST":
@@ -487,8 +592,23 @@ def visualizar_tipo_atributo_view(request, id_tipo_atributo):
 @login_required(login_url='/login/')
 def gestion_proyectos_view(request):
     """
-    Permite listar todos los proyectos registrados en el sistema, junto con las 
-    operaciones disponibles por cada proyecto.
+    ::
+    
+        La vista del listado de proyectos del sistema. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+                - El usuario debe estar logueado.
+                Esta vista permite al usuario listar y conocer las opciones de los proyectos del sistema.
+                Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+                los botones de accion sobre cada proyecto.
+                
+        La vista recibe los siguientes parametros:
+    
+                - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+        
+                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     crear_proyecto = False
     modificar_proyecto = False
@@ -534,7 +654,26 @@ def gestion_proyectos_view(request):
 @permiso_requerido(permiso="Crear proyecto")
 def crear_proyecto_view(request):
     """
-    Permite crear un nuevo proyecto en el sistema.
+    ::
+    
+        La vista para crear un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Crear proyecto.
+            
+        Esta vista permite al usuario crear un proyecto para lograr esto, se verifica la validez de cada campo ingresado y 
+        luego se crea el proyecto de acuerdo a los campos ingresados. 
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de usuarios. 
     """
     form = CrearProyectoForm()
     if request.method == "POST":
@@ -935,16 +1074,23 @@ def iniciar_proyecto_view(request, id_proyecto):
 @login_required(login_url='/login/')
 def gestion_fases_view(request):
     """
-    La vista del listado de fases del sistema. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    Esta vista permite al usuario listar y conocer las opciones de las fases del sistema.
-    Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
-    los botones de accion sobre cada fase.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    ::
+    
+        La vista del listado de fases del sistema. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+                - El usuario debe estar logueado.
+                Esta vista permite al usuario listar y conocer las opciones de las fases del sistema.
+                Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+                los botones de accion sobre cada fase.
+                
+        La vista recibe los siguientes parametros:
+    
+                - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+        
+                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     crear_fase = False
     modificar_fase = False
@@ -978,18 +1124,26 @@ def gestion_fases_view(request):
 @permiso_requerido(permiso="Crear fase")
 def crear_fase_view(request):
     """
-    La vista para crear una fase. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Crear fase.
-    Esta vista permite al usuario crear una fase en el sistema, para lograr esto, se verifica la validez de cada campo ingresado 
-    y luego se crea la fase de acuerdo a los campos ingresados. 
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    La vista retorna lo siguiente:
-    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
-    generado en la vista, al template correspondiente.
-    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
+    ::
+    
+        La vista para crear una fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Crear fase.
+            
+        Esta vista permite al usuario crear una fase para lograr esto, se verifica la validez de cada campo ingresado y 
+        luego se crea la fase de acuerdo a los campos ingresados. 
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de usuarios. 
     """
     form = CrearFaseForm()
     if request.method == "POST":
@@ -1214,16 +1368,23 @@ def fase_quitar_rol_view(request, id_fase, id_rol):
 @login_required(login_url='/login/')
 def gestion_tipos_item_view(request):
     """
-    La vista del listado de tipos de item del sistema. Para acceder a esta vista se deben cumplir los siguientes
-    requisitos:
-    - El usuario debe estar logueado.
-    Esta vista permite al usuario listar y conocer las opciones de las fases del sistema.
-    Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
-    los botones de accion sobre cada fase.
-    La vista recibe los siguientes parametros:
-    - request: contiene informacion sobre la sesion actual.
-    La vista retorna lo siguiente:
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    ::
+    
+        La vista del listado de tipos de item del sistema. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+                - El usuario debe estar logueado.
+                Esta vista permite al usuario listar y conocer las opciones de los tipos de item del sistema.
+                Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+                los botones de accion sobre cada tipo de item.
+                
+        La vista recibe los siguientes parametros:
+    
+                - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+        
+                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     crear_tipo_de_item = False
     modificar_tipo_de_item = False
@@ -1259,7 +1420,26 @@ def gestion_tipos_item_view(request):
 @permiso_requerido(permiso="Crear tipo de item")
 def crear_tipo_item_view(request):
     """
-    Permite crear un nuevo tipo de item en el sistema.
+    ::
+    
+        La vista para crear un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Crear tipo de item.
+            
+        Esta vista permite al usuario crear un tipo de item para lograr esto, se verifica la validez de cada campo ingresado y 
+        luego se crea el tipo de item de acuerdo a los campos ingresados. 
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de usuarios. 
     """
     form = CrearTipoItemForm()
     if request.method == "POST":

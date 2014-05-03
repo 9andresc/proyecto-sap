@@ -108,14 +108,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'agogo'
-#html_theme_options = {
-  #      "footerbg": "black",
- #       "bgcolor": "black",
-#	"linkcolor": "black",
- #       "headerbg": "black",
-   #     "hoverlinkcolor": "black",
- #   }
+html_theme = 'haiku'
 
 
 # Theme options are theme-specific and customize the look and feel of a theme

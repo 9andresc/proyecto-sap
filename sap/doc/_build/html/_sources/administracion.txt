@@ -1,61 +1,9 @@
-administracion package
-======================
-
-Subpackages
------------
+Contenido del Modulo de Administración
+======================================
 
 .. toctree::
+   :maxdepth: 4
 
-    administracion.tests
-
-Submodules
-----------
-
-administracion.admin module
----------------------------
-
-.. automodule:: administracion.admin
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-administracion.forms module
----------------------------
-
-.. automodule:: administracion.forms
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-administracion.models module
-----------------------------
-
-.. automodule:: administracion.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-administracion.urls module
---------------------------
-
-.. automodule:: administracion.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-administracion.views module
----------------------------
-
-.. automodule:: administracion.views
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: administracion
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   moduloADM/models.rst
+   moduloADM/views.rst
+   moduloADM/forms.rst

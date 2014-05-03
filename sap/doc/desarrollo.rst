@@ -1,5 +1,5 @@
-Contenido del Modulo de Desarrollo:
-===================================
+Contenido del Modulo de Desarrollo
+==================================
 
 .. toctree::
    :maxdepth: 4

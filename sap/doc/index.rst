@@ -21,7 +21,12 @@ Contenidos:
    administracion.rst
    desarrollo.rst
 
+Indice, modulos y busqueda por palabra clave
+============================================
 
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
    
 
 
