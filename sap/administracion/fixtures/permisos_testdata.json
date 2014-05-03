@@ -1,0 +1,408 @@
+[
+{
+    "pk": 1, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear usuario"
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar usuario"
+    }
+},
+{
+    "pk": 3, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar usuario"
+    }
+},
+{
+    "pk": 4, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar usuario"
+    }
+},
+{
+    "pk": 5, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Cambiar contrasenha"
+    }
+},
+{
+    "pk": 6, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar roles de usuario"
+    }
+},
+{
+    "pk": 7, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar rol a usuario"
+    }
+},
+{
+    "pk": 8, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar rol de usuario"
+    }
+},
+{
+    "pk": 9, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear rol"
+    }
+},
+{
+    "pk": 10, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar rol"
+    }
+},
+{
+    "pk": 11, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar rol"
+    }
+},
+{
+    "pk": 12, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar rol"
+    }
+},
+{
+    "pk": 13, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar permisos de rol"
+    }
+},
+{
+    "pk": 14, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar permiso a rol"
+    }
+},
+{
+    "pk": 15, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar permiso de rol"
+    }
+},
+{
+    "pk": 16, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear tipo de atributo"
+    }
+},
+{
+    "pk": 17, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar tipo de atributo"
+    }
+},
+{
+    "pk": 18, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar tipo de atributo"
+    }
+},
+{
+    "pk": 19, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar tipo de atributo"
+    }
+},
+{
+    "pk": 20, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear proyecto"
+    }
+},
+{
+    "pk": 21, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar proyecto"
+    }
+},
+{
+    "pk": 22, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar proyecto"
+    }
+},
+{
+    "pk": 23, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar proyecto"
+    }
+},
+{
+    "pk": 24, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Iniciar proyecto"
+    }
+},
+{
+    "pk": 25, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar usuarios de proyecto"
+    }
+},
+{
+    "pk": 26, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar usuario a proyecto"
+    }
+},
+{
+    "pk": 27, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar usuario de proyecto"
+    }
+},
+{
+    "pk": 28, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar comite de proyecto"
+    }
+},
+{
+    "pk": 29, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar miembro a comite"
+    }
+},
+{
+    "pk": 30, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar miembro de comite"
+    }
+},
+{
+    "pk": 31, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar fases de proyecto"
+    }
+},
+{
+    "pk": 32, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar fase a proyecto"
+    }
+},
+{
+    "pk": 33, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar fase de proyecto"
+    }
+},
+{
+    "pk": 34, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar roles de proyecto"
+    }
+},
+{
+    "pk": 35, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar rol a proyecto"
+    }
+},
+{
+    "pk": 36, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar rol de proyecto"
+    }
+},
+{
+    "pk": 37, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear fase"
+    }
+},
+{
+    "pk": 38, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar fase"
+    }
+},
+{
+    "pk": 39, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar fase"
+    }
+},
+{
+    "pk": 40, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar fase"
+    }
+},
+{
+    "pk": 41, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar roles de fase"
+    }
+},
+{
+    "pk": 42, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar rol a fase"
+    }
+},
+{
+    "pk": 43, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar rol de fase"
+    }
+},
+{
+    "pk": 44, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar items de fase"
+    }
+},
+{
+    "pk": 45, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear item"
+    }
+},
+{
+    "pk": 46, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar item"
+    }
+},
+{
+    "pk": 47, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar item"
+    }
+},
+{
+    "pk": 48, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar item"
+    }
+},
+{
+    "pk": 49, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Calcular costo de proyecto"
+    }
+},
+{
+    "pk": 50, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Iniciar fase"
+    }
+},
+{
+    "pk": 51, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Finalizar fase"
+    }
+},
+{
+    "pk": 52, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear tipo de item"
+    }
+},
+{
+    "pk": 53, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar tipo de item"
+    }
+},
+{
+    "pk": 54, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar tipos de atributo de tipo de item"
+    }
+},
+{
+    "pk": 55, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar tipo de atributo a tipo de item"
+    }
+},
+{
+    "pk": 56, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar tipo de atributo de tipo de item"
+    }
+},
+{
+    "pk": 58, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar tipo de item"
+    }
+},
+{
+    "pk": 59, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar tipo de item"
+    }
+}
+]

@@ -30,10 +30,10 @@
                     			<td>{{ u.email }}</td>
                     			<td>
                     			{% ifequal u.estado 0 %}
-									Activo
+									Inactivo
 								{% endifequal %}
 								{% ifequal u.estado 1 %}
-									Inactivo
+									Activo
 								{% endifequal %}
                     			<td>
                     			{% if modificar_usuario or eliminar_usuario or visualizar_usuario or gestionar_roles %}

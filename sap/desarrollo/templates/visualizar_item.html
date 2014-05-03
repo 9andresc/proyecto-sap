@@ -47,7 +47,7 @@
         
         {% for a in atributos %}
 			<div class="input-group">
-				<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+				<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
 				{% if a.tipo_atributo.tipo_dato == 0 %}
 					<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"f" }}" disabled="disabled">
 				{% elif a.tipo_atributo.tipo_dato == 1 %}
@@ -55,7 +55,13 @@
 				{% elif a.tipo_atributo.tipo_dato == 2 %}
 					<textarea rows="3" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" disabled="disabled">{{ a.valor_texto }}</textarea>
 				{% else %}
-					<input type="checkbox" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_logico }}" disabled="disabled">
+	            	{% if a.logico == True %}
+	                   	<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="Sí" disabled="disabled">
+	              	{% elif a.logico == False %}
+	              		<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="No" disabled="disabled">
+	                {% else %}
+	                	<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="Desconocido" disabled="disabled">
+	                {% endif %}
 				{% endif %}
 			</div>
 			<br>

@@ -1,0 +1,72 @@
+[
+{
+    "pk": 2, 
+    "model": "desarrollo.item", 
+    "fields": {
+        "archivos": "", 
+        "costo": 0.0, 
+        "complejidad": 1, 
+        "descripcion": "", 
+        "nombre": "Item 2", 
+        "estado": 0, 
+        "tipo_item": 1, 
+        "fase": null
+    }
+},
+{
+    "pk": 3, 
+    "model": "desarrollo.item", 
+    "fields": {
+        "archivos": "", 
+        "costo": 0.0, 
+        "complejidad": 1, 
+        "descripcion": "Descripci\u00f3n del item 2.", 
+        "nombre": "Item 2", 
+        "estado": 0, 
+        "tipo_item": 1, 
+        "fase": 1
+    }
+},
+{
+    "pk": 4, 
+    "model": "desarrollo.item", 
+    "fields": {
+        "archivos": "", 
+        "costo": 0.0, 
+        "complejidad": 1, 
+        "descripcion": "Descripci\u00f3n del item 1.", 
+        "nombre": "Item 1", 
+        "estado": 0, 
+        "tipo_item": 1, 
+        "fase": 1
+    }
+},
+{
+    "pk": 5, 
+    "model": "desarrollo.item", 
+    "fields": {
+        "archivos": "", 
+        "costo": 0.0, 
+        "complejidad": 1, 
+        "descripcion": "", 
+        "nombre": "Item 3", 
+        "estado": 0, 
+        "tipo_item": 2, 
+        "fase": 1
+    }
+},
+{
+    "pk": 6, 
+    "model": "desarrollo.item", 
+    "fields": {
+        "archivos": "", 
+        "costo": 0.0, 
+        "complejidad": 1, 
+        "descripcion": "", 
+        "nombre": "Item 4", 
+        "estado": 0, 
+        "tipo_item": 2, 
+        "fase": 1
+    }
+}
+]

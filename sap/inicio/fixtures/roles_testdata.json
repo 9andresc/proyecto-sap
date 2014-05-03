@@ -1,0 +1,83 @@
+[
+{
+    "pk": 1, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee todos los permisos relacionados a los usuarios y los roles.", 
+        "nombre": "Administrador", 
+        "permisos": [
+            14, 
+            7, 
+            5, 
+            20, 
+            9, 
+            1, 
+            11, 
+            3, 
+            13, 
+            6, 
+            10, 
+            2, 
+            15, 
+            8, 
+            12, 
+            4
+        ]
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee todos los permisos relacionados a tipos de atributos, tipos de item, items, proyectos y fases.", 
+        "nombre": "Lider de proyecto", 
+        "permisos": [
+            32, 
+            29, 
+            42, 
+            35, 
+            55, 
+            26, 
+            49, 
+            5, 
+            37, 
+            45, 
+            16, 
+            52, 
+            39, 
+            48, 
+            22, 
+            18, 
+            58, 
+            51, 
+            28, 
+            31, 
+            44, 
+            41, 
+            34, 
+            54, 
+            25, 
+            50, 
+            24, 
+            38, 
+            46, 
+            21, 
+            17, 
+            53, 
+            2, 
+            33, 
+            30, 
+            43, 
+            36, 
+            56, 
+            27, 
+            40, 
+            47, 
+            23, 
+            19, 
+            59, 
+            4
+        ]
+    }
+}
+]

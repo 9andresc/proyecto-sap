@@ -282,8 +282,13 @@ def crear_item_view(request, id_fase, id_proyecto):
     generado en la vista, al template correspondiente.
     - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. 
     """
-    fase = Fase.objects.get(id=id_fase[0])
-    proyecto = Proyecto.objects.get(id=id_proyecto[0])
+    identificador_fase = []
+    for s in id_fase.split('/'):
+        if s.isdigit():
+            identificador_fase.append(s)
+            break
+    fase = Fase.objects.get(id=identificador_fase[0])
+    proyecto = Proyecto.objects.get(id=id_proyecto)
     form = CrearItemForm()
     if request.method == "POST":
         form = CrearItemForm(request.POST)
@@ -342,7 +347,7 @@ def modificar_item_view(request, id_item, id_fase, id_proyecto):
             break
     
     fase = Fase.objects.get(id=identificador_fase[0])
-    proyecto = Proyecto.objects.get(id=id_proyecto[0])
+    proyecto = Proyecto.objects.get(id=id_proyecto)
     atributos = ValorAtributo.objects.filter(item__id=id_item)
     form = ModificarItemForm()
     if request.method == "POST":
@@ -366,8 +371,15 @@ def modificar_item_view(request, id_item, id_fase, id_proyecto):
                             a.valor_texto = value
                             a.save()
                         else:
-                            a.valor_logico = value
-                            a.save()
+                            if value=="1":
+                                a.valor_logico = None
+                                a.save()
+                            elif value=="2":
+                                a.valor_logico = True
+                                a.save()
+                            elif value=="3":
+                                a.valor_logico = False
+                                a.save()
                         
             item.nombre = nombre
             item.descripcion = descripcion
@@ -410,6 +422,7 @@ def eliminar_item_view(request, id_item, id_fase, id_proyecto):
     - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. 
     """
     item = Item.objects.get(id=id_item)
+    atributos = ValorAtributo.objects.filter(item__id=id_item)
     identificador_fase = []
     for s in id_fase.split('/'):
         if s.isdigit():
@@ -417,7 +430,7 @@ def eliminar_item_view(request, id_item, id_fase, id_proyecto):
             break
     
     fase = Fase.objects.get(id=identificador_fase[0])
-    proyecto = Proyecto.objects.get(id=id_proyecto[0])
+    proyecto = Proyecto.objects.get(id=id_proyecto)
     valido = True
     if item.estado == 1 or item.estado == 2 or item.estado == 4:
         valido = False
@@ -426,10 +439,10 @@ def eliminar_item_view(request, id_item, id_fase, id_proyecto):
             item.delete()
             return HttpResponseRedirect('/desarrollo/items/fase/%s/proyecto/%s/'%(fase.id, proyecto.id))
         else:
-            ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'valido':valido}
+            ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'valido':valido, 'atributos':atributos}
             return render_to_response('eliminar_item.html', ctx, context_instance=RequestContext(request))
     if request.method == "GET":
-        ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'valido':valido}
+        ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'valido':valido, 'atributos':atributos}
         return render_to_response('eliminar_item.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')

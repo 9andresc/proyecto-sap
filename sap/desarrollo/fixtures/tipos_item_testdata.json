@@ -1,0 +1,25 @@
+[
+{
+    "pk": 1, 
+    "model": "administracion.tipoitem", 
+    "fields": {
+        "descripcion": "", 
+        "nombre": "Tipo de item 1", 
+        "tipos_atributo": [
+            1, 
+            2
+        ]
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.tipoitem", 
+    "fields": {
+        "descripcion": "", 
+        "nombre": "Tipo de item 2", 
+        "tipos_atributo": [
+            2
+        ]
+    }
+}
+]

@@ -65,7 +65,21 @@
 				{% elif a.tipo_atributo.tipo_dato == 2 %}
 					<textarea rows="3" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">{{ a.valor_texto }}</textarea>
 				{% else %}
-					<input type="checkbox" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_logico }}">
+					<select class="form-control" id="{{ a.atributo.Nombre }}" name="{{ a.atributo.Nombre }}">
+	                    {% if a.logico == True %}
+	                    	<option value="1">Desconocido</option>
+	                        <option value="2" selected="selected">Sí</option>
+	                       	<option value="3">No</option>
+	                    {% elif a.logico == False %}
+	                     	<option value="1">Desconocido</option>
+	                      	<option value="2">Sí</option>
+	                       	<option value="3" selected="selected">No</option>
+	                    {% else %}
+	                     	<option value="1" selected="selected">Desconocido</option>
+	                     	<option value="2">Sí</option>
+	                      	<option value="3">No</option>
+	                    {% endif %}
+                    </select>
 				{% endif %}
 			</div>
 			<br>

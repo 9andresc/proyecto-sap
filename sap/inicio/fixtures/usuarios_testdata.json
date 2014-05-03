@@ -3,22 +3,120 @@
     "pk": 1, 
     "model": "auth.user", 
     "fields": {
-        "username": "gustavo", 
-        "first_name": "Gustavo", 
-        "last_name": "Cabral", 
-        "roles": [], 
+        "username": "admin", 
+        "first_name": "", 
+        "last_name": "", 
+        "roles": [
+            1
+        ], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
         "is_superuser": true, 
         "is_staff": true, 
-        "last_login": "2014-04-11T20:33:04.071Z", 
+        "last_login": "2014-05-02T22:59:23.151Z", 
         "groups": [], 
         "user_permissions": [], 
-        "password": "pbkdf2_sha256$12000$vHpiV6ErPnxE$KC2Y3E76bUqHWAKxkuJ3bFrMb7QDZS1RaGpOjbmi4+Q=", 
+        "password": "pbkdf2_sha256$12000$u9UhE2ICdPeP$ihyjAOyaClNXAt6L2TAZqxDqJl59k30ZnFsJs2dDuQo=", 
         "estado": 1, 
-        "email": "andrescabral.c@gmail.com", 
-        "date_joined": "2014-04-11T20:31:10.894Z"
+        "email": "admin@sap.com", 
+        "date_joined": "2014-05-02T16:04:09.370Z"
+    }
+},
+{
+    "pk": 2, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "gustavo", 
+        "first_name": "Gustavo", 
+        "last_name": "Cabral", 
+        "roles": [
+            2
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-02T23:02:07.165Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$t5z9B2lmBhBA$c0OTodkx5GmqMf0OGoXvHIQVy9y5enPnp5Ys+Kk48BI=", 
+        "estado": 1, 
+        "email": "gustavo@sap.com", 
+        "date_joined": "2014-05-02T16:20:14.711Z"
+    }
+},
+{
+    "pk": 3, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "rodrigo", 
+        "first_name": "Rodrigo", 
+        "last_name": "Santos", 
+        "roles": [
+            2
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-02T16:29:37.190Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$mQMFenak7ivE$MaDIBfHAuyvutDluVL+ynhXajAWf8dkgWmkN2AzGcd0=", 
+        "estado": 1, 
+        "email": "rodrigo@sap.com", 
+        "date_joined": "2014-05-02T16:20:41.642Z"
+    }
+},
+{
+    "pk": 4, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "andres", 
+        "first_name": "Andres", 
+        "last_name": "Cabral", 
+        "roles": [
+            2
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-02T16:29:55.515Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$EwPrMs0s3MzV$U7LYqfYFaE6hXZbLnxkQq9ku9RdCxhrm8xYBBqL+YU8=", 
+        "estado": 1, 
+        "email": "andres@sap.com", 
+        "date_joined": "2014-05-02T16:21:26.148Z"
+    }
+},
+{
+    "pk": 5, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "gabriel", 
+        "first_name": "Gabriel", 
+        "last_name": "Santos", 
+        "roles": [
+            2
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-02T16:30:13.422Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$0lTklleUumCM$ceqObqtx/jwWo54qQo01m4x4wa+bcJ5Vd1S9y4GxFog=", 
+        "estado": 1, 
+        "email": "gabriel@sap.com", 
+        "date_joined": "2014-05-02T16:21:55.611Z"
     }
 }
 ]
