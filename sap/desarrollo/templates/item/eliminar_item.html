@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}SAP - Eliminación del item {{ item.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Detalles del item</small></h1>
+		
+		<div class="input-group">
+			<span class="input-group-addon"><b>Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ item.nombre }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Estado</b></span>
+			{% ifequal item.estado 0 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="En construcción" disabled="disabled">
+			{% endifequal %}
+			{% ifequal item.estado 1 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="Aprobado" disabled="disabled">
+			{% endifequal %}
+			{% ifequal item.estado 2 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="Bloqueado" disabled="disabled">
+			{% endifequal %}
+			{% ifequal item.estado 3 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="En revisión" disabled="disabled">
+			{% endifequal %}
+			{% ifequal item.estado 4 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="Eliminado" disabled="disabled">
+			{% endifequal %}
+		</div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" disabled="disabled">{{ item.descripcion }}</textarea>
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Complejidad</b></span>
+			<input type="text" class="form-control" id="complejidad" name="complejidad" value="{{ item.complejidad }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Costo</b></span>
+			<input type="text" class="form-control" id="costo" name="costo" value="{{ item.costo|stringformat:"f" }}" disabled="disabled">
+        </div>
+        <br>
+        
+        {% for a in atributos %}
+			<div class="input-group">
+				<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+				{% if a.tipo_atributo.tipo_dato == 0 %}
+					<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"f" }}" disabled="disabled">
+				{% elif a.tipo_atributo.tipo_dato == 1 %}
+					<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}" disabled="disabled">
+				{% elif a.tipo_atributo.tipo_dato == 2 %}
+					<textarea rows="3" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" disabled="disabled">{{ a.valor_texto }}</textarea>
+				{% else %}
+	            	{% if a.logico == True %}
+	                   	<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="Sí" disabled="disabled">
+	              	{% elif a.logico == False %}
+	              		<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="No" disabled="disabled">
+	                {% else %}
+	                	<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="Desconocido" disabled="disabled">
+	                {% endif %}
+				{% endif %}
+			</div>
+			<br>
+		{% endfor %}
+		
+		{% if valido %}
+			<form action="" method="POST">
+				{% csrf_token %}
+				<div class="panel panel-danger">
+    				<div class="panel-heading">
+    					<h3 class="panel-title">¡Atención!</h3>
+            		</div>
+            		<div class="panel-body">
+            			<h3 class="panel-title">¿Realmente desea eliminar el item {{ item.nombre }}?</h3>
+						<br>
+						<a type="button" class="btn btn-default" href="/desarrollo/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/">Cancelar</a>
+        				<button type="submit" class="btn btn-danger">Eliminar</button>
+			    	</div>
+        		</div>
+        	</form>
+        {% else %}
+        	<div class="panel panel-warning">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Alto ahí!</h3>
+      			</div>
+      			<div class="panel-body">
+        			El item {{ item.nombre }} se encuentra en uno de los siguientes estados: Aprobado, Bloqueado o Eliminado. Por lo tanto, no puede ser eliminado.
+      			</div>
+      		</div>
+      		<br>
+      		<a class="btn btn-default" href="/desarrollo/fases/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
+        {% endif %}
+	</div>
+</div>
+{% endblock %}

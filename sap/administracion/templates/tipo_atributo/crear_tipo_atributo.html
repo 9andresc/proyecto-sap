@@ -37,6 +37,46 @@
         {% endif %}
         <!-- Fin del manejo de errores del formulario -->
 		
+		<!-- Script para el selector de tipo de dato -->
+		<script>
+			function miFuncion(obj) {
+				var value = obj.value;
+				switch (value) {
+					case "0":
+						document.getElementById("longitud").setAttribute("required","required");
+				    	document.getElementById("longitud").removeAttribute("disabled");
+				    	document.getElementById("precision").setAttribute("required","required");
+				    	document.getElementById("precision").removeAttribute("disabled");
+				    	break;
+					case "1":
+						document.getElementById("longitud").setAttribute("disabled","disabled");
+						document.getElementById("longitud").removeAttribute("required");
+						document.getElementById("precision").setAttribute("disabled","disabled");
+						document.getElementById("precision").removeAttribute("required");
+						break;
+					case "2":
+						document.getElementById("longitud").setAttribute("required","required");
+						document.getElementById("longitud").removeAttribute("disabled");
+						document.getElementById("precision").setAttribute("disabled","disabled");
+						document.getElementById("precision").removeAttribute("required");
+						break;
+					case "3":
+						document.getElementById("longitud").setAttribute("required","required");
+						document.getElementById("longitud").removeAttribute("disabled");
+						document.getElementById("precision").setAttribute("disabled","disabled");
+						document.getElementById("precision").removeAttribute("required");
+						break;
+					case "4":
+						document.getElementById("longitud").setAttribute("disabled","disabled");
+						document.getElementById("longitud").removeAttribute("required");
+						document.getElementById("precision").setAttribute("disabled","disabled");
+						document.getElementById("precision").removeAttribute("required");
+						break;
+				}
+			}
+		</script>
+		<!-- Fin del script para el selector de tipo de dato -->
+		
 		<p class="text-muted">Campos obligatorios (*)</p>
 		<div class="input-group">
 			<span class="input-group-addon"><b>* Nombre</b></span>
@@ -45,11 +85,12 @@
         <br>
         <div class="input-group">
 			<span class="input-group-addon"><b>* Tipo de dato</b></span>
-			<select class="form-control" id="tipo_dato" name="tipo_dato">
-				<option value="0">Númerico</option>
+			<select class="form-control" id="tipo_dato" name="tipo_dato" onchange="miFuncion(this)">
+				<option value="0" selected="selected">Numérico</option>
 				<option value="1">Fecha</option>
-				<option value="2">Texto</option>
-				<option value="3">Lógico</option>
+				<option value="2">Texto grande</option>
+				<option value="3">Texto chico</option>
+				<option value="4">Lógico</option>
 			</select>
         </div>
         <br>
@@ -57,7 +98,28 @@
 			<span class="input-group-addon"><b>Descripción</b></span>
 			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción del tipo de atributo"></textarea>
         </div>
-        
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Longitud</b></span>
+			<input type="number" class="form-control" id="longitud" name="longitud" placeholder="Longitud del tipo de dato" required="required">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Precisión</b></span>
+			<input type="number" class="form-control" id="precision" name="precision" placeholder="Precisión del tipo de dato" required="required">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Obligatorio</b></span>
+			<select class="form-control" id="obligatorio" name="obligatorio">
+	        	<option value="0" selected="selected">No</option>
+	        	<option value="1">Sí</option>      	
+         	</select>
+        </div>
+		<br>
+
+		{{ longitud }}
+		{{ precision }}
         <br>
         <button type="submit" class="btn btn-success">Crear</button>
 	</form>

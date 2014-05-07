@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}SAP - Modificar item {{ item.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+
+	<h1><small>Modificar item</small></h1>
+	<form class="form-horizontal" method="POST">
+		{% csrf_token %}
+		
+		<!-- Manejo de errores del formulario -->
+    	{% if form.errors %}
+    	<div class="panel panel-warning">
+    		<div class="panel-heading">
+    			<h3 class="panel-title">¡Alto ahí!</h3>
+            </div>
+            <div class="panel-body">
+            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
+            	<br>
+            	<ul class="list-unstyled">
+            		{% for field in form %}
+            			{% if field.errors %} 
+  							<li><b>{{ field.label }}</b></li>
+  								{% for error in field.errors %}
+    								<ul>
+      									<li>{{ error }}</li>
+    								</ul>
+    							{% endfor %}
+  							</li>
+  						{% endif %}
+  					{% endfor %}
+				</ul>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Fin del manejo de errores del formulario -->
+        
+        <p class="text-muted">Campos obligatorios (*)</p>
+		<div class="input-group">
+			<span class="input-group-addon"><b>* Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ item.nombre }}">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion">{{ item.descripcion }}</textarea>
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Complejidad</b></span>
+			<input type="text" class="form-control" id="complejidad" name="complejidad" value="{{ item.complejidad }}">
+        </div>
+		<br>
+		<div class="input-group">
+			<span class="input-group-addon"><b>* Costo</b></span>
+			<input type="text" class="form-control" id="costo" name="costo" value="{{ item.costo|stringformat:"f" }}">
+        </div>
+		<br>
+		{% for a in atributos %}
+			<div class="input-group">
+				<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+				{% if a.tipo_atributo.tipo_dato == 0 %}
+					<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"f" }}">
+				{% elif a.tipo_atributo.tipo_dato == 1 %}
+					<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}">
+				{% elif a.tipo_atributo.tipo_dato == 2 %}
+					<textarea rows="3" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">{{ a.valor_texto }}</textarea>
+				{% else %}
+					<select class="form-control" id="{{ a.atributo.Nombre }}" name="{{ a.atributo.Nombre }}">
+	                    {% if a.logico == True %}
+	                    	<option value="1">Desconocido</option>
+	                        <option value="2" selected="selected">Sí</option>
+	                       	<option value="3">No</option>
+	                    {% elif a.logico == False %}
+	                     	<option value="1">Desconocido</option>
+	                      	<option value="2">Sí</option>
+	                       	<option value="3" selected="selected">No</option>
+	                    {% else %}
+	                     	<option value="1" selected="selected">Desconocido</option>
+	                     	<option value="2">Sí</option>
+	                      	<option value="3">No</option>
+	                    {% endif %}
+                    </select>
+				{% endif %}
+			</div>
+			<br>
+		{% endfor %}
+		
+        <button type="submit" class="btn btn-success">Modificar</button>
+	</form>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/fases/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
+</div>
+{% endblock %}

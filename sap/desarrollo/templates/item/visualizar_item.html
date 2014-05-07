@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}SAP - Item {{ item.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Detalles del item</small></h1>
+		
+		<div class="input-group">
+			<span class="input-group-addon"><b>Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ item.nombre }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Estado</b></span>
+			{% ifequal item.estado 0 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="En construcción" disabled="disabled">
+			{% endifequal %}
+			{% ifequal item.estado 1 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="Aprobado" disabled="disabled">
+			{% endifequal %}
+			{% ifequal item.estado 2 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="Bloqueado" disabled="disabled">
+			{% endifequal %}
+			{% ifequal item.estado 3 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="En revisión" disabled="disabled">
+			{% endifequal %}
+			{% ifequal item.estado 4 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="Eliminado" disabled="disabled">
+			{% endifequal %}
+		</div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" disabled="disabled">{{ item.descripcion }}</textarea>
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Complejidad</b></span>
+			<input type="text" class="form-control" id="complejidad" name="complejidad" value="{{ item.complejidad }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Costo</b></span>
+			<input type="text" class="form-control" id="costo" name="costo" value="{{ item.costo|stringformat:"f" }}" disabled="disabled">
+        </div>
+        <br>
+        
+        {% for a in atributos %}
+			<div class="input-group">
+				<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+				{% if a.tipo_atributo.tipo_dato == 0 %}
+					<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"f" }}" disabled="disabled">
+				{% elif a.tipo_atributo.tipo_dato == 1 %}
+					<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}" disabled="disabled">
+				{% elif a.tipo_atributo.tipo_dato == 2 %}
+					<textarea rows="3" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" disabled="disabled">{{ a.valor_texto }}</textarea>
+				{% else %}
+	            	{% if a.logico == True %}
+	                   	<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="Sí" disabled="disabled">
+	              	{% else %}
+	              		<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="No" disabled="disabled">
+	                {% endif %}
+				{% endif %}
+			</div>
+			<br>
+		{% endfor %}
+        
+		<a class="btn btn-default" href="/desarrollo/fases/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
+	</div>
+</div>
+{% endblock %}

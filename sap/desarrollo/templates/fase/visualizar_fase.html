@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}SAP - Fase {{ fase.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Detalles de la fase</small></h1>
+		
+		<div class="input-group">
+			<span class="input-group-addon"><b>Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ fase.nombre }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Estado</b></span>
+			{% ifequal fase.estado 0 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="Inactivo" disabled="disabled">
+			{% endifequal %}
+			{% ifequal fase.estado 1 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="En Curso" disabled="disabled">
+			{% endifequal %}
+			{% ifequal fase.estado 2 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="Finalizado" disabled="disabled">
+			{% endifequal %}
+		</div>
+		<br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" disabled="disabled">{{ fase.descripcion }}</textarea>
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Fecha de Inicio</b></span>
+			<input type="text" class="form-control" id="fecha_inicio" name="fecha_inicio" value="{{ fase.fecha_inicio }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Duración</b></span>
+			<input type="text" class="form-control" id="duracion" name="duracion" value="{{ fase.duracion }}" disabled="disabled">
+        </div>
+        
+		<br>
+		<a class="btn btn-default" href="{% url 'vista_fases_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
+	</div>
+</div>
+{% endblock %}

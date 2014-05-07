@@ -3,9 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from administracion.models import Rol
 from administracion.models import TipoAtributo, TIPO_DATO
-from administracion.models import Proyecto, ESTADOS_PROYECTO
-from administracion.models import Fase
-from administracion.models import TipoItem
+from administracion.models import Proyecto
 
 class CustomDateField(forms.DateField):
     def __init__(self, *args, **kwargs):
@@ -234,15 +232,6 @@ class ModificarTipoAtributoForm(forms.Form):
             return nombre 
         raise forms.ValidationError('Nombre de tipo atributo ya registrado.')
     
-def opcion_lider():
-    usuarios = User.objects.all()
-    resultado = []
-    for usuario in usuarios: 
-        if usuario.is_active:
-            tupla = (usuario.id, usuario.username)
-            resultado.append(tupla)
-    return resultado
-    
 class CrearProyectoForm(forms.Form):
     """
     ::
@@ -265,7 +254,6 @@ class CrearProyectoForm(forms.Form):
     """
     nombre = forms.CharField(label="Nombre de proyecto", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
-    usuario_lider = forms.ChoiceField(label="Lider", choices=(opcion_lider()), required=True)
     presupuesto = forms.FloatField(label="Presupuesto", required=True)
     complejidad = forms.IntegerField(label="Complejidad", required=True)
     fecha_inicio = CustomDateField(required=True)
@@ -320,7 +308,6 @@ class ModificarProyectoForm(forms.Form):
     """
     nombre = forms.CharField(label="Nombre de proyecto", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
-    usuario_lider = forms.ChoiceField(label="Lider", choices=(opcion_lider()), required=True)
     presupuesto = forms.FloatField(label="Presupuesto", required=True)
     complejidad = forms.IntegerField(label="Complejidad", required=True)
     fecha_inicio = CustomDateField(required=True)
@@ -356,146 +343,3 @@ class ModificarProyectoForm(forms.Form):
             return fecha_inicio
         else:
             raise forms.ValidationError('La fecha introducida es distinta a la fecha original o anterior a la fecha actual. Ingrese una fecha valida.')
-        
-class CrearFaseForm(forms.Form):
-    """
-    ::
-    
-        Formulario utilizado para la creacion de una fase.
-        
-        Se especifican todos los atributos de la fase que deben 
-        ingresarse estableciendo como required=True, si es indispensable
-        completar ese atributo para la creacion de la fase o caso 
-        contrario required=False.
-        
-        Se utilizan funciones para verificar que el nombre no este registrado
-        en el sistema.
-        
-        Se utiliza una funciona para verificar que la fecha ingresada sea valida.
-        
-    """
-    nombre = forms.CharField(label="Nombre de fase", required=True)
-    descripcion = forms.CharField(label="Descripcion", required=False)
-    duracion = forms.IntegerField(label="Duracion", required=True)
-    fecha_inicio = CustomDateField(required=True)
-
-    def clean_nombre(self):
-        nombre = self.cleaned_data['nombre']
-        try:
-            fase = Fase.objects.get(nombre=nombre)
-        except Fase.DoesNotExist:
-            return nombre
-        raise forms.ValidationError('Nombre de fase ya registrado.')
-        
-    def clean_duracion(self):
-        duracion = self.cleaned_data['duracion']
-        if duracion > 0:
-            return duracion
-        else:
-            raise forms.ValidationError('El valor de la duracion (en semanas) debe ser mayor a cero.')
-        
-    def clean_fecha_inicio(self):
-        fecha_inicio = self.cleaned_data['fecha_inicio']
-        if fecha_inicio >= datetime.date.today():
-            return fecha_inicio
-        else:
-            raise forms.ValidationError('La fecha introducida es anterior a la fecha actual. Ingrese una fecha posterior.')
-        
-class ModificarFaseForm(forms.Form):
-    """
-    ::
-    
-        Formulario utilizado para la modificacion de una fase.
-        
-        Se especifican todos los atributos de la fase que deben 
-        ingresarse sin posibilidad de dejar el campo vacio estableciendo
-        como required=True, caso contrarios required=False.
-        
-        Se utilizan funciones para verificar que el nombre no este registrado
-        en el sistema.
-        
-        Se utiliza una funciona para verificar que la fecha ingresada sea valida.
-        
-    """
-    nombre = forms.CharField(label="Nombre de fase", required=True)
-    descripcion = forms.CharField(label="Descripcion", required=False)
-    duracion = forms.IntegerField(label="Duracion", required=True)
-    fecha_inicio = CustomDateField(required=True)
-
-    def clean_nombre(self): 
-        nombre = self.cleaned_data['nombre'] 
-        try: 
-            fase = Fase.objects.get(nombre=nombre) 
-            if fase.nombre == nombre:
-                return nombre 
-        except Fase.DoesNotExist:
-            return nombre 
-        raise forms.ValidationError('Nombre de fase ya registrado.')
-        
-    def clean_duracion(self):
-        duracion = self.cleaned_data['duracion']
-        if duracion > 0:
-            return duracion
-        else:
-            raise forms.ValidationError('El valor de la duracion (en semanas) debe ser mayor a cero.')
-        
-    def clean_fecha_inicio(self):
-        nombre = self.cleaned_data['nombre']
-        fecha_inicio = self.cleaned_data['fecha_inicio']
-        if fecha_inicio >= datetime.date.today() or fecha_inicio == Fase.objects.get(nombre=nombre).fecha_inicio:
-            return fecha_inicio
-        else:
-            raise forms.ValidationError('La fecha introducida es distinta a la fecha original o anterior a la fecha actual. Ingrese una fecha valida.')
-      
-class CrearTipoItemForm(forms.Form):
-    """
-    ::
-    
-        Formulario utilizado para la creacion de un tipo de item.
-        
-        Se especifican todos los atributos del tipo de item que deben 
-        ingresarse estableciendo como required=True, si es indispensable
-        completar ese atributo para la creacion del tipo de item o caso 
-        contrario required=False.
-        
-        Se utilizan funciones para verificar que el nombre no este registrado
-        en el sistema.
-        
-    """
-    nombre = forms.CharField(label="Nombre de tipo de item", required=True)
-    descripcion = forms.CharField(label="Descripcion", required=False)
-  
-    def clean_nombre(self):
-        nombre = self.cleaned_data['nombre']
-        try:
-            tipo_item = TipoItem.objects.get(nombre=nombre)
-        except TipoItem.DoesNotExist:
-            return nombre
-        raise forms.ValidationError('Nombre de tipo de item ya registrado.')  
-    
-class ModificarTipoItemForm(forms.Form):
-    """
-    ::
-    
-        Formulario utilizado para la modificacion de un tipo de item.
-        
-        Se especifican todos los atributos del tipo de item que deben 
-        ingresarse sin posibilidad de dejar el campo vacio estableciendo
-        como required=True, caso contrarios required=False.
-        
-        Se utilizan funciones para verificar que el nombre no este registrado
-        en el sistema.
-        
-    """
-    nombre = forms.CharField(label="Nombre de tipo de item", required=True)
-    descripcion = forms.CharField(label="Descripcion", required=False)
-
-    def clean_nombre(self): 
-        nombre = self.cleaned_data['nombre'] 
-        try: 
-            tipo_item = TipoItem.objects.get(nombre=nombre) 
-            if tipo_item.nombre == nombre:
-                return nombre 
-        except TipoItem.DoesNotExist:
-            return nombre 
-        raise forms.ValidationError('Nombre de tipo de item ya registrado.')  

@@ -5,7 +5,7 @@
 <div class="jumbotron">
 	<div class="bs-example">
 		<h1><small>Permisos del rol {{ rol.nombre }}</small></h1>
-		<a class="btn btn-sm btn-default" href="{% url 'vista_agregar_permiso' id_rol=rol.id %}"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
+		<a class="btn btn-default" href="{% url 'vista_agregar_permiso' id_rol=rol.id %}"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
 		<br><br>
 		{% if permisos %}
 			<div class="table-responsive"> 
@@ -22,7 +22,7 @@
                 			<tr>
                     			<td>{{ p.id }}</td>
                     			<td>{{ p.nombre }}</td>
-                    			<td><a class="btn btn-sm btn-default" href="/administracion/gestion_roles/quitar_permiso/rol/{{ rol.id }}/{{ p.id }}/"><span class="glyphicon glyphicon-minus"></span> Quitar</a></td>
+                    			<td><a class="btn btn-default" href="/administracion/gestion_roles/quitar_permiso/{{ p.id }}/rol/{{ rol.id }}/"><span class="glyphicon glyphicon-minus"></span> Quitar</a></td>
                 			</tr>
                 		{% endfor %}
                 	</tbody>

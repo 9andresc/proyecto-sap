@@ -46,8 +46,8 @@
         <div class="input-group">
 			<span class="input-group-addon"><b>* Lider</b></span>
 			<select class="form-control" id="usuario_lider" name="usuario_lider">
-				{% for eleccion in form.usuario_lider.field.choices %}
-					<option value="{{ eleccion.0 }}">{{ eleccion.1 }}</option>
+				{% for u in usuarios %}
+					<option value="{{ u.id }}">{{ u.username }}</option>
 				{% endfor %}
 			</select>
         </div>

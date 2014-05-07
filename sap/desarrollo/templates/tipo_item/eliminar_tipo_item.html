@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}SAP - Eliminación del tipo de item {{ tipo_item.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Detalles del tipo de item</small></h1>
+		
+		<div class="input-group">
+			<span class="input-group-addon"><b>Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ tipo_item.nombre }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" disabled="disabled">{{ tipo_atributo.descripcion }}</textarea>
+        </div>
+		
+		<br>
+		<form action="" method="POST">
+			{% csrf_token %}
+			<div class="panel panel-danger">
+    			<div class="panel-heading">
+    				<h3 class="panel-title">¡Atención!</h3>
+            	</div>
+            	<div class="panel-body">
+            		<h3 class="panel-title">¿Realmente desea eliminar el tipo de item {{ tipo_item.nombre }}?</h3>
+            		<br>
+					<h3 class="panel-title"><em>Si acepta, los registros del tipo de item {{ tipo_item.nombre }} se perderán.</em></h3>
+					<br>
+					<a type="button" class="btn btn-default" href="/desarrollo/fases/tipos_item/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/">Cancelar</a>
+        			<button type="submit" class="btn btn-danger">Eliminar</button>
+			    </div>
+        	</div>
+        </form>
+	</div>
+</div>
+{% endblock %}

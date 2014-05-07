@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}SAP - Crear fase{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	
+	<!-- datepicker script -->
+    <script>
+    	$(".input-group.date").datepicker({ autoclose: true, todayHighlight: true });
+    </script>
+    <!-- end datepicker script -->
+    
+	<h1><small>Crear fase</small></h1>
+	<form class="form-horizontal" method="POST">
+		{% csrf_token %}
+		
+		<!-- Manejo de errores del formulario -->
+    	{% if form.errors %}
+    	<div class="panel panel-warning">
+    		<div class="panel-heading">
+    			<h3 class="panel-title">¡Alto ahí!</h3>
+            </div>
+            <div class="panel-body">
+            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
+            	<br>
+            	<ul class="list-unstyled">
+            		{% for field in form %}
+            			{% if field.errors %} 
+  							<li><b>{{ field.label }}</b></li>
+  								{% for error in field.errors %}
+    								<ul>
+      									<li>{{ error }}</li>
+    								</ul>
+    							{% endfor %}
+  							</li>
+  						{% endif %}
+  					{% endfor %}
+				</ul>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Fin del manejo de errores del formulario -->
+		
+		<p class="text-muted">Campos obligatorios (*)</p>
+		<div class="input-group">
+			<span class="input-group-addon"><b>* Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de la fase">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción de la fase."></textarea>
+        </div>
+        <br>
+
+		<div class="input-group">
+			<span class="input-group-addon"><b>* Fecha de inicio</b></span>
+            <input type="text" class="form-control" placeholder="Elija una fecha" id="fecha" name="fecha_inicio">
+        </div>
+        <script type="text/javascript">
+            // When the document is ready
+            $(document).ready(function () {
+                
+                $('#fecha').datepicker({
+                    format: "dd/mm/yyyy"
+                });  
+            
+            });
+        </script>
+        <br>
+        
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Duracion</b></span>
+			<input type="text" class="form-control" id="duracion" name="duracion"  value="1">
+        </div>
+        
+        <br>
+        <button type="submit" class="btn btn-success">Crear</button>
+	</form>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_fases_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
+</div>
+{% endblock %}

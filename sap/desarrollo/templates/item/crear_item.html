@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}SAP - Crear item{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<h1><small>Crear item</small></h1>
+	<form class="form-horizontal" method="POST">
+		{% csrf_token %}
+		
+		<!-- Manejo de errores del formulario -->
+    	{% if form.errors %}
+    	<div class="panel panel-warning">
+    		<div class="panel-heading">
+    			<h3 class="panel-title">¡Alto ahí!</h3>
+            </div>
+            <div class="panel-body">
+            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
+            	<br>
+            	<ul class="list-unstyled">
+            		{% for field in form %}
+            			{% if field.errors %} 
+  							<li><b>{{ field.label }}</b></li>
+  								{% for error in field.errors %}
+    								<ul>
+      									<li>{{ error }}</li>
+    								</ul>
+    							{% endfor %}
+  							</li>
+  						{% endif %}
+  					{% endfor %}
+				</ul>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Fin del manejo de errores del formulario -->
+		
+		<p class="text-muted">Campos obligatorios (*)</p>
+		<div class="input-group">
+			<span class="input-group-addon"><b>* Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del item">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Tipo de item</b></span>
+			<select class="form-control" id="tipo_item" name="tipo_item">
+				{% for t in tipos_item %}
+					<option value="{{ t.id }}">{{ t.nombre }}</option>
+				{% endfor %}
+			</select>
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción del item"></textarea>
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Complejidad</b></span>
+			<input type="text" class="form-control" id="complejidad" name="complejidad"  value="1">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Costo</b></span>
+			<input type="text" class="form-control" id="costo" name="costo" value="0" >
+        </div>
+        
+        <br>
+        <button type="submit" class="btn btn-success">Crear</button>
+	</form>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/fases/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
+</div>
+{% endblock %}

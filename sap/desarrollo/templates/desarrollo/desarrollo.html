@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}SAP - Desarrollo{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Módulo de Desarrollo - Proyectos en curso</small></h1>
+		<br>
+		{% if proyectos %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre de proyecto</th>   
+                    		<th>Estado</th>
+                    		<th>Líder</th>
+                    		<th>Fecha de inicio</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for p in proyectos %}
+                			<tr>
+                    			<td>{{ p.id }}</td>
+                    			<td>{{ p.nombre }}</td>
+                    			<td>
+                    			{% ifequal p.estado 0 %}
+									Inactivo
+								{% endifequal %}
+								{% ifequal p.estado 1 %}
+									En curso
+								{% endifequal %}
+								{% ifequal p.estado 2 %}
+									Finalizado
+								{% endifequal %}
+                    			</td>
+                    			<td>{{ p.usuario_lider.username }}</td>
+                    			<td>{{ p.fecha_inicio }}</td>
+                    			<td>
+                    			{% if calcular_costo or gestionar_fases %}
+                    			<div class="btn-group">
+      								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
+      								<ul class="dropdown-menu">
+        								{% if gestionar_fases %}
+        								<li><a href="{% url 'vista_fases_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-cog"></span> Fases</a></li>
+        								{% endif %}
+        								{% if calcular_costo %}
+        								<li><a href="{% url 'vista_calcular_costo' id_proyecto=p.id %}"><span class="glyphicon glyphicon-usd"></span> Costo total</a></li>
+      									{% endif %}
+      								</ul>
+    							</div>
+    							{% endif %}
+                    			</td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No existen proyectos en curso.</h3>
+    	{% endif %}
+	</div>
+</div>
+{% endblock %}

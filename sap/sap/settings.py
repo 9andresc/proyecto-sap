@@ -68,8 +68,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'sap',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
         'HOST': '127.0.0.1',
     }
 }

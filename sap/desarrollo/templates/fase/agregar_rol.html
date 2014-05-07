@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}SAP - Agregar roles{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		{% if proyecto %}
+		<h1><small>Roles del proyecto {{ proyecto.nombre }}</small></h1>
+			{% if roles %}
+				<div class="table-responsive"> 
+        			<table class="table table-hover">
+        				<thead>
+                			<tr>
+                    			<th>ID</th>
+                    			<th>Nombre de rol</th>
+                    			<th></th>
+                    		</tr>
+                    	</thead>
+                		<tbody>
+                			{% for r in roles %}
+                				<tr>
+                    				<td>{{ r.id }}</td>
+                    				<td>{{ r.nombre }}</td>
+                    				<td><a class="btn btn-default" href="/desarrollo/fases/confirmacion_agregar_rol/{{ r.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
+                				</tr>
+                			{% endfor %}
+                		</tbody>
+        			</table>
+    			</div>
+    		{% else %}
+    			<h3>El proyecto {{ proyecto.nombre }} no posee roles.</h3>
+    		{% endif %}
+    	{% else %}
+    		<h1><small>Roles</small></h1>
+    		<h3>La fase {{ fase.nombre }} no está vinculada a ningún proyecto. Por lo tanto, no se pueden agregar roles.</h3>
+    	{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/fases/roles/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles de la fase {{ fase.nombre }}</a>
+</div>
+{% endblock %}

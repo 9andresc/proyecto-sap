@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}SAP - Tipos de atributo del tipo de item {{ tipo_item.nombre }}{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Tipos de atributo del tipo de item {{ tipo_item.nombre }}</small></h1>
+		<a class="btn btn-default" href="/desarrollo/fases/tipos_item/agregar_tipo_atributo/tipo_item/{{ tipo_item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
+		<br><br>
+		{% if tipos_atributo %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre del Tipo de atributo</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for a in tipos_atributo %}
+                			<tr>
+                    			<td>{{ a.id }}</td>
+                    			<td>{{ a.nombre }}</td>
+                    			<td><a class="btn btn-default" href="/desarrollo/fases/tipos_item/quitar_tipo_atributo/{{ a.id }}/tipo_item/{{ tipo_item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-minus"></span> Quitar</a></td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No posee tipos de atributo.</h3>
+    	{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/fases/tipos_item/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de tipos de item de la fase {{ fase.nombre }}</a>
+</div>
+{% endblock %}

@@ -6,7 +6,7 @@
 	<div class="bs-example">
 		<h1><small>Gestión de proyectos</small></h1>
 		{% if crear_proyecto %}
-		<a class="btn btn-sm btn-default" href="{% url 'vista_crear_proyecto' %}"><span class="glyphicon glyphicon-record"></span> Crear</a>
+		<a class="btn btn-default" href="{% url 'vista_crear_proyecto' %}"><span class="glyphicon glyphicon-record"></span> Crear</a>
 		<br>
 		{% endif %}
 		<br>
@@ -18,6 +18,7 @@
                     		<th>ID</th>
                     		<th>Nombre de proyecto</th>   
                     		<th>Estado</th>
+                    		<th>Líder</th>
                     		<th>Fecha de inicio</th>
                     		<th></th>
                     	</tr>
@@ -38,9 +39,10 @@
 									Finalizado
 								{% endifequal %}
                     			</td>
+                    			<td>{{ p.usuario_lider.username }}</td>
                     			<td>{{ p.fecha_inicio }}</td>
                     			<td>
-                    			{% if modificar_proyecto or eliminar_proyecto or visualizar_proyecto or gestionar_usuarios or gestionar_fases or gestionar_roles or gestionar_comite or iniciar_proyecto %}
+                    			{% if modificar_proyecto or eliminar_proyecto or visualizar_proyecto or gestionar_usuarios or gestionar_roles or gestionar_comite or iniciar_proyecto %}
                     			<div class="btn-group">
       								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
       								<ul class="dropdown-menu">
@@ -53,12 +55,11 @@
         								{% if visualizar_proyecto %}
         								<li><a href="{% url 'vista_visualizar_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-search"></span> Visualizar</a></li>
         								{% endif %}
+        								{% if gestionar_usuarios or gestionar_roles or gestionar_comite %}
         								<li class="divider"></li>
+        								{% endif %}
         								{% if gestionar_usuarios %}
         								<li><a href="{% url 'vista_usuarios_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-cog"></span> Usuarios</a></li>
-      									{% endif %}
-      									{% if gestionar_fases %}
-        								<li><a href="{% url 'vista_fases_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-cog"></span> Fases</a></li>
       									{% endif %}
         								{% if gestionar_roles %}
         								<li><a href="{% url 'vista_roles_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-cog"></span> Roles</a></li>
@@ -66,8 +67,8 @@
       									{% if gestionar_comite %}
         								<li><a href="{% url 'vista_comite_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-cog"></span> Comité</a></li>
       									{% endif %}
-        								<li class="divider"></li>
         								{% if iniciar_proyecto %}
+        								<li class="divider"></li>
         								<li><a href="{% url 'vista_iniciar_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-play"></span> Iniciar</a></li>
       									{% endif %}
       								</ul>

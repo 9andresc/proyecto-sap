@@ -2,6 +2,11 @@ from django.conf.urls import patterns, url
 from desarrollo.views import desarrollo_view
 from desarrollo.views import calcular_costo_view
 from desarrollo.views import fases_proyecto_view
+from desarrollo.views import crear_fase_view, modificar_fase_view, eliminar_fase_view, visualizar_fase_view
+from desarrollo.views import roles_fase_view, fase_agregar_rol_view, fase_confirmacion_agregar_rol_view, fase_quitar_rol_view
+from desarrollo.views import tipos_item_fase_view
+from desarrollo.views import crear_tipo_item_view, modificar_tipo_item_view, eliminar_tipo_item_view, visualizar_tipo_item_view
+from desarrollo.views import tipos_atributo_tipo_item_view, agregar_tipo_atributo_view, confirmacion_agregar_tipo_atributo_view, quitar_tipo_atributo_view
 from desarrollo.views import iniciar_fase_view
 from desarrollo.views import finalizar_fase_view
 from desarrollo.views import items_fase_view
@@ -9,13 +14,30 @@ from desarrollo.views import crear_item_view, modificar_item_view, eliminar_item
 
 urlpatterns = patterns('',
     url(r'^desarrollo/$', desarrollo_view, name="vista_desarrollo"),
-    url(r'^desarrollo/calcular_costo/proyecto/(?P<id_proyecto>.*)/$', calcular_costo_view, name="vista_desarrollo_calcular_costo"),
-    url(r'^desarrollo/fases/proyecto/(?P<id_proyecto>.*)/$', fases_proyecto_view, name="vista_desarrollo_fases_proyecto"),
-    url(r'^desarrollo/fases/iniciar_fase/(?P<id_fase>.*)/proyecto/(?P<id_proyecto>.*)/$', iniciar_fase_view, name="vista_desarrollo_iniciar_fase"),
-    url(r'^desarrollo/fases/finalizar_fase/(?P<id_fase>.*)/proyecto/(?P<id_proyecto>.*)/$', finalizar_fase_view, name="vista_desarrollo_finalizar_fase"),
-    url(r'^desarrollo/items/fase/(?P<id_fase>.*)/proyecto/(?P<id_proyecto>.*)/$', items_fase_view, name="vista_desarrollo_items_fase"),
-    url(r'^desarrollo/items/crear_item/fase/(?P<id_fase>.*)/proyecto/(?P<id_proyecto>.*)/$', crear_item_view, name="vista_desarrollo_crear_item"),
-    url(r'^desarrollo/items/modificar_item/(?P<id_item>.*)/fase/(?P<id_fase>.*)/proyecto/(?P<id_proyecto>.*)/$', modificar_item_view, name="vista_desarrollo_modificar_item"),
-    url(r'^desarrollo/items/eliminar_item/(?P<id_item>.*)/fase/(?P<id_fase>.*)/proyecto/(?P<id_proyecto>.*)/$', eliminar_item_view, name="vista_desarrollo_eliminar_item"),
-    url(r'^desarrollo/items/item/(?P<id_item>.*)/fase/(?P<id_fase>.*)/proyecto/(?P<id_proyecto>.*)/$', visualizar_item_view, name="vista_desarrollo_visualizar_item"),
+    url(r'^desarrollo/calcular_costo/proyecto/(?P<id_proyecto>\d+)/$', calcular_costo_view, name="vista_calcular_costo"),
+    url(r'^desarrollo/fases/proyecto/(?P<id_proyecto>\d+)/$', fases_proyecto_view, name="vista_fases_proyecto"),
+    url(r'^desarrollo/fases/crear_fase/proyecto/(?P<id_proyecto>\d+)/$', crear_fase_view, name="vista_crear_fase"),
+    url(r'^desarrollo/fases/modificar_fase/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', modificar_fase_view, name="vista_modificar_fase"),
+    url(r'^desarrollo/fases/eliminar_fase/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', eliminar_fase_view, name="vista_eliminar_fase"),
+    url(r'^desarrollo/fases/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', visualizar_fase_view, name="vista_visualizar_fase"),
+    url(r'^desarrollo/fases/roles/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', roles_fase_view, name="vista_roles_fase"),
+    url(r'^desarrollo/fases/agregar_rol/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', fase_agregar_rol_view, name="vista_fase_agregar_rol"),
+    url(r'^desarrollo/fases/confirmacion_agregar_rol/(?P<id_rol>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', fase_confirmacion_agregar_rol_view, name="vista_confirmacion_fase_agregar_rol"),
+    url(r'^desarrollo/fases/quitar_rol/(?P<id_rol>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', fase_quitar_rol_view, name="vista_fase_quitar_rol"),
+    url(r'^desarrollo/fases/tipos_item/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', tipos_item_fase_view, name="vista_tipos_item_fase"),
+    url(r'^desarrollo/fases/tipos_item/crear_tipo_item/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', crear_tipo_item_view, name="vista_crear_tipo_item"),  
+    url(r'^desarrollo/fases/tipos_item/modificar_tipo_item/(?P<id_tipo_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', modificar_tipo_item_view, name="vista_modificar_tipo_item"),
+    url(r'^desarrollo/fases/tipos_item/eliminar_tipo_item/(?P<id_tipo_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', eliminar_tipo_item_view, name="vista_eliminar_tipo_item"),
+    url(r'^desarrollo/fases/tipos_item/tipo_item/(?P<id_tipo_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', visualizar_tipo_item_view, name="vista_visualizar_tipo_item"),
+    url(r'^desarrollo/fases/tipos_item/tipos_atributo/tipo_item/(?P<id_tipo_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', tipos_atributo_tipo_item_view, name="vista_tipos_atributo_tipo_item"),
+    url(r'^desarrollo/fases/tipos_item/agregar_tipo_atributo/tipo_item/(?P<id_tipo_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', agregar_tipo_atributo_view, name="vista_agregar_tipo_atributo"),
+    url(r'^desarrollo/fases/tipos_item/confirmacion_agregar_tipo_atributo/(?P<id_tipo_atributo>\d+)/tipo_item/(?P<id_tipo_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', confirmacion_agregar_tipo_atributo_view, name="vista_confirmacion_agregar_tipo_atributo"),
+    url(r'^desarrollo/fases/tipos_item/quitar_tipo_atributo/(?P<id_tipo_atributo>\d+)/tipo_item/(?P<id_tipo_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', quitar_tipo_atributo_view, name="vista_quitar_tipo_atributo"),
+    url(r'^desarrollo/fases/iniciar_fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', iniciar_fase_view, name="vista_iniciar_fase"),
+    url(r'^desarrollo/fases/items/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', items_fase_view, name="vista_items_fase"),
+    url(r'^desarrollo/fases/items/crear_item/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', crear_item_view, name="vista_crear_item"),
+    url(r'^desarrollo/fases/items/modificar_item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', modificar_item_view, name="vista_modificar_item"),
+    url(r'^desarrollo/fases/items/eliminar_item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', eliminar_item_view, name="vista_eliminar_item"),
+    url(r'^desarrollo/fases/items/item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', visualizar_item_view, name="vista_visualizar_item"),
+    url(r'^desarrollo/fases/finalizar_fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', finalizar_fase_view, name="vista_finalizar_fase"),
 )

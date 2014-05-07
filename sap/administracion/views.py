@@ -4,9 +4,10 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm, ModificarTipoItemForm
-from administracion.models import Rol, Permiso, TipoAtributo, Proyecto, Fase, TipoItem, ValorAtributo
-from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto
+from administracion.forms import CrearUsuarioForm, ModificarUsuarioForm, CambiarContrasenhaForm, CrearRolForm, ModificarRolForm, CrearTipoAtributoForm, ModificarTipoAtributoForm, CrearProyectoForm, ModificarProyectoForm
+from administracion.models import Rol, Permiso, TipoAtributo, Proyecto
+from desarrollo.models import ValorAtributo
+from inicio.decorators import permiso_requerido, miembro_proyecto
 
 @login_required(login_url='/login/')
 def gestion_usuarios_view(request):
@@ -295,7 +296,7 @@ def roles_usuario_view(request, id_usuario):
     return render_to_response('usuario/roles_usuario.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
-def agregar_rol_view(request, id_usuario):
+def usuario_agregar_rol_view(request, id_usuario):
     """
     ::
     
@@ -323,7 +324,7 @@ def agregar_rol_view(request, id_usuario):
     
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar rol a usuario")
-def confirmacion_agregar_rol_view(request, id_usuario, id_rol):
+def usuario_confirmacion_agregar_rol_view(request, id_rol, id_usuario):
     """
     ::
     
@@ -361,7 +362,7 @@ def confirmacion_agregar_rol_view(request, id_usuario, id_rol):
     
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar rol de usuario")
-def quitar_rol_view(request, id_usuario, id_rol):
+def usuario_quitar_rol_view(request, id_rol, id_usuario):
     """
     ::
     
@@ -642,7 +643,7 @@ def agregar_permiso_view(request, id_rol):
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar permiso a rol")
-def confirmacion_agregar_permiso_view(request, id_rol, id_permiso):
+def confirmacion_agregar_permiso_view(request, id_permiso, id_rol):
     """
     ::
     
@@ -680,7 +681,7 @@ def confirmacion_agregar_permiso_view(request, id_rol, id_permiso):
     
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar permiso de rol")
-def quitar_permiso_view(request, id_rol, id_permiso):
+def quitar_permiso_view(request, id_permiso, id_rol):
     """
     ::
     
@@ -788,8 +789,26 @@ def crear_tipo_atributo_view(request):
             nombre = form.cleaned_data['nombre']
             descripcion = form.cleaned_data['descripcion']
             tipo_dato = form.cleaned_data['tipo_dato']
-            tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato)
-            tipo_atributo.save()
+            
+            obligatorio = request.POST.get('obligatorio')
+            if obligatorio == 0:
+                obligatorio = False
+            else:
+                obligatorio = True
+                
+            if tipo_dato == 0:
+                longitud = request.POST.get('longitud')
+                precision = request.POST.get('precision')
+                tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato, longitud=longitud, precision=precision, obligatorio=obligatorio)
+                tipo_atributo.save()
+            elif tipo_dato == 1 or tipo_dato == 4:
+                tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato, obligatorio=obligatorio)
+                tipo_atributo.save()
+            else:
+                longitud = request.POST.get('longitud')
+                tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato, longitud=longitud, obligatorio=obligatorio)
+                tipo_atributo.save()
+            
             return HttpResponseRedirect('/administracion/gestion_tipos_atributo/')
             
         else:
@@ -835,10 +854,38 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
             nombre = form.cleaned_data['nombre']
             descripcion = form.cleaned_data['descripcion']
             tipo_dato = form.cleaned_data['tipo_dato']
-            tipo_atributo.nombre = nombre
-            tipo_atributo.descripcion = descripcion
-            tipo_atributo.tipo_dato = tipo_dato
-            tipo_atributo.save()
+            
+            obligatorio = request.POST.get('obligatorio')
+            if obligatorio == 0:
+                obligatorio = False
+            else:
+                obligatorio = True
+                
+            if tipo_dato == 0:
+                longitud = request.POST.get('longitud')
+                precision = request.POST.get('precision')
+                tipo_atributo.nombre = nombre
+                tipo_atributo.descripcion = descripcion
+                tipo_atributo.tipo_dato = tipo_dato
+                tipo_atributo.longitud = longitud
+                tipo_atributo.precision = precision
+                tipo_atributo.obligatorio = obligatorio
+                tipo_atributo.save()
+            elif tipo_dato == 1 or tipo_dato == 4:
+                tipo_atributo.nombre = nombre
+                tipo_atributo.descripcion = descripcion
+                tipo_atributo.tipo_dato = tipo_dato
+                tipo_atributo.obligatorio = obligatorio
+                tipo_atributo.save()
+            else:
+                longitud = request.POST.get('longitud')
+                tipo_atributo.nombre = nombre
+                tipo_atributo.descripcion = descripcion
+                tipo_atributo.tipo_dato = tipo_dato
+                tipo_atributo.longitud = longitud
+                tipo_atributo.obligatorio = obligatorio
+                tipo_atributo.save()
+            
             return HttpResponseRedirect('/administracion/gestion_tipos_atributo/tipo_atributo/%s'%tipo_atributo.id)
             
     if request.method == "GET":
@@ -940,7 +987,6 @@ def gestion_proyectos_view(request):
     eliminar_proyecto = False
     visualizar_proyecto = False
     gestionar_usuarios = False
-    gestionar_fases = False
     gestionar_roles = False
     gestionar_comite = False
     iniciar_proyecto = False
@@ -957,8 +1003,6 @@ def gestion_proyectos_view(request):
                 visualizar_proyecto = True
             elif p.nombre == 'Gestionar usuarios de proyecto':
                 gestionar_usuarios = True
-            elif p.nombre == 'Gestionar fases de proyecto':
-                gestionar_fases = True
             elif p.nombre == 'Gestionar comite de proyecto':
                 gestionar_comite = True
             elif p.nombre == 'Gestionar roles de proyecto':
@@ -966,13 +1010,13 @@ def gestion_proyectos_view(request):
             elif p.nombre == 'Iniciar proyecto':
                 iniciar_proyecto = True
                     
-            if crear_proyecto and modificar_proyecto and eliminar_proyecto and visualizar_proyecto and gestionar_usuarios and gestionar_fases and gestionar_roles and gestionar_comite and iniciar_proyecto:
+            if crear_proyecto and modificar_proyecto and eliminar_proyecto and visualizar_proyecto and gestionar_usuarios and gestionar_roles and gestionar_comite and iniciar_proyecto:
                 break
-        if crear_proyecto and modificar_proyecto and eliminar_proyecto and visualizar_proyecto and gestionar_usuarios and gestionar_fases and gestionar_roles and gestionar_comite and iniciar_proyecto:
+        if crear_proyecto and modificar_proyecto and eliminar_proyecto and visualizar_proyecto and gestionar_usuarios and gestionar_roles and gestionar_comite and iniciar_proyecto:
                 break
             
     proyectos = Proyecto.objects.all()
-    ctx = {'proyectos':proyectos, 'crear_proyecto':crear_proyecto, 'modificar_proyecto':modificar_proyecto, 'eliminar_proyecto':eliminar_proyecto, 'visualizar_proyecto':visualizar_proyecto,'gestionar_usuarios':gestionar_usuarios, 'gestionar_fases':gestionar_fases, 'gestionar_roles':gestionar_roles, 'gestionar_comite':gestionar_comite, 'iniciar_proyecto':iniciar_proyecto}
+    ctx = {'proyectos':proyectos, 'crear_proyecto':crear_proyecto, 'modificar_proyecto':modificar_proyecto, 'eliminar_proyecto':eliminar_proyecto, 'visualizar_proyecto':visualizar_proyecto,'gestionar_usuarios':gestionar_usuarios, 'gestionar_roles':gestionar_roles, 'gestionar_comite':gestionar_comite, 'iniciar_proyecto':iniciar_proyecto}
     return render_to_response('proyecto/gestion_proyectos.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1001,6 +1045,7 @@ def crear_proyecto_view(request):
             - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de usuarios. 
     """
     form = CrearProyectoForm()
+    usuarios = User.objects.all()
     if request.method == "POST":
         form = CrearProyectoForm(request.POST)
         if form.is_valid():
@@ -1009,9 +1054,10 @@ def crear_proyecto_view(request):
             presupuesto = form.cleaned_data['presupuesto']
             complejidad = form.cleaned_data['complejidad']
             fecha_inicio = form.cleaned_data['fecha_inicio']
-            usuario_lider = form.cleaned_data['usuario_lider']
             
-            lider = User.objects.get(id=usuario_lider)
+            id_lider = request.POST.get('usuario_lider')
+            
+            lider = User.objects.get(id=id_lider)
             rol_lider = Rol.objects.get(nombre="Lider de proyecto")
             lider.roles.add(rol_lider)
             
@@ -1022,9 +1068,9 @@ def crear_proyecto_view(request):
             return HttpResponseRedirect('/administracion/gestion_proyectos/')
             
         else:
-            ctx = {'form':form}
+            ctx = {'form':form, 'usuarios':usuarios}
             return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
-    ctx = {'form':form}
+    ctx = {'form':form, 'usuarios':usuarios}
     return render_to_response('proyecto/crear_proyecto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1055,6 +1101,7 @@ def modificar_proyecto_view(request, id_proyecto):
             generado en la vista, al template correspondiente.
             - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
     """
+    usuarios = User.objects.all()
     proyecto = Proyecto.objects.get(id=id_proyecto)
     if request.method == "POST":
         form = ModificarProyectoForm(data=request.POST)
@@ -1064,9 +1111,10 @@ def modificar_proyecto_view(request, id_proyecto):
             presupuesto = form.cleaned_data['presupuesto']
             complejidad = form.cleaned_data['complejidad']
             fecha_inicio = form.cleaned_data['fecha_inicio']
-            usuario_lider = form.cleaned_data['usuario_lider']
             
-            lider = User.objects.get(id=usuario_lider)
+            id_lider = request.POST.get('usuario_lider')
+            
+            lider = User.objects.get(id=id_lider)
             
             proyecto.nombre = nombre
             proyecto.descripcion = descripcion
@@ -1084,7 +1132,7 @@ def modificar_proyecto_view(request, id_proyecto):
             'presupuesto': proyecto.presupuesto,
             'complejidad': proyecto.complejidad,
             })
-    ctx = {'form': form, 'proyecto': proyecto}
+    ctx = {'form': form, 'proyecto': proyecto, 'usuarios':usuarios}
     return render_to_response('proyecto/modificar_proyecto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1224,7 +1272,7 @@ def proyecto_agregar_usuario_view(request, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar usuario a proyecto")
 @miembro_proyecto()
-def confirmacion_proyecto_agregar_usuario_view(request, id_proyecto, id_usuario):
+def proyecto_confirmacion_agregar_usuario_view(request, id_proyecto, id_usuario):
     """
     ::
     
@@ -1295,144 +1343,6 @@ def proyecto_quitar_usuario_view(request, id_proyecto, id_usuario):
     return render_to_response('proyecto/quitar_usuario.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
-@permiso_requerido(permiso="Gestionar fases de proyecto")
-@miembro_proyecto()
-def fases_proyecto_view(request, id_proyecto):
-    """
-    ::
-    
-        La vista del listado de fases por proyecto. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Gestionar fases de proyecto.
-            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-            
-        Esta vista permite al usuario listar y conocer las opciones de las fases de un proyecto previamente seleccionado.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_proyecto: el identificador del proyecto.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    proyecto = Proyecto.objects.get(id=id_proyecto)
-    fases = proyecto.fases.all()
-    ctx = {'proyecto':proyecto, 'fases':fases}
-    return render_to_response('proyecto/fases_proyecto.html', ctx, context_instance=RequestContext(request))
-
-@login_required(login_url='/login/')
-def proyecto_agregar_fase_view(request, id_proyecto):
-    """
-    ::
-    
-        La vista del listado de fases ligadas al proyecto. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-    
-            - El usuario debe estar logueado.
-            
-        Esta vista permite al usuario listar todas las fases ligadas al proyecto, ademas, el template relacionado concede 
-        las opciones para agregar una fase seleccionada.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_proyecto: el identificador del proyecto.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    proyecto = Proyecto.objects.get(id=id_proyecto)
-    fases = Fase.objects.all()
-    ctx = {'proyecto':proyecto, 'fases':fases}
-    return render_to_response('proyecto/agregar_fase.html', ctx, context_instance=RequestContext(request))
-
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Agregar fase a proyecto")
-@miembro_proyecto()
-def confirmacion_proyecto_agregar_fase_view(request, id_proyecto, id_fase):
-    """
-    ::
-    
-        La vista de confirmacion de agregacion de una fase a un proyecto. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Agregar fase a proyecto.
-            - El usuario debe ser miembro del proyecto.
-            
-        Esta vista permite al usuario agregar una fase seleccionada a un proyecto seleccionado previamente. Se verifica si la fase a agregar ya 
-        pertenece al proyecto, en cuyo caso se cancelara la operacion.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_proyecto: el identificador del proyecto.
-            - id_fase: el identificador de la fase.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    valido_uno = False
-    valido_dos = False
-    proyecto = Proyecto.objects.get(id=id_proyecto)
-    fase = Fase.objects.get(id=id_fase)
-    try:
-        phase = proyecto.fases.get(id=id_fase)
-    except Fase.DoesNotExist:
-        valido_uno = True
-    try:
-        project = fase.proyecto
-    except Proyecto.DoesNotExist:
-        valido_dos = True
-    if fase.proyecto == None:
-        valido_dos = True      
-    if valido_uno and valido_dos:
-        proyecto.fases.add(fase)
-        proyecto.save()
-    ctx = {'proyecto':proyecto, 'fase':fase, 'valido_uno':valido_uno, 'valido_dos':valido_dos}
-    return render_to_response('proyecto/confirmacion_agregar_fase.html', ctx, context_instance=RequestContext(request))
-
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Quitar fase de proyecto")
-@miembro_proyecto()
-def proyecto_quitar_fase_view(request, id_proyecto, id_fase):
-    """
-    ::
-    
-        La vista para quitar una fase de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Quitar fase de proyecto.
-            - El usuario debe pertenecer al proyecto.
-            
-        Esta vista permite al usuario quitar una fase seleccionada de un proyecto seleccionado previamente.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_proyecto: el identificador de la proyecto.
-            - id_fase: el identificador del fase.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    proyecto = Proyecto.objects.get(id=id_proyecto)
-    fase = Fase.objects.get(id=id_fase)
-    fase.proyecto = None
-    fase.save()
-    proyecto.save()
-    ctx = {'proyecto':proyecto, 'fase':fase}
-    return render_to_response('proyecto/quitar_fase.html', ctx, context_instance=RequestContext(request))
-
-@login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar roles de proyecto")
 @miembro_proyecto()
 def roles_proyecto_view(request, id_proyecto):
@@ -1492,7 +1402,7 @@ def proyecto_agregar_rol_view(request, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar rol a proyecto")
 @miembro_proyecto()
-def confirmacion_proyecto_agregar_rol_view(request, id_proyecto, id_rol):
+def proyecto_confirmacion_agregar_rol_view(request, id_proyecto, id_rol):
     """
     ::
     
@@ -1622,7 +1532,7 @@ def proyecto_agregar_miembro_view(request, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar miembro a comite")
 @miembro_proyecto()
-def confirmacion_proyecto_agregar_miembro_view(request, id_proyecto, id_usuario):
+def proyecto_confirmacion_agregar_miembro_view(request, id_proyecto, id_usuario):
     """
     ::
     
@@ -1710,7 +1620,6 @@ def iniciar_proyecto_view(request, id_proyecto):
             - El proyecto debe estar en estado Inactivo.
             - El proyecto debe poseer un lider.
             - El proyecto debe poseer al menos un miembro en su comite de cambios.
-            - El proyecto debe poseer al menos una fase.
             - El proyecto debe poseer al menos un rol.
         
         La vista recibe los siguientes parametros:
@@ -1726,7 +1635,6 @@ def iniciar_proyecto_view(request, id_proyecto):
     inicio_valido = True
     estado_valido = True
     comite_valido = True
-    fases_valido = True
     roles_valido = True
     
     if proyecto.estado != 0:
@@ -1740,9 +1648,6 @@ def iniciar_proyecto_view(request, id_proyecto):
     if proyecto.comite_de_cambios.count() == 0:
         comite_valido = False
         inicio_valido = False
-    if proyecto.fases.count() == 0:
-        fases_valido = False
-        inicio_valido = False
     if proyecto.roles.count() == 0:
         roles_valido = False
         inicio_valido = False
@@ -1750,690 +1655,8 @@ def iniciar_proyecto_view(request, id_proyecto):
     if inicio_valido:
         proyecto.estado = 1
         proyecto.save()
-        ctx = {'proyecto':proyecto, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'lider_valido':lider_valido, 'comite_valido':comite_valido, 'fases_valido':fases_valido, 'roles_valido':roles_valido}
+        ctx = {'proyecto':proyecto, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'lider_valido':lider_valido, 'comite_valido':comite_valido, 'roles_valido':roles_valido}
         return render_to_response('proyecto/iniciar_proyecto.html', ctx, context_instance=RequestContext(request))
     else:
-        ctx = {'proyecto':proyecto, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'lider_valido':lider_valido, 'comite_valido':comite_valido, 'fases_valido':fases_valido, 'roles_valido':roles_valido}
+        ctx = {'proyecto':proyecto, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'lider_valido':lider_valido, 'comite_valido':comite_valido, 'roles_valido':roles_valido}
         return render_to_response('proyecto/iniciar_proyecto.html', ctx, context_instance=RequestContext(request))
-    
-@login_required(login_url='/login/')
-def gestion_fases_view(request):
-    """
-    ::
-    
-        La vista del listado de fases del sistema. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-    
-                - El usuario debe estar logueado.
-                Esta vista permite al usuario listar y conocer las opciones de las fases del sistema.
-                Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
-                los botones de accion sobre cada fase.
-                
-        La vista recibe los siguientes parametros:
-    
-                - request: contiene informacion sobre la sesion actual.
-            
-        La vista retorna lo siguiente:
-        
-                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    crear_fase = False
-    modificar_fase = False
-    eliminar_fase = False
-    visualizar_fase = False
-    gestionar_roles = False
-    roles = request.user.roles.all()
-    for r in roles:
-        for p in r.permisos.all():
-            if p.nombre == 'Crear fase':
-                crear_fase = True
-            elif p.nombre == 'Modificar fase':
-                modificar_fase = True
-            elif p.nombre == 'Eliminar fase':
-                eliminar_fase = True
-            elif p.nombre == 'Visualizar fase':
-                visualizar_fase = True
-            elif p.nombre == 'Gestionar roles de fase':
-                gestionar_roles = True
-                
-            if crear_fase and modificar_fase and eliminar_fase and visualizar_fase and gestionar_roles:
-                break
-        if crear_fase and modificar_fase and eliminar_fase and visualizar_fase and gestionar_roles:
-                break
-            
-    fases = Fase.objects.all()
-    ctx = {'fases':fases, 'crear_fase':crear_fase, 'modificar_fase':modificar_fase, 'eliminar_fase':eliminar_fase, 'visualizar_fase':visualizar_fase, 'gestionar_roles':gestionar_roles}
-    return render_to_response('fase/gestion_fases.html', ctx, context_instance=RequestContext(request))
-    
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Crear fase")
-def crear_fase_view(request):
-    """
-    ::
-    
-        La vista para crear una fase. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-    
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Crear fase.
-            
-        Esta vista permite al usuario crear una fase para lograr esto, se verifica la validez de cada campo ingresado y 
-        luego se crea la fase de acuerdo a los campos ingresados. 
-            
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
-            generado en la vista, al template correspondiente.
-            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de usuarios. 
-    """
-    form = CrearFaseForm()
-    if request.method == "POST":
-        form = CrearFaseForm(request.POST)
-        if form.is_valid():
-            nombre = form.cleaned_data['nombre']
-            descripcion = form.cleaned_data['descripcion']
-            duracion = form.cleaned_data['duracion']
-            fecha_inicio = form.cleaned_data['fecha_inicio']
-            
-            fase = Fase.objects.create(nombre=nombre, descripcion=descripcion, duracion=duracion, fecha_inicio=fecha_inicio)
-            fase.save()
-            return HttpResponseRedirect('/administracion/gestion_fases/')
-            
-        else:
-            ctx = {'form':form}
-            return render_to_response('fase/crear_fase.html', ctx, context_instance=RequestContext(request))
-    ctx = {'form':form}
-    return render_to_response('fase/crear_fase.html', ctx, context_instance=RequestContext(request))
-    
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Modificar fase")
-@fase_miembro_proyecto()
-def modificar_fase_view(request, id_fase):
-    """
-    ::
-    
-        La vista para modificar una fase. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Modificar fase.
-            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-            
-        Esta vista permite al usuario modificar una fase previamente seleccionada, para lograr esto, 
-        se verifica la validez de cada campo modificado y luego se guarda la fase de acuerdo a los campos ingresados.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_fase: el identificador de la fase.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
-            generado en la vista, al template correspondiente.
-            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
-    """
-    fase = Fase.objects.get(id=id_fase)
-    if request.method == "POST":
-        form = ModificarFaseForm(data=request.POST)
-        if form.is_valid():
-            nombre = form.cleaned_data['nombre']
-            descripcion = form.cleaned_data['descripcion']
-            duracion = form.cleaned_data['duracion']
-            fecha_inicio = form.cleaned_data['fecha_inicio']
-            
-            fase.nombre = nombre
-            fase.descripcion = descripcion
-            fase.duracion = duracion
-            fase.fecha_inicio = fecha_inicio
-            fase.save()
-            return HttpResponseRedirect('/administracion/gestion_fases/fase/%s'%fase.id)
-            
-    if request.method == "GET":
-        form = ModificarFaseForm(initial={
-            'nombre': fase.nombre,
-            'descripcion': fase.descripcion,
-            'presupuesto': fase.duracion,
-            })
-    ctx = {'form': form, 'fase': fase}
-    return render_to_response('fase/modificar_fase.html', ctx, context_instance=RequestContext(request))
-
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Eliminar fase")
-@fase_miembro_proyecto()
-def eliminar_fase_view(request, id_fase):
-    """
-    ::
-    
-        La vista para eliminar una fase. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Eliminar fase.
-            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-            
-        Esta vista permite al usuario eliminar una fase previamente seleccionada, para lograr esto, 
-        se verifica si la fase cumple las siguientes condiciones:
-        
-            - La fase debe estar en estado Inactivo.
-            
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_fase: el identificador de la fase.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
-            generado en la vista, al template correspondiente.
-            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
-    """
-    fase = Fase.objects.get(id=id_fase)
-    valido = True
-    if fase.estado == 2 or fase.estado == 1:
-        valido = False
-    if request.method == "POST":
-        if valido == True:
-            fase.delete()
-            return HttpResponseRedirect('/administracion/gestion_fases/')
-        else:
-            ctx = {'fase':fase, 'valido':valido}
-            return render_to_response('fase/eliminar_fase.html', ctx, context_instance=RequestContext(request))
-    if request.method == "GET":
-        ctx = {'fase':fase, 'valido':valido}
-        return render_to_response('fase/eliminar_fase.html', ctx, context_instance=RequestContext(request))
-    
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Visualizar fase")
-@fase_miembro_proyecto()
-def visualizar_fase_view(request, id_fase):
-    """
-    ::
-    
-        La vista para visualizar una fase. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Visualizar fase.
-            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-            
-        Esta vista permite al usuario visualizar todos los campos guardados de una fase previamente seleccionada.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_fase: el identificador de la fase.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
-    """
-    fase = Fase.objects.get(id=id_fase)
-    ctx = {'fase': fase}
-    return render_to_response('fase/visualizar_fase.html', ctx, context_instance=RequestContext(request))
-    
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Gestionar roles de fase")
-@fase_miembro_proyecto()
-def roles_fase_view(request, id_fase):
-    """
-    ::
-    
-        La vista del listado de roles por fase. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Gestionar roles de fase.
-            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-            
-        Esta vista permite al usuario listar y conocer las opciones de los roles de la fase previamente seleccionada.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_fase: el identificador de la fase.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    fase = Fase.objects.get(id=id_fase)
-    roles = Rol.objects.filter(fase__id=id_fase)
-    ctx = {'fase':fase, 'roles':roles}
-    return render_to_response('fase/roles_fase.html', ctx, context_instance=RequestContext(request))
-    
-@login_required(login_url='/login/')
-def fase_agregar_rol_view(request, id_fase):
-    """
-    ::
-    
-        La vista del listado de roles del proyecto ligado a la fase. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-    
-            - El usuario debe estar logueado.
-            
-        Esta vista permite al usuario listar todos los roles del proyecto al cual esta ligada la fase, ademas, el template relacionado concede 
-        las opciones para agregar un rol seleccionado.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_fase: el identificador de la fase.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    fase = Fase.objects.get(id=id_fase)
-    proyecto = fase.proyecto
-    roles = proyecto.roles.all()
-    ctx = {'fase':fase, 'proyecto':proyecto, 'roles':roles}
-    return render_to_response('fase/agregar_rol.html', ctx, context_instance=RequestContext(request))
-    
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Agregar rol a fase")
-@fase_miembro_proyecto()
-def confirmacion_fase_agregar_rol_view(request, id_fase, id_rol):
-    """
-    ::
-    
-        La vista de confirmacion de agregacion de un rol a una fase. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Agregar rol a fase.
-            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-            
-        Esta vista permite al usuario agregar un rol seleccionado a la fase seleccionada previamente. Se verifica si el rol a agregar ya 
-        pertenece a la fase, en cuyo caso se cancelara la operacion.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_fase: el identificador de la fase.
-            - id_rol: el identificador del rol.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    valido = False
-    fase = Fase.objects.get(id=id_fase)
-    rol = Rol.objects.get(id=id_rol)
-    try:
-        role = fase.roles.get(id=id_rol)
-    except Rol.DoesNotExist:
-        valido = True      
-    if valido:
-        fase.roles.add(rol)
-        fase.save()
-    ctx = {'fase':fase, 'rol':rol, 'valido':valido}
-    return render_to_response('fase/confirmacion_agregar_rol.html', ctx, context_instance=RequestContext(request))  
-    
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Quitar rol de fase")
-@fase_miembro_proyecto()
-def fase_quitar_rol_view(request, id_fase, id_rol):
-    """
-    ::
-    
-        La vista para quitar un rol de una fase. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Quitar rol de fase.
-            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-        
-        Esta vista permite al usuario quitar un rol seleccionado de la fase seleccionada previamente.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_fase: el identificador de la fase.
-            - id_rol: el identificador del rol.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    fase = Fase.objects.get(id=id_fase)
-    rol = Rol.objects.get(id=id_rol)
-    fase.roles.remove(rol)
-    fase.save()
-    ctx = {'fase':fase, 'rol':rol}
-    return render_to_response('fase/quitar_rol.html', ctx, context_instance=RequestContext(request))
-  
-@login_required(login_url='/login/')
-def gestion_tipos_item_view(request):
-    """
-    ::
-    
-        La vista del listado de tipos de item del sistema. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-    
-                - El usuario debe estar logueado.
-                Esta vista permite al usuario listar y conocer las opciones de los tipos de item del sistema.
-                Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
-                los botones de accion sobre cada tipo de item.
-                
-        La vista recibe los siguientes parametros:
-    
-                - request: contiene informacion sobre la sesion actual.
-            
-        La vista retorna lo siguiente:
-        
-                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    crear_tipo_de_item = False
-    modificar_tipo_de_item = False
-    eliminar_tipo_de_item = False
-    visualizar_tipo_de_item = False
-    gestionar_tipos_de_atributo = False
-    roles = request.user.roles.all()
-    for r in roles:
-        for p in r.permisos.all():
-            if p.nombre == 'Crear tipo de item':
-                crear_tipo_de_item = True
-            elif p.nombre == 'Modificar tipo de item':
-                modificar_tipo_de_item = True
-            elif p.nombre == 'Eliminar tipo de item':
-                eliminar_tipo_de_item = True
-            elif p.nombre == 'Visualizar tipo de item':
-                visualizar_tipo_de_item = True
-            elif p.nombre == 'Gestionar tipos de atributo de tipo de item':
-                gestionar_tipos_de_atributo = True
-                
-            if crear_tipo_de_item and modificar_tipo_de_item and eliminar_tipo_de_item and visualizar_tipo_de_item and gestionar_tipos_de_atributo:
-                break
-        if crear_tipo_de_item and modificar_tipo_de_item and eliminar_tipo_de_item and visualizar_tipo_de_item and gestionar_tipos_de_atributo:
-                break
-            
-    tipos_item = TipoItem.objects.all()
-    ctx = {'tipos_item':tipos_item, 'crear_tipo_de_item':crear_tipo_de_item, 'modificar_tipo_de_item':modificar_tipo_de_item, 'eliminar_tipo_de_item':eliminar_tipo_de_item, 'visualizar_tipo_de_item':visualizar_tipo_de_item, 'gestionar_tipos_de_atributo':gestionar_tipos_de_atributo}
-    return render_to_response('tipo_item/gestion_tipos_item.html', ctx, context_instance=RequestContext(request))
-  
-
-   
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Crear tipo de item")
-def crear_tipo_item_view(request):
-    """
-    ::
-    
-        La vista para crear un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-    
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Crear tipo de item.
-            
-        Esta vista permite al usuario crear un tipo de item para lograr esto, se verifica la validez de cada campo ingresado y 
-        luego se crea el tipo de item de acuerdo a los campos ingresados. 
-            
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
-            generado en la vista, al template correspondiente.
-            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de usuarios. 
-    """
-    form = CrearTipoItemForm()
-    if request.method == "POST":
-        form = CrearTipoItemForm(request.POST)
-        if form.is_valid():
-            nombre = form.cleaned_data['nombre']
-            descripcion = form.cleaned_data['descripcion']
-            
-            tipo_item = TipoItem.objects.create(nombre=nombre, descripcion=descripcion)
-            tipo_item.save()
-            return HttpResponseRedirect('/administracion/gestion_tipos_item/')
-            
-        else:
-            ctx = {'form':form}
-            return render_to_response('tipo_item/crear_tipo_item.html', ctx, context_instance=RequestContext(request))
-    ctx = {'form':form}
-    return render_to_response('tipo_item/crear_tipo_item.html', ctx, context_instance=RequestContext(request))
-    
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Modificar tipo de item")
-def modificar_tipo_item_view(request, id_tipo_item):
-    """
-    ::
-    
-        La vista para modificar un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Modificar tipo de item.
-            
-        Esta vista permite al usuario modificar un tipo de item previamente seleccionada, para lograr esto, 
-        se verifica la validez de cada campo modificado y luego se guarda el tipo de item de acuerdo a los campos ingresados.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_tipo_item: el identificador del tipo de item.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
-            generado en la vista, al template correspondiente.
-            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
-    """
-    tipo_item = TipoItem.objects.get(id=id_tipo_item)
-    if request.method == "POST":
-        form = ModificarTipoItemForm(data=request.POST)
-        if form.is_valid():
-            nombre = form.cleaned_data['nombre']
-            descripcion = form.cleaned_data['descripcion']
-            
-            tipo_item.nombre = nombre
-            tipo_item.descripcion = descripcion
-
-            tipo_item.save()
-            return HttpResponseRedirect('/administracion/gestion_tipos_item/tipo_item/%s'%tipo_item.id)
-            
-    if request.method == "GET":
-        form = ModificarTipoItemForm(initial={
-            'nombre': tipo_item.nombre,
-            'descripcion': tipo_item.descripcion,
-            })
-    ctx = {'form': form, 'tipo_item': tipo_item}
-    return render_to_response('tipo_item/modificar_tipo_item.html', ctx, context_instance=RequestContext(request))
-  
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Visualizar tipo de item")
-def visualizar_tipo_item_view(request, id_tipo_item):
-    """
-    ::
-    
-        La vista para visualizar un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Visualizar tipo de item.
-            
-        Esta vista permite al usuario visualizar todos los campos guardados de un tipo de item previamente seleccionado.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_tipo_item: el identificador del tipo de item.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
-    """
-    tipo_item = TipoItem.objects.get(id=id_tipo_item)
-    ctx = {'tipo_item': tipo_item}
-    return render_to_response('tipo_item/visualizar_tipo_item.html', ctx, context_instance=RequestContext(request))
-
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Eliminar tipo de item")
-def eliminar_tipo_item_view(request, id_tipo_item):
-    """
-    ::
-    
-        La vista para eliminar un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Eliminar tipo de item.
-            
-        Esta vista permite al usuario eliminar un tipo de item previamente seleccionado.
-            
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_tipo_item: el identificador del tipo de item.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
-            generado en la vista, al template correspondiente.
-            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
-    """
-    tipo_item = TipoItem.objects.get(id=id_tipo_item)
-    if request.method == "POST":
-        TipoItem.objects.get(id=id_tipo_item).delete()
-        return HttpResponseRedirect('/administracion/gestion_tipos_item/')
-    if request.method == "GET":
-        ctx = {'tipo_item':tipo_item}
-        return render_to_response('tipo_item/eliminar_tipo_item.html', ctx, context_instance=RequestContext(request))
-
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Gestionar tipos de atributo de tipo de item")
-
-def tipos_atributo_tipo_item_view(request, id_tipo_item):
-    """
-    ::
-    
-        La vista del listado de tipos de atributo del tipo de item. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Gestionar tipos de atributo de tipo de item.
-            
-        Esta vista permite al usuario listar y conocer las opciones de los tipos de atributo del item previamente seleccionado.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_tipo_item: el identificador del tipo de item.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    id_tipoitem=id_tipo_item
-    tipo_item = TipoItem.objects.get(id=id_tipo_item)
-    tipos_atributo = TipoAtributo.objects.filter(tipoitem__id=id_tipoitem)
-    ctx = {'tipo_item':tipo_item, 'tipos_atributo':tipos_atributo}
-    return render_to_response('tipo_item/tipos_atributo_tipo_item.html', ctx, context_instance=RequestContext(request))
-
-@login_required(login_url='/login/')
-def agregar_tipo_atributo_view(request, id_tipo_item):
-    """
-    ::
-    
-        La vista del listado de tipos de atributo ligados al tipo de item. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-    
-            - El usuario debe estar logueado.
-            
-        Esta vista permite al usuario listar todos los tipos de atributo del sistema, ademas, el template relacionado concede 
-        las opciones para agregar un tipo de atributo seleccionado.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_tipo_item: el identificador del tipo de item.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    tipo_item = TipoItem.objects.get(id=id_tipo_item)
-    tipos_atributo = TipoAtributo.objects.all()
-    ctx = {'tipo_item':tipo_item, 'tipos_atributo':tipos_atributo}
-    return render_to_response('tipo_item/agregar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
-
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Agregar tipo de atributo a tipo de item")
-def confirmacion_agregar_tipo_atributo_view(request, id_tipo_item, id_tipo_atributo):
-    """
-    ::
-    
-        La vista de confirmacion de agregacion de un tipo de atributo a un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Agregar tipo de atributo a tipo de item.
-            
-        Esta vista permite al usuario agregar un tipo de atributo seleccionado a el tipo de item seleccionado previamente. Se verifica si el tipo de atributo a agregar ya 
-        pertenece al tipo de item, en cuyo caso se cancelara la operacion.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_tipo_item: el identificador del tipo de item.
-            - id_tipo_atributo: el identificador del tipo de atributo.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    valido = False
-    tipo_item = TipoItem.objects.get(id=id_tipo_item)
-    tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
-    try:
-        tipo_atribut = tipo_item.tipos_atributo.get(id=id_tipo_atributo)
-    except TipoAtributo.DoesNotExist:
-        valido = True      
-    if valido:
-        tipo_item.tipos_atributo.add(tipo_atributo)
-        tipo_item.save()
-    ctx = {'tipo_item':tipo_item, 'tipo_atributo':tipo_atributo, 'valido':valido}
-    return render_to_response('tipo_item/confirmacion_agregar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
-    
-@login_required(login_url='/login/')
-@permiso_requerido(permiso="Quitar tipo de atributo de tipo de item")
-def quitar_tipo_atributo_view(request, id_tipo_item, id_tipo_atributo):
-    """
-    ::
-    
-        La vista para quitar un tipo de atributo de un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
-        requisitos:
-        
-            - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Quitar tipo de atributo de tipo de item.
-        
-        Esta vista permite al usuario quitar un tipo de atributo seleccionado del tipo de item seleccionado previamente.
-        
-        La vista recibe los siguientes parametros:
-        
-            - request: contiene informacion sobre la sesion actual.
-            - id_tipo_item: el identificador de la tipo de item.
-            - id_tipo_atributo: el identificador del tipo de atributo.
-            
-        La vista retorna lo siguiente:
-        
-            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-    """
-    tipo_item = TipoItem.objects.get(id=id_tipo_item)
-    tipo_atributo = TipoAtributo.objects.get(id=id_tipo_atributo)
-    atributos = ValorAtributo.objects.filter(tipo_atributo__id=id_tipo_atributo)
-    valido = True
-    if atributos:
-        valido = False
-    if valido:
-        tipo_item.tipos_atributo.remove(tipo_atributo)
-        tipo_item.save()
-    ctx = {'tipo_item':tipo_item, 'tipo_atributo':tipo_atributo, 'valido':valido}
-    return render_to_response('tipo_item/quitar_tipo_atributo.html', ctx, context_instance=RequestContext(request))

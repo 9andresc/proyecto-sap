@@ -56,6 +56,7 @@
             41, 
             34, 
             54, 
+            60, 
             25, 
             50, 
             24, 
@@ -64,7 +65,6 @@
             21, 
             17, 
             53, 
-            2, 
             33, 
             30, 
             43, 
@@ -75,8 +75,23 @@
             47, 
             23, 
             19, 
-            59, 
-            4
+            59
+        ]
+    }
+},
+{
+    "pk": 3, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee todos los permisos de gesti\u00f3n de items.", 
+        "nombre": "Desarrollador", 
+        "permisos": [
+            5, 
+            45, 
+            48, 
+            44, 
+            46, 
+            47
         ]
     }
 }

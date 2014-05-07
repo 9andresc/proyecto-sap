@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}SAP - Confirmación de finalizado de la fase {{ fase.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		{% if finalizado_valido %}
+			<div class="panel panel-success">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Éxito!</h3>
+      			</div>
+      			<div class="panel-body">
+        			La fase {{ fase.nombre }} cumple con todos los requisitos. Ya está finalizada.
+      			</div>
+      		</div>
+		{% else %}
+			<div class="panel panel-warning">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Alto ahí!</h3>
+      			</div>
+      			<div class="panel-body">
+        			La fase {{ fase.nombre }} no cumple con todos los requisitos para finalizar. A continuación, un listado de todos los requisitos no cumplidos:
+					<br><br>
+					<ul class="list-styled">
+						{% if estado_valido == False %}
+							<li>La fase debe estar en estado En curso.</li>
+						{% elif finalizado_valido == False %}
+							<li>La fase posee al menos un item que no se encuentra en estado Bloqueado.</li>
+						{% endif %}
+					</ul>        			
+      			</div>
+      		</div>
+		{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_fases_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
+</div>
+{% endblock %}

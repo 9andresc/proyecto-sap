@@ -38,6 +38,46 @@
 	        {% endif %}
 	        <!-- Fin del manejo de errores del formulario -->
 	        
+	        <!-- Script para el selector de tipo de dato -->
+			<script>
+				function miFuncion(obj) {
+					var value = obj.value;
+					switch (value) {
+						case "0":
+							document.getElementById("longitud").setAttribute("required","required");
+					    	document.getElementById("longitud").removeAttribute("disabled");
+					    	document.getElementById("precision").setAttribute("required","required");
+					    	document.getElementById("precision").removeAttribute("disabled");
+					    	break;
+						case "1":
+							document.getElementById("longitud").setAttribute("disabled","disabled");
+							document.getElementById("longitud").removeAttribute("required");
+							document.getElementById("precision").setAttribute("disabled","disabled");
+							document.getElementById("precision").removeAttribute("required");
+							break;
+						case "2":
+							document.getElementById("longitud").setAttribute("required","required");
+							document.getElementById("longitud").removeAttribute("disabled");
+							document.getElementById("precision").setAttribute("disabled","disabled");
+							document.getElementById("precision").removeAttribute("required");
+							break;
+						case "3":
+							document.getElementById("longitud").setAttribute("required","required");
+							document.getElementById("longitud").removeAttribute("disabled");
+							document.getElementById("precision").setAttribute("disabled","disabled");
+							document.getElementById("precision").removeAttribute("required");
+							break;
+						case "4":
+							document.getElementById("longitud").setAttribute("disabled","disabled");
+							document.getElementById("longitud").removeAttribute("required");
+							document.getElementById("precision").setAttribute("disabled","disabled");
+							document.getElementById("precision").removeAttribute("required");
+							break;
+					}
+				}
+			</script>
+	        <!-- Fin del script para el selector de tipo de dato -->
+	        
 	        <p class="text-muted">Campos obligatorios (*)</p>
 			<div class="input-group">
 				<span class="input-group-addon"><b>* Nombre</b></span>
@@ -46,20 +86,64 @@
 	        <br>
 	        <div class="input-group">
 				<span class="input-group-addon"><b>* Tipo de dato</b></span>
-				<select class="form-control" id="tipo_dato" name="tipo_dato">
-					{% for eleccion in form.tipo_dato.field.choices %}
-						{% ifequal tipo_atributo.tipo_dato eleccion.0 %}
-							<option value="{{ eleccion.0 }}" selected="selected">{{ eleccion.1 }}</option>
-						{% else %}
-							<option value="{{ eleccion.0 }}">{{ eleccion.1 }}</option>
-						{% endifequal %}
-					{% endfor %}
+				<select class="form-control" id="tipo_dato" name="tipo_dato" onchange="miFuncion(this)">
+					{% if tipo_atributo.tipo_dato == 0 %}
+						<option value="0" selected="selected">Numérico</option>
+					{% else %}
+						<option value="0">Numérico</option>
+					{% endif %}
+					{% if tipo_atributo.tipo_dato == 1 %}
+						<option value="1" selected="selected">Fecha</option>
+					{% else %}
+						<option value="1">Fecha</option>
+					{% endif %}
+					{% if tipo_atributo.tipo_dato == 2 %}
+						<option value="2" selected="selected">Texto grande</option>
+					{% else %}
+						<option value="2">Texto grande</option>
+					{% endif %}
+					{% if tipo_atributo.tipo_dato == 3 %}
+						<option value="3" selected="selected">Texto chico</option>
+					{% else %}
+						<option value="3">Texto chico</option>
+					{% endif %}
+					{% if tipo_atributo.tipo_dato == 4 %}
+						<option value="4" selected="selected">Lógico</option>
+					{% else %}
+						<option value="4">Lógico</option>
+					{% endif %}
 				</select>
-	        </div>
-	        <br>
+        	</div>
+        	<br>
 	        <div class="input-group">
 				<span class="input-group-addon"><b>Descripción</b></span>
 				<textarea rows="3" class="form-control" id="descripcion" name="descripcion">{{ tipo_atributo.descripcion }}</textarea>
+	        </div>
+	        <br>
+	        <div class="input-group">
+				<span class="input-group-addon"><b>* Longitud</b></span>
+				<input type="number" class="form-control" id="longitud" name="longitud" value="{{ tipo_atributo.longitud }}" required="required">
+	        </div>
+	        <br>
+	        <div class="input-group">
+				<span class="input-group-addon"><b>* Precisión</b></span>
+				<input type="number" class="form-control" id="precision" name="precision" value="{{ tipo_atributo.precision }}" required="required">
+	        </div>
+	        <br>
+	        <div class="input-group">
+				<span class="input-group-addon"><b>* Obligatorio</b></span>
+				<select class="form-control" id="obligatorio" name="obligatorio">
+					{% if tipo_atributo.obligatorio == False %}
+		        		<option value="0" selected="selected">No</option>
+		        	{% else %}
+		        		<option value="0">No</option>
+		        	{% endif %}
+		        	{% if tipo_atributo.obligatorio == True %}
+		        		<option value="1" selected="selected">Sí</option>
+		        	{% else %}
+		        		<option value="1">Sí</option>
+		        	{% endif %}	
+	         	</select>
 	        </div>
 	        
 			<br>

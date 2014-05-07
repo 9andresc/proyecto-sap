@@ -404,5 +404,12 @@
     "fields": {
         "nombre": "Visualizar tipo de item"
     }
+},
+{
+    "pk": 60, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar tipos de item de fase"
+    }
 }
 ]

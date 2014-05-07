@@ -1,0 +1,733 @@
+[
+{
+    "pk": 1, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear usuario"
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar usuario"
+    }
+},
+{
+    "pk": 3, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar usuario"
+    }
+},
+{
+    "pk": 4, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar usuario"
+    }
+},
+{
+    "pk": 5, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Cambiar contrasenha"
+    }
+},
+{
+    "pk": 6, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar roles de usuario"
+    }
+},
+{
+    "pk": 7, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar rol a usuario"
+    }
+},
+{
+    "pk": 8, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar rol de usuario"
+    }
+},
+{
+    "pk": 9, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear rol"
+    }
+},
+{
+    "pk": 10, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar rol"
+    }
+},
+{
+    "pk": 11, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar rol"
+    }
+},
+{
+    "pk": 12, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar rol"
+    }
+},
+{
+    "pk": 13, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar permisos de rol"
+    }
+},
+{
+    "pk": 14, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar permiso a rol"
+    }
+},
+{
+    "pk": 15, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar permiso de rol"
+    }
+},
+{
+    "pk": 16, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear tipo de atributo"
+    }
+},
+{
+    "pk": 17, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar tipo de atributo"
+    }
+},
+{
+    "pk": 18, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar tipo de atributo"
+    }
+},
+{
+    "pk": 19, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar tipo de atributo"
+    }
+},
+{
+    "pk": 20, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear proyecto"
+    }
+},
+{
+    "pk": 21, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar proyecto"
+    }
+},
+{
+    "pk": 22, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar proyecto"
+    }
+},
+{
+    "pk": 23, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar proyecto"
+    }
+},
+{
+    "pk": 24, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Iniciar proyecto"
+    }
+},
+{
+    "pk": 25, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar usuarios de proyecto"
+    }
+},
+{
+    "pk": 26, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar usuario a proyecto"
+    }
+},
+{
+    "pk": 27, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar usuario de proyecto"
+    }
+},
+{
+    "pk": 28, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar comite de proyecto"
+    }
+},
+{
+    "pk": 29, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar miembro a comite"
+    }
+},
+{
+    "pk": 30, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar miembro de comite"
+    }
+},
+{
+    "pk": 31, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar fases de proyecto"
+    }
+},
+{
+    "pk": 32, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar fase a proyecto"
+    }
+},
+{
+    "pk": 33, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar fase de proyecto"
+    }
+},
+{
+    "pk": 34, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar roles de proyecto"
+    }
+},
+{
+    "pk": 35, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar rol a proyecto"
+    }
+},
+{
+    "pk": 36, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar rol de proyecto"
+    }
+},
+{
+    "pk": 37, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear fase"
+    }
+},
+{
+    "pk": 38, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar fase"
+    }
+},
+{
+    "pk": 39, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar fase"
+    }
+},
+{
+    "pk": 40, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar fase"
+    }
+},
+{
+    "pk": 41, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar roles de fase"
+    }
+},
+{
+    "pk": 42, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar rol a fase"
+    }
+},
+{
+    "pk": 43, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar rol de fase"
+    }
+},
+{
+    "pk": 44, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar items de fase"
+    }
+},
+{
+    "pk": 45, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear item"
+    }
+},
+{
+    "pk": 46, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar item"
+    }
+},
+{
+    "pk": 47, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar item"
+    }
+},
+{
+    "pk": 48, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar item"
+    }
+},
+{
+    "pk": 49, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Calcular costo de proyecto"
+    }
+},
+{
+    "pk": 50, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Iniciar fase"
+    }
+},
+{
+    "pk": 51, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Finalizar fase"
+    }
+},
+{
+    "pk": 52, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear tipo de item"
+    }
+},
+{
+    "pk": 53, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Modificar tipo de item"
+    }
+},
+{
+    "pk": 54, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar tipos de atributo de tipo de item"
+    }
+},
+{
+    "pk": 55, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar tipo de atributo a tipo de item"
+    }
+},
+{
+    "pk": 56, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar tipo de atributo de tipo de item"
+    }
+},
+{
+    "pk": 58, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Eliminar tipo de item"
+    }
+},
+{
+    "pk": 59, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar tipo de item"
+    }
+},
+{
+    "pk": 60, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar tipos de item de fase"
+    }
+},
+{
+    "pk": 1, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee todos los permisos relacionados a los usuarios y los roles.", 
+        "nombre": "Administrador", 
+        "permisos": [
+            14, 
+            7, 
+            5, 
+            20, 
+            9, 
+            1, 
+            11, 
+            3, 
+            13, 
+            6, 
+            10, 
+            2, 
+            15, 
+            8, 
+            12, 
+            4
+        ]
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee todos los permisos relacionados a tipos de atributos, tipos de item, items, proyectos y fases.", 
+        "nombre": "Lider de proyecto", 
+        "permisos": [
+            32, 
+            29, 
+            42, 
+            35, 
+            55, 
+            26, 
+            49, 
+            5, 
+            37, 
+            45, 
+            16, 
+            52, 
+            39, 
+            48, 
+            22, 
+            18, 
+            58, 
+            51, 
+            28, 
+            31, 
+            44, 
+            41, 
+            34, 
+            54, 
+            60, 
+            25, 
+            50, 
+            24, 
+            38, 
+            46, 
+            21, 
+            17, 
+            53, 
+            33, 
+            30, 
+            43, 
+            36, 
+            56, 
+            27, 
+            40, 
+            47, 
+            23, 
+            19, 
+            59
+        ]
+    }
+},
+{
+    "pk": 3, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee todos los permisos de gesti\u00f3n de items.", 
+        "nombre": "Desarrollador", 
+        "permisos": [
+            5, 
+            45, 
+            48, 
+            44, 
+            46, 
+            47
+        ]
+    }
+},
+{
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "admin", 
+        "first_name": "", 
+        "last_name": "", 
+        "roles": [
+            1
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2014-05-07T06:02:09.501Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$u9UhE2ICdPeP$ihyjAOyaClNXAt6L2TAZqxDqJl59k30ZnFsJs2dDuQo=", 
+        "estado": 1, 
+        "email": "admin@sap.com", 
+        "date_joined": "2014-05-02T16:04:09.370Z"
+    }
+},
+{
+    "pk": 2, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "gustavo", 
+        "first_name": "Gustavo", 
+        "last_name": "Cabral", 
+        "roles": [], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-07T02:42:12.150Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$xP5EtVFCxgJZ$F53IGwFUrRMRFUDYdwQmi7xwz+GCGgQ5Wk16gnj8w7A=", 
+        "estado": 0, 
+        "email": "gustavo@sap.com", 
+        "date_joined": "2014-05-06T19:49:56.934Z"
+    }
+},
+{
+    "pk": 3, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "rodrigo", 
+        "first_name": "Rodrigo", 
+        "last_name": "Santos", 
+        "roles": [], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-07T01:54:16.980Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$0tls7L0w5UYv$p8WkVeYxRvAkQujDPVEku4A55+Hb4qS7YoqB/55Lzm0=", 
+        "estado": 0, 
+        "email": "rodrigo@sap.com", 
+        "date_joined": "2014-05-06T19:50:23.398Z"
+    }
+},
+{
+    "pk": 4, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "andres", 
+        "first_name": "Andres", 
+        "last_name": "Cabral", 
+        "roles": [], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-06T19:51:26.809Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$zMoCHpVyDF7b$6VfNgS2YXL7UL2vJxnhLxZb+uL+9PzR63BSla1QhoI4=", 
+        "estado": 0, 
+        "email": "andres@sap.com", 
+        "date_joined": "2014-05-06T19:51:26.809Z"
+    }
+},
+{
+    "pk": 5, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "gabriel", 
+        "first_name": "Gabriel", 
+        "last_name": "Santos", 
+        "roles": [], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-06T19:51:52.210Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$7RD4XdN3BAIW$BM+P2Rxz3d1+LI1SSq66lkaj5Y4BUaGH792/g3pPZS8=", 
+        "estado": 0, 
+        "email": "gabriel@sap.com", 
+        "date_joined": "2014-05-06T19:51:52.210Z"
+    }
+},
+{
+    "pk": 6, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "akira", 
+        "first_name": "Akira", 
+        "last_name": "Shimosoeda", 
+        "roles": [], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-06T19:54:14.947Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$iJQWUWRf19pz$HwHUyRgdIFgColcAxLQeX4yUFT2CniWhBBM0HDgYbpI=", 
+        "estado": 0, 
+        "email": "akira@sap.com", 
+        "date_joined": "2014-05-06T19:54:14.947Z"
+    }
+},
+{
+    "pk": 7, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "marcos", 
+        "first_name": "Marcos", 
+        "last_name": "Aquino", 
+        "roles": [], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-06T19:54:45.236Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$NrB88Oek4Yak$Z2PeNgT75iFq4vt8Pdst6e8NjFpp6ZXgrE7Hp7/VbmI=", 
+        "estado": 0, 
+        "email": "marcos@sap.com", 
+        "date_joined": "2014-05-06T19:54:45.236Z"
+    }
+},
+{
+    "pk": 8, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "alexis", 
+        "first_name": "Alexis", 
+        "last_name": "Ojeda", 
+        "roles": [], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-06T19:55:33.092Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$e2RGNNYpy3E9$LdiqwaH3+rGOyB0ghMoecSorCz8U3nxI1qUjFTi4hAk=", 
+        "estado": 0, 
+        "email": "alexis@sap.com", 
+        "date_joined": "2014-05-06T19:55:33.092Z"
+    }
+},
+{
+    "pk": 9, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "gerardo", 
+        "first_name": "Gerardo", 
+        "last_name": "Ramos", 
+        "roles": [], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-06T19:56:04.665Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$QSnQCFjeXmVJ$Qt3c8qS6VKGp96InPvHIrcYwJmPrhCmGvGFiGCeBLEo=", 
+        "estado": 0, 
+        "email": "gerardo@sap.com", 
+        "date_joined": "2014-05-06T19:56:04.665Z"
+    }
+},
+{
+    "pk": 10, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "saul", 
+        "first_name": "Saul", 
+        "last_name": "Zalimben", 
+        "roles": [], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-06T20:19:06.034Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$UlT7gpmhEjib$5v2QBCRWtBY0T3s+wLZ34E75og2Bk8+7yHCHKxo9hZo=", 
+        "estado": 0, 
+        "email": "saul@sap.com", 
+        "date_joined": "2014-05-06T20:19:06.034Z"
+    }
+}
+]
