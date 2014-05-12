@@ -75,7 +75,6 @@ class Item(models.Model):
         estado: estado actual del item.
         fase: fase en la que esta el item.
         tipo_item: tipo de item vinculado al item.
-        padre_raiz: es el item raiz de la relacion. Se utiliza para evitar ciclos relacionales.
         padre: es item padre/antecesor del item.
         tipo_relacion: indica que tipo de relacion tiene el item con el padre/antecesor (Hijo o Sucesor).
     """
@@ -139,7 +138,8 @@ class VersionItem(models.Model):
     estado = models.IntegerField(max_length=30, choices=Item.ESTADOS_ITEM, default=0)
     fase = models.ForeignKey(Fase, null=True, blank=True)
     tipo_item = models.ForeignKey(TipoItem, null=True, blank=True)
-    padre_raiz = models.IntegerField(null=True)
+    adan = models.IntegerField(null=True)
+    cain = models.IntegerField(null=True)
     padre = models.IntegerField(null=True)
     tipo_relacion = models.IntegerField(max_length=1, choices=Item.TIPOS_RELACION, null=True)
     fecha_version = models.DateTimeField(null=True)

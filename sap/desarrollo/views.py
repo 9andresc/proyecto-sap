@@ -1559,7 +1559,11 @@ def agregar_relacion_view(request, id_fase, id_item, id_proyecto):
     if request.method == "POST":
         eleccion_relacion = request.POST.get('eleccion_relacion')
         if eleccion_relacion == "0":
-            items_hijos = fase.items.filter(padre=None).exclude(id=id_item).exclude(id=item.padre_raiz)
+            items_hijos = fase.items.filter(padre=None).exclude(id=id_item)
+            if item.adan:
+                items_hijos = items_hijos.exclude(id=item.adan)
+            if item.cain:
+                items_hijos = items_hijos.exclude(id=item.cain)
             ctx = {'item':item, 'items_hijos':items_hijos, 'fase':fase, 'proyecto':proyecto, 'valido':valido}
             return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
         elif eleccion_relacion == "1":
@@ -1580,6 +1584,10 @@ def agregar_relacion_view(request, id_fase, id_item, id_proyecto):
                 return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
 
     items_hijos = fase.items.filter(padre=None).exclude(id=id_item)
+    if item.adan:
+        items_hijos = items_hijos.exclude(id=item.adan)
+    if item.cain:
+        items_hijos = items_hijos.exclude(id=item.cain)
     ctx = {'item':item, 'items_hijos':items_hijos, 'fase':fase, 'proyecto':proyecto, 'valido':valido}
     return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
 
@@ -1620,11 +1628,11 @@ def confirmacion_agregar_relacion_view(request, id_fase, id_item, id_relacion, i
             relacion.adan = item.adan
         else:
             relacion.adan = item.id
-        if item.adan == None and item.cain == None:
-            pass
-        else:
+            
+        if item.adan and item.cain == None:
+            relacion.adan = item.adan
             relacion.cain = item.id
-        if item.adan and item.cain:
+        elif item.adan and item.cain:
             relacion.cain = item.cain
             
         relacion.tipo_relacion = 0
@@ -1634,13 +1642,13 @@ def confirmacion_agregar_relacion_view(request, id_fase, id_item, id_relacion, i
             relacion.adan = item.adan
         else:
             relacion.adan = item.id
-        if item.adan == None and item.cain == None:
-            pass
-        else:
-            relacion.cain = item.id
-        if item.adan and item.cain:
-            relacion.cain = item.cain
             
+        if item.adan and item.cain == None:
+            relacion.adan = item.adan
+            relacion.cain = item.id
+        elif item.adan and item.cain:
+            relacion.cain = item.cain
+        
         relacion.tipo_relacion = 1
         relacion.save()
         
@@ -1686,9 +1694,30 @@ def quitar_relacion_view(request, id_fase, id_item, id_relacion, id_proyecto):
     relacion.padre = None
     relacion.tipo_relacion = None
     relacion.save()
-    items_nietos = Item.objects.filter(padre_raiz=item.id)
-    for i in items_nietos:
-        i.padre_raiz = relacion.id
-        i.save()
     
-    
+    relaciones = relacion.relaciones.all()
+    for r in relaciones:
+        r.adan = relacion.id
+        r.cain = None
+        r.save()
+        hijos = r.relaciones.all()
+        resultados = []
+        
+        while 1:
+            nuevas_relaciones = []
+            if len(hijos) == 0:
+                break
+            for h in hijos:
+                resultados.append(h)
+                if h.relaciones.count() > 0:
+                    for s in h.relaciones.all():
+                        nuevas_relaciones.append(s)
+            hijos = nuevas_relaciones
+        
+        for h in resultados:
+            h.adan = relacion.id
+            h.cain = r.id
+            h.save()
+            
+    ctx = {'item':item, 'relacion':relacion, 'fase':fase, 'proyecto':proyecto}
+    return render_to_response('item/quitar_relacion.html', ctx, context_instance=RequestContext(request))
