@@ -15,17 +15,19 @@
         		<table class="table table-hover">
             		<thead>
                 		<tr>
-                    		<th>ID</th>
+                    		<th>Secuencia</th>
                     		<th>Nombre de fase</th>
                     		<th>Estado</th>
                     		<th>Fecha de inicio</th>
+                    		<th></th>
+                    		<th></th>
                     		<th></th>
                     	</tr>
                     </thead>
                 	<tbody>
                 		{% for f in fases %}
                 			<tr>
-                    			<td>{{ f.id }}</td>
+                    			<td>{{ f.num_secuencia }}</td>
                     			<td>{{ f.nombre }}</td>
                     			<td>
                     			{% ifequal f.estado 0 %}
@@ -69,7 +71,7 @@
         								<li class="divider"></li>
         								{% endif %}
         								{% if iniciar_fase %}
-        								<li><a href="desarrollo/fases/iniciar_fase/{{ f.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-play"></span> Iniciar</a></li>
+        								<li><a href="/desarrollo/fases/iniciar_fase/{{ f.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-play"></span> Iniciar</a></li>
         								{% endif %}
         								{% if finalizar_fase %}
         								<li><a href="/desarrollo/fases/finalizar_fase/{{ f.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-stop"></span> Finalizar</a></li>
@@ -77,6 +79,12 @@
       								</ul>
     							</div>
     							{% endif %}
+                    			</td>
+                    			<td>
+                    				<a class="btn btn-default" href="/desarrollo/fases/subir_fase/{{ f.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-arrow-up black"></span> Subir</a>
+                    			</td>
+                    			<td>
+                    				<a class="btn btn-default" href="/desarrollo/fases/bajar_fase/{{ f.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-arrow-down black"></span> Bajar</a>
                     			</td>
                 			</tr>
                 		{% endfor %}

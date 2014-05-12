@@ -1,5 +1,4 @@
 from django.db import models
-from simple_history.models import HistoricalRecords
 from administracion.models import Rol, Proyecto, TipoAtributo
 
 ESTADOS_FASE = (
@@ -62,17 +61,6 @@ class TipoItem(models.Model):
     class Meta:
         ordering = ["nombre"]
 
-ESTADOS_ITEM = (
-    (0, "En construccion"),
-    (1, "Aprobado"),
-    (2, "Bloqueado"),
-    (3, "En revision"),
-    (4, "Eliminado"),
-)
-
-def content_file_name(instance, filename):
-    return '/'.join(['content', instance.nombre, filename])
-
 class Item(models.Model):
     """
     ::
@@ -82,29 +70,82 @@ class Item(models.Model):
 
         nombre: nombre del item.
         descripcion: una breve descripcion sobre el item.
-        costo: costo del item.
+        costo_*: costo del item.
         complejidad: complejidad respectiva del item.
         estado: estado actual del item.
-        archivos: historial del item..
         fase: fase en la que esta el item.
         tipo_item: tipo de item vinculado al item.
+        padre_raiz: es el item raiz de la relacion. Se utiliza para evitar ciclos relacionales.
+        padre: es item padre/antecesor del item.
+        tipo_relacion: indica que tipo de relacion tiene el item con el padre/antecesor (Hijo o Sucesor).
     """
+    ESTADOS_ITEM = (
+        (0, "En construccion"),
+        (1, "Aprobado"),
+        (2, "Bloqueado"),
+        (3, "En revision"),
+    )
+    TIPOS_RELACION = (
+        (0, "Hijo"),
+        (1, "Sucesor"),
+    )
+    
     nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=True)
-    costo = models.FloatField(null=True, blank=True, default=0)
+    costo_monetario = models.FloatField(null=True, blank=True, default=0)
+    costo_temporal = models.FloatField(null=True, blank=True, default=0)
     complejidad = models.IntegerField(null=True, blank=True, default=0)
-    estado = models.IntegerField(max_length=30, choices=ESTADOS_ITEM, default=0)
-    archivos = models.FileField(upload_to=content_file_name)
+    estado = models.IntegerField(max_length=1, choices=ESTADOS_ITEM, default=0)
     fase = models.ForeignKey(Fase, related_name="items", null=True, blank=True)
     tipo_item = models.ForeignKey(TipoItem, related_name="items", null=True, blank=True)
-    
-    history = HistoricalRecords()
+    adan = models.IntegerField(null=True)
+    cain = models.IntegerField(null=True)
+    padre = models.ForeignKey('desarrollo.Item', related_name="relaciones", null=True, blank=True)
+    tipo_relacion = models.IntegerField(max_length=1, choices=TIPOS_RELACION, null=True)
     
     def __unicode__(self):
         return self.nombre
     
     class Meta:
         ordering = ["nombre"]
+        
+class VersionItem(models.Model):
+    """
+    ::
+    
+        Clase que describe la estructura de cada instancia de una VersionItem, los atributos 
+        que posee una VersionItem son:
+
+        version: numero de serie de la version del item.
+        id_item: identificador del item.
+        nombre: nombre del item.
+        descripcion: una breve descripcion sobre el item.
+        costo_*: costo del item.
+        complejidad: complejidad respectiva del item.
+        estado: estado actual del item.
+        fase: fase en la que esta el item.
+        tipo_item: tipo de item vinculado al item.
+        padre: el padre (o antecesor) del item.
+        tipo_relacion: indica que clase de relacion se mantiene con el item padre o antecesor.
+        fecha_version: fecha de la creacion de la version.
+    """
+    version = models.FloatField(null=False, default=1.0)
+    id_item = models.IntegerField(null=False)
+    nombre = models.CharField(max_length=50, blank=False)
+    descripcion = models.TextField(blank=True)
+    costo_monetario = models.FloatField(null=True, blank=True, default=0)
+    costo_temporal = models.FloatField(null=True, blank=True, default=0)
+    complejidad = models.IntegerField(null=True, blank=True, default=0)
+    estado = models.IntegerField(max_length=30, choices=Item.ESTADOS_ITEM, default=0)
+    fase = models.ForeignKey(Fase, null=True, blank=True)
+    tipo_item = models.ForeignKey(TipoItem, null=True, blank=True)
+    padre_raiz = models.IntegerField(null=True)
+    padre = models.IntegerField(null=True)
+    tipo_relacion = models.IntegerField(max_length=1, choices=Item.TIPOS_RELACION, null=True)
+    fecha_version = models.DateTimeField(null=True)
+    
+    class Meta:
+        ordering = ["id_item", "version"]
         
 class ValorAtributo(models.Model):
     """
@@ -116,9 +157,9 @@ class ValorAtributo(models.Model):
         item: item al que va ligado.
         tipo_item:tipo de item al que va ligado.
         tipo_atributo: tipo de atributo al que va ligado.
-        valor_XXX: valor del tipo de atributo, que puede ser Fecha, Numerico, Logico o Texto.
+        valor_*: valor del tipo de atributo, que puede ser Fecha, Numerico, Logico, Texto grande o Texto chico.
     """
-    item = models.ForeignKey('desarrollo.Item', related_name="valores", null=True, blank=True)
+    item = models.ForeignKey(Item, related_name="valores", null=True, blank=True)
     tipo_item = models.ForeignKey(TipoItem, null=True, blank=True)
     tipo_atributo = models.ForeignKey(TipoAtributo, null=True, blank=True)
     valor_fecha = models.DateField(null=True)
