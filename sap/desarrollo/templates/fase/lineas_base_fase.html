@@ -39,7 +39,7 @@
 									{% endifequal %}
 	                    			</td>
 	                    			<td>
-	                    			{% if modificar_linea_base or eliminar_linea_base or visualizar_linea_base or gestionar_relaciones or aprobar_item %}
+	                    			{% if modificar_linea_base or eliminar_linea_base or visualizar_linea_base or gestionar_items or aprobar_item %}
 	                    			<div class="btn-group">
 	      								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
 	      								<ul class="dropdown-menu">
@@ -52,14 +52,11 @@
 	        								{% if visualizar_linea_base %}
 	        									<li><a href="/desarrollo/fases/lineas_base/linea_base/{{ l.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-search"></span> Visualizar</a></li>
 	      									{% endif %}
-	      									{% if aprobar_linea_base %}
-	        									<li><a href="/desarrollo/fases/items/aprobar_item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-certificate"></span> Aprobar</a></li>
-	      									{% endif %}
-	      									{% if gestionar_relaciones %}
+	      									{% if gestionar_items %}
 	      										<li class="divider"></li>
 	      									{% endif %}
-	      									{% if gestionar_relaciones %}
-	        									<li><a href="/desarrollo/fases/items/relaciones/item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-random"></span> Relaciones</a></li>
+	      									{% if gestionar_items %}
+	        									<li><a href="/desarrollo/lineas_base/items/linea_base/{{ l.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-cog"></span> Items</a></li>
 	      									{% endif %}
 	      								</ul>
 	    							</div>

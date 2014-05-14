@@ -1876,6 +1876,40 @@ def visualizar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
     return render_to_response('linea_base/visualizar_linea_base.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar items de linea base")
+@fase_miembro_proyecto()
+def items_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
+    """
+    ::
+    
+        La vista del listado de items por linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar items de linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario listar y conocer las opciones de los items de la linea base previamente seleccionada.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_linea_base: identificador de la linea base.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    item = Item.objects.filter(fase__id=id_fase)
+    linea_base = LineaBase.objects.filter(fase__id=id_proyecto)
+    ctx = {'fase':fase, 'proyecto':proyecto, 'item':item, 'linea_base':linea_base}
+    return render_to_response('linea_base/items_linea_base.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
 @permiso_requerido(permiso="Cerrar linea base")
 @fase_miembro_proyecto()
 def cerrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
