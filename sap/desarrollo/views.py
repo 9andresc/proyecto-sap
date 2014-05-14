@@ -1617,6 +1617,54 @@ def aprobar_item_view(request, id_fase, id_item, id_proyecto):
 
 @login_required(login_url='/login/')
 @fase_miembro_proyecto()
+def desaprobar_item_view(request, id_fase, id_item, id_proyecto):
+    """
+    ::
+    
+        La vista para desaprobar un item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Desaprobar item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+        Esta vista permite al usuario desaprobar un item, es decir, cambiar el estado del item a En construccion. Para lograr esto, el
+        item debe estar en estado Aprobado o Bloqueado.
+        La vista recibe los siguientes parametros:
+    
+            - request: contiene informacion sobre la sesion actual.
+            - id_item: el identificador del item.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    item = fase.items.get(id=id_item)
+    valido = False
+    if item.estado == 1 or item.estado == 2:
+        valido = True
+    if valido:
+        item.version = item.version + 1
+        item.estado = 0
+        item.save()
+        version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
+                                                  descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                  costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                  estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                                  adan=item.adan, cain=item.cain,
+                                                  tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
+        if item.padre:
+            version_item.padre = item.padre.id
+        version_item.save()
+    ctx = {'item':item, 'valido':valido, 'fase':fase, 'proyecto':proyecto}
+    return render_to_response('item/desaprobar_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@fase_miembro_proyecto()
 def revivir_item_view(request, id_fase, id_proyecto):
     """
     ::
@@ -2453,7 +2501,7 @@ def confirmacion_reversionar_item_view(request, id_fase, id_item, id_reversion, 
                                                       descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
                                                       costo_temporal=item.costo_temporal, complejidad=item.complejidad,
                                                       estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
-                                                      adan=item.None, cain=None, padre = None,
+                                                      adan=None, cain=None, padre = None,
                                                       tipo_relacion=None, fecha_version=datetime.datetime.now())
                 
             # Verificamos si existen items en el proyecto que son hijos/sucesores del item a reversionar.
