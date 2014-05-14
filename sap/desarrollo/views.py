@@ -1874,3 +1874,59 @@ def visualizar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
     linea_base = fase.lineas_base.get(id=id_linea_base)
     ctx = {'linea_base': linea_base, 'fase':fase, 'proyecto':proyecto}
     return render_to_response('linea_base/visualizar_linea_base.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Cerrar linea base")
+@fase_miembro_proyecto()
+def cerrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
+    """
+    ::
+    
+        La vista para visualizar una linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Visualizar linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+ Esta vista permite al usuario cerrar una linea base si se cumple con los siguientes requisitos:
+        
+            - Debe estar en estado Abierta.
+            - Debe poseer solo items en estado bloqueado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_linea_base: el identificador de la linea base.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    inicio_valido = True
+    estado_valido = True
+    roles_valido = True
+    tipos_item_valido = True
+    
+    if fase.estado != 0:
+        estado_valido = False
+        inicio_valido = False
+    if fase.tipos_item.count() == 0:
+        tipos_item_valido = False
+        inicio_valido = False
+    if fase.roles.count() == 0:
+        roles_valido = False
+        inicio_valido = False
+    
+    if inicio_valido:
+        fase.estado = 1
+        fase.save()
+        ctx = {'fase':fase, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'tipos_item_valido':tipos_item_valido, 'roles_valido':roles_valido, 'proyecto':proyecto}
+        return render_to_response('fase/iniciar_fase.html', ctx, context_instance=RequestContext(request))
+    else:
+        ctx = {'fase':fase, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'tipos_item_valido':tipos_item_valido, 'roles_valido':roles_valido, 'proyecto':proyecto}
+        return render_to_response('fase/iniciar_fase.html', ctx, context_instance=RequestContext(request))
