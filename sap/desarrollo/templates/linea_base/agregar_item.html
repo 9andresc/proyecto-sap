@@ -21,15 +21,14 @@
                 				<tr>
                     				<td>{{ i.id }}</td>
                     				<td>{{ i.nombre }}</td>
-                    				
-                    				<td><a class="btn btn-default" href="/desarrollo/fases/confirmacion_agregar_rol/{{ r.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
+                    				<td><a class="btn btn-default" href="/desarrollo/lineas_base/confirmacion_agregar_item/{{ i.id }}/linea_base/{{ linea_base.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
                 				</tr>
                 			{% endfor %}
                 		</tbody>
         			</table>
     			</div>
     		{% else %}
-    			<h3>La Fase {{ fase.nombre }} no posee items.</h3>
+    			<h3>La Fase {{ fase.nombre }} no posee items en estado Aprobado.</h3>
     		{% endif %}
     	{% else %}
     		<h1><small>Items</small></h1>

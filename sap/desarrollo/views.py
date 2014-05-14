@@ -1904,9 +1904,9 @@ def items_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
     """
     fase = Fase.objects.get(id=id_fase)
     proyecto = Proyecto.objects.get(id=id_proyecto)
-    item = Item.objects.filter(fase__id=id_fase)
+    items = Item.objects.filter(linea_base__id=id_linea_base)
     linea_base = fase.lineas_base.get(id=id_linea_base)
-    ctx = {'fase':fase, 'proyecto':proyecto, 'item':item, 'linea_base':linea_base}
+    ctx = {'fase':fase, 'proyecto':proyecto, 'items':items, 'linea_base':linea_base}
     return render_to_response('linea_base/items_linea_base.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1936,7 +1936,8 @@ def linea_base_agregar_item_view(request, id_fase, id_linea_base, id_proyecto):
     """
     fase = Fase.objects.get(id=id_fase)
     proyecto = fase.proyecto
-    items = fase.items.all()
+#    items = fase.items.all()
+    items = fase.items.filter(estado=1)
     linea_base = fase.lineas_base.get(id=id_linea_base)
     ctx = {'fase':fase, 'proyecto':proyecto, 'items':items, 'linea_base':linea_base}
     return render_to_response('linea_base/agregar_item.html', ctx, context_instance=RequestContext(request))
@@ -1944,7 +1945,7 @@ def linea_base_agregar_item_view(request, id_fase, id_linea_base, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar item a linea base")
 @fase_miembro_proyecto()
-def linea_base_confirmacion_agregar_item_view(request, id_fase, id_linea_base,id_item, id_proyecto):
+def linea_base_confirmacion_agregar_item_view(request, id_fase, id_linea_base, id_item, id_proyecto):
     """
     ::
     
@@ -1985,6 +1986,42 @@ def linea_base_confirmacion_agregar_item_view(request, id_fase, id_linea_base,id
     ctx = {'fase':fase, 'item':item, 'linea_base':linea_base, 'proyecto':proyecto, 'valido':valido}
     return render_to_response('linea_base/confirmacion_agregar_item.html', ctx, context_instance=RequestContext(request))  
 
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar item de linea base")
+@fase_miembro_proyecto()
+def linea_base_quitar_item_view(request, id_fase, id_item, id_linea_base, id_proyecto):
+    """
+    ::
+    
+        La vista para quitar un item de una linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quitar item de linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+        
+        Esta vista permite al usuario quitar un item seleccionado de la linea base seleccionada previamente.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_item: el identificador del item.
+            - id_linea_base: el identificador del linea base.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = fase.proyecto
+    linea_base = LineaBase.objects.get(id=id_linea_base)
+    item = Item.objects.get(id=id_item)
+    linea_base.items.remove(item)
+    linea_base.save()
+    ctx = {'fase':fase, 'item':item, 'linea_base':linea_base,  'proyecto':proyecto}
+    return render_to_response('linea_base/quitar_item.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Cerrar linea base")
