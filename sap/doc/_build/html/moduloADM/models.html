@@ -56,22 +56,6 @@
 </pre></div>
 </div>
 <span class="target" id="module-administracion.models"></span><dl class="class">
-<dt id="administracion.models.Fase">
-<em class="property">class </em><tt class="descclassname">administracion.models.</tt><tt class="descname">Fase</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/models.html#Fase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.models.Fase" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de una Fase, los atributos 
-que posee una fase son:
-
-nombre: nombre de la fase.
-descripcion: una breve descripcion sobre la fase.
-estado: estado actual de la fase.
-fecha de inicio: fecha de inicio de la fase.
-duracion: duracion de la fase.
-roles: roles asociados a la fase.
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="class">
 <dt id="administracion.models.Permiso">
 <em class="property">class </em><tt class="descclassname">administracion.models.</tt><tt class="descname">Permiso</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/models.html#Permiso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.models.Permiso" title="Permalink to this definition">¶</a></dt>
 <dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de un Permiso, los atributos 
@@ -126,33 +110,6 @@ nombre: nombre del tipo atributo.
 tipo de dato: el tipo de dato al que corresponde.
 descripcion: una breve descripcion del tipo atributo.
 valor: valor que posee el tipo atributo.
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="class">
-<dt id="administracion.models.TipoItem">
-<em class="property">class </em><tt class="descclassname">administracion.models.</tt><tt class="descname">TipoItem</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/models.html#TipoItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.models.TipoItem" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de un Tipo de item, los atributos 
-que posee un tipo de item son:
-
-nombre: nombre del tipo de item.
-descripcion: breve descripcion del tipo de item.
-tipos_atributo: tipos de atributo que posee el tipo de item.
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="class">
-<dt id="administracion.models.ValorAtributo">
-<em class="property">class </em><tt class="descclassname">administracion.models.</tt><tt class="descname">ValorAtributo</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/administracion/models.html#ValorAtributo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#administracion.models.ValorAtributo" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la relacion entre un tipo de atributo con un tipo de item y un item, los atributos 
-que posee son:
-
-item: item al que va ligado.
-tipo_item:tipo de item al que va ligado.
-tipo_atributo: tipo de atributo al que va ligado.
-valor_XXX: valor del tipo de atributo, que puede ser Fecha, Numerico, Logico o Texto.
 </pre></div>
 </div>
 </dd></dl>

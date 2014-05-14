@@ -61,6 +61,35 @@ class TipoItem(models.Model):
     class Meta:
         ordering = ["nombre"]
 
+class LineaBase(models.Model):
+    """
+    ::
+    
+        Clase que describe la estructura de cada instancia de una Linea Base, los atributos 
+        que posee una Linea Base son:
+
+        nombre: nombre de la linea base.
+        descripcion: una breve descripcion sobre la linea base.
+        num_secuencia: define el orden numerico de la linea base dentro de una fase.
+        estado: estado actual de la linea base
+    """
+    ESTADOS_LINEA_BASE = (
+        (0, "Abierta"),
+        (1, "Cerrada"),
+        (2, "En revision"),
+    )
+
+    nombre = models.CharField(max_length=50, blank=False)
+    descripcion = models.TextField(blank=True)
+    num_secuencia = models.IntegerField(max_length=30, null=True)
+    estado = models.IntegerField(max_length=1, choices=ESTADOS_LINEA_BASE, default=0)
+    
+    def __unicode__(self):
+        return self.nombre
+    
+    class Meta:
+        ordering = ["num_secuencia"]
+        
 class Item(models.Model):
     """
     ::
@@ -96,6 +125,7 @@ class Item(models.Model):
     complejidad = models.IntegerField(null=True, blank=True, default=0)
     estado = models.IntegerField(max_length=1, choices=ESTADOS_ITEM, default=0)
     fase = models.ForeignKey(Fase, related_name="items", null=True, blank=True)
+    linea_base = models.ForeignKey(LineaBase, related_name="items", null=True, blank=True)
     tipo_item = models.ForeignKey(TipoItem, related_name="items", null=True, blank=True)
     adan = models.IntegerField(null=True)
     cain = models.IntegerField(null=True)
@@ -167,3 +197,4 @@ class ValorAtributo(models.Model):
     valor_logico = models.BooleanField(default=True)
     valor_texto_grande = models.TextField(blank=True)
     valor_texto_chico = models.CharField(max_length=50, blank=True)
+    
