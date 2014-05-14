@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}SAP - Linea base {{ linea_base.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Detalles de la Linea base</small></h1>
+		
+		<div class="input-group">
+			<span class="input-group-addon"><b>Nombre</b></span>
+			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ linea_base.nombre }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Estado</b></span>
+			{% ifequal linea_base.estado 0 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="Abierta" disabled="disabled">
+			{% endifequal %}
+			{% ifequal linea_base.estado 1 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="Cerrada" disabled="disabled">
+			{% endifequal %}
+			{% ifequal linea_base.estado 2 %}
+				<input type="text" class="form-control" id="estado" name="estado" value="En Revisión" disabled="disabled">
+			{% endifequal %}
+		</div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" disabled="disabled">{{ linea_base.descripcion }}</textarea>
+        </div>
+        <br>
+		<a class="btn btn-default" href="/desarrollo/fases/lineas_base/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de lineas base de la fase {{ fase.nombre }}</a>
+	</div>
+</div>
+{% endblock %}

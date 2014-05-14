@@ -1842,3 +1842,35 @@ def crear_linea_base_view(request, id_fase, id_proyecto):
             return render_to_response('linea_base/crear_linea_base.html', ctx, context_instance=RequestContext(request))
     ctx = {'form':form, 'fase':fase, 'proyecto':proyecto}
     return render_to_response('linea_base/crear_linea_base.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar linea base")
+@fase_miembro_proyecto()
+def visualizar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
+    """
+    ::
+    
+        La vista para visualizar una linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Visualizar linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+        Esta vista permite al usuario visualizar todos los campos guardados de una linea base de la fase previamente seleccionada.
+        La vista recibe los siguientes parametros:
+    
+            - request: contiene informacion sobre la sesion actual.
+            - id_linea_base: el identificador de la linea base.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    linea_base = fase.lineas_base.get(id=id_linea_base)
+    ctx = {'linea_base': linea_base, 'fase':fase, 'proyecto':proyecto}
+    return render_to_response('linea_base/visualizar_linea_base.html', ctx, context_instance=RequestContext(request))
