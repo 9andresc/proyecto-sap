@@ -1331,10 +1331,14 @@ def modificar_item_view(request, id_fase, id_item, id_proyecto):
             generado en la vista, al template correspondiente.
             - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion del item modificado. 
     """
-    item = Item.objects.get(id=id_item)
-    fase = Fase.objects.get(id=id_fase)
     proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    item = fase.items.get(id=id_item)
     atributos = ValorAtributo.objects.filter(item__id=id_item)
+    valido = True
+    if item.estado == 1 or item.estado == 2 or item.estado == 4:
+        valido = False
+    
     form = ModificarItemForm()
     if request.method == "POST":
         form = ModificarItemForm(request.POST)
@@ -1373,8 +1377,11 @@ def modificar_item_view(request, id_fase, id_item, id_proyecto):
                             elif value=="0":
                                 a.valor_logico = False
                                 a.save()
-                        elif a.tipo_atributo.tipo_dato == 5:
-                            a.valor_archivo = value
+            for a in atributos:
+                for key, value in request.FILES.iteritems():
+                    if a.tipo_atributo.nombre == key:
+                        if a.tipo_atributo.tipo_dato == 5:
+                            a.valor_archivo = request.FILES[key]
                             a.save()
             
             if item.nombre != nombre or item.descripcion != descripcion or item.complejidad != complejidad or item.costo_monetario != costo_monetario or item.costo_temporal != costo_temporal:
@@ -1405,7 +1412,7 @@ def modificar_item_view(request, id_fase, id_item, id_proyecto):
             'costo_monetario': item.costo_monetario,
             'complejidad': item.complejidad,
             })
-    ctx = {'form':form, 'item':item, 'fase':fase, 'proyecto':proyecto, 'atributos':atributos, 'setting':settings}
+    ctx = {'form':form, 'item':item, 'fase':fase, 'proyecto':proyecto, 'atributos':atributos, 'setting':settings, "valido":valido}
     return render_to_response('item/modificar_item.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')

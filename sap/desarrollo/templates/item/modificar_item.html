@@ -3,164 +3,175 @@
 {% block content %}
 <div class="jumbotron">
 
-	<h1><small>Modificar item</small></h1>
-	<form class="form-horizontal" method="POST">
-		{% csrf_token %}
-		
-		<!-- Manejo de errores del formulario -->
-    	{% if form.errors %}
-    	<div class="panel panel-warning">
-    		<div class="panel-heading">
-    			<h3 class="panel-title">¡Alto ahí!</h3>
-            </div>
-            <div class="panel-body">
-            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
-            	<br>
-            	<ul class="list-unstyled">
-            		{% for field in form %}
-            			{% if field.errors %} 
-  							<li><b>{{ field.label }}</b></li>
-  								{% for error in field.errors %}
-    								<ul>
-      									<li>{{ error }}</li>
-    								</ul>
-    							{% endfor %}
-  							</li>
-  						{% endif %}
-  					{% endfor %}
-				</ul>
-            </div>
-        </div>
-        {% endif %}
-        <!-- Fin del manejo de errores del formulario -->
-        
-        <p class="text-muted">Campos obligatorios (*)</p>
-		<div class="input-group">
-			<span class="input-group-addon"><b>* Nombre</b></span>
-			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ item.nombre }}">
-        </div>
-        <br>
-        <div class="input-group">
-			<span class="input-group-addon"><b>Descripción</b></span>
-			<textarea rows="3" class="form-control" id="descripcion" name="descripcion">{{ item.descripcion }}</textarea>
-        </div>
-        <br>
-        <div class="input-group">
-			<span class="input-group-addon"><b>* Complejidad</b></span>
-			<input type="text" class="form-control" id="complejidad" name="complejidad" value="{{ item.complejidad }}">
-        </div>
-		<br>
-		<div class="input-group">
-			<span class="input-group-addon"><b>* Costo monetario</b></span>
-			<input type="text" class="form-control" id="costo_monetario" name="costo_monetario" value="{{ item.costo_monetario|stringformat:".3f" }}">
-        </div>
-        <br>
-		<div class="input-group">
-			<span class="input-group-addon"><b>* Costo temporal</b></span>
-			<input type="text" class="form-control" id="costo_temporal" name="costo_temporal" value="{{ item.costo_temporal|stringformat:".3f" }}">
-        </div>
-		<br>
-		
-		{% for a in atributos %}
-			{% if a.tipo_atributo.tipo_dato == 0 %}
-				{% if a.tipo_atributo.obligatorio == True %}
-					<div class="input-group">
-						<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
-						<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"."|add:a.tipo_atributo.num_precision|add:"f" }}" required="required">
-					</div>
-				{% else %}
-					<div class="input-group">
-						<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-						<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"."|add:a.tipo_atributo.num_precision|add:"f" }}">
-					</div>
-				{% endif %}
-			{% elif a.tipo_atributo.tipo_dato == 1 %}
-				{% if a.tipo_atributo.obligatorio == True %}
-					<div class="input-group">
-						<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
-						<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}" required="required">
-					</div>
-				{% else %}
-					<div class="input-group">
-						<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-						<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}">
-					</div>
-				{% endif %}
-			{% elif a.tipo_atributo.tipo_dato == 2 %}
-				{% if a.tipo_atributo.obligatorio == True %}
-					<div class="input-group">
-						<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
-						<textarea rows="3" class="form-control" maxlength="{{ a.tipo_atributo.textg_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" required>{{ a.valor_texto_grande }}</textarea>
-					</div>
-				{% else %}
-					<div class="input-group">
-						<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-						<textarea rows="3" class="form-control" maxlength="{{ a.tipo_atributo.textg_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">{{ a.valor_texto_grande }}</textarea>
-					</div>
-				{% endif %}
-			{% elif a.tipo_atributo.tipo_dato == 3 %}
-				{% if a.tipo_atributo.obligatorio == True %}
-					<div class="input-group">
-						<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
-						<input type="text" class="form-control" maxlength="{{ a.tipo_atributo.textch_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_texto_chico }}" required="required">
-					</div>
-				{% else %}
-					<div class="input-group">
-						<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-						<input type="text" class="form-control" maxlength="{{ a.tipo_atributo.textch_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_texto_chico }}">
-					</div>
-				{% endif %}
-			{% elif a.tipo_atributo.tipo_dato == 4 %}
-				<div class="input-group">
-					<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-					<select class="form-control" id="{{ a.atributo.nombre }}" name="{{ a.atributo.nombre }}">
-		            	{% if a.logico == True %}
-		                	<option value="1" selected="selected">Sí</option>
-		                 	<option value="0">No</option>
-		             	{% elif a.logico == False %}
-		                  	<option value="1">Sí</option>
-		                  	<option value="0" selected="selected">No</option>
-		              	{% endif %}
-	             	</select>
-	             </div>
-	     	{% else %}
-	            {% if a.tipo_atributo.obligatorio == True %}
-	            	{% if a.valor_archivo %}
-	            		<div class="input-group">
-	            			<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
-	            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" required="required">
-						</div>
-						<br>
-						<a class="btn btn-info" href="{{ setting.MEDIA_URL }}items/{{ a.valor_archivo }}">Archivo</a>
-						<br>
-					{% else %}
+	{% if valido %}
+		<h1><small>Modificar item</small></h1>
+		<form class="form-horizontal" method="POST" enctype="multipart/form-data">
+			{% csrf_token %}
+			
+			<!-- Manejo de errores del formulario -->
+	    	{% if form.errors %}
+	    	<div class="panel panel-warning">
+	    		<div class="panel-heading">
+	    			<h3 class="panel-title">¡Alto ahí!</h3>
+	            </div>
+	            <div class="panel-body">
+	            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
+	            	<br>
+	            	<ul class="list-unstyled">
+	            		{% for field in form %}
+	            			{% if field.errors %} 
+	  							<li><b>{{ field.label }}</b></li>
+	  								{% for error in field.errors %}
+	    								<ul>
+	      									<li>{{ error }}</li>
+	    								</ul>
+	    							{% endfor %}
+	  							</li>
+	  						{% endif %}
+	  					{% endfor %}
+					</ul>
+	            </div>
+	        </div>
+	        {% endif %}
+	        <!-- Fin del manejo de errores del formulario -->
+	        
+	        <p class="text-muted">Campos obligatorios (*)</p>
+			<div class="input-group">
+				<span class="input-group-addon"><b>* Nombre</b></span>
+				<input type="text" class="form-control" id="nombre" name="nombre" value="{{ item.nombre }}">
+	        </div>
+	        <br>
+	        <div class="input-group">
+				<span class="input-group-addon"><b>Descripción</b></span>
+				<textarea rows="3" class="form-control" id="descripcion" name="descripcion">{{ item.descripcion }}</textarea>
+	        </div>
+	        <br>
+	        <div class="input-group">
+				<span class="input-group-addon"><b>* Complejidad</b></span>
+				<input type="text" class="form-control" id="complejidad" name="complejidad" value="{{ item.complejidad }}">
+	        </div>
+			<br>
+			<div class="input-group">
+				<span class="input-group-addon"><b>* Costo monetario</b></span>
+				<input type="text" class="form-control" id="costo_monetario" name="costo_monetario" value="{{ item.costo_monetario|stringformat:".3f" }}">
+	        </div>
+	        <br>
+			<div class="input-group">
+				<span class="input-group-addon"><b>* Costo temporal</b></span>
+				<input type="text" class="form-control" id="costo_temporal" name="costo_temporal" value="{{ item.costo_temporal|stringformat:".3f" }}">
+	        </div>
+			<br>
+			
+			{% for a in atributos %}
+				{% if a.tipo_atributo.tipo_dato == 0 %}
+					{% if a.tipo_atributo.obligatorio == True %}
 						<div class="input-group">
 							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
-	            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" required="required">
+							<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"."|add:a.tipo_atributo.num_precision|add:"f" }}" required="required">
 						</div>
-					{% endif %}
-				{% else %}
-					{% if a.valor_archivo %}
-	            		<div class="input-group">
-	            			<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-	            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">
-						</div>
-						<br>
-						<a class="btn btn-info" href="{{ setting.MEDIA_URL }}items/{{ a.valor_archivo }}">Archivo</a>
-						<br>
 					{% else %}
 						<div class="input-group">
 							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-	            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">
+							<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"."|add:a.tipo_atributo.num_precision|add:"f" }}">
 						</div>
 					{% endif %}
+				{% elif a.tipo_atributo.tipo_dato == 1 %}
+					{% if a.tipo_atributo.obligatorio == True %}
+						<div class="input-group">
+							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+							<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}" required="required">
+						</div>
+					{% else %}
+						<div class="input-group">
+							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+							<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}">
+						</div>
+					{% endif %}
+				{% elif a.tipo_atributo.tipo_dato == 2 %}
+					{% if a.tipo_atributo.obligatorio == True %}
+						<div class="input-group">
+							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+							<textarea rows="3" class="form-control" maxlength="{{ a.tipo_atributo.textg_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" required>{{ a.valor_texto_grande }}</textarea>
+						</div>
+					{% else %}
+						<div class="input-group">
+							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+							<textarea rows="3" class="form-control" maxlength="{{ a.tipo_atributo.textg_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">{{ a.valor_texto_grande }}</textarea>
+						</div>
+					{% endif %}
+				{% elif a.tipo_atributo.tipo_dato == 3 %}
+					{% if a.tipo_atributo.obligatorio == True %}
+						<div class="input-group">
+							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+							<input type="text" class="form-control" maxlength="{{ a.tipo_atributo.textch_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_texto_chico }}" required="required">
+						</div>
+					{% else %}
+						<div class="input-group">
+							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+							<input type="text" class="form-control" maxlength="{{ a.tipo_atributo.textch_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_texto_chico }}">
+						</div>
+					{% endif %}
+				{% elif a.tipo_atributo.tipo_dato == 4 %}
+					<div class="input-group">
+						<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+						<select class="form-control" id="{{ a.atributo.nombre }}" name="{{ a.atributo.nombre }}">
+			            	{% if a.logico == True %}
+			                	<option value="1" selected="selected">Sí</option>
+			                 	<option value="0">No</option>
+			             	{% elif a.logico == False %}
+			                  	<option value="1">Sí</option>
+			                  	<option value="0" selected="selected">No</option>
+			              	{% endif %}
+		             	</select>
+		             </div>
+		     	{% else %}
+		            {% if a.tipo_atributo.obligatorio == True %}
+		            	{% if a.valor_archivo %}
+		            		<div class="input-group">
+		            			<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+		            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" required="required">
+							</div>
+							<br>
+							<a class="btn btn-info" href="{{ setting.MEDIA_URL }}{{ a.valor_archivo }}">Archivo</a>
+							<br>
+						{% else %}
+							<div class="input-group">
+								<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+		            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" required="required">
+							</div>
+						{% endif %}
+					{% else %}
+						{% if a.valor_archivo %}
+		            		<div class="input-group">
+		            			<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+		            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">
+							</div>
+							<br>
+							<a class="btn btn-info" href="{{ setting.MEDIA_URL }}{{ a.valor_archivo }}">Archivo</a>
+							<br>
+						{% else %}
+							<div class="input-group">
+								<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+		            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">
+							</div>
+						{% endif %}
+					{% endif %}
 				{% endif %}
-			{% endif %}
-			<br>
-		{% endfor %}
-		
-    	<button type="submit" class="btn btn-success">Modificar</button>
-	</form>
+				<br>
+			{% endfor %}
+			
+	    	<button type="submit" class="btn btn-success">Modificar</button>
+		</form>
+	{% else %}
+		<div class="panel panel-warning">
+      		<div class="panel-heading">
+        		<h3 class="panel-title">¡Alto ahí!</h3>
+      		</div>
+      		<div class="panel-body">
+        		El item <i>{{ item.nombre }}</i> se encuentra en uno de los siguientes estados: <b>Aprobado</b>, <b>Bloqueado</b> o <b>Eliminado</b>. Por lo tanto, no puede ser modificado.
+      		</div>
+      	</div>	
+	{% endif %}
 	<br>
 	<a class="btn btn-default" href="/desarrollo/fases/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
 </div>

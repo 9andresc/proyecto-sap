@@ -79,7 +79,7 @@
 					{% endifequal %}
 	            {% else %}
 	            	<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-	            	<a class="form-control" href="{{ setting.MEDIA_URL }}items/{{ a.valor_archivo }}">Archivo</a>
+	            	<a class="form-control" href="{{ setting.MEDIA_URL }}{{ a.valor_archivo }}">Archivo</a>
 				{% endif %}
 			</div>
 			<br>
