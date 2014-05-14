@@ -404,7 +404,7 @@ def subir_fase_view(request, id_fase, id_proyecto):
                         break
     if fase.num_secuencia > 1:
         fase_superior = proyecto.fases.get(num_secuencia=(fase.num_secuencia - 1))
-        if fase_superior.estado == 1:
+        if fase_superior.estado == 2:
             fs_estado_valido = False
         if fase_superior.items.count() > 0:
             items = fase_superior.items.all()
@@ -427,9 +427,9 @@ def subir_fase_view(request, id_fase, id_proyecto):
         fase_superior.num_secuencia = fase_superior.num_secuencia + 1
         fase_superior.save()
         proyecto.save()
+        
         return HttpResponseRedirect('/desarrollo/fases/proyecto/%s'%id_proyecto)
     else:
-        subir_valido = False
         return HttpResponseRedirect('/desarrollo/fases/proyecto/%s'%id_proyecto)
     
 @login_required(login_url='/login/')
@@ -463,7 +463,6 @@ def bajar_fase_view(request, id_fase, id_proyecto):
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fase = proyecto.fases.get(id=id_fase)
-    bajar_valido = True
     secuencia_valida = True
     f_estado_valido = True
     fi_estado_valido = True
@@ -487,7 +486,7 @@ def bajar_fase_view(request, id_fase, id_proyecto):
                         break
     if fase.num_secuencia < proyecto.fases.count():
         fase_inferior = proyecto.fases.get(num_secuencia=(fase.num_secuencia + 1))
-        if fase_inferior.estado == 1:
+        if fase_inferior.estado == 2:
             fi_estado_valido = False
         if fase_inferior.items.count() > 0:
             items = fase_inferior.items.all()
@@ -510,7 +509,6 @@ def bajar_fase_view(request, id_fase, id_proyecto):
         proyecto.save()
         return HttpResponseRedirect('/desarrollo/fases/proyecto/%s'%id_proyecto)
     else:
-        bajar_valido = False
         return HttpResponseRedirect('/desarrollo/fases/proyecto/%s'%id_proyecto)
     
 @login_required(login_url='/login/')
@@ -1185,6 +1183,7 @@ def items_fase_view(request, id_fase, id_proyecto):
     visualizar_item = False
     gestionar_relaciones = False
     aprobar_item = False
+    gestionar_versiones = False
     roles = request.user.roles.all()
     for r in roles:
         for p in r.permisos.all():
@@ -1200,10 +1199,12 @@ def items_fase_view(request, id_fase, id_proyecto):
                 gestionar_relaciones = True
             elif p.nombre == 'Aprobar item':
                 aprobar_item = True
+            elif p.nombre == 'Gestionar versiones de item':
+                gestionar_versiones = True
                 
-            if crear_item and modificar_item and eliminar_item and visualizar_item and gestionar_relaciones and aprobar_item:
+            if crear_item and modificar_item and eliminar_item and visualizar_item and gestionar_relaciones and aprobar_item and gestionar_versiones:
                 break
-        if crear_item and modificar_item and eliminar_item and visualizar_item and gestionar_relaciones and aprobar_item:
+        if crear_item and modificar_item and eliminar_item and visualizar_item and gestionar_relaciones and aprobar_item and gestionar_versiones:
             break
     
     proyecto = Proyecto.objects.get(id=id_proyecto)
@@ -1212,7 +1213,7 @@ def items_fase_view(request, id_fase, id_proyecto):
     if fase.estado == 0:
         valido = False
     items = fase.items.all()
-    ctx = {'valido':valido, 'proyecto':proyecto, 'fase':fase, 'items':items, 'crear_item':crear_item, 'modificar_item':modificar_item, 'eliminar_item':eliminar_item, 'visualizar_item':visualizar_item, 'gestionar_relaciones':gestionar_relaciones, 'aprobar_item':aprobar_item}
+    ctx = {'valido':valido, 'proyecto':proyecto, 'fase':fase, 'items':items, 'crear_item':crear_item, 'modificar_item':modificar_item, 'eliminar_item':eliminar_item, 'visualizar_item':visualizar_item, 'gestionar_relaciones':gestionar_relaciones, 'aprobar_item':aprobar_item, 'gestionar_versiones':gestionar_versiones}
     return render_to_response('fase/items_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -2119,3 +2120,403 @@ def quitar_relacion_view(request, id_fase, id_item, id_relacion, id_proyecto):
             
     ctx = {'item':item, 'relacion':relacion, 'fase':fase, 'proyecto':proyecto}
     return render_to_response('item/quitar_relacion.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar versiones de item")
+@fase_miembro_proyecto()
+def versiones_item_view(request, id_fase, id_item, id_proyecto):
+    """
+    ::
+    
+        La vista del listado de versiones por item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar versiones de item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario listar las versiones de un item previamente seleccionado. Por cada item en la tabla de 
+        versiones, se podra reversionar uno eligido.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_item: el identificador del item.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    item = fase.items.get(id=id_item)
+    versiones = VersionItem.objects.filter(id_item=id_item).exclude(estado=4).exclude(version=item.version)
+    ctx = {'item':item, 'versiones':versiones, 'fase':fase, 'proyecto':proyecto}
+    return render_to_response('item/versiones_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Reversionar item")
+@fase_miembro_proyecto()
+def confirmacion_reversionar_item_view(request, id_fase, id_item, id_reversion, id_proyecto):
+    """
+    ::
+    
+        La vista de la confirmacion de reversionado de un item previamente seleccionado. Para acceder a esta vista se deben cumplir los 
+        siguientes requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Reversionar item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+        
+        Esta funcionalidad se encarga de realizar el reversionado de item. Se verifica si el item a reversionar no provoca inconsistencias en el 
+        grafo de relaciones del proyecto.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_item: el identificador del item.
+            - id_fase: el identificador del la fase.
+            - id_reversion: el identificador del item reversionado.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    item = fase.items.get(id=id_item)
+    item_reversion = VersionItem.objects.get(id=id_reversion)
+    estado_valido = True
+    fase_valida = True
+    
+    if item.estado == 1 or item.estado == 2 or item.estado == 4:
+        estado_valido = False
+    if fase.estado == 2:
+        fase_valida = False
+    
+    # Si el estado del item a reemplazar con la reversion no esta Aprobado ni Bloqueado y el estado de la fase no es Finalizado.
+    if estado_valido and fase_valida:
+        existe_padre = True
+        estado_padre_valido = True
+        try:
+            item_padre = Item.objects.get(id=item_reversion.padre)
+            if item_padre.fase.id != item_reversion.fase.id:
+                if item_padre.estado != 2:
+                    estado_padre_valido = False
+            else:
+                if item_padre.estado != 1 or item_padre.estado != 2:
+                    estado_padre_valido = False
+        except Item.DoesNotExist:
+            existe_padre = False
+            
+        # Si el padre del item a reversionar existe.
+        if existe_padre:
+            # Si el estado del padre (del item a reversionar) es Aprobado o Bloqueado.
+            if estado_padre_valido:
+                item.nombre = item_reversion.nombre
+                item.version = item_reversion.version
+                item.estado = item_reversion.estado
+                item.descripcion = item_reversion.descripcion
+                item.costo_monetario = item_reversion.costo_monetario
+                item.costo_temporal = item_reversion.costo_temporal
+                item.complejidad = item_reversion.complejidad
+                item.fase = item_reversion.fase
+                item.tipo_item = item_reversion.tipo_item
+                
+                # Verificamos si el padre y el item a reversionar pertenecen a la misma fase.
+                if item_padre.fase == item.fase:
+                    item.tipo_relacion = 0
+                else:
+                    item.tipo_relacion = 1
+                
+                # Si el padre del item a reversionar es adan.
+                if item_padre.adan == None:
+                    item.adan = item_padre.adan
+                    item.cain = None
+                    item.padre = item_padre
+                    item.save()
+                    
+                    # Version del item guardada.
+                    version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
+                                                           descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                           costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                           estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                                           adan=item.adan, cain=item.cain,
+                                                           tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
+                    if item.padre:
+                        version_item.padre = item.padre.id
+                    version_item.save()
+                    
+                    # Verificamos si existen items en el proyecto que son hijos del item a reversionar.
+                    relaciones = Item.objects.filter(padre=item)
+                    # Si existe al menos uno, se cargaran todos los hijos/sucesores en la lista resultados.
+                    if relaciones:
+                        resultados = []
+                        
+                        while 1:
+                            nuevas_relaciones = []
+                            if len(relaciones) == 0:
+                                break
+                            for r in relaciones:
+                                resultados.append(r)
+                                if r.relaciones.count() > 0:
+                                    for h in r.relaciones.all():
+                                        nuevas_relaciones.append(h)
+                            relaciones = nuevas_relaciones
+                        
+                        # Por cada hijo/sucesor se modificaran sus campos de gestion de cosistencia del grafo.
+                        for r in resultados:
+                            r.adan = item_padre.id
+                            r.cain = item.id
+                            r.version = r.version + 1
+                            r.save()
+                            
+                            version_r = VersionItem.objects.create(version=r.version, id_item=r.id, nombre=r.nombre, 
+                                                                   descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
+                                                                   costo_temporal=r.costo_temporal, complejidad=r.complejidad,
+                                                                   estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
+                                                                   adan=r.adan, cain=r.cain,
+                                                                   tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
+                            if r.padre:
+                                version_r.padre = r.padre.id
+                            version_r.save()
+                    
+                    ctx = {"item_reversion":item_reversion, "item":item, "fase":fase, "proyecto":proyecto, "existe_padre":existe_padre, "estado_padre_valido":estado_padre_valido, "estado_valido":estado_valido, "fase_valida":fase_valida}
+                    return render_to_response('item/confirmacion_reversionar_item.html', ctx, context_instance=RequestContext(request))
+                # Fin--> Si el padre del item a reversionar es adan.
+                # Si el padre del item a reversionar no es adan.
+                elif item_padre.adan:
+                    item.adan = item_padre.adan
+                    item.cain = item_padre.id
+                    item.padre = item_padre
+                    item.save()
+                    
+                    # Version del item guardada.
+                    version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
+                                                              descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                              costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                              estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                                              adan=item.adan, cain=item.cain,
+                                                              tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
+                    if item.padre:
+                        version_item.padre = item.padre.id
+                    version_item.save()
+                    
+                    # Verificamos si existen items en el proyecto que son hijos del item a reversionar.
+                    relaciones = Item.objects.filter(padre=item)
+                    # Si existe al menos uno, se cargaran todos los hijos/sucesores en la lista resultados.
+                    if relaciones:
+                        resultados = []
+                        
+                        while 1:
+                            nuevas_relaciones = []
+                            if len(relaciones) == 0:
+                                break
+                            for r in relaciones:
+                                resultados.append(r)
+                                if r.relaciones.count() > 0:
+                                    for h in r.relaciones.all():
+                                        nuevas_relaciones.append(h)
+                            relaciones = nuevas_relaciones
+                        
+                        # Por cada hijo/sucesor se modificaran sus campos de gestion de cosistencia del grafo.
+                        for r in resultados:
+                            r.adan = item_padre.id
+                            r.cain = item.id
+                            r.version = r.version + 1
+                            r.save()
+                            
+                            version_r = VersionItem.objects.create(version=r.version, id_item=r.id, nombre=r.nombre, 
+                                                                   descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
+                                                                   costo_temporal=r.costo_temporal, complejidad=r.complejidad,
+                                                                   estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
+                                                                   adan=r.adan, cain=r.cain,
+                                                                   tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
+                            if r.padre:
+                                version_r.padre = r.padre.id
+                            version_r.save()
+                
+                ctx = {"item_reversion":item_reversion, "item":item, "fase":fase, "proyecto":proyecto, "existe_padre":existe_padre, "estado_padre_valido":estado_padre_valido, "estado_valido":estado_valido, "fase_valida":fase_valida}
+                return render_to_response('item/confirmacion_reversionar_item.html', ctx, context_instance=RequestContext(request))
+                # Fin--> Si el padre del item a reversionar no es adan.
+                    
+            # Fin--> Si el estado del padre (del item a reversionar) es Aprobado o Bloqueado.
+            # Si el estado del padre (del item a reversionar) no es Aprobado ni Bloqueado.            
+            else:
+                # El item reversionado sera adan de sus hijos/sucesores.
+                item.nombre = item_reversion.nombre
+                item.version = item.version + 1
+                item.estado = item_reversion.estado
+                item.descripcion = item_reversion.descripcion
+                item.costo_monetario = item_reversion.costo_monetario
+                item.costo_temporal = item_reversion.costo_temporal
+                item.complejidad = item_reversion.complejidad
+                item.fase = item_reversion.fase
+                item.tipo_item = item_reversion.tipo_item
+                item.padre = None
+                item.adan = None
+                item.cain = None
+                item.tipo_relacion = None
+                item.save()
+                
+                # Version del item guardada.
+                version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
+                                                          descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                          costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                          estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                                          adan=item.None, cain=None, padre = None,
+                                                          tipo_relacion=None, fecha_version=datetime.datetime.now())
+                
+                # Verificamos si existen items en el proyecto que son hijos/sucesores del item a reversionar.
+                relaciones = Item.objects.filter(padre=item)
+                # Si existe al menos uno, se modificaran los campos de gestion de consistencia del grafo de los 
+                # hijos/sucesores directos del item a revivir.
+                for r in relaciones:
+                    r.adan = item.id
+                    r.cain = None
+                    r.padre = item
+                    r.version = r.version + 1
+                    r.save()
+                    
+                    version_r = VersionItem.objects.create(version=r.version, id_item=r.id, nombre=r.nombre, 
+                                                           descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
+                                                           costo_temporal=r.costo_temporal, complejidad=r.complejidad,
+                                                           estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
+                                                           adan=r.adan, cain=r.cain,
+                                                           tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
+                    if r.padre:
+                        version_r.padre = r.padre.id
+                    version_r.save()
+        
+                    # Verificamos si existen items en el proyecto que son hijos/sucesores de los hijos/sucesores directos del 
+                    # item a reversionar.
+                    hijos = r.relaciones.all()
+                    # Cargamos en la lista resultados los hijos/sucesores de cada hijo/sucesor directo del item a reversionar.
+                    resultados = []
+                    while 1:
+                        nuevas_relaciones = []
+                        if len(hijos) == 0:
+                            break
+                        for h in hijos:
+                            resultados.append(h)
+                            if h.relaciones.count() > 0:
+                                for s in h.relaciones.all():
+                                    nuevas_relaciones.append(s)
+                        hijos = nuevas_relaciones
+                        
+                    # Por cada hijo/sucesor de los hijos/sucesores directos del item a revivir, se modificaran sus campos 
+                    # de gestion de cosistencia del grafo.
+                    for rs in resultados:
+                        rs.adan = r.adan
+                        rs.cain = r.id
+                        rs.version = rs.version + 1
+                        rs.save()
+                            
+                        version_rs = VersionItem.objects.create(version=rs.version, id_item=rs.id, nombre=rs.nombre, 
+                                                               descripcion=rs.descripcion, costo_monetario=rs.costo_monetario, 
+                                                               costo_temporal=rs.costo_temporal, complejidad=rs.complejidad,
+                                                               estado=rs.estado, fase=rs.fase, tipo_item=rs.tipo_item,
+                                                               adan=rs.adan, cain=rs.cain,
+                                                               tipo_relacion=rs.tipo_relacion, fecha_version=datetime.datetime.now())
+                        if rs.padre:
+                            version_rs.padre = rs.padre.id
+                        version_rs.save()
+            
+            ctx = {"item_reversion":item_reversion, "item":item, "fase":fase, "proyecto":proyecto, "existe_padre":existe_padre, "estado_padre_valido":estado_padre_valido, "estado_valido":estado_valido, "fase_valida":fase_valida}
+            return render_to_response('item/confirmacion_reversionar_item.html', ctx, context_instance=RequestContext(request))
+            # Fin--> Si el estado del padre (del item a reversionar) no es Aprobado ni Bloqueado.
+        # Fin--> Si el padre del item a reversionar existe.
+        # Si el padre del item a reversionar no existe.
+        else:
+            # El item reversionado sera adan de sus hijos/sucesores.
+            item.nombre = item_reversion.nombre
+            item.version = item.version + 1
+            item.estado = item_reversion.estado
+            item.descripcion = item_reversion.descripcion
+            item.costo_monetario = item_reversion.costo_monetario
+            item.costo_temporal = item_reversion.costo_temporal
+            item.complejidad = item_reversion.complejidad
+            item.fase = item_reversion.fase
+            item.tipo_item = item_reversion.tipo_item
+            item.padre = None
+            item.adan = None
+            item.cain = None
+            item.tipo_relacion = None
+            item.save()
+                
+            # Version del item guardada.
+            version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
+                                                      descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                      costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                      estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                                      adan=item.None, cain=None, padre = None,
+                                                      tipo_relacion=None, fecha_version=datetime.datetime.now())
+                
+            # Verificamos si existen items en el proyecto que son hijos/sucesores del item a reversionar.
+            relaciones = Item.objects.filter(padre=item)
+            # Si existe al menos uno, se modificaran los campos de gestion de consistencia del grafo de los 
+            # hijos/sucesores directos del item a revivir.
+            for r in relaciones:
+                r.adan = item.id
+                r.cain = None
+                r.padre = item
+                r.version = r.version + 1
+                r.save()
+                    
+                version_r = VersionItem.objects.create(version=r.version, id_item=r.id, nombre=r.nombre, 
+                                                       descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
+                                                       costo_temporal=r.costo_temporal, complejidad=r.complejidad,
+                                                       estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
+                                                       adan=r.adan, cain=r.cain,
+                                                       tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
+                if r.padre:
+                    version_r.padre = r.padre.id
+                version_r.save()
+        
+                # Verificamos si existen items en el proyecto que son hijos/sucesores de los hijos/sucesores directos del 
+                # item a reversionar.
+                hijos = r.relaciones.all()
+                # Cargamos en la lista resultados los hijos/sucesores de cada hijo/sucesor directo del item a reversionar.
+                resultados = []
+                while 1:
+                    nuevas_relaciones = []
+                    if len(hijos) == 0:
+                        break
+                    for h in hijos:
+                        resultados.append(h)
+                        if h.relaciones.count() > 0:
+                            for s in h.relaciones.all():
+                                nuevas_relaciones.append(s)
+                    hijos = nuevas_relaciones
+                        
+                # Por cada hijo/sucesor de los hijos/sucesores directos del item a revivir, se modificaran sus campos 
+                # de gestion de cosistencia del grafo.
+                for rs in resultados:
+                    rs.adan = r.adan
+                    rs.cain = r.id
+                    rs.version = rs.version + 1
+                    rs.save()
+                            
+                    version_rs = VersionItem.objects.create(version=rs.version, id_item=rs.id, nombre=rs.nombre, 
+                                                            descripcion=rs.descripcion, costo_monetario=rs.costo_monetario, 
+                                                            costo_temporal=rs.costo_temporal, complejidad=rs.complejidad,
+                                                            estado=rs.estado, fase=rs.fase, tipo_item=rs.tipo_item,
+                                                            adan=rs.adan, cain=rs.cain,
+                                                            tipo_relacion=rs.tipo_relacion, fecha_version=datetime.datetime.now())
+                    if rs.padre:
+                        version_rs.padre = rs.padre.id
+                    version_rs.save()
+        
+        ctx = {"item_reversion":item_reversion, "item":item, "fase":fase, "proyecto":proyecto, "existe_padre":existe_padre, "estado_valido":estado_valido, "fase_valida":fase_valida}
+        return render_to_response('item/confirmacion_reversionar_item.html', ctx, context_instance=RequestContext(request))
+        # Fin--> Si el padre del item a reversionar no existe.
+    # Fin--> Si el estado del item a reemplazar con la reversion no es Aprobado ni Bloqueado y el estado de la fase no es Finalizado.
+    # Si el estado (del item a reemplazar con la reversion) es Aprobado o Bloqueado, o el estado de la fase es Finalizado.
+    else:
+        ctx = {"item_reversion":item_reversion, "item":item, "fase":fase, "proyecto":proyecto, "estado_valido":estado_valido, "fase_valida":fase_valida}
+        return render_to_response('item/confirmacion_reversionar_item.html', ctx, context_instance=RequestContext(request))
+    # Fin--> Si el estado (del item a reemplazar con la reversion) es Aprobado o Bloqueado, o el estado de la fase es Finalizado.

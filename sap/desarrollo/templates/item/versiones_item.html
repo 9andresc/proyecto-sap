@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}SAP - Versiones del item {{ item.nombre }}{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Versiones del item <i>{{ item.nombre }}</i></small></h1>
+		<br>
+		<div class="input-group">
+			<span class="input-group-addon"><b>Versión actual</b></span>
+			<input type="text" class="form-control" id="version" name="version" value="{{ item.version }}" disabled="disabled">
+        </div>
+        <br>
+		{% if versiones %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>Nombre del item</th>
+                    		<th>Estado</th>
+                    		<th>Versión</th>
+                    		<th>Fecha de versión</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for v in versiones %}
+                			<tr>
+                    			<td>{{ v.nombre }}</td>
+                    			<td>
+                    			{% ifequal v.estado 0 %}
+									En construcción
+								{% endifequal %}
+								{% ifequal v.estado 1 %}
+									Aprobado
+								{% endifequal %}
+								{% ifequal v.estado 2 %}
+									Bloqueado
+								{% endifequal %}
+								{% ifequal v.estado 3 %}
+									En revisión
+								{% endifequal %}
+								<td>{{ v.version }}</td>
+								<td>{{ v.fecha_version|date:'d-m-Y H:i' }}</td>
+                    			<td><a class="btn btn-default" href="/desarrollo/fases/items/confirmacion_reversionar_item/{{ v.id }}/item/{{ item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-refresh"></span> Reversionar</a></td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No posee versiones.</h3>
+    	{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/fases/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
+</div>
+{% endblock %}

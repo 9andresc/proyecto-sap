@@ -153,7 +153,7 @@ class VersionItem(models.Model):
     fecha_version = models.DateTimeField(null=True)
     
     class Meta:
-        ordering = ["id_item", "version"]
+        ordering = ["version"]
         
 class ValorAtributo(models.Model):
     """
