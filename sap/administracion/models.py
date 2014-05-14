@@ -45,6 +45,7 @@ TIPO_DATO = (
     (2, "Texto grande"),
     (3, "Texto chico"),
     (4, "Logico"),
+    (5, "Archivo"),
 ) 
 
 class TipoAtributo(models.Model):
@@ -57,14 +58,20 @@ class TipoAtributo(models.Model):
         nombre: nombre del tipo atributo.
         tipo de dato: el tipo de dato al que corresponde.
         descripcion: una breve descripcion del tipo atributo.
-        valor: valor que posee el tipo atributo.
+        num_longitud: longitud de un tipo de dato Numerico.
+        num_precision: precision decimal de un tipo de dato Numerico.
+        textg_longitud: longitud de un tipo de dato Texto grande.
+        textch_longitud: longitud de un tipo de dato Texto chico.
+        obligatorio: valor booleano que indica si un atributo debe ser obligatorio o no.
     """
     nombre = models.CharField(max_length=50, blank=False)
     tipo_dato  = models.IntegerField(max_length=30,choices= TIPO_DATO, default=0)
     descripcion = models.TextField(blank=True)
-    longitud = models.IntegerField(null=True)
-    precision = models.IntegerField(null=True)
-    obligatorio = models.BooleanField(default=False)
+    num_longitud = models.IntegerField(null=True, blank=True)
+    num_precision = models.IntegerField(null=True, blank=True)
+    textg_longitud = models.IntegerField(null=True, blank=True)
+    textch_longitud = models.IntegerField(null=True, blank=True)
+    obligatorio = models.BooleanField(default=False, blank=True)
     
     def __unicode__(self):
         return self.nombre

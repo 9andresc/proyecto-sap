@@ -195,7 +195,9 @@ class CrearTipoAtributoForm(forms.Form):
     nombre = forms.CharField(label="Nombre de tipo atributo", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
     tipo_dato = forms.ChoiceField(label="Tipo dato", choices=TIPO_DATO, required=True)
-    
+    num_longitud = forms.IntegerField(label="Longitud numerica", required=False)
+    num_precision = forms.IntegerField(label="Precision numerica", required=False)
+
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']
         try:
@@ -203,6 +205,14 @@ class CrearTipoAtributoForm(forms.Form):
         except TipoAtributo.DoesNotExist:
             return nombre
         raise forms.ValidationError('Nombre de tipo atributo ya registrado.')
+    
+    def clean_num_precision(self):
+        num_precision = self.cleaned_data['num_precision']
+        return num_precision
+    
+    def clean_num_longitud(self):
+        num_longitud = self.cleaned_data['num_longitud']
+        return num_longitud
 
 class ModificarTipoAtributoForm(forms.Form):
     """
@@ -221,6 +231,8 @@ class ModificarTipoAtributoForm(forms.Form):
     nombre = forms.CharField(label="Nombre de tipo atributo", required=True)
     descripcion = forms.CharField(label="Descripcion", required=False)
     tipo_dato = forms.ChoiceField(label="Tipo dato", choices=TIPO_DATO, required=False)
+    num_longitud = forms.IntegerField(label="Longitud numerica", required=False)
+    num_precision = forms.IntegerField(label="Precision numerica", required=False)
         
     def clean_nombre(self): 
         nombre = self.cleaned_data['nombre'] 
@@ -231,6 +243,14 @@ class ModificarTipoAtributoForm(forms.Form):
         except TipoAtributo.DoesNotExist:
             return nombre 
         raise forms.ValidationError('Nombre de tipo atributo ya registrado.')
+    
+    def clean_num_precision(self):
+        num_precision = self.cleaned_data['num_precision']
+        return num_precision
+    
+    def clean_num_longitud(self):
+        num_longitud = self.cleaned_data['num_longitud']
+        return num_longitud
     
 class CrearProyectoForm(forms.Form):
     """

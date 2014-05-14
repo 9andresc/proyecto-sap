@@ -789,24 +789,34 @@ def crear_tipo_atributo_view(request):
             nombre = form.cleaned_data['nombre']
             descripcion = form.cleaned_data['descripcion']
             tipo_dato = form.cleaned_data['tipo_dato']
+            num_longitud = form.cleaned_data['num_longitud']
+            num_precision = form.cleaned_data['num_precision']
             
             obligatorio = request.POST.get('obligatorio')
-            if obligatorio == 0:
+            if obligatorio == "0":
                 obligatorio = False
             else:
                 obligatorio = True
                 
-            if tipo_dato == 0:
-                longitud = request.POST.get('longitud')
-                precision = request.POST.get('precision')
-                tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato, longitud=longitud, precision=precision, obligatorio=obligatorio)
-                tipo_atributo.save()
-            elif tipo_dato == 1 or tipo_dato == 4:
+            if tipo_dato == "0":
+                valido = True
+                if num_longitud > num_precision:
+                    tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato, num_longitud=num_longitud, num_precision=num_precision, obligatorio=obligatorio)
+                    tipo_atributo.save()
+                else:
+                    valido = False
+                    ctx = {'form':form, 'valido':valido}
+                    return render_to_response('tipo_atributo/crear_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+            elif tipo_dato == "1" or tipo_dato == "4" or tipo_dato == "5":
                 tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato, obligatorio=obligatorio)
                 tipo_atributo.save()
-            else:
-                longitud = request.POST.get('longitud')
-                tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato, longitud=longitud, obligatorio=obligatorio)
+            elif tipo_dato == "2":
+                longitud = request.POST.get('textg_longitud')
+                tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato, textg_longitud=longitud, obligatorio=obligatorio)
+                tipo_atributo.save()
+            elif tipo_dato == "3":
+                longitud = request.POST.get('textch_longitud')
+                tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato, textch_longitud=longitud, obligatorio=obligatorio)
                 tipo_atributo.save()
             
             return HttpResponseRedirect('/administracion/gestion_tipos_atributo/')
@@ -854,35 +864,61 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
             nombre = form.cleaned_data['nombre']
             descripcion = form.cleaned_data['descripcion']
             tipo_dato = form.cleaned_data['tipo_dato']
+            num_longitud = form.cleaned_data['num_longitud']
+            num_precision = form.cleaned_data['num_precision']
             
             obligatorio = request.POST.get('obligatorio')
-            if obligatorio == 0:
+            if obligatorio == "0":
                 obligatorio = False
             else:
                 obligatorio = True
                 
-            if tipo_dato == 0:
-                longitud = request.POST.get('longitud')
-                precision = request.POST.get('precision')
+            if tipo_dato == "0":
+                valido = True
+                if num_longitud > num_precision:
+                    tipo_atributo.nombre = nombre
+                    tipo_atributo.descripcion = descripcion
+                    tipo_atributo.tipo_dato = tipo_dato
+                    tipo_atributo.num_longitud = num_longitud
+                    tipo_atributo.num_precision = num_precision
+                    tipo_atributo.textg_longitud = None
+                    tipo_atributo.textch_longitud = None
+                    tipo_atributo.obligatorio = obligatorio
+                    tipo_atributo.save()
+                else:
+                    valido = False
+                    ctx = {'form':form, 'valido':valido}
+                    return render_to_response('tipo_atributo/crear_tipo_atributo.html', ctx, context_instance=RequestContext(request))
+            elif tipo_dato == "1" or tipo_dato == "4" or tipo_dato == "5":
                 tipo_atributo.nombre = nombre
                 tipo_atributo.descripcion = descripcion
                 tipo_atributo.tipo_dato = tipo_dato
-                tipo_atributo.longitud = longitud
-                tipo_atributo.precision = precision
+                tipo_atributo.num_longitud = None
+                tipo_atributo.num_precision = None
+                tipo_atributo.textg_longitud = None
+                tipo_atributo.textch_longitud = None
                 tipo_atributo.obligatorio = obligatorio
                 tipo_atributo.save()
-            elif tipo_dato == 1 or tipo_dato == 4:
+            elif tipo_dato == "2":
+                longitud = request.POST.get('textg_longitud')
                 tipo_atributo.nombre = nombre
                 tipo_atributo.descripcion = descripcion
                 tipo_atributo.tipo_dato = tipo_dato
+                tipo_atributo.num_longitud = None
+                tipo_atributo.num_precision = None
+                tipo_atributo.textg_longitud = longitud
+                tipo_atributo.textch_longitud = None
                 tipo_atributo.obligatorio = obligatorio
                 tipo_atributo.save()
-            else:
-                longitud = request.POST.get('longitud')
+            elif tipo_dato == "3":
+                longitud = request.POST.get('textch_longitud')
                 tipo_atributo.nombre = nombre
                 tipo_atributo.descripcion = descripcion
                 tipo_atributo.tipo_dato = tipo_dato
-                tipo_atributo.longitud = longitud
+                tipo_atributo.num_longitud = None
+                tipo_atributo.num_precision = None
+                tipo_atributo.textg_longitud = None
+                tipo_atributo.textch_longitud = longitud
                 tipo_atributo.obligatorio = obligatorio
                 tipo_atributo.save()
             
@@ -893,6 +929,10 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
             'nombre': tipo_atributo.nombre,
             'descripcion': tipo_atributo.descripcion,
             'tipo_dato': tipo_atributo.tipo_dato,
+            'num_longitud':tipo_atributo.num_longitud,
+            'num_precision':tipo_atributo.num_precision,
+            'textg_longitud':tipo_atributo.textg_longitud,
+            'textch_longitud':tipo_atributo.textch_longitud,
             })
     ctx = {'form': form, 'tipo_atributo': tipo_atributo, 'valido':valido}
     return render_to_response('tipo_atributo/modificar_tipo_atributo.html', ctx, context_instance=RequestContext(request))
@@ -928,7 +968,7 @@ def eliminar_tipo_atributo_view(request, id_tipo_atributo):
     if atributos:
         valido = False
     if request.method == "POST":
-        TipoAtributo.objects.get(id=id_tipo_atributo).delete()
+        tipo_atributo.delete()
         return HttpResponseRedirect('/administracion/gestion_tipos_atributo/')
     if request.method == "GET":
         ctx = {'tipo_atributo':tipo_atributo, 'valido':valido}

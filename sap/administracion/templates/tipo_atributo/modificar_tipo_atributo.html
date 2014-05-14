@@ -8,7 +8,7 @@
 			{% csrf_token %}
 			
 			<!-- Manejo de errores del formulario -->
-	    	{% if form.errors %}
+	    	{% if form.errors or valido == False %}
 	    	<div class="panel panel-warning">
 	    		<div class="panel-heading">
 	    			<h3 class="panel-title">¡Alto ahí!</h3>
@@ -32,6 +32,12 @@
 	  							</li>
 	  						{% endif %}
 	  					{% endfor %}
+	  					{% if valido == False %}
+	  						<li><b>Longitud numérica</b></li>
+	  						<ul>
+	  							<li>La longitud numérica debe ser mayor que la precisión numérica.</li>
+	  						</ul>
+						{% endif %}
 					</ul>
 	            </div>
 	        </div>
@@ -44,35 +50,65 @@
 					var value = obj.value;
 					switch (value) {
 						case "0":
-							document.getElementById("longitud").setAttribute("required","required");
-					    	document.getElementById("longitud").removeAttribute("disabled");
-					    	document.getElementById("precision").setAttribute("required","required");
-					    	document.getElementById("precision").removeAttribute("disabled");
+							document.getElementById("num_longitud").setAttribute("required","required");
+					    	document.getElementById("num_longitud").removeAttribute("disabled");
+					    	document.getElementById("num_precision").setAttribute("required","required");
+					    	document.getElementById("num_precision").removeAttribute("disabled");
+					    	document.getElementById("textg_longitud").setAttribute("disabled","disabled");
+					    	document.getElementById("textg_longitud").removeAttribute("required");
+					    	document.getElementById("textch_longitud").setAttribute("disabled","disabled");
+					    	document.getElementById("textch_longitud").removeAttribute("required");
 					    	break;
 						case "1":
-							document.getElementById("longitud").setAttribute("disabled","disabled");
-							document.getElementById("longitud").removeAttribute("required");
-							document.getElementById("precision").setAttribute("disabled","disabled");
-							document.getElementById("precision").removeAttribute("required");
+							document.getElementById("num_longitud").setAttribute("disabled","disabled");
+							document.getElementById("num_longitud").removeAttribute("required");
+							document.getElementById("num_precision").setAttribute("disabled","disabled");
+							document.getElementById("num_precision").removeAttribute("required");
+							document.getElementById("textg_longitud").setAttribute("disabled","disabled");
+					    	document.getElementById("textg_longitud").removeAttribute("required");
+					    	document.getElementById("textch_longitud").setAttribute("disabled","disabled");
+					    	document.getElementById("textch_longitud").removeAttribute("required");
 							break;
 						case "2":
-							document.getElementById("longitud").setAttribute("required","required");
-							document.getElementById("longitud").removeAttribute("disabled");
-							document.getElementById("precision").setAttribute("disabled","disabled");
-							document.getElementById("precision").removeAttribute("required");
+							document.getElementById("num_longitud").setAttribute("disabled","disabled");
+							document.getElementById("num_longitud").removeAttribute("required");
+							document.getElementById("num_precision").setAttribute("disabled","disabled");
+							document.getElementById("num_precision").removeAttribute("required");
+							document.getElementById("textg_longitud").removeAttribute("disabled");
+							document.getElementById("textg_longitud").setAttribute("required","required");
+							document.getElementById("textch_longitud").setAttribute("disabled","disabled");
+					    	document.getElementById("textch_longitud").removeAttribute("required");
 							break;
 						case "3":
-							document.getElementById("longitud").setAttribute("required","required");
-							document.getElementById("longitud").removeAttribute("disabled");
-							document.getElementById("precision").setAttribute("disabled","disabled");
-							document.getElementById("precision").removeAttribute("required");
+							document.getElementById("num_longitud").setAttribute("disabled","disabled");
+							document.getElementById("num_longitud").removeAttribute("required");
+							document.getElementById("num_precision").setAttribute("disabled","disabled");
+							document.getElementById("num_precision").removeAttribute("required");
+							document.getElementById("textch_longitud").removeAttribute("disabled");
+							document.getElementById("textch_longitud").setAttribute("required","required");
+							document.getElementById("textg_longitud").setAttribute("disabled","disabled");
+					    	document.getElementById("textg_longitud").removeAttribute("required");
 							break;
 						case "4":
-							document.getElementById("longitud").setAttribute("disabled","disabled");
-							document.getElementById("longitud").removeAttribute("required");
-							document.getElementById("precision").setAttribute("disabled","disabled");
-							document.getElementById("precision").removeAttribute("required");
+							document.getElementById("num_longitud").setAttribute("disabled","disabled");
+							document.getElementById("num_longitud").removeAttribute("required");
+							document.getElementById("num_precision").setAttribute("disabled","disabled");
+							document.getElementById("num_precision").removeAttribute("required");
+							document.getElementById("textg_longitud").setAttribute("disabled","disabled");
+					    	document.getElementById("textg_longitud").removeAttribute("required");
+					    	document.getElementById("textch_longitud").setAttribute("disabled","disabled");
+					    	document.getElementById("textch_longitud").removeAttribute("required");
 							break;
+						case "5":
+							document.getElementById("num_longitud").setAttribute("disabled","disabled");
+							document.getElementById("num_longitud").removeAttribute("required");
+							document.getElementById("num_precision").setAttribute("disabled","disabled");
+							document.getElementById("num_precision").removeAttribute("required");
+							document.getElementById("textg_longitud").setAttribute("disabled","disabled");
+					    	document.getElementById("textg_longitud").removeAttribute("required");
+					    	document.getElementById("textch_longitud").setAttribute("disabled","disabled");
+					    	document.getElementById("textch_longitud").removeAttribute("required");
+					    	break;
 					}
 				}
 			</script>
@@ -112,6 +148,11 @@
 					{% else %}
 						<option value="4">Lógico</option>
 					{% endif %}
+					{% if tipo_atributo.tipo_dato == 5 %}
+						<option value="5" selected="selected">Archivo</option>
+					{% else %}
+						<option value="5">Lógico</option>
+					{% endif %}
 				</select>
         	</div>
         	<br>
@@ -121,19 +162,29 @@
 	        </div>
 	        <br>
 	        <div class="input-group">
-				<span class="input-group-addon"><b>* Longitud</b></span>
-				<input type="number" class="form-control" id="longitud" name="longitud" value="{{ tipo_atributo.longitud }}" required="required">
+				<span class="input-group-addon"><b>* Longitud numérica</b></span>
+				<input type="number" min="1" max="30" class="form-control" id="num_longitud" name="num_longitud" value="{{ tipo_atributo.num_longitud }}" disabled="disabled">
 	        </div>
 	        <br>
 	        <div class="input-group">
-				<span class="input-group-addon"><b>* Precisión</b></span>
-				<input type="number" class="form-control" id="precision" name="precision" value="{{ tipo_atributo.precision }}" required="required">
+				<span class="input-group-addon"><b>* Precisión numérica</b></span>
+				<input type="number" min="0" max="10" class="form-control" id="num_precision" name="num_precision" value="{{ tipo_atributo.num_precision }}" disabled="disabled">
+	        </div>
+	        <br>
+	        <div class="input-group">
+				<span class="input-group-addon"><b>* Longitud del texto chico</b></span>
+				<input type="number" min="1" max="30" class="form-control" id="textch_longitud" name="textch_longitud" value="{{ tipo_atributo.textch_longitud }}" disabled="disabled">
+	        </div>
+	        <br>
+	        <div class="input-group">
+				<span class="input-group-addon"><b>* Longitud del texto grande</b></span>
+				<input type="number" min="1" max="250" class="form-control" id="textg_longitud" name="textg_longitud" value="{{ tipo_atributo.textg_longitud }}" disabled="disabled">
 	        </div>
 	        <br>
 	        <div class="input-group">
 				<span class="input-group-addon"><b>* Obligatorio</b></span>
 				<select class="form-control" id="obligatorio" name="obligatorio">
-					{% if tipo_atributo.obligatorio == False %}
+		        	{% if tipo_atributo.obligatorio == False %}
 		        		<option value="0" selected="selected">No</option>
 		        	{% else %}
 		        		<option value="0">No</option>
@@ -142,11 +193,11 @@
 		        		<option value="1" selected="selected">Sí</option>
 		        	{% else %}
 		        		<option value="1">Sí</option>
-		        	{% endif %}	
+		        	{% endif %}	     	
 	         	</select>
 	        </div>
+	        <br>
 	        
-			<br>
 	        <button type="submit" class="btn btn-success">Modificar</button>
 		</form>
 	{% else %}

@@ -28,16 +28,22 @@
                     			<td>{{ t.nombre }}</td>
                     			<td>
                     			{% ifequal t.tipo_dato 0 %}
-									Numerico
+									Numérico
 								{% endifequal %}
 								{% ifequal t.tipo_dato 1 %}
 									Fecha
 								{% endifequal %}
 								{% ifequal t.tipo_dato 2 %}
-									Texto
+									Texto Grande
 								{% endifequal %}
 								{% ifequal t.tipo_dato 3 %}
-									Logico
+									Texto Chico
+								{% endifequal %}
+								{% ifequal t.tipo_dato 4 %}
+									Lógico
+								{% endifequal %}
+								{% ifequal t.tipo_dato 5 %}
+									Archivo
 								{% endifequal %}
 								<td>
                     			{% if modificar_tipo_de_atributo or eliminar_tipo_de_atributo or visualizar_tipo_de_atributo %}

@@ -1,4 +1,5 @@
 import datetime
+from django.conf import settings
 from django.shortcuts import render_to_response
 from django.http.response import HttpResponseRedirect
 from django.template import RequestContext
@@ -1263,15 +1264,21 @@ def crear_item_view(request, id_fase, id_proyecto):
             tipo_item = TipoItem.objects.get(id=id_tipo_item)
             
             item = Item.objects.create(nombre=nombre, descripcion=descripcion, complejidad=complejidad, costo_monetario=costo_monetario, costo_temporal=costo_temporal, tipo_item=tipo_item)
-            item.save()
-            version_item = VersionItem.objects.create(id_item=item.id, nombre=nombre, descripcion=descripcion, complejidad=complejidad, costo_monetario=costo_monetario, costo_temporal=costo_temporal, fase=fase, tipo_item=tipo_item, fecha_version=datetime.datetime.now())
-            version_item.save()
             tipos_atributo = tipo_item.tipos_atributo.all()
             for tipo_atributo in tipos_atributo:
                 valor_atributo = ValorAtributo.objects.create(item=item, tipo_item=tipo_item, tipo_atributo=tipo_atributo)
                 valor_atributo.save()
             fase.items.add(item)
+            item.save()
             fase.save()
+            version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
+                                                      descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                      costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                      estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                                      adan=item.adan, cain=item.cain, padre=item.padre,
+                                                      tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
+            version_item.save()
+            
             return HttpResponseRedirect('/desarrollo/fases/items/fase/%s/proyecto/%s'%(id_fase, id_proyecto))
             
         else:
@@ -1334,28 +1341,40 @@ def modificar_item_view(request, id_fase, id_item, id_proyecto):
                             a.valor_fecha = value
                             a.save()
                         elif a.tipo_atributo.tipo_dato == 2:
-                            a.valor_texto = value
+                            a.valor_texto_grande = value
                             a.save()
-                        else:
+                        elif a.tipo_atributo.tipo_dato == 3:
+                            a.valor_texto_chico = value
+                            a.save()
+                        elif a.tipo_atributo.tipo_dato == 4:
                             if value=="1":
-                                a.valor_logico = None
-                                a.save()
-                            elif value=="2":
                                 a.valor_logico = True
                                 a.save()
-                            elif value=="3":
+                            elif value=="0":
                                 a.valor_logico = False
                                 a.save()
-                        
-            item.nombre = nombre
-            item.descripcion = descripcion
-            item.complejidad = complejidad
-            item.costo_monetario = costo_monetario
-            item.costo_temporal = costo_temporal
-            item.save()
-            version = VersionItem.objects.filter(id_item=item.id).order_by('-fecha_version')[:1]
-            version_item = VersionItem.objects.create(version = version[0].version + 0.1, id_item=item.id, nombre=nombre, descripcion=descripcion, complejidad=complejidad, costo_monetario=costo_monetario, costo_temporal=costo_temporal, fase=item.fase, tipo_item=item.tipo_item, fecha_version=datetime.datetime.now())
-            version_item.save()
+                        elif a.tipo_atributo.tipo_dato == 5:
+                            a.valor_archivo = value
+                            a.save()
+            
+            if item.nombre != nombre or item.descripcion != descripcion or item.complejidad != complejidad or item.costo_monetario != costo_monetario or item.costo_temporal != costo_temporal:
+                item.version = item.version + 1
+                item.nombre = nombre
+                item.descripcion = descripcion
+                item.complejidad = complejidad
+                item.costo_monetario = costo_monetario
+                item.costo_temporal = costo_temporal
+                item.save()
+                version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
+                                                          descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                          costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                          estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                                          adan=item.adan, cain=item.cain,
+                                                          tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
+                if item.padre:
+                    version_item.padre = item.padre.id
+                version_item.save()
+            
             return HttpResponseRedirect('/desarrollo/fases/items/item/%s/fase/%s/proyecto/%s'%(id_item, id_fase, id_proyecto))
     
     if request.method == "GET":
@@ -1366,7 +1385,7 @@ def modificar_item_view(request, id_fase, id_item, id_proyecto):
             'costo_monetario': item.costo_monetario,
             'complejidad': item.complejidad,
             })
-    ctx = {'form':form, 'item':item, 'fase':fase, 'proyecto':proyecto, 'atributos':atributos}
+    ctx = {'form':form, 'item':item, 'fase':fase, 'proyecto':proyecto, 'atributos':atributos, 'setting':settings}
     return render_to_response('item/modificar_item.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1401,22 +1420,89 @@ def eliminar_item_view(request, id_fase, id_item, id_proyecto):
             generado en la vista, al template correspondiente.
             - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. 
     """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
     item = Item.objects.get(id=id_item)
     atributos = ValorAtributo.objects.filter(item__id=id_item)
-    fase = Fase.objects.get(id=id_fase)
-    proyecto = Proyecto.objects.get(id=id_proyecto)
     valido = True
     if item.estado == 1 or item.estado == 2 or item.estado == 4:
         valido = False
     if request.method == "POST":
         if valido == True:
+            version_eliminada = VersionItem.objects.filter(id_item=item.id).get(version=item.version)
+            version_eliminada.estado = 4
+            version_eliminada.save()
+            
+            if item.relaciones:
+                relaciones = item.relaciones.all()
+                for r in relaciones:
+                    r.adan = None
+                    r.cain = None
+                    r.padre = None
+                    r.version = r.version + 1
+                    r.save()
+                    version_r = VersionItem.objects.create(version=r.version, id_item=r.id, nombre=r.nombre, 
+                                                           descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
+                                                           costo_temporal=r.costo_temporal, complejidad=r.complejidad,
+                                                           estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
+                                                           adan=r.adan, cain=r.cain,
+                                                           tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
+                    if r.padre:
+                        version_r.padre = r.padre.id
+                    version_r.save()
+                    
+                    hijos_sucesores = r.relaciones.all()
+                    
+                    for hs in hijos_sucesores:
+                        hs.adan = r.id
+                        hs.cain = None
+                        hs.save()
+                        
+                        version_hs = VersionItem.objects.create(version=hs.version, id_item=hs.id, nombre=hs.nombre, 
+                                                               descripcion=hs.descripcion, costo_monetario=hs.costo_monetario, 
+                                                               costo_temporal=hs.costo_temporal, complejidad=hs.complejidad,
+                                                               estado=hs.estado, fase=hs.fase, tipo_item=hs.tipo_item,
+                                                               adan=hs.adan, cain=hs.cain,
+                                                               tipo_relacion=hs.tipo_relacion, fecha_version=datetime.datetime.now())
+                        if hs.padre:
+                            version_hs.padre = hs.padre.id
+                        version_hs.save()
+                        
+                        hijos_hs = hs.relaciones.all()
+                        resultados = []
+                        while 1:
+                            nuevas_relaciones = []
+                            if len(hijos_hs) == 0:
+                                break
+                            for h in hijos_hs:
+                                resultados.append(h)
+                                if h.relaciones.count() > 0:
+                                    for s in h.relaciones.all():
+                                        nuevas_relaciones.append(s)
+                            hijos_hs = nuevas_relaciones
+                        
+                        for h in resultados:
+                            h.adan = r.id
+                            h.cain = hs.id
+                            h.version = h.version + 1
+                            h.save()
+                            version_h = VersionItem.objects.create(version=h.version, id_item=h.id, nombre=h.nombre, 
+                                                                   descripcion=h.descripcion, costo_monetario=h.costo_monetario, 
+                                                                   costo_temporal=h.costo_temporal, complejidad=h.complejidad,
+                                                                   estado=h.estado, fase=h.fase, tipo_item=h.tipo_item,
+                                                                   adan=h.adan, cain=h.cain,
+                                                                   tipo_relacion=h.tipo_relacion, fecha_version=datetime.datetime.now())
+                            if h.padre:
+                                version_h.padre = h.padre.id
+                            version_h.save()
+                
             item.delete()
             return HttpResponseRedirect('/desarrollo/fases/items/fase/%s/proyecto/%s'%(id_fase, id_proyecto))
         else:
-            ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'valido':valido, 'atributos':atributos}
+            ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'valido':valido, 'atributos':atributos, 'setting':settings}
             return render_to_response('item/eliminar_item.html', ctx, context_instance=RequestContext(request))
     if request.method == "GET":
-        ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'valido':valido, 'atributos':atributos}
+        ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'valido':valido, 'atributos':atributos, 'setting':settings}
         return render_to_response('item/eliminar_item.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1445,11 +1531,11 @@ def visualizar_item_view(request, id_fase, id_item, id_proyecto):
         
             - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
     """
-    item = Item.objects.get(id=id_item)
-    atributos = ValorAtributo.objects.filter(item__id=id_item)
-    fase = Fase.objects.get(id=id_fase)
     proyecto = Proyecto.objects.get(id=id_proyecto)
-    ctx = {'item':item, 'fase': fase, 'proyecto':proyecto, 'atributos':atributos}
+    fase = proyecto.fases.get(id=id_fase)
+    item = fase.items.get(id=id_item)
+    atributos = ValorAtributo.objects.filter(item__id=id_item)
+    ctx = {'item':item, 'fase': fase, 'proyecto':proyecto, 'atributos':atributos, 'setting':settings}
     return render_to_response('item/visualizar_item.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1486,11 +1572,179 @@ def aprobar_item_view(request, id_fase, id_item, id_proyecto):
     if item.estado == 1 or item.estado == 2:
         valido = False
     if valido:
+        item.version = item.version + 1
         item.estado = 1
         item.save()
+        version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
+                                                  descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                  costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                  estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                                  adan=item.adan, cain=item.cain,
+                                                  tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
+        if item.padre:
+            version_item.padre = item.padre.id
+        version_item.save()
     ctx = {'item':item, 'valido':valido, 'fase':fase, 'proyecto':proyecto}
     return render_to_response('item/aprobar_item.html', ctx, context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
+@fase_miembro_proyecto()
+def revivir_item_view(request, id_fase, id_proyecto):
+    """
+    ::
+    
+        La vista para revivir un item eliminado. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Revivir item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario ver un listado de todos los items previamente eliminados de la fase actual. En el template 
+        generado se tendra la opcion de revivir los items del listado otorgado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    items_eliminados = VersionItem.objects.filter(fase=fase).filter(estado=4)
+    
+    ctx = {"items_eliminados":items_eliminados, "fase":fase, "proyecto":proyecto}
+    return render_to_response('item/items_eliminados.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Revivir item")
+@fase_miembro_proyecto()
+def confirmacion_revivir_item_view(request, id_fase, id_item, id_proyecto):
+    """
+    ::
+    
+        La vista para revivir un item eliminado. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Revivir item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario revivir un item previamente eliminado. Se encarga de revisar si el item a revivir 
+        quiere entrar en una fase en estado Finalizado, en cuyo caso, se abortara la operacion. Ademas, verifica si el
+        item a revivir poseia un padre. Si tenia un padre, la vista se encarga de reasignar el item a la lista de 
+        hijos/sucesores del padre item. Si no poseia padre, simplemente queda sin padre; los usuarios estan a cargo de 
+        asignarlo a un padre item si se necesitase.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_item: el identificador del item.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.  
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    item = VersionItem.objects.filter(id_item=id_item).get(estado=4)
+    fase_valida = True
+    padre_valido = False
+    
+    if fase.estado == 2:
+        fase_valida = False
+    if item.padre:
+        padre_valido = True
+    
+    if padre_valido:
+        existe_padre = True
+        try:
+            item_padre = fase.items.get(id=item.padre)
+        except Item.DoesNotExist:
+            existe_padre = False
+            if fase_valida:
+                item_revivido = Item.objects.create(id=item.id_item, nombre=item.nombre, version=item.version, estado=0, 
+                                                    descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                    costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                    fase=item.fase, tipo_item=item.tipo_item)
+                item_revivido.save()
+                item.estado = 0
+                item.save()
+                
+                tipo_item = TipoItem.objects.get(id=item.tipo_item.id)
+                tipos_atributo = tipo_item.tipos_atributo.all()
+                for tipo_atributo in tipos_atributo:
+                    valor_atributo = ValorAtributo.objects.create(item=item_revivido, tipo_item=tipo_item, tipo_atributo=tipo_atributo)
+                    valor_atributo.save()
+                
+                ctx = {"item_revivido":item_revivido, "fase":fase, "proyecto":proyecto, "padre_valido":padre_valido, "existe_padre":existe_padre, "fase_valida":fase_valida}
+                return render_to_response('item/confirmacion_revivir_item.html', ctx, context_instance=RequestContext(request))
+            else:
+                ctx = {"item":item, "fase":fase, "proyecto":proyecto, "fase_valida":fase_valida, "padre_valido":padre_valido}
+                return render_to_response('item/confirmacion_revivir_item.html', ctx, context_instance=RequestContext(request))
+            
+        if fase_valida:
+            item_revivido = Item.objects.create(id=item.id_item, nombre=item.nombre, version=item.version, estado=0, 
+                                                descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                fase=item.fase, tipo_item=item.tipo_item, adan=item.adan,
+                                                cain=item.cain, padre=item_padre, tipo_relacion=item.tipo_relacion)
+            if item_padre.adan:
+                item_revivido.adan = item_padre.adan
+            else:
+                item_revivido.adan = item_padre.id
+            if item_padre.adan and item_padre.cain == None:
+                item_revivido.adan = item_padre.adan
+                item_revivido.cain = item_padre.id
+            elif item_padre.adan and item_padre.cain:
+                item_revivido.cain = item_padre.cain
+            item_revivido.save()
+            
+            item.estado = 0
+            item.save()
+            
+            tipo_item = TipoItem.objects.get(id=item.tipo_item.id)
+            tipos_atributo = tipo_item.tipos_atributo.all()
+            for tipo_atributo in tipos_atributo:
+                valor_atributo = ValorAtributo.objects.create(item=item_revivido, tipo_item=tipo_item, tipo_atributo=tipo_atributo)
+                valor_atributo.save()
+            
+            item_padre.relaciones.add(item_revivido)
+            item_padre.save()
+            
+            ctx = {"item_revivido":item_revivido, "item_padre":item_padre, "fase":fase, "proyecto":proyecto, "existe_padre":existe_padre, "fase_valida":fase_valida, "padre_valido":padre_valido}
+            return render_to_response('item/confirmacion_revivir_item.html', ctx, context_instance=RequestContext(request))
+        else:
+            ctx = {"item":item, "fase":fase, "proyecto":proyecto, "fase_valida":fase_valida, "padre_valido":padre_valido}
+            return render_to_response('item/confirmacion_revivir_item.html', ctx, context_instance=RequestContext(request))
+    else:
+        if fase_valida:
+            item_revivido = Item.objects.create(id=item.id_item, nombre=item.nombre, version=item.version, estado=0, 
+                                                descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                fase=item.fase, tipo_item=item.tipo_item)
+            item_revivido.save()
+            item.estado = 0
+            item.save()
+            
+            tipo_item = TipoItem.objects.get(id=item.tipo_item.id)
+            tipos_atributo = tipo_item.tipos_atributo.all()
+            for tipo_atributo in tipos_atributo:
+                valor_atributo = ValorAtributo.objects.create(item=item_revivido, tipo_item=tipo_item, tipo_atributo=tipo_atributo)
+                valor_atributo.save()
+            
+            ctx = {"item_revivido":item_revivido, "fase":fase, "proyecto":proyecto, "padre_valido":padre_valido, "fase_valida":fase_valida}
+            return render_to_response('item/confirmacion_revivir_item.html', ctx, context_instance=RequestContext(request))
+        else:
+            ctx = {"item":item, "fase":fase, "proyecto":proyecto, "padre_valido":padre_valido, "fase_valida":fase_valida}
+            return render_to_response('item/confirmacion_revivir_item.html', ctx, context_instance=RequestContext(request))
+            
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar relaciones de item")
 @fase_miembro_proyecto()
@@ -1623,6 +1877,11 @@ def confirmacion_agregar_relacion_view(request, id_fase, id_item, id_relacion, i
     fase = proyecto.fases.get(id=id_fase)
     item = fase.items.get(id=id_item)
     relacion = Item.objects.get(id=id_relacion)
+    modificar_relaciones = False
+    
+    if relacion.relaciones and relacion.adan == None and relacion.cain == None and relacion.padre == None:
+        modificar_relaciones = True
+    
     if item.fase.id == relacion.fase.id:
         if item.adan:
             relacion.adan = item.adan
@@ -1635,8 +1894,48 @@ def confirmacion_agregar_relacion_view(request, id_fase, id_item, id_relacion, i
         elif item.adan and item.cain:
             relacion.cain = item.cain
             
+        if modificar_relaciones:
+            relaciones = relacion.relaciones.all()
+            resultados = []
+                
+            while 1:
+                hijos = []
+                if len(relaciones) == 0:
+                    break
+                for r in relaciones:
+                    resultados.append(r)
+                    if r.relaciones.count() > 0:
+                        for h in r.relaciones.all():
+                            hijos.append(h)
+                relaciones = hijos
+                
+            for r in resultados:
+                r.adan = item.id
+                r.cain = relacion.id
+                r.version = r.version + 1
+                r.save()
+                version_r = VersionItem.objects.create(version=r.version, id_item=r.id, nombre=r.nombre, 
+                                                       descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
+                                                       costo_temporal=r.costo_temporal, complejidad=r.complejidad,
+                                                       estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
+                                                       adan=r.adan, cain=r.cain,
+                                                       tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
+                if r.padre:
+                    version_r.padre = r.padre.id
+                version_r.save()
+            
         relacion.tipo_relacion = 0
+        relacion.version = relacion.version + 1
         relacion.save()
+        version_relacion = VersionItem.objects.create(version=relacion.version, id_item=relacion.id, nombre=relacion.nombre, 
+                                                      descripcion=relacion.descripcion, costo_monetario=relacion.costo_monetario, 
+                                                      costo_temporal=relacion.costo_temporal, complejidad=relacion.complejidad,
+                                                      estado=relacion.estado, fase=relacion.fase, tipo_item=relacion.tipo_item,
+                                                      adan=relacion.adan, cain=relacion.cain,
+                                                      tipo_relacion=relacion.tipo_relacion, fecha_version=datetime.datetime.now())
+        if relacion.padre:
+            version_relacion.padre = relacion.padre.id
+        version_relacion.save()
     else:
         if item.adan:
             relacion.adan = item.adan
@@ -1648,9 +1947,49 @@ def confirmacion_agregar_relacion_view(request, id_fase, id_item, id_relacion, i
             relacion.cain = item.id
         elif item.adan and item.cain:
             relacion.cain = item.cain
+            
+        if modificar_relaciones:
+            relaciones = relacion.relaciones.all()
+            resultados = []
+                
+            while 1:
+                hijos = []
+                if len(relaciones) == 0:
+                    break
+                for r in relaciones:
+                    resultados.append(r)
+                    if r.relaciones.count() > 0:
+                        for h in r.relaciones.all():
+                            hijos.append(h)
+                relaciones = hijos
+                
+            for r in resultados:
+                r.adan = item.id
+                r.cain = relacion.id
+                r.version = r.version + 1
+                r.save()
+                version_r = VersionItem.objects.create(version=r.version, id_item=r.id, nombre=r.nombre, 
+                                                       descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
+                                                       costo_temporal=r.costo_temporal, complejidad=r.complejidad,
+                                                       estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
+                                                       adan=r.adan, cain=r.cain,
+                                                       tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
+                if r.padre:
+                    version_r.padre = r.padre.id
+                version_r.save()
         
         relacion.tipo_relacion = 1
+        relacion.version = relacion.version + 1
         relacion.save()
+        version_relacion = VersionItem.objects.create(version=relacion.version, id_item=relacion.id, nombre=relacion.nombre, 
+                                                      descripcion=relacion.descripcion, costo_monetario=relacion.costo_monetario, 
+                                                      costo_temporal=relacion.costo_temporal, complejidad=relacion.complejidad,
+                                                      estado=relacion.estado, fase=relacion.fase, tipo_item=relacion.tipo_item,
+                                                      adan=relacion.adan, cain=relacion.cain,
+                                                      tipo_relacion=relacion.tipo_relacion, fecha_version=datetime.datetime.now())
+        if relacion.padre:
+            version_relacion.padre = relacion.padre.id
+        version_relacion.save()
         
     item.relaciones.add(relacion)
     item.save()
@@ -1690,16 +2029,38 @@ def quitar_relacion_view(request, id_fase, id_item, id_relacion, id_proyecto):
     item = fase.items.get(id=id_item)
     relacion = Item.objects.get(id=id_relacion)
     
-    relacion.padre_raiz = None
+    relacion.adan = None
+    relacion.cain = None
     relacion.padre = None
     relacion.tipo_relacion = None
+    relacion.version = relacion.version + 1
     relacion.save()
+    version_relacion = VersionItem.objects.create(version=relacion.version, id_item=relacion.id, nombre=relacion.nombre, 
+                                                  descripcion=relacion.descripcion, costo_monetario=relacion.costo_monetario, 
+                                                  costo_temporal=relacion.costo_temporal, complejidad=relacion.complejidad,
+                                                  estado=relacion.estado, fase=relacion.fase, tipo_item=relacion.tipo_item,
+                                                  adan=relacion.adan, cain=relacion.cain,
+                                                  tipo_relacion=relacion.tipo_relacion, fecha_version=datetime.datetime.now())
+    if relacion.padre:
+        version_relacion.padre = relacion.padre.id
+    version_relacion.save()
     
     relaciones = relacion.relaciones.all()
     for r in relaciones:
         r.adan = relacion.id
         r.cain = None
+        r.version = r.version + 1
         r.save()
+        version_r = VersionItem.objects.create(version=r.version, id_item=r.id, nombre=r.nombre, 
+                                               descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
+                                               costo_temporal=r.costo_temporal, complejidad=r.complejidad,
+                                               estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
+                                               adan=r.adan, cain=r.cain,
+                                               tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
+        if r.padre:
+            version_r.padre = r.padre.id
+        version_r.save()
+        
         hijos = r.relaciones.all()
         resultados = []
         
@@ -1717,7 +2078,17 @@ def quitar_relacion_view(request, id_fase, id_item, id_relacion, id_proyecto):
         for h in resultados:
             h.adan = relacion.id
             h.cain = r.id
+            h.version = h.version + 1
             h.save()
+            version_h = VersionItem.objects.create(version=h.version, id_item=h.id, nombre=h.nombre, 
+                                                   descripcion=h.descripcion, costo_monetario=h.costo_monetario, 
+                                                   costo_temporal=h.costo_temporal, complejidad=h.complejidad,
+                                                   estado=h.estado, fase=h.fase, tipo_item=h.tipo_item,
+                                                   adan=h.adan, cain=h.cain,
+                                                   tipo_relacion=h.tipo_relacion, fecha_version=datetime.datetime.now())
+            if h.padre:
+                version_h.padre = h.padre.id
+            version_h.save()
             
     ctx = {'item':item, 'relacion':relacion, 'fase':fase, 'proyecto':proyecto}
     return render_to_response('item/quitar_relacion.html', ctx, context_instance=RequestContext(request))

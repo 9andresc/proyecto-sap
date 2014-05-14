@@ -8,10 +8,11 @@
 			<h1><small>Items de la fase {{ fase.nombre }}</small></h1>
 			{% if crear_item %}
 			<a class="btn btn-default" href="/desarrollo/fases/items/crear_item/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-record"></span> Crear</a>
-			<br>
 			{% endif %}
+			<a class="btn btn-default" href="/desarrollo/fases/items/revivir_item/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-flash"></span> Revivir item</a>
 			<br>
 			{% if items %}
+				<br>
 				<div class="table-responsive"> 
 	        		<table class="table table-hover">
 	            		<thead>

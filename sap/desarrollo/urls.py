@@ -10,7 +10,7 @@ from desarrollo.views import tipos_atributo_tipo_item_view, agregar_tipo_atribut
 from desarrollo.views import iniciar_fase_view
 from desarrollo.views import finalizar_fase_view
 from desarrollo.views import items_fase_view
-from desarrollo.views import crear_item_view, modificar_item_view, eliminar_item_view, visualizar_item_view, aprobar_item_view
+from desarrollo.views import crear_item_view, modificar_item_view, eliminar_item_view, visualizar_item_view, aprobar_item_view, revivir_item_view, confirmacion_revivir_item_view
 from desarrollo.views import relaciones_item_view, agregar_relacion_view, confirmacion_agregar_relacion_view, quitar_relacion_view
 
 urlpatterns = patterns('',
@@ -43,6 +43,8 @@ urlpatterns = patterns('',
     url(r'^desarrollo/fases/items/eliminar_item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', eliminar_item_view, name="vista_eliminar_item"),
     url(r'^desarrollo/fases/items/item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', visualizar_item_view, name="vista_visualizar_item"),
     url(r'^desarrollo/fases/items/aprobar_item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', aprobar_item_view, name="vista_aprobar_item"),
+    url(r'^desarrollo/fases/items/revivir_item/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', revivir_item_view, name="vista_revivir_item"),
+    url(r'^desarrollo/fases/items/confirmacion_revivir_item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', confirmacion_revivir_item_view, name="vista_confirmacion_revivir_item"),
     url(r'^desarrollo/fases/items/relaciones/item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', relaciones_item_view, name="vista_relaciones_item"),
     url(r'^desarrollo/fases/items/agregar_relacion/item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', agregar_relacion_view, name="vista_agregar_relacion"),
     url(r'^desarrollo/fases/items/confirmacion_agregar_relacion/(?P<id_relacion>\d+)/item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', confirmacion_agregar_relacion_view, name="vista_confirmacion_agregar_relacion"),

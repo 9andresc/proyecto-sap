@@ -52,45 +52,114 @@
 		<br>
 		<div class="input-group">
 			<span class="input-group-addon"><b>* Costo monetario</b></span>
-			<input type="text" class="form-control" id="costo_monetario" name="costo_monetario" value="{{ item.costo_monetario|stringformat:"f" }}">
+			<input type="text" class="form-control" id="costo_monetario" name="costo_monetario" value="{{ item.costo_monetario|stringformat:".3f" }}">
         </div>
         <br>
 		<div class="input-group">
 			<span class="input-group-addon"><b>* Costo temporal</b></span>
-			<input type="text" class="form-control" id="costo_temporal" name="costo_temporal" value="{{ item.costo_temporal|stringformat:"f" }}">
+			<input type="text" class="form-control" id="costo_temporal" name="costo_temporal" value="{{ item.costo_temporal|stringformat:".3f" }}">
         </div>
 		<br>
+		
 		{% for a in atributos %}
-			<div class="input-group">
-				<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
-				{% if a.tipo_atributo.tipo_dato == 0 %}
-					<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"f" }}">
-				{% elif a.tipo_atributo.tipo_dato == 1 %}
-					<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}">
-				{% elif a.tipo_atributo.tipo_dato == 2 %}
-					<textarea rows="3" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">{{ a.valor_texto }}</textarea>
+			{% if a.tipo_atributo.tipo_dato == 0 %}
+				{% if a.tipo_atributo.obligatorio == True %}
+					<div class="input-group">
+						<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+						<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"."|add:a.tipo_atributo.num_precision|add:"f" }}" required="required">
+					</div>
 				{% else %}
-					<select class="form-control" id="{{ a.atributo.Nombre }}" name="{{ a.atributo.Nombre }}">
-	                    {% if a.logico == True %}
-	                    	<option value="1">Desconocido</option>
-	                        <option value="2" selected="selected">Sí</option>
-	                       	<option value="3">No</option>
-	                    {% elif a.logico == False %}
-	                     	<option value="1">Desconocido</option>
-	                      	<option value="2">Sí</option>
-	                       	<option value="3" selected="selected">No</option>
-	                    {% else %}
-	                     	<option value="1" selected="selected">Desconocido</option>
-	                     	<option value="2">Sí</option>
-	                      	<option value="3">No</option>
-	                    {% endif %}
-                    </select>
+					<div class="input-group">
+						<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+						<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"."|add:a.tipo_atributo.num_precision|add:"f" }}">
+					</div>
 				{% endif %}
-			</div>
+			{% elif a.tipo_atributo.tipo_dato == 1 %}
+				{% if a.tipo_atributo.obligatorio == True %}
+					<div class="input-group">
+						<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+						<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}" required="required">
+					</div>
+				{% else %}
+					<div class="input-group">
+						<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+						<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}">
+					</div>
+				{% endif %}
+			{% elif a.tipo_atributo.tipo_dato == 2 %}
+				{% if a.tipo_atributo.obligatorio == True %}
+					<div class="input-group">
+						<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+						<textarea rows="3" class="form-control" maxlength="{{ a.tipo_atributo.textg_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" required>{{ a.valor_texto_grande }}</textarea>
+					</div>
+				{% else %}
+					<div class="input-group">
+						<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+						<textarea rows="3" class="form-control" maxlength="{{ a.tipo_atributo.textg_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">{{ a.valor_texto_grande }}</textarea>
+					</div>
+				{% endif %}
+			{% elif a.tipo_atributo.tipo_dato == 3 %}
+				{% if a.tipo_atributo.obligatorio == True %}
+					<div class="input-group">
+						<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+						<input type="text" class="form-control" maxlength="{{ a.tipo_atributo.textch_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_texto_chico }}" required="required">
+					</div>
+				{% else %}
+					<div class="input-group">
+						<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+						<input type="text" class="form-control" maxlength="{{ a.tipo_atributo.textch_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_texto_chico }}">
+					</div>
+				{% endif %}
+			{% elif a.tipo_atributo.tipo_dato == 4 %}
+				<div class="input-group">
+					<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+					<select class="form-control" id="{{ a.atributo.nombre }}" name="{{ a.atributo.nombre }}">
+		            	{% if a.logico == True %}
+		                	<option value="1" selected="selected">Sí</option>
+		                 	<option value="0">No</option>
+		             	{% elif a.logico == False %}
+		                  	<option value="1">Sí</option>
+		                  	<option value="0" selected="selected">No</option>
+		              	{% endif %}
+	             	</select>
+	             </div>
+	     	{% else %}
+	            {% if a.tipo_atributo.obligatorio == True %}
+	            	{% if a.valor_archivo %}
+	            		<div class="input-group">
+	            			<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+	            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" required="required">
+						</div>
+						<br>
+						<a class="btn btn-info" href="{{ setting.MEDIA_URL }}items/{{ a.valor_archivo }}">Archivo</a>
+						<br>
+					{% else %}
+						<div class="input-group">
+							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+	            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" required="required">
+						</div>
+					{% endif %}
+				{% else %}
+					{% if a.valor_archivo %}
+	            		<div class="input-group">
+	            			<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+	            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">
+						</div>
+						<br>
+						<a class="btn btn-info" href="{{ setting.MEDIA_URL }}items/{{ a.valor_archivo }}">Archivo</a>
+						<br>
+					{% else %}
+						<div class="input-group">
+							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+	            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">
+						</div>
+					{% endif %}
+				{% endif %}
+			{% endif %}
 			<br>
 		{% endfor %}
 		
-        <button type="submit" class="btn btn-success">Modificar</button>
+    	<button type="submit" class="btn btn-success">Modificar</button>
 	</form>
 	<br>
 	<a class="btn btn-default" href="/desarrollo/fases/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
