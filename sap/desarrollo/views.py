@@ -1753,7 +1753,7 @@ def lineas_base_fase_view(request, id_fase, id_proyecto):
                 - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
     crear_linea_base = False
-    modificar_linea_base = False
+    cerrar_linea_base = False
     eliminar_linea_base = False
     visualizar_linea_base = False
     gestionar_items = False
@@ -1764,8 +1764,8 @@ def lineas_base_fase_view(request, id_fase, id_proyecto):
         for p in r.permisos.all():
             if p.nombre == 'Crear linea base':
                 crear_linea_base = True
-            elif p.nombre == 'Modificar linea base':
-                modificar_linea_base= True
+            elif p.nombre == 'Cerrar linea base':
+                cerrar_linea_base= True
             elif p.nombre == 'Eliminar linea base':
                 eliminar_linea_base = True
             elif p.nombre == 'Visualizar linea base':
@@ -1777,9 +1777,9 @@ def lineas_base_fase_view(request, id_fase, id_proyecto):
             elif p.nombre == 'Gestionar items de linea base':
                 gestionar_items = True
                 
-            if crear_linea_base and modificar_linea_base and eliminar_linea_base and visualizar_linea_base and  gestionar_items:
+            if crear_linea_base and cerrar_linea_base and eliminar_linea_base and visualizar_linea_base and  gestionar_items:
                 break
-        if crear_linea_base and modificar_linea_base and eliminar_linea_base and visualizar_linea_base and  gestionar_items:
+        if crear_linea_base and cerrar_linea_base and eliminar_linea_base and visualizar_linea_base and  gestionar_items:
                 break
                 
     proyecto = Proyecto.objects.get(id=id_proyecto)
@@ -1788,7 +1788,7 @@ def lineas_base_fase_view(request, id_fase, id_proyecto):
     if fase.estado == 0:
         valido = False
     lineas_base = fase.lineas_base.all()
-    ctx = {'valido':valido, 'proyecto':proyecto, 'fase':fase, 'lineas_base':lineas_base, 'crear_linea_base':crear_linea_base, 'modificar_linea_base':modificar_linea_base, 'eliminar_linea_base':eliminar_linea_base, 'visualizar_linea_base':visualizar_linea_base,  'gestionar_items':gestionar_items}
+    ctx = {'valido':valido, 'proyecto':proyecto, 'fase':fase, 'lineas_base':lineas_base, 'crear_linea_base':crear_linea_base, 'cerrar_linea_base':cerrar_linea_base, 'eliminar_linea_base':eliminar_linea_base, 'visualizar_linea_base':visualizar_linea_base,  'gestionar_items':gestionar_items}
     return render_to_response('fase/lineas_base_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -2030,23 +2030,23 @@ def cerrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
     """
     ::
     
-        La vista para visualizar una linea base. Para acceder a esta vista se deben cumplir los siguientes
+        La vista para cerrar una linea base. Para acceder a esta vista se deben cumplir los siguientes
         requisitos:
     
             - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Visualizar linea base.
+            - El usuario debe poseer el permiso: Cerrar linea base.
             - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    
- Esta vista permite al usuario cerrar una linea base si se cumple con los siguientes requisitos:
+            
+        Esta vista permite al usuario cerrar una linea base si es que cumple con las siguientes condiciones:
         
             - Debe estar en estado Abierta.
-            - Debe poseer solo items en estado bloqueado.
+            - Todos sus items deben estar en estado Bloqueado.
             
         La vista recibe los siguientes parametros:
         
             - request: contiene informacion sobre la sesion actual.
             - id_fase: el identificador de la fase.
-            - id_linea_base: el identificador de la linea base.
+            - id_linea_base: el identificador de la linea base
             - id_proyecto: el identificador del proyecto.
             
         La vista retorna lo siguiente:
@@ -2055,26 +2055,30 @@ def cerrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
     """
     fase = Fase.objects.get(id=id_fase)
     proyecto = Proyecto.objects.get(id=id_proyecto)
-    inicio_valido = True
+    linea_base = fase.lineas_base.get(id=id_linea_base)
+    
+    cerrado_valido = True
     estado_valido = True
-    roles_valido = True
-    tipos_item_valido = True
-    
-    if fase.estado != 0:
+    if linea_base.estado == 1:
         estado_valido = False
-        inicio_valido = False
-    if fase.tipos_item.count() == 0:
-        tipos_item_valido = False
-        inicio_valido = False
-    if fase.roles.count() == 0:
-        roles_valido = False
-        inicio_valido = False
+        cerrado_valido = False
     
-    if inicio_valido:
-        fase.estado = 1
-        fase.save()
-        ctx = {'fase':fase, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'tipos_item_valido':tipos_item_valido, 'roles_valido':roles_valido, 'proyecto':proyecto}
-        return render_to_response('fase/iniciar_fase.html', ctx, context_instance=RequestContext(request))
+    if estado_valido:
+        cerrado_valido = True
+        items = linea_base.items.all()
+        for i in items:
+            if i.estado != 2:
+                cerrado_valido = False
+                break
+            
+        if cerrado_valido:
+            linea_base.estado = 1
+            linea_base.save()
+            ctx = {'fase':fase, 'cerrado_valido':cerrado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
+            return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
+        else:
+            ctx = {'fase':fase, 'cerrado_valido':cerrado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
+            return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
     else:
-        ctx = {'fase':fase, 'inicio_valido':inicio_valido, 'estado_valido':estado_valido, 'tipos_item_valido':tipos_item_valido, 'roles_valido':roles_valido, 'proyecto':proyecto}
-        return render_to_response('fase/iniciar_fase.html', ctx, context_instance=RequestContext(request))
+        ctx = {'fase':fase, 'cerrado_valido':cerrado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
+        return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))

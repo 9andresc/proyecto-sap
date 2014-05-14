@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}SAP - Confirmación de cerrado de la linea base {{ linea_base.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		{% if cerrado_valido %}
+			<div class="panel panel-success">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Éxito!</h3>
+      			</div>
+      			<div class="panel-body">
+        			La linea base {{ linea_base.nombre }} cumple con todos los requisitos. Ya está cerrada.
+      			</div>
+      		</div>
+		{% else %}
+			<div class="panel panel-warning">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Alto ahí!</h3>
+      			</div>
+      			<div class="panel-body">
+        			La linea base{{ linea_base.nombre }} no cumple con todos los requisitos para cerrarse. A continuación, un listado de todos los requisitos no cumplidos:
+					<br><br>
+					<ul class="list-styled">
+						{% if estado_valido == False %}
+							<li>La linea base debe estar en estado Abierta.</li>
+						{% elif cerrado_valido == False %}
+							<li>La linea base posee al menos un item que no se encuentra en estado Bloqueado.</li>
+						{% endif %}
+					</ul>        			
+      			</div>
+      		</div>
+		{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/fases/lineas_base/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de lineas base de la fase {{ fase.nombre }}</a>
+</div>
+{% endblock %}
