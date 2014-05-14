@@ -12,7 +12,7 @@ from desarrollo.views import finalizar_fase_view
 from desarrollo.views import items_fase_view
 from desarrollo.views import crear_item_view, modificar_item_view, eliminar_item_view, visualizar_item_view, aprobar_item_view
 from desarrollo.views import relaciones_item_view, agregar_relacion_view, confirmacion_agregar_relacion_view, quitar_relacion_view
-
+from desarrollo.views import lineas_base_fase_view
 urlpatterns = patterns('',
     url(r'^desarrollo/$', desarrollo_view, name="vista_desarrollo"),
     url(r'^desarrollo/calcular_costo/proyecto/(?P<id_proyecto>\d+)/$', calcular_costo_view, name="vista_calcular_costo"),
@@ -48,4 +48,5 @@ urlpatterns = patterns('',
     url(r'^desarrollo/fases/items/confirmacion_agregar_relacion/(?P<id_relacion>\d+)/item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', confirmacion_agregar_relacion_view, name="vista_confirmacion_agregar_relacion"),
     url(r'^desarrollo/fases/items/quitar_relacion/(?P<id_relacion>\d+)/item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', quitar_relacion_view, name="vista_quitar_relacion"),
     url(r'^desarrollo/fases/finalizar_fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', finalizar_fase_view, name="vista_finalizar_fase"),
+    url(r'^desarrollo/fases/lineas_base/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', lineas_base_fase_view, name="vista_lineas_base_fase"),
 )

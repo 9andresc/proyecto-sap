@@ -72,6 +72,7 @@ class LineaBase(models.Model):
         descripcion: una breve descripcion sobre la linea base.
         num_secuencia: define el orden numerico de la linea base dentro de una fase.
         estado: estado actual de la linea base
+        fase: fase en la que esta la linea base.
     """
     ESTADOS_LINEA_BASE = (
         (0, "Abierta"),
@@ -83,6 +84,7 @@ class LineaBase(models.Model):
     descripcion = models.TextField(blank=True)
     num_secuencia = models.IntegerField(max_length=30, null=True)
     estado = models.IntegerField(max_length=1, choices=ESTADOS_LINEA_BASE, default=0)
+    fase = models.ForeignKey(Fase, related_name="lineas_base", null=True, blank=True)
     
     def __unicode__(self):
         return self.nombre

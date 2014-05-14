@@ -125,6 +125,7 @@ def fases_proyecto_view(request, id_proyecto):
     eliminar_fase = False
     visualizar_fase = False
     gestionar_tipos_item = False
+    gestionar_lineas_base = False
     gestionar_items = False
     gestionar_roles = False
     iniciar_fase = False
@@ -150,14 +151,16 @@ def fases_proyecto_view(request, id_proyecto):
                 finalizar_fase = True
             elif p.nombre == 'Gestionar items de fase':
                 gestionar_items = True
+            elif p.nombre == 'Gestionar lineas base de fase':
+                gestionar_lineas_base = True
                 
-            if crear_fase and modificar_fase and eliminar_fase and visualizar_fase and gestionar_tipos_item and gestionar_roles and iniciar_fase and finalizar_fase and gestionar_items:
+            if crear_fase and modificar_fase and eliminar_fase and visualizar_fase and gestionar_tipos_item and gestionar_roles and iniciar_fase and finalizar_fase and gestionar_items and gestionar_lineas_base:
                 break
-        if crear_fase and modificar_fase and eliminar_fase and visualizar_fase and gestionar_tipos_item and gestionar_roles and iniciar_fase and finalizar_fase and gestionar_items:
+        if crear_fase and modificar_fase and eliminar_fase and visualizar_fase and gestionar_tipos_item and gestionar_roles and iniciar_fase and finalizar_fase and gestionar_items and gestionar_lineas_base:
                 break
             
     fases = proyecto.fases.all()
-    ctx = {'fases':fases, 'proyecto':proyecto, 'crear_fase':crear_fase, 'modificar_fase':modificar_fase, 'eliminar_fase':eliminar_fase, 'visualizar_fase':visualizar_fase, 'gestionar_tipos_item':gestionar_tipos_item, 'gestionar_roles':gestionar_roles, 'iniciar_fase':iniciar_fase, 'finalizar_fase':finalizar_fase, 'gestionar_items':gestionar_items}
+    ctx = {'fases':fases, 'proyecto':proyecto, 'crear_fase':crear_fase, 'modificar_fase':modificar_fase, 'eliminar_fase':eliminar_fase, 'visualizar_fase':visualizar_fase, 'gestionar_tipos_item':gestionar_tipos_item, 'gestionar_roles':gestionar_roles, 'iniciar_fase':iniciar_fase, 'finalizar_fase':finalizar_fase, 'gestionar_items':gestionar_items, 'gestionar_lineas_base':gestionar_lineas_base}
     return render_to_response('desarrollo/gestion_fases.html', ctx, context_instance=RequestContext(request))
     
 @login_required(login_url='/login/')
@@ -1721,3 +1724,69 @@ def quitar_relacion_view(request, id_fase, id_item, id_relacion, id_proyecto):
             
     ctx = {'item':item, 'relacion':relacion, 'fase':fase, 'proyecto':proyecto}
     return render_to_response('item/quitar_relacion.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar lineas base de fase")
+@fase_miembro_proyecto()
+def lineas_base_fase_view(request, id_fase, id_proyecto):
+    """
+    ::
+    
+        La vista del listado de lineas base por fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+                - El usuario debe estar logueado.
+                - El usuario debe poseer el permiso: Gestionar lineas base de fase.
+                - Debe ser miembro del proyecto en cuestion.
+        
+        Esta vista permite al usuario listar y conocer las opciones de las lineas base por fase.
+        Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+        los botones de accion sobre cada linea base.
+                
+        La vista recibe los siguientes parametros:
+    
+                - request: contiene informacion sobre la sesion actual.
+                - id_fase: el identificador de la fase.
+            
+        La vista retorna lo siguiente:
+        
+                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    crear_linea_base = False
+    modificar_linea_base = False
+    eliminar_linea_base = False
+    visualizar_linea_base = False
+    gestionar_items = False
+#    iniciar_fase = False
+#    finalizar_fase = False
+    roles = request.user.roles.all()
+    for r in roles:
+        for p in r.permisos.all():
+            if p.nombre == 'Crear linea base':
+                crear_linea_base = True
+            elif p.nombre == 'Modificar linea base':
+                modificar_linea_base= True
+            elif p.nombre == 'Eliminar linea base':
+                eliminar_linea_base = True
+            elif p.nombre == 'Visualizar linea base':
+                visualizar_linea_base = True
+#            elif p.nombre == 'Iniciar fase':
+#                iniciar_fase = True
+#            elif p.nombre == 'Finalizar fase':
+#                finalizar_fase = True
+            elif p.nombre == 'Gestionar items de linea base':
+                gestionar_items = True
+                
+            if crear_linea_base and modificar_linea_base and eliminar_linea_base and visualizar_linea_base and  gestionar_items:
+                break
+        if crear_linea_base and modificar_linea_base and eliminar_linea_base and visualizar_linea_base and  gestionar_items:
+                break
+                
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    valido = True
+    if fase.estado == 0:
+        valido = False
+    lineas_base = fase.lineas_base.all()
+    ctx = {'valido':valido, 'proyecto':proyecto, 'fase':fase, 'lineas_base':lineas_base, 'crear_linea_base':crear_linea_base, 'modificar_linea_base':modificar_linea_base, 'eliminar_linea_base':eliminar_linea_base, 'visualizar_linea_base':visualizar_linea_base,  'gestionar_items':gestionar_items}
+    return render_to_response('fase/lineas_base_fase.html', ctx, context_instance=RequestContext(request))

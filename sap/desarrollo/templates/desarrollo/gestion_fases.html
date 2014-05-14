@@ -42,7 +42,7 @@
                     			</td>
                     			<td>{{ f.fecha_inicio }}</td>
                     			<td>
-                    			{% if modificar_fase or eliminar_fase or visualizar_fase or gestionar_roles or gestionar_tipos_item or iniciar_fase or finalizar_fase or gestionar_items %}
+                    			{% if modificar_fase or eliminar_fase or visualizar_fase or gestionar_roles or gestionar_tipos_item or iniciar_fase or finalizar_fase or gestionar_items or gestionar_lineas_base %}
                     			<div class="btn-group">
       								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
       								<ul class="dropdown-menu">
@@ -66,6 +66,9 @@
         								{% endif %}
       									{% if gestionar_items %}
         								<li><a href="/desarrollo/fases/items/fase/{{ f.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-cog"></span> Items</a></li>
+        								{% endif %}
+        								{% if gestionar_lineas_base %}
+        								<li><a href="/desarrollo/fases/lineas_base/fase/{{ f.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-cog"></span> Lineas base</a></li>
         								{% endif %}
         								{% if iniciar_fase or finalizar_fase %}
         								<li class="divider"></li>
