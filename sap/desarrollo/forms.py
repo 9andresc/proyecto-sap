@@ -1,6 +1,6 @@
 import datetime
 from django import forms
-from desarrollo.models import Fase, TipoItem
+from desarrollo.models import Fase, TipoItem, LineaBase
 
 class CustomDateField(forms.DateField):
     def __init__(self, *args, **kwargs):
@@ -232,3 +232,17 @@ class ModificarItemForm(forms.Form):
             return costo_temporal
         else:
             raise forms.ValidationError('El valor del costo temporal debe ser igual o mayor a cero.')
+        
+class CrearLineaBaseForm(forms.Form):
+    """
+    ::
+    
+        Formulario utilizado para la creacion de una linea base.
+        
+        Se especifican todos los atributos de la linea base que deben 
+        ingresarse estableciendo como required=True, si es indispensable
+        completar ese atributo para la creacion de la linea base o caso 
+        contrario required=False.
+    """
+    nombre = forms.CharField(label="Nombre de la linea base", required=True)
+    descripcion = forms.CharField(label="Descripcion", required=False)

@@ -4,8 +4,8 @@ from django.http.response import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from administracion.models import Proyecto, Rol, TipoAtributo
-from desarrollo.models import Item, Fase, TipoItem, ValorAtributo, VersionItem
-from desarrollo.forms import CrearItemForm, ModificarItemForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm, ModificarTipoItemForm
+from desarrollo.models import Item, Fase, TipoItem, ValorAtributo, VersionItem, LineaBase
+from desarrollo.forms import CrearItemForm, ModificarItemForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm, ModificarTipoItemForm, CrearLineaBaseForm
 from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto
 
 @login_required(login_url='/login/')
@@ -1790,3 +1790,55 @@ def lineas_base_fase_view(request, id_fase, id_proyecto):
     lineas_base = fase.lineas_base.all()
     ctx = {'valido':valido, 'proyecto':proyecto, 'fase':fase, 'lineas_base':lineas_base, 'crear_linea_base':crear_linea_base, 'modificar_linea_base':modificar_linea_base, 'eliminar_linea_base':eliminar_linea_base, 'visualizar_linea_base':visualizar_linea_base,  'gestionar_items':gestionar_items}
     return render_to_response('fase/lineas_base_fase.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Crear linea base")
+@fase_miembro_proyecto()
+def crear_linea_base_view(request, id_fase, id_proyecto):
+    """
+    ::
+    
+        La vista para crear una linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Crear linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario crear y agregar una linea base a la fase previamente seleccionada, para lograr esto, 
+        se verifica la validez de cada campo ingresado y luego se crea la linea base de acuerdo a los campos ingresados y 
+        se almacena en la fase. 
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de lineas base por fase. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    
+    form = CrearLineaBaseForm()
+    if request.method == "POST":
+        form = CrearLineaBaseForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            
+            linea_base = LineaBase.objects.create(nombre=nombre, descripcion=descripcion, num_secuencia=fase.lineas_base.count()+1)
+            linea_base.save()
+            fase.lineas_base.add(linea_base)
+            fase.save()
+            return HttpResponseRedirect('/desarrollo/fases/lineas_base/fase/%s/proyecto/%s'%(id_fase, id_proyecto))
+            
+        else:
+            ctx = {'form':form, 'fase':fase, 'proyecto':proyecto}
+            return render_to_response('linea_base/crear_linea_base.html', ctx, context_instance=RequestContext(request))
+    ctx = {'form':form, 'fase':fase, 'proyecto':proyecto}
+    return render_to_response('linea_base/crear_linea_base.html', ctx, context_instance=RequestContext(request))
