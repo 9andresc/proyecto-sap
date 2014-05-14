@@ -5,7 +5,9 @@
 <div class="jumbotron">
 	<div class="bs-example">
 		<h1><small>Items de la linea base {{ linea_base.nombre }}</small></h1>
+		{% ifequal linea_base.estado 0 %}						
 		<a class="btn btn-default" href="/desarrollo/lineas_base/agregar_item/linea_base/{{ linea_base.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
+		{% endifequal %}
 		<br><br>
 		{% if items %}
 			<div class="table-responsive"> 
@@ -22,7 +24,9 @@
                 			<tr>
                     			<td>{{ i.id }}</td>
                     			<td>{{ i.nombre }}</td>
+                    		{% ifequal linea_base.estado 0 %}
                     			<td><a class="btn btn-default" href="/desarrollo/lineas_base/quitar_item/{{ i.id }}/linea_base/{{ linea_base.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-minus"></span> Quitar</a></td>
+                			{% endifequal %}
                 			</tr>
                 		{% endfor %}
                 	</tbody>
