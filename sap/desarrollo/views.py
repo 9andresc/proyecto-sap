@@ -1287,6 +1287,20 @@ def crear_item_view(request, id_fase, id_proyecto):
     ctx = {'form':form, 'fase':fase, 'proyecto':proyecto, 'tipos_item':tipos_item}
     return render_to_response('item/crear_item.html', ctx, context_instance=RequestContext(request))
 
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+    
+def is_date(s):
+    try:
+        datetime.datetime.strptime(s, '%d/%m/%Y')
+        return True
+    except ValueError:
+        return False
+
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Modificar item")
 @fase_miembro_proyecto()
@@ -1335,10 +1349,16 @@ def modificar_item_view(request, id_fase, id_item, id_proyecto):
                 for key, value in request.POST.iteritems():
                     if a.tipo_atributo.nombre == key:
                         if a.tipo_atributo.tipo_dato == 0:
-                            a.valor_numerico = value
+                            if is_number(value):
+                                a.valor_numerico = value
+                            else:
+                                a.valor_numerico = None
                             a.save()
                         elif a.tipo_atributo.tipo_dato == 1:
-                            a.valor_fecha = value
+                            if is_date(value):
+                                a.valor_fecha = value
+                            else:
+                                a.valor_fecha = None
                             a.save()
                         elif a.tipo_atributo.tipo_dato == 2:
                             a.valor_texto_grande = value
