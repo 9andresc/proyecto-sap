@@ -2353,11 +2353,11 @@ def confirmacion_reversionar_item_view(request, id_fase, id_item, id_reversion, 
                     
                     # Version del item guardada.
                     version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
-                                                           descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
-                                                           costo_temporal=item.costo_temporal, complejidad=item.complejidad,
-                                                           estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
-                                                           adan=item.adan, cain=item.cain,
-                                                           tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
+                                                              descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                              costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                              estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                                              adan=item.adan, cain=item.cain,
+                                                              tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
                     if item.padre:
                         version_item.padre = item.padre.id
                     version_item.save()
@@ -2366,6 +2366,11 @@ def confirmacion_reversionar_item_view(request, id_fase, id_item, id_reversion, 
                     relaciones = Item.objects.filter(padre=item)
                     # Si existe al menos uno, se cargaran todos los hijos/sucesores en la lista resultados.
                     if relaciones:
+                        item.estado = 1
+                        item.save()
+                        version_item.estado = 1
+                        version_item.save()
+                        
                         resultados = []
                         
                         while 1:
@@ -2421,6 +2426,10 @@ def confirmacion_reversionar_item_view(request, id_fase, id_item, id_reversion, 
                     relaciones = Item.objects.filter(padre=item)
                     # Si existe al menos uno, se cargaran todos los hijos/sucesores en la lista resultados.
                     if relaciones:
+                        item.estado = 1
+                        item.save()
+                        version_item.estado = 1
+                        version_item.save()
                         resultados = []
                         
                         while 1:
@@ -2481,9 +2490,14 @@ def confirmacion_reversionar_item_view(request, id_fase, id_item, id_reversion, 
                                                           estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
                                                           adan=item.None, cain=None, padre = None,
                                                           tipo_relacion=None, fecha_version=datetime.datetime.now())
-                
+                version_item.save()
                 # Verificamos si existen items en el proyecto que son hijos/sucesores del item a reversionar.
                 relaciones = Item.objects.filter(padre=item)
+                if relaciones:
+                    item.estado = 1
+                    item.save()
+                    version_item.estado = 1
+                    version_item.save()
                 # Si existe al menos uno, se modificaran los campos de gestion de consistencia del grafo de los 
                 # hijos/sucesores directos del item a revivir.
                 for r in relaciones:
@@ -2566,9 +2580,14 @@ def confirmacion_reversionar_item_view(request, id_fase, id_item, id_reversion, 
                                                       estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
                                                       adan=None, cain=None, padre = None,
                                                       tipo_relacion=None, fecha_version=datetime.datetime.now())
-                
+            version_item.save()
             # Verificamos si existen items en el proyecto que son hijos/sucesores del item a reversionar.
             relaciones = Item.objects.filter(padre=item)
+            if relaciones:
+                item.estado = 1
+                item.save()
+                version_item.estado = 1
+                version_item.save()
             # Si existe al menos uno, se modificaran los campos de gestion de consistencia del grafo de los 
             # hijos/sucesores directos del item a revivir.
             for r in relaciones:
