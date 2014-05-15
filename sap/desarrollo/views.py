@@ -162,9 +162,6 @@ def fases_proyecto_view(request, id_proyecto):
                 break
             
     fases = proyecto.fases.all()
-<<<<<<< HEAD
-    ctx = {'fases':fases, 'proyecto':proyecto, 'crear_fase':crear_fase, 'modificar_fase':modificar_fase, 'eliminar_fase':eliminar_fase, 'visualizar_fase':visualizar_fase, 'gestionar_tipos_item':gestionar_tipos_item, 'gestionar_roles':gestionar_roles, 'iniciar_fase':iniciar_fase, 'finalizar_fase':finalizar_fase, 'gestionar_items':gestionar_items, 'gestionar_lineas_base':gestionar_lineas_base}
-=======
     grafo_proyecto = pydot.Dot(graph_type='digraph', fontname="Verdana", size="7, 7")
     grafo_proyecto.set_node_defaults(style="filled", fillcolor="white", fixedsize='true', height=.85, width=.85)
     grafo_proyecto.set_edge_defaults(color="black", arrowhead="vee")
@@ -228,7 +225,6 @@ def fases_proyecto_view(request, id_proyecto):
     ruta_grafo = str(settings.MEDIA_URL) + "grafos/grafo_proyecto_" + str(proyecto.nombre) + ".png"
 
     ctx = {'fases':fases, 'proyecto':proyecto, 'ruta_grafo':ruta_grafo, 'crear_fase':crear_fase, 'modificar_fase':modificar_fase, 'eliminar_fase':eliminar_fase, 'visualizar_fase':visualizar_fase, 'gestionar_tipos_item':gestionar_tipos_item, 'gestionar_roles':gestionar_roles, 'iniciar_fase':iniciar_fase, 'finalizar_fase':finalizar_fase, 'gestionar_items':gestionar_items}
->>>>>>> refs/heads/gustavo
     return render_to_response('desarrollo/gestion_fases.html', ctx, context_instance=RequestContext(request))
     
 @login_required(login_url='/login/')
