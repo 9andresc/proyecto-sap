@@ -460,5 +460,61 @@
     "fields": {
         "nombre": "Reversionar item"
     }
+},
+{
+    "pk": 68, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar lineas base de fase"
+    }
+},
+{
+    "pk": 69, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear linea base"
+    }
+},
+{
+    "pk": 70, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar linea base"
+    }
+},
+{
+    "pk": 71, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar items de linea base"
+    }
+},
+{
+    "pk": 72, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar item a linea base"
+    }
+},
+{
+    "pk": 73, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar item de linea base"
+    }
+},
+{
+    "pk": 74, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Cerrar linea base"
+    }
+},
+{
+    "pk": 75, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quebrar linea base"
+    }
 }
 ]
