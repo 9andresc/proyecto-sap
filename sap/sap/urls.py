@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from settings import MEDIA_ROOT
+from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
@@ -12,5 +12,5 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('',
-    (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': MEDIA_ROOT}),
-)
+    (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+    'document_root': settings.MEDIA_ROOT}))

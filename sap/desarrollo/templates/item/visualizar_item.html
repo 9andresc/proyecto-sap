@@ -24,10 +24,12 @@
 			{% ifequal item.estado 3 %}
 				<input type="text" class="form-control" id="estado" name="estado" value="En revisión" disabled="disabled">
 			{% endifequal %}
-			{% ifequal item.estado 4 %}
-				<input type="text" class="form-control" id="estado" name="estado" value="Eliminado" disabled="disabled">
-			{% endifequal %}
 		</div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Versión</b></span>
+			<input type="text" class="form-control" id="version" name="version" value="{{ item.version }}" disabled="disabled">
+        </div>
         <br>
         <div class="input-group">
 			<span class="input-group-addon"><b>Descripción</b></span>
@@ -40,26 +42,41 @@
         </div>
         <br>
         <div class="input-group">
-			<span class="input-group-addon"><b>Costo</b></span>
-			<input type="text" class="form-control" id="costo" name="costo" value="{{ item.costo|stringformat:"f" }}" disabled="disabled">
+			<span class="input-group-addon"><b>Costo monetario</b></span>
+			<input type="text" class="form-control" id="costo_monetario" name="costo_monetario" value="{{ item.costo_monetario|stringformat:".3f" }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Costo temporal</b></span>
+			<input type="text" class="form-control" id="costo_temporal" name="costo_temporal" value="{{ item.costo_temporal|stringformat:".3f" }}" disabled="disabled">
         </div>
         <br>
         
         {% for a in atributos %}
 			<div class="input-group">
-				<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
 				{% if a.tipo_atributo.tipo_dato == 0 %}
-					<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"f" }}" disabled="disabled">
+					<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+					<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"."|add:a.tipo_atributo.num_precision|add:"f" }}" disabled="disabled">
 				{% elif a.tipo_atributo.tipo_dato == 1 %}
+					<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
 					<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}" disabled="disabled">
 				{% elif a.tipo_atributo.tipo_dato == 2 %}
-					<textarea rows="3" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" disabled="disabled">{{ a.valor_texto }}</textarea>
-				{% else %}
-	            	{% if a.logico == True %}
-	                   	<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="Sí" disabled="disabled">
-	              	{% else %}
-	              		<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="No" disabled="disabled">
-	                {% endif %}
+					<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+					<textarea rows="3" class="form-control" maxlength="{{ a.tipo_atributo.textg_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" disabled="disabled">{{ a.valor_texto_grande }}</textarea>
+				{% elif a.tipo_atributo.tipo_dato == 3 %}
+					<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+					<input type="text" class="form-control" maxlength="{{ a.tipo_atributo.textch_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_texto_chico }}" disabled="disabled">
+				{% elif a.tipo_atributo.tipo_dato == 4 %}
+					<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+					{% ifequal item.estado 0 %}
+						<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="No" disabled="disabled">
+					{% endifequal %}
+					{% ifequal item.estado 1 %}
+						<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="Sí" disabled="disabled">
+					{% endifequal %}
+	            {% else %}
+	            	<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+	            	<a class="form-control" href="{{ setting.MEDIA_URL }}{{ a.valor_archivo }}">Archivo</a>
 				{% endif %}
 			</div>
 			<br>

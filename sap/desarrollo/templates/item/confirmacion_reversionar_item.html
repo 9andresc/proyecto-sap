@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}SAP - Confirmación{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		{% if estado_valido and fase_valida %}
+			{% if existe_padre %}
+				{% if estado_padre_valido %}
+					<div class="panel panel-success">
+			      		<div class="panel-heading">
+			        		<h3 class="panel-title">¡Éxito!</h3>
+			      		</div>
+			      		<div class="panel-body">
+			        		La versión <b>{{ item_reversion.version }}</b> reemplazo correctamente a la versión anterior del item <i>{{ item.nombre }}</i>.
+			      		</div>
+	      			</div>
+				{% else %}
+					<div class="panel panel-info">
+			      		<div class="panel-heading">
+			        		<h3 class="panel-title">Info</h3>
+			      		</div>
+			      		<div class="panel-body">
+			        		La versión <b>{{ item_reversion.version }}</b> reemplazo correctamente a la versión anterior del item <i>{{ item.nombre }}</i>. No obstante, 
+			        		el padre del item reversionado no está en estado <b>Aprobado</b> ni <b>Bloqueado</b>. Por ello, el item reversionado a quedado sin padre/antecesor.
+			      		</div>
+	      			</div>
+	      		{% endif %}
+			{% else %}
+				<div class="panel panel-success">
+			      	<div class="panel-heading">
+			        	<h3 class="panel-title">¡Éxito!</h3>
+			      	</div>
+			      	<div class="panel-body">
+			        	La versión <b>{{ item_reversion.version }}</b> reemplazo correctamente a la versión anterior del item <i>{{ item.nombre }}</i>. Además, 
+			        	el item reversionado es independiente de todo item padre/antecesor.
+			      	</div>
+	      		</div>
+			{% endif %}
+		{% else %}
+			<div class="panel panel-warning">
+	      		<div class="panel-heading">
+	        		<h3 class="panel-title">¡Alto ahí!</h3>
+	      		</div>
+	      		<div class="panel-body">
+	        		La versión <b>{{ item_reversion.version }}</b> no pudo reemplazar a la versión <b>{{ item.version }}</b> del item <i>{{ item.nombre }}</i>, debido a que:
+	        		<br><br>
+	        		<ul>
+	        			{% if estado_valido == False %}
+	        				<li>El estado del item <i>{{ item.nombre }}</i> es <b>Aprobado</b> o <b>Bloqueado</b>. Por tanto, no se puede reversionar este item.</li>
+	        			{% endif %}
+	        			{% if fase_valida == False %}
+	        				<li>El estado de la fase <i>{{ fase.nombre }}</i> es <b>Finalizado</b>. Por tanto, no se pueden reversionar los items de esta fase.</li>
+	        			{% endif %}
+	        		</ul>
+	      		</div>
+	      	</div>
+		{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/fases/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
+</div>
+{% endblock %}

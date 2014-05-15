@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxLengthValidator
 from administracion.models import Rol, Proyecto, TipoAtributo
 
 ESTADOS_FASE = (
@@ -100,12 +101,15 @@ class Item(models.Model):
         que posee un Item son:
 
         nombre: nombre del item.
+        version: indica la version actual del item.
         descripcion: una breve descripcion sobre el item.
         costo_*: costo del item.
         complejidad: complejidad respectiva del item.
         estado: estado actual del item.
         fase: fase en la que esta el item.
         tipo_item: tipo de item vinculado al item.
+        adan: es el identificador de un item raiz, su proposito es evitar bucles en el grafo de items.
+        cain: es el identificador de un item post-raiz, su proposito es evitar bucles en el grafo de items.
         padre: es item padre/antecesor del item.
         tipo_relacion: indica que tipo de relacion tiene el item con el padre/antecesor (Hijo o Sucesor).
     """
@@ -114,6 +118,7 @@ class Item(models.Model):
         (1, "Aprobado"),
         (2, "Bloqueado"),
         (3, "En revision"),
+        (4, "Eliminado"),
     )
     TIPOS_RELACION = (
         (0, "Hijo"),
@@ -121,6 +126,7 @@ class Item(models.Model):
     )
     
     nombre = models.CharField(max_length=50, blank=False)
+    version = models.FloatField(null=False, default=1.0)
     descripcion = models.TextField(blank=True)
     costo_monetario = models.FloatField(null=True, blank=True, default=0)
     costo_temporal = models.FloatField(null=True, blank=True, default=0)
@@ -129,10 +135,10 @@ class Item(models.Model):
     fase = models.ForeignKey(Fase, related_name="items", null=True, blank=True)
     linea_base = models.ForeignKey(LineaBase, related_name="items", null=True, blank=True)
     tipo_item = models.ForeignKey(TipoItem, related_name="items", null=True, blank=True)
-    adan = models.IntegerField(null=True)
-    cain = models.IntegerField(null=True)
+    adan = models.IntegerField(null=True, blank=True)
+    cain = models.IntegerField(null=True, blank=True)
     padre = models.ForeignKey('desarrollo.Item', related_name="relaciones", null=True, blank=True)
-    tipo_relacion = models.IntegerField(max_length=1, choices=TIPOS_RELACION, null=True)
+    tipo_relacion = models.IntegerField(max_length=1, choices=TIPOS_RELACION, null=True, blank=True)
     
     def __unicode__(self):
         return self.nombre
@@ -156,6 +162,8 @@ class VersionItem(models.Model):
         estado: estado actual del item.
         fase: fase en la que esta el item.
         tipo_item: tipo de item vinculado al item.
+        adan: es el identificador de un item raiz, su proposito es evitar bucles en el grafo de items.
+        cain: es el identificador de un item post-raiz, su proposito es evitar bucles en el grafo de items.
         padre: el padre (o antecesor) del item.
         tipo_relacion: indica que clase de relacion se mantiene con el item padre o antecesor.
         fecha_version: fecha de la creacion de la version.
@@ -177,7 +185,7 @@ class VersionItem(models.Model):
     fecha_version = models.DateTimeField(null=True)
     
     class Meta:
-        ordering = ["id_item", "version"]
+        ordering = ["version"]
         
 class ValorAtributo(models.Model):
     """
@@ -189,7 +197,7 @@ class ValorAtributo(models.Model):
         item: item al que va ligado.
         tipo_item:tipo de item al que va ligado.
         tipo_atributo: tipo de atributo al que va ligado.
-        valor_*: valor del tipo de atributo, que puede ser Fecha, Numerico, Logico, Texto grande o Texto chico.
+        valor_*: valor del tipo de atributo, que puede ser Fecha, Numerico, Logico, Texto grande, Texto chico o Archivo.
     """
     item = models.ForeignKey(Item, related_name="valores", null=True, blank=True)
     tipo_item = models.ForeignKey(TipoItem, null=True, blank=True)
@@ -197,6 +205,6 @@ class ValorAtributo(models.Model):
     valor_fecha = models.DateField(null=True)
     valor_numerico = models.DecimalField(max_digits=30, decimal_places=10, null=True)
     valor_logico = models.BooleanField(default=True)
-    valor_texto_grande = models.TextField(blank=True)
-    valor_texto_chico = models.CharField(max_length=50, blank=True)
-    
+    valor_texto_grande = models.TextField(validators=[MaxLengthValidator(250)], blank=True)
+    valor_texto_chico = models.CharField(max_length=30, blank=True)
+    valor_archivo = models.FileField(upload_to='archivos/items/')

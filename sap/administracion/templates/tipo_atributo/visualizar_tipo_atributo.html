@@ -19,10 +19,16 @@
 				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Fecha" disabled="disabled">
 			{% endifequal %}
 			{% ifequal tipo_atributo.tipo_dato 2 %}
-				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Texto" disabled="disabled">
+				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Texto Grande" disabled="disabled">
 			{% endifequal %}
 			{% ifequal tipo_atributo.tipo_dato 3 %}
+				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Texto Chico" disabled="disabled">
+			{% endifequal %}
+			{% ifequal tipo_atributo.tipo_dato 4 %}
 				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Lógico" disabled="disabled">
+			{% endifequal %}
+			{% ifequal tipo_atributo.tipo_dato 5 %}
+				<input type="text" class="form-control" id="tipo_dato" name="tipo_dato" value="Archivo" disabled="disabled">
 			{% endifequal %}
 		</div>
         <br>
@@ -30,8 +36,37 @@
 			<span class="input-group-addon"><b>Descripción</b></span>
 			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" disabled="disabled">{{ tipo_atributo.descripcion }}</textarea>
         </div>
-        
-		<br>
+  		<br>
+	    <div class="input-group">
+			<span class="input-group-addon"><b>Longitud numérica</b></span>
+			<input type="number" class="form-control" id="num_longitud" name="num_longitud" value="{{ tipo_atributo.num_longitud }}" disabled="disabled">
+	   	</div>
+	    <br>
+	   	<div class="input-group">
+			<span class="input-group-addon"><b>Precisión numérica</b></span>
+			<input type="number" class="form-control" id="num_precision" name="num_precision" value="{{ tipo_atributo.num_precision }}" disabled="disabled">
+	    </div>
+	    <br>
+	    <div class="input-group">
+			<span class="input-group-addon"><b>Longitud del texto chico</b></span>
+			<input type="number" class="form-control" id="textch_longitud" name="textch_longitud" value="{{ tipo_atributo.textch_longitud }}" disabled="disabled">
+	    </div>
+	    <br>
+	    <div class="input-group">
+			<span class="input-group-addon"><b>Longitud del texto grande</b></span>
+			<input type="number" class="form-control" id="textg_longitud" name="textg_longitud" value="{{ tipo_atributo.textg_longitud }}" disabled="disabled">
+	    </div>
+	    <br>
+	    <div class="input-group">
+			<span class="input-group-addon"><b>Obligatorio</b></span>
+			{% if tipo_atributo.obligatorio %}
+				<input type="text" class="form-control" id="obligatorio" name="obligatorio" value="Sí" disabled="disabled">
+			{% else %}
+				<input type="text" class="form-control" id="obligatorio" name="obligatorio" value="No" disabled="disabled">
+			{% endif %}
+		</div>
+	    <br>
+
 		<a class="btn btn-default" href="{% url 'vista_gestion_tipos_atributo' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de tipos de atributo</a>
 	</div>
 </div>

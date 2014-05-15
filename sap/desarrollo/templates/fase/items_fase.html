@@ -8,10 +8,11 @@
 			<h1><small>Items de la fase {{ fase.nombre }}</small></h1>
 			{% if crear_item %}
 			<a class="btn btn-default" href="/desarrollo/fases/items/crear_item/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-record"></span> Crear</a>
-			<br>
 			{% endif %}
+			<a class="btn btn-default" href="/desarrollo/fases/items/revivir_item/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-flash"></span> Revivir item</a>
 			<br>
 			{% if items %}
+				<br>
 				<div class="table-responsive"> 
 	        		<table class="table table-hover">
 	            		<thead>
@@ -42,7 +43,7 @@
 									{% endifequal %}
 	                    			</td>
 	                    			<td>
-	                    			{% if modificar_item or eliminar_item or visualizar_item or gestionar_relaciones or aprobar_item %}
+	                    			{% if modificar_item or eliminar_item or visualizar_item or gestionar_relaciones or aprobar_item or gestionar_versiones %}
 	                    			<div class="btn-group">
 	      								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
 	      								<ul class="dropdown-menu">
@@ -58,11 +59,15 @@
 	      									{% if aprobar_item %}
 	        									<li><a href="/desarrollo/fases/items/aprobar_item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-certificate"></span> Aprobar</a></li>
 	      									{% endif %}
-	      									{% if gestionar_relaciones %}
+	      									<li><a href="/desarrollo/fases/items/desaprobar_item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-remove-sign"></span> Desaprobar</a></li>
+	      									{% if gestionar_relaciones or gestionar_versiones %}
 	      										<li class="divider"></li>
 	      									{% endif %}
 	      									{% if gestionar_relaciones %}
 	        									<li><a href="/desarrollo/fases/items/relaciones/item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-random"></span> Relaciones</a></li>
+	      									{% endif %}
+	      									{% if gestionar_versiones %}
+	        									<li><a href="/desarrollo/fases/items/versiones/item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-refresh"></span> Versiones</a></li>
 	      									{% endif %}
 	      								</ul>
 	    							</div>

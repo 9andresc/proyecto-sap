@@ -413,6 +413,55 @@
     }
 },
 {
+    "pk": 61, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar relaciones de item"
+    }
+},
+{
+    "pk": 62, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar relacion a item"
+    }
+},
+{
+    "pk": 63, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar relacion de item"
+    }
+},
+{
+    "pk": 64, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Aprobar item"
+    }
+},
+{
+    "pk": 65, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Revivir item"
+    }
+},
+{
+    "pk": 66, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar versiones de item"
+    }
+},
+{
+    "pk": 67, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Reversionar item"
+    }
+},
+{
     "pk": 1, 
     "model": "administracion.rol", 
     "fields": {
@@ -447,10 +496,12 @@
         "permisos": [
             32, 
             29, 
+            62, 
             42, 
             35, 
             55, 
             26, 
+            64, 
             49, 
             5, 
             37, 
@@ -466,11 +517,13 @@
             28, 
             31, 
             44, 
+            61, 
             41, 
             34, 
             54, 
             60, 
             25, 
+            66, 
             50, 
             24, 
             38, 
@@ -480,10 +533,13 @@
             53, 
             33, 
             30, 
+            63, 
             43, 
             36, 
             56, 
             27, 
+            67, 
+            65, 
             40, 
             47, 
             23, 
@@ -499,11 +555,18 @@
         "descripcion": "Posee todos los permisos de gesti\u00f3n de items.", 
         "nombre": "Desarrollador", 
         "permisos": [
+            62, 
+            64, 
             5, 
             45, 
             48, 
             44, 
+            61, 
+            66, 
             46, 
+            63, 
+            67, 
+            65, 
             47
         ]
     }

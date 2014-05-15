@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}SAP - Confirmación{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		{% if padre_valido %}
+			{% if fase_valida %}
+				{% if existe_padre %}
+					<div class="panel panel-success">
+		      			<div class="panel-heading">
+		        			<h3 class="panel-title">¡Éxito!</h3>
+		      			</div>
+		      			<div class="panel-body">
+		        			El item <i>{{ item_revivido.nombre }}</i> fue revivido exitosamente. Además, fue asignado al conjunto de hijos/sucesores del item 
+		        			<i>{{ item_padre.nombre }}</i>.
+		      			</div>
+		      		</div>
+		      	{% else %}
+		      		<div class="panel panel-info">
+		      			<div class="panel-heading">
+		        			<h3 class="panel-title">Info</h3>
+		      			</div>
+		      			<div class="panel-body">
+		        			El item <i>{{ item_revivido.nombre }}</i> fue revivido exitosamente. No obstante, el padre del item revivido ya no existe. Por lo 
+		        			tanto, no posee padre ni antecesor.
+		      			</div>
+		      		</div>
+		      	{% endif %}
+			{% else %}
+				<div class="panel panel-warning">
+	      			<div class="panel-heading">
+	        			<h3 class="panel-title">¡Alto ahí!</h3>
+	      			</div>
+	      			<div class="panel-body">
+	        			El item <i>{{ item.nombre }}</i> no pudo ser revivido debido a que la fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>Finalizado</b>.
+	      			</div>
+	      		</div>
+	      	{% endif %}
+		{% else %}
+			{% if fase_valida %}
+				<div class="panel panel-success">
+	      			<div class="panel-heading">
+	        			<h3 class="panel-title">¡Éxito!</h3>
+	      			</div>
+	      			<div class="panel-body">
+	        			El item <i>{{ item_revivido.nombre }}</i> fue revivido exitosamente. Como el item revivido no posee padre ni antecesor, ha quedado 
+	        			independiente de todo item de la fase <i>{{ fase.nombre }}</i>.
+	      			</div>
+	      		</div>
+			{% else %}
+				<div class="panel panel-warning">
+	      			<div class="panel-heading">
+	        			<h3 class="panel-title">¡Alto ahí!</h3>
+	      			</div>
+	      			<div class="panel-body">
+	        			El item <i>{{ item.nombre }}</i> no pudo ser revivido debido a que la fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>Finalizado</b>.
+	      			</div>
+	      		</div>
+	      	{% endif %}
+		{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/fases/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
+</div>
+{% endblock %}
