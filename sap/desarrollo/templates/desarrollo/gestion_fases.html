@@ -91,6 +91,10 @@
                 	</tbody>
         		</table>
     		</div>
+    		<h2 align="center"><small>Grafo de items del proyecto {{ proyecto.nombre }}</small></h2>
+    		<div align="center">
+			 	<img src="{{ ruta_grafo }}" alt="Grafo del proyecto {{ proyecto.nombre }}" class="img-thumbnail" width="400px" height="400px">
+			</div>
     	{% else %}
     		<h3>No posee fases.</h3>
     	{% endif %}

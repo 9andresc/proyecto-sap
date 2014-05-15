@@ -1,4 +1,5 @@
 import datetime
+import pydot
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.http.response import HttpResponseRedirect
@@ -158,7 +159,69 @@ def fases_proyecto_view(request, id_proyecto):
                 break
             
     fases = proyecto.fases.all()
-    ctx = {'fases':fases, 'proyecto':proyecto, 'crear_fase':crear_fase, 'modificar_fase':modificar_fase, 'eliminar_fase':eliminar_fase, 'visualizar_fase':visualizar_fase, 'gestionar_tipos_item':gestionar_tipos_item, 'gestionar_roles':gestionar_roles, 'iniciar_fase':iniciar_fase, 'finalizar_fase':finalizar_fase, 'gestionar_items':gestionar_items}
+    grafo_proyecto = pydot.Dot(graph_type='digraph', fontname="Verdana", size="7, 7")
+    grafo_proyecto.set_node_defaults(style="filled", fillcolor="white", fixedsize='true', height=.85, width=.85)
+    grafo_proyecto.set_edge_defaults(color="black", arrowhead="vee")
+    
+    for f in fases:
+        partes = f.nombre.split(" ")
+        nombre_cluster_fase = ""
+        for p in partes:
+            nombre_cluster_fase = nombre_cluster_fase + p
+        cluster_fase = pydot.Cluster(nombre_cluster_fase, label=nombre_cluster_fase, shape='rectangle', fontsize=15)
+        items = f.items.all()
+        if items:
+            for i in items:
+                partes = i.nombre.split(" ")
+                nombre_nodo_item = ""
+                for p in partes:
+                    nombre_nodo_item = nombre_nodo_item + p
+                color_estado = "white"
+                if i.estado == 1:
+                    color_estado = "#40FF00"
+                elif i.estado == 2:
+                    color_estado = "#DF0101"
+                elif i.estado == 3:
+                    color_estado = "#BDBDBD"
+                
+                cluster_fase.add_node(pydot.Node(nombre_cluster_fase + "_" + nombre_nodo_item, label=nombre_nodo_item, fillcolor=color_estado, fontsize=15))
+        grafo_proyecto.add_subgraph(cluster_fase)
+
+    for f in fases:
+        partes = f.nombre.split(" ")
+        nombre_cluster_fase = ""
+        for p in partes:
+            nombre_cluster_fase = nombre_cluster_fase + p
+        items = f.items.all()
+        for i in items:
+            partes = i.nombre.split(" ")
+            nombre_nodo_item = ""
+            for p in partes:
+                nombre_nodo_item = nombre_nodo_item + p
+            relaciones = i.relaciones.all()
+            for r in relaciones:
+                if r.fase != i.fase:
+                    partes = r.nombre.split(" ")
+                    nombre_nodo_r = ""
+                    for p in partes:
+                        nombre_nodo_r = nombre_nodo_r + p
+                    partes = r.fase.nombre.split(" ")
+                    nombre_cluster_fase_relacion = ""
+                    for p in partes:
+                        nombre_cluster_fase_relacion = nombre_cluster_fase_relacion + p
+                    grafo_proyecto.add_edge(pydot.Edge(nombre_cluster_fase + "_" + nombre_nodo_item, nombre_cluster_fase_relacion + "_" + nombre_nodo_r))
+                else:
+                    partes = r.nombre.split(" ")
+                    nombre_nodo_r = ""
+                    for p in partes:
+                        nombre_nodo_r = nombre_nodo_r + p
+                    grafo_proyecto.add_edge(pydot.Edge(nombre_cluster_fase + "_" + nombre_nodo_item, nombre_cluster_fase + "_" + nombre_nodo_r))
+            
+    ruta_grafo = str(settings.MEDIA_ROOT) + "grafos/grafo_proyecto_" + str(proyecto.nombre) + ".png"
+    grafo_proyecto.write(ruta_grafo, prog='dot', format='png')
+    ruta_grafo = str(settings.MEDIA_URL) + "grafos/grafo_proyecto_" + str(proyecto.nombre) + ".png"
+
+    ctx = {'fases':fases, 'proyecto':proyecto, 'ruta_grafo':ruta_grafo, 'crear_fase':crear_fase, 'modificar_fase':modificar_fase, 'eliminar_fase':eliminar_fase, 'visualizar_fase':visualizar_fase, 'gestionar_tipos_item':gestionar_tipos_item, 'gestionar_roles':gestionar_roles, 'iniciar_fase':iniciar_fase, 'finalizar_fase':finalizar_fase, 'gestionar_items':gestionar_items}
     return render_to_response('desarrollo/gestion_fases.html', ctx, context_instance=RequestContext(request))
     
 @login_required(login_url='/login/')
