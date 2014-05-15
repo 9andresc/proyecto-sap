@@ -204,7 +204,7 @@ class ValorAtributo(models.Model):
     tipo_atributo = models.ForeignKey(TipoAtributo, null=True, blank=True)
     valor_fecha = models.DateField(null=True)
     valor_numerico = models.DecimalField(max_digits=30, decimal_places=10, null=True)
-    valor_logico = models.BooleanField(default=True)
+    valor_logico = models.NullBooleanField(null=True, blank=True)
     valor_texto_grande = models.TextField(validators=[MaxLengthValidator(250)], blank=True)
     valor_texto_chico = models.CharField(max_length=30, blank=True)
     valor_archivo = models.FileField(upload_to='archivos/items/')

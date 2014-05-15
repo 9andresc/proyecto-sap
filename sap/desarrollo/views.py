@@ -162,8 +162,8 @@ def fases_proyecto_view(request, id_proyecto):
                 break
             
     fases = proyecto.fases.all()
-    grafo_proyecto = pydot.Dot(graph_type='digraph', fontname="Verdana", size="7, 7")
-    grafo_proyecto.set_node_defaults(style="filled", fillcolor="white", fixedsize='true', height=.85, width=.85)
+    grafo_proyecto = pydot.Dot(graph_type='digraph', fontname="Verdana", rankdir="TB")
+    grafo_proyecto.set_node_defaults(style="filled", fillcolor="white")
     grafo_proyecto.set_edge_defaults(color="black", arrowhead="vee")
     
     for f in fases:
@@ -171,7 +171,7 @@ def fases_proyecto_view(request, id_proyecto):
         nombre_cluster_fase = ""
         for p in partes:
             nombre_cluster_fase = nombre_cluster_fase + p
-        cluster_fase = pydot.Cluster(nombre_cluster_fase, label=nombre_cluster_fase, shape='rectangle', fontsize=15, style='filled', color='#E6E6E6')
+        cluster_fase = pydot.Cluster(nombre_cluster_fase, label=nombre_cluster_fase, shape='rectangle', fontsize=15, style='filled', color='#E6E6E6', fillcolor="#BDBDBD", fontcolor="white")
         items = f.items.all()
         if items:
             for i in items:
@@ -181,11 +181,11 @@ def fases_proyecto_view(request, id_proyecto):
                     nombre_nodo_item = nombre_nodo_item + p
                 color_estado = "white"
                 if i.estado == 1:
-                    color_estado = "#40FF00"
+                    color_estado = "#80FF00"
                 elif i.estado == 2:
                     color_estado = "#DF0101"
                 elif i.estado == 3:
-                    color_estado = "#BDBDBD"
+                    color_estado = "#045FB4"
                 
                 cluster_fase.add_node(pydot.Node(nombre_cluster_fase + "_" + nombre_nodo_item, label=nombre_nodo_item, fillcolor=color_estado, fontsize=15))
         grafo_proyecto.add_subgraph(cluster_fase)
@@ -212,13 +212,13 @@ def fases_proyecto_view(request, id_proyecto):
                     nombre_cluster_fase_relacion = ""
                     for p in partes:
                         nombre_cluster_fase_relacion = nombre_cluster_fase_relacion + p
-                    grafo_proyecto.add_edge(pydot.Edge(nombre_cluster_fase + "_" + nombre_nodo_item, nombre_cluster_fase_relacion + "_" + nombre_nodo_r))
+                    grafo_proyecto.add_edge(pydot.Edge(nombre_cluster_fase + "_" + nombre_nodo_item, nombre_cluster_fase_relacion + "_" + nombre_nodo_r, label='costo='+str(i.costo_monetario)))
                 else:
                     partes = r.nombre.split(" ")
                     nombre_nodo_r = ""
                     for p in partes:
                         nombre_nodo_r = nombre_nodo_r + p
-                    grafo_proyecto.add_edge(pydot.Edge(nombre_cluster_fase + "_" + nombre_nodo_item, nombre_cluster_fase + "_" + nombre_nodo_r))
+                    grafo_proyecto.add_edge(pydot.Edge(nombre_cluster_fase + "_" + nombre_nodo_item, nombre_cluster_fase + "_" + nombre_nodo_r, label='costo='+str(i.costo_monetario)))
             
     ruta_grafo = str(settings.MEDIA_ROOT) + "grafos/grafo_proyecto_" + str(proyecto.nombre) + ".png"
     grafo_proyecto.write(ruta_grafo, prog='dot', format='png')

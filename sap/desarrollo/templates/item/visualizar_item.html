@@ -68,12 +68,11 @@
 					<input type="text" class="form-control" maxlength="{{ a.tipo_atributo.textch_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_texto_chico }}" disabled="disabled">
 				{% elif a.tipo_atributo.tipo_dato == 4 %}
 					<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-					{% ifequal item.estado 0 %}
+					{% if a.valor_logico == False %}
 						<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="No" disabled="disabled">
-					{% endifequal %}
-					{% ifequal item.estado 1 %}
+					{% else %}
 						<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="Sí" disabled="disabled">
-					{% endifequal %}
+					{% endif %}
 	            {% else %}
 	            	<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
 	            	<a class="form-control" href="{{ setting.MEDIA_URL }}{{ a.valor_archivo }}">Archivo</a>

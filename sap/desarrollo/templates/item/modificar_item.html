@@ -114,13 +114,16 @@
 				{% elif a.tipo_atributo.tipo_dato == 4 %}
 					<div class="input-group">
 						<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-						<select class="form-control" id="{{ a.atributo.nombre }}" name="{{ a.atributo.nombre }}">
-			            	{% if a.logico == True %}
+						<select class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">
+			            	{% if a.valor_logico == True %}
 			                	<option value="1" selected="selected">Sí</option>
 			                 	<option value="0">No</option>
-			             	{% elif a.logico == False %}
+			             	{% elif a.valor_logico == False %}
 			                  	<option value="1">Sí</option>
 			                  	<option value="0" selected="selected">No</option>
+			              	{% else %}
+			              		<option value="1">Sí</option>
+			                  	<option value="0">No</option>
 			              	{% endif %}
 		             	</select>
 		             </div>
