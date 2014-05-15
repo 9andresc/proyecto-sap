@@ -411,5 +411,54 @@
     "fields": {
         "nombre": "Gestionar tipos de item de fase"
     }
+},
+{
+    "pk": 61, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar relaciones de item"
+    }
+},
+{
+    "pk": 62, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar relacion a item"
+    }
+},
+{
+    "pk": 63, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar relacion de item"
+    }
+},
+{
+    "pk": 64, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Aprobar item"
+    }
+},
+{
+    "pk": 65, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Revivir item"
+    }
+},
+{
+    "pk": 66, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar versiones de item"
+    }
+},
+{
+    "pk": 67, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Reversionar item"
+    }
 }
 ]
