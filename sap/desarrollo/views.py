@@ -171,7 +171,7 @@ def fases_proyecto_view(request, id_proyecto):
         nombre_cluster_fase = ""
         for p in partes:
             nombre_cluster_fase = nombre_cluster_fase + p
-        cluster_fase = pydot.Cluster(nombre_cluster_fase, label=nombre_cluster_fase, shape='rectangle', fontsize=15)
+        cluster_fase = pydot.Cluster(nombre_cluster_fase, label=nombre_cluster_fase, shape='rectangle', fontsize=15, style='filled', color='#E6E6E6')
         items = f.items.all()
         if items:
             for i in items:
