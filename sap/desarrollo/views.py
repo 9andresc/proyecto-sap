@@ -1,10 +1,11 @@
+import datetime
 from django.shortcuts import render_to_response
 from django.http.response import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from administracion.models import Proyecto, Rol, TipoAtributo
-from desarrollo.models import Item, Fase, TipoItem, ValorAtributo
-from desarrollo.forms import CrearItemForm, ModificarItemForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm, ModificarTipoItemForm
+from desarrollo.models import Item, Fase, TipoItem, ValorAtributo, VersionItem, LineaBase
+from desarrollo.forms import CrearItemForm, ModificarItemForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm, ModificarTipoItemForm, CrearLineaBaseForm
 from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto
 
 @login_required(login_url='/login/')
@@ -124,6 +125,7 @@ def fases_proyecto_view(request, id_proyecto):
     eliminar_fase = False
     visualizar_fase = False
     gestionar_tipos_item = False
+    gestionar_lineas_base = False
     gestionar_items = False
     gestionar_roles = False
     iniciar_fase = False
@@ -149,14 +151,16 @@ def fases_proyecto_view(request, id_proyecto):
                 finalizar_fase = True
             elif p.nombre == 'Gestionar items de fase':
                 gestionar_items = True
+            elif p.nombre == 'Gestionar lineas base de fase':
+                gestionar_lineas_base = True
                 
-            if crear_fase and modificar_fase and eliminar_fase and visualizar_fase and gestionar_tipos_item and gestionar_roles and iniciar_fase and finalizar_fase and gestionar_items:
+            if crear_fase and modificar_fase and eliminar_fase and visualizar_fase and gestionar_tipos_item and gestionar_roles and iniciar_fase and finalizar_fase and gestionar_items and gestionar_lineas_base:
                 break
-        if crear_fase and modificar_fase and eliminar_fase and visualizar_fase and gestionar_tipos_item and gestionar_roles and iniciar_fase and finalizar_fase and gestionar_items:
+        if crear_fase and modificar_fase and eliminar_fase and visualizar_fase and gestionar_tipos_item and gestionar_roles and iniciar_fase and finalizar_fase and gestionar_items and gestionar_lineas_base:
                 break
             
     fases = proyecto.fases.all()
-    ctx = {'fases':fases, 'proyecto':proyecto, 'crear_fase':crear_fase, 'modificar_fase':modificar_fase, 'eliminar_fase':eliminar_fase, 'visualizar_fase':visualizar_fase, 'gestionar_tipos_item':gestionar_tipos_item, 'gestionar_roles':gestionar_roles, 'iniciar_fase':iniciar_fase, 'finalizar_fase':finalizar_fase, 'gestionar_items':gestionar_items}
+    ctx = {'fases':fases, 'proyecto':proyecto, 'crear_fase':crear_fase, 'modificar_fase':modificar_fase, 'eliminar_fase':eliminar_fase, 'visualizar_fase':visualizar_fase, 'gestionar_tipos_item':gestionar_tipos_item, 'gestionar_roles':gestionar_roles, 'iniciar_fase':iniciar_fase, 'finalizar_fase':finalizar_fase, 'gestionar_items':gestionar_items, 'gestionar_lineas_base':gestionar_lineas_base}
     return render_to_response('desarrollo/gestion_fases.html', ctx, context_instance=RequestContext(request))
     
 @login_required(login_url='/login/')
@@ -197,7 +201,7 @@ def crear_fase_view(request, id_proyecto):
             duracion = form.cleaned_data['duracion']
             fecha_inicio = form.cleaned_data['fecha_inicio']
             
-            fase = Fase.objects.create(nombre=nombre, descripcion=descripcion, duracion=duracion, fecha_inicio=fecha_inicio)
+            fase = Fase.objects.create(nombre=nombre, descripcion=descripcion, duracion=duracion, fecha_inicio=fecha_inicio, num_secuencia=proyecto.fases.count()+1)
             fase.save()
             proyecto.fases.add(fase)
             proyecto.save()
@@ -302,6 +306,10 @@ def eliminar_fase_view(request, id_fase, id_proyecto):
         valido = False
     if request.method == "POST":
         if valido == True:
+            fases = proyecto.fases.filter(id__gt=id_fase)
+            for f in fases:
+                f.num_secuencia = f.num_secuencia - 1
+                f.save()
             fase.delete()
             return HttpResponseRedirect('/desarrollo/fases/proyecto/%s'%id_proyecto)
         else:
@@ -341,6 +349,171 @@ def visualizar_fase_view(request, id_fase, id_proyecto):
     fase = proyecto.fases.get(id=id_fase)
     ctx = {'fase':fase, 'proyecto':proyecto}
     return render_to_response('fase/visualizar_fase.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@fase_miembro_proyecto()
+def subir_fase_view(request, id_fase, id_proyecto):
+    """
+    ::
+    
+        La vista para subir de secuencia una fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario subir el numero de secuencia de una fase y por medio de ello bajar el numero de secuencia de la
+        fase ubicada inmediatamente arriba de la fase seleccionada para subir. Sin embargo, para poder subir el numero de secuencia
+        se deben cumplir los siguientes requisitos:
+            
+            - La fase a subir no debe estar en estado Finalizado y ninguno de sus items debe ser sucesor o antecesor de los items 
+            de sus dos fases vecinas (la inmediatamente superior e inferior).
+            - La fase de arriba debe cumplir los mismos requisitos que la fase a subir.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    subir_valido = True
+    secuencia_valida = True
+    f_estado_valido = True
+    fs_estado_valido = True
+    f_relaciones_valida = True
+    fs_relaciones_valida = True
+    if fase.num_secuencia == 1:
+        secuencia_valida = False
+    if fase.estado == 2:
+        f_estado_valido = False
+    if fase.items.count() > 0:
+        items = fase.items.all()
+        for i in items:
+            if i.tipo_relacion == 1:
+                f_relaciones_valida = False
+                break
+            if i.relaciones.count() > 0:
+                relaciones = i.relaciones.all()
+                for r in relaciones:
+                    if r.tipo_relacion == 1:
+                        f_relaciones_valida = False
+                        break
+    if fase.num_secuencia > 1:
+        fase_superior = proyecto.fases.get(num_secuencia=(fase.num_secuencia - 1))
+        if fase_superior.estado == 1:
+            fs_estado_valido = False
+        if fase_superior.items.count() > 0:
+            items = fase_superior.items.all()
+            for i in items:
+                if i.tipo_relacion == 1:
+                    fs_relaciones_valida = False
+                    break
+                if i.relaciones.count() > 0:
+                    relaciones = i.relaciones.all()
+                    for r in relaciones:
+                        if r.tipo_relacion == 1:
+                            fs_relaciones_valida = False
+    
+    if f_estado_valido and fs_estado_valido and secuencia_valida and f_relaciones_valida and fs_relaciones_valida:
+        fases = proyecto.fases.all()
+        fase_superior = fases.get(num_secuencia=(fase.num_secuencia - 1))
+        fase = fases.get(id=id_fase)
+        fase.num_secuencia = fase.num_secuencia - 1
+        fase.save()
+        fase_superior.num_secuencia = fase_superior.num_secuencia + 1
+        fase_superior.save()
+        proyecto.save()
+        return HttpResponseRedirect('/desarrollo/fases/proyecto/%s'%id_proyecto)
+    else:
+        subir_valido = False
+        return HttpResponseRedirect('/desarrollo/fases/proyecto/%s'%id_proyecto)
+    
+@login_required(login_url='/login/')
+def bajar_fase_view(request, id_fase, id_proyecto):
+    """
+    ::
+    
+        La vista para bajar de secuencia una fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario bajar el numero de secuencia de una fase y por medio de ello subir el numero de secuencia de la
+        fase ubicada inmediatamente abajo de la fase seleccionada para bajar. Sin embargo, para poder bajar el numero de secuencia
+        se deben cumplir los siguientes requisitos:
+            
+            - La fase a bajar no debe estar en estado Finalizado y ninguno de sus items debe ser sucesor o antecesor de los items 
+            de sus dos fases vecinas (la inmediatamente superior e inferior).
+            - La fase de abajo debe cumplir los mismos requisitos que la fase a bajar.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - num_secuencia: el numero de secuencia de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    bajar_valido = True
+    secuencia_valida = True
+    f_estado_valido = True
+    fi_estado_valido = True
+    f_relaciones_valida = True
+    fi_relaciones_valida = True
+    if fase.num_secuencia == proyecto.fases.count():
+        secuencia_valida = False
+    if fase.estado == 2:
+        f_estado_valido = False
+    if fase.items.count() > 0:
+        items = fase.items.all()
+        for i in items:
+            if i.tipo_relacion == 1:
+                f_relaciones_valida = False
+                break
+            if i.relaciones.count() > 0:
+                relaciones = i.relaciones.all()
+                for r in relaciones:
+                    if r.tipo_relacion == 1:
+                        f_relaciones_valida = False
+                        break
+    if fase.num_secuencia < proyecto.fases.count():
+        fase_inferior = proyecto.fases.get(num_secuencia=(fase.num_secuencia + 1))
+        if fase_inferior.estado == 1:
+            fi_estado_valido = False
+        if fase_inferior.items.count() > 0:
+            items = fase_inferior.items.all()
+            for i in items:
+                if i.tipo_relacion == 1:
+                    fi_relaciones_valida = False
+                    break
+                if i.relaciones.count() > 0:
+                    relaciones = i.relaciones.all()
+                    for r in relaciones:
+                        if r.tipo_relacion == 1:
+                            fi_relaciones_valida = False
+    
+    if f_estado_valido and fi_estado_valido and secuencia_valida and f_relaciones_valida and fi_relaciones_valida:
+        fase_inferior = proyecto.fases.get(num_secuencia=(fase.num_secuencia + 1))
+        fase.num_secuencia = fase.num_secuencia + 1
+        fase.save()
+        fase_inferior.num_secuencia = fase_inferior.num_secuencia - 1
+        fase_inferior.save()
+        proyecto.save()
+        return HttpResponseRedirect('/desarrollo/fases/proyecto/%s'%id_proyecto)
+    else:
+        bajar_valido = False
+        return HttpResponseRedirect('/desarrollo/fases/proyecto/%s'%id_proyecto)
     
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar roles de fase")
@@ -508,8 +681,8 @@ def tipos_item_fase_view(request, id_fase, id_proyecto):
         
                 - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
-    fase = Fase.objects.get(id=id_fase)
-    proyecto = fase.proyecto
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
     crear_tipo_de_item = False
     modificar_tipo_de_item = False
     eliminar_tipo_de_item = False
@@ -534,7 +707,7 @@ def tipos_item_fase_view(request, id_fase, id_proyecto):
         if crear_tipo_de_item and modificar_tipo_de_item and eliminar_tipo_de_item and visualizar_tipo_de_item and gestionar_tipos_de_atributo:
                 break
             
-    tipos_item = TipoItem.objects.all()
+    tipos_item = fase.tipos_item.all()
     ctx = {'tipos_item':tipos_item, 'fase':fase, 'proyecto':proyecto, 'crear_tipo_de_item':crear_tipo_de_item, 'modificar_tipo_de_item':modificar_tipo_de_item, 'eliminar_tipo_de_item':eliminar_tipo_de_item, 'visualizar_tipo_de_item':visualizar_tipo_de_item, 'gestionar_tipos_de_atributo':gestionar_tipos_de_atributo}
     return render_to_response('tipo_item/gestion_tipos_item.html', ctx, context_instance=RequestContext(request))
   
@@ -567,8 +740,8 @@ def crear_tipo_item_view(request, id_fase, id_proyecto):
             generado en la vista, al template correspondiente.
             - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de usuarios. 
     """
-    fase = Fase.objects.get(id=id_fase)
-    proyecto = fase.proyecto
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
     form = CrearTipoItemForm()
     if request.method == "POST":
         form = CrearTipoItemForm(request.POST)
@@ -578,6 +751,8 @@ def crear_tipo_item_view(request, id_fase, id_proyecto):
             
             tipo_item = TipoItem.objects.create(nombre=nombre, descripcion=descripcion)
             tipo_item.save()
+            fase.tipos_item.add(tipo_item)
+            fase.save()
             return HttpResponseRedirect('/desarrollo/fases/tipos_item/fase/%s/proyecto/%s'%(id_fase, id_proyecto))
             
         else:
@@ -616,9 +791,9 @@ def modificar_tipo_item_view(request, id_fase, id_tipo_item, id_proyecto):
             generado en la vista, al template correspondiente.
             - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
     """
-    fase = Fase.objects.get(id=id_fase)
-    proyecto = fase.proyecto
-    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    tipo_item = fase.tipos_item.get(id=id_tipo_item)
     if request.method == "POST":
         form = ModificarTipoItemForm(data=request.POST)
         if form.is_valid():
@@ -666,9 +841,9 @@ def visualizar_tipo_item_view(request, id_fase, id_tipo_item, id_proyecto):
         
             - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
     """
-    fase = Fase.objects.get(id=id_fase)
-    proyecto = fase.proyecto
-    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    tipo_item = fase.tipos_item.get(id=id_tipo_item)
     ctx = {'tipo_item': tipo_item, 'fase':fase, 'proyecto':proyecto}
     return render_to_response('tipo_item/visualizar_tipo_item.html', ctx, context_instance=RequestContext(request))
 
@@ -701,9 +876,9 @@ def eliminar_tipo_item_view(request, id_fase, id_tipo_item, id_proyecto):
             generado en la vista, al template correspondiente.
             - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
     """
-    fase = Fase.objects.get(id=id_fase)
-    proyecto = fase.proyecto
-    tipo_item = TipoItem.objects.get(id=id_tipo_item)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    tipo_item = fase.tipos_item.get(id=id_tipo_item)
     if request.method == "POST":
         tipo_item.delete()
         return HttpResponseRedirect('/desarrollo/fases/tipos_item/fase/%s/proyecto/%s'%(id_fase, id_proyecto))
@@ -1010,6 +1185,8 @@ def items_fase_view(request, id_fase, id_proyecto):
     modificar_item = False
     eliminar_item = False
     visualizar_item = False
+    gestionar_relaciones = False
+    aprobar_item = False
     roles = request.user.roles.all()
     for r in roles:
         for p in r.permisos.all():
@@ -1021,16 +1198,23 @@ def items_fase_view(request, id_fase, id_proyecto):
                 eliminar_item = True
             elif p.nombre == 'Visualizar item':
                 visualizar_item = True
+            elif p.nombre == 'Gestionar relaciones de item':
+                gestionar_relaciones = True
+            elif p.nombre == 'Aprobar item':
+                aprobar_item = True
                 
-            if crear_item and modificar_item and eliminar_item and visualizar_item:
+            if crear_item and modificar_item and eliminar_item and visualizar_item and gestionar_relaciones and aprobar_item:
                 break
-        if crear_item and modificar_item and eliminar_item and visualizar_item:
+        if crear_item and modificar_item and eliminar_item and visualizar_item and gestionar_relaciones and aprobar_item:
             break
     
     proyecto = Proyecto.objects.get(id=id_proyecto)
-    fase = Fase.objects.get(id=id_fase)
+    fase = proyecto.fases.get(id=id_fase)
+    valido = True
+    if fase.estado == 0:
+        valido = False
     items = fase.items.all()
-    ctx = {'proyecto':proyecto, 'fase':fase, 'items':items, 'crear_item':crear_item, 'modificar_item':modificar_item, 'eliminar_item':eliminar_item, 'visualizar_item':visualizar_item}
+    ctx = {'valido':valido, 'proyecto':proyecto, 'fase':fase, 'items':items, 'crear_item':crear_item, 'modificar_item':modificar_item, 'eliminar_item':eliminar_item, 'visualizar_item':visualizar_item, 'gestionar_relaciones':gestionar_relaciones, 'aprobar_item':aprobar_item}
     return render_to_response('fase/items_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1063,9 +1247,10 @@ def crear_item_view(request, id_fase, id_proyecto):
             generado en la vista, al template correspondiente.
             - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de items por fase. 
     """
-    fase = Fase.objects.get(id=id_fase)
-    tipos_item = TipoItem.objects.all()
     proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    tipos_item = fase.tipos_item.all()
+    
     form = CrearItemForm()
     if request.method == "POST":
         form = CrearItemForm(request.POST)
@@ -1073,14 +1258,17 @@ def crear_item_view(request, id_fase, id_proyecto):
             nombre = form.cleaned_data['nombre']
             descripcion = form.cleaned_data['descripcion']
             complejidad = form.cleaned_data['complejidad']
-            costo = form.cleaned_data['costo']
+            costo_monetario = form.cleaned_data['costo_monetario']
+            costo_temporal = form.cleaned_data['costo_temporal']
             
             id_tipo_item = request.POST.get('tipo_item')
             
             tipo_item = TipoItem.objects.get(id=id_tipo_item)
             
-            item = Item.objects.create(nombre=nombre, descripcion=descripcion, complejidad=complejidad, costo=costo, tipo_item=tipo_item)
+            item = Item.objects.create(nombre=nombre, descripcion=descripcion, complejidad=complejidad, costo_monetario=costo_monetario, costo_temporal=costo_temporal, tipo_item=tipo_item)
             item.save()
+            version_item = VersionItem.objects.create(id_item=item.id, nombre=nombre, descripcion=descripcion, complejidad=complejidad, costo_monetario=costo_monetario, costo_temporal=costo_temporal, fase=fase, tipo_item=tipo_item, fecha_version=datetime.datetime.now())
+            version_item.save()
             tipos_atributo = tipo_item.tipos_atributo.all()
             for tipo_atributo in tipos_atributo:
                 valor_atributo = ValorAtributo.objects.create(item=item, tipo_item=tipo_item, tipo_atributo=tipo_atributo)
@@ -1136,7 +1324,8 @@ def modificar_item_view(request, id_fase, id_item, id_proyecto):
             nombre = form.cleaned_data['nombre']
             descripcion = form.cleaned_data['descripcion']
             complejidad = form.cleaned_data['complejidad']
-            costo = form.cleaned_data['costo']
+            costo_monetario = form.cleaned_data['costo_monetario']
+            costo_temporal = form.cleaned_data['costo_temporal']
             
             for a in atributos:
                 for key, value in request.POST.iteritems():
@@ -1164,15 +1353,20 @@ def modificar_item_view(request, id_fase, id_item, id_proyecto):
             item.nombre = nombre
             item.descripcion = descripcion
             item.complejidad = complejidad
-            item.costo = costo
+            item.costo_monetario = costo_monetario
+            item.costo_temporal = costo_temporal
             item.save()
+            version = VersionItem.objects.filter(id_item=item.id).order_by('-fecha_version')[:1]
+            version_item = VersionItem.objects.create(version = version[0].version + 0.1, id_item=item.id, nombre=nombre, descripcion=descripcion, complejidad=complejidad, costo_monetario=costo_monetario, costo_temporal=costo_temporal, fase=item.fase, tipo_item=item.tipo_item, fecha_version=datetime.datetime.now())
+            version_item.save()
             return HttpResponseRedirect('/desarrollo/fases/items/item/%s/fase/%s/proyecto/%s'%(id_item, id_fase, id_proyecto))
     
     if request.method == "GET":
         form = ModificarItemForm(initial={
             'nombre': item.nombre,
             'descripcion': item.descripcion,
-            'costo': item.costo,
+            'costo_temporal': item.costo_temporal,
+            'costo_monetario': item.costo_monetario,
             'complejidad': item.complejidad,
             })
     ctx = {'form':form, 'item':item, 'fase':fase, 'proyecto':proyecto, 'atributos':atributos}
@@ -1260,3 +1454,674 @@ def visualizar_item_view(request, id_fase, id_item, id_proyecto):
     proyecto = Proyecto.objects.get(id=id_proyecto)
     ctx = {'item':item, 'fase': fase, 'proyecto':proyecto, 'atributos':atributos}
     return render_to_response('item/visualizar_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Aprobar item")
+@fase_miembro_proyecto()
+def aprobar_item_view(request, id_fase, id_item, id_proyecto):
+    """
+    ::
+    
+        La vista para aprobar un item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Aprobar item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+        Esta vista permite al usuario aprobar un item, es decir, cambiar el estado del item a Aprobado. Para lograr esto, el
+        item debe estar en estado En Construccion o En Revision.
+        La vista recibe los siguientes parametros:
+    
+            - request: contiene informacion sobre la sesion actual.
+            - id_item: el identificador del item.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    item = fase.items.get(id=id_item)
+    valido = True
+    if item.estado == 1 or item.estado == 2:
+        valido = False
+    if valido:
+        item.estado = 1
+        item.save()
+    ctx = {'item':item, 'valido':valido, 'fase':fase, 'proyecto':proyecto}
+    return render_to_response('item/aprobar_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar relaciones de item")
+@fase_miembro_proyecto()
+def relaciones_item_view(request, id_fase, id_item, id_proyecto):
+    """
+    ::
+    
+        La vista del listado de relaciones por item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar relaciones de item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario listar y conocer las opciones de las relaciones del item seleccionado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_item: el identificador del item.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    item = fase.items.get(id=id_item)
+    relaciones = item.relaciones.all()
+    ctx = {'item':item, 'relaciones':relaciones, 'fase':fase, 'proyecto':proyecto}
+    return render_to_response('item/relaciones_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@fase_miembro_proyecto()
+def agregar_relacion_view(request, id_fase, id_item, id_proyecto):
+    """
+    ::
+    
+        La vista del listado de items pertenecientes a la fase siguiente o la misma fase. La eleccion de una de las anteriores dependera
+        del tipo de relacion que se quiera agregar (Padre-Hijo o Antecesor-Sucesor). Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_item: el identificador del item.
+            - id_fase: el identificador del la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    item = fase.items.get(id=id_item)
+    valido = False
+    if item.estado == 1 or item.estado == 2:
+        valido = True
+    if request.method == "POST":
+        eleccion_relacion = request.POST.get('eleccion_relacion')
+        if eleccion_relacion == "0":
+            items_hijos = fase.items.filter(padre=None).exclude(id=id_item)
+            if item.adan:
+                items_hijos = items_hijos.exclude(id=item.adan)
+            if item.cain:
+                items_hijos = items_hijos.exclude(id=item.cain)
+            ctx = {'item':item, 'items_hijos':items_hijos, 'fase':fase, 'proyecto':proyecto, 'valido':valido}
+            return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
+        elif eleccion_relacion == "1":
+            estado_valido = False
+            num_fases_valido = False
+            if item.estado == 2:
+                estado_valido = True
+            num_fases = proyecto.fases.count()
+            if fase.num_secuencia < num_fases:
+                num_fases_valido = True
+            if estado_valido and num_fases_valido:
+                fase_vecina = proyecto.fases.get(num_secuencia = (fase.num_secuencia + 1))
+                items_sucesores = fase_vecina.items.filter(padre=None)
+                ctx = {'item':item, 'items_sucesores':items_sucesores, 'fase':fase, 'fase_vecina':fase_vecina, 'proyecto':proyecto, 'valido':valido}
+                return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
+            else:
+                ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'valido':valido, 'estado_valido':estado_valido, 'num_fases_valido':num_fases_valido}
+                return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
+
+    items_hijos = fase.items.filter(padre=None).exclude(id=id_item)
+    if item.adan:
+        items_hijos = items_hijos.exclude(id=item.adan)
+    if item.cain:
+        items_hijos = items_hijos.exclude(id=item.cain)
+    ctx = {'item':item, 'items_hijos':items_hijos, 'fase':fase, 'proyecto':proyecto, 'valido':valido}
+    return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Agregar relacion a item")
+@fase_miembro_proyecto()
+def confirmacion_agregar_relacion_view(request, id_fase, id_item, id_relacion, id_proyecto):
+    """
+    ::
+    
+        La vista de la confirmacion de agregacion de una relacion a un item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Agregar relacion a item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+        
+        Esta funcionalidad se encarga de realizar la agregacion de relacion. No posee excepciones, puesto que, los items a seleccionar para
+        la agregacion cumplen con todos los requisitos necesarios para evitar inconsistencias en el grafo de items relacionados.
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_item: el identificador del item.
+            - id_fase: el identificador del la fase.
+            - id_relacion: el identificador del item a relacionar.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    item = fase.items.get(id=id_item)
+    relacion = Item.objects.get(id=id_relacion)
+    if item.fase.id == relacion.fase.id:
+        if item.adan:
+            relacion.adan = item.adan
+        else:
+            relacion.adan = item.id
+            
+        if item.adan and item.cain == None:
+            relacion.adan = item.adan
+            relacion.cain = item.id
+        elif item.adan and item.cain:
+            relacion.cain = item.cain
+            
+        relacion.tipo_relacion = 0
+        relacion.save()
+    else:
+        if item.adan:
+            relacion.adan = item.adan
+        else:
+            relacion.adan = item.id
+            
+        if item.adan and item.cain == None:
+            relacion.adan = item.adan
+            relacion.cain = item.id
+        elif item.adan and item.cain:
+            relacion.cain = item.cain
+        
+        relacion.tipo_relacion = 1
+        relacion.save()
+        
+    item.relaciones.add(relacion)
+    item.save()
+
+    ctx = {'item':item, 'relacion':relacion, 'fase':fase, 'proyecto':proyecto}
+    return render_to_response('item/confirmacion_agregar_relacion.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar relacion de item")
+@fase_miembro_proyecto()
+def quitar_relacion_view(request, id_fase, id_item, id_relacion, id_proyecto):
+    """
+    ::
+    
+        La vista para quitar una relacion de un item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quitar relacion de item.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+        
+        Esta funcionalidad permite a un usuario romper una relacion entre el padre/antecesor item y un hijo hijo/sucesor. Ademas de esto, 
+        todos aquellos items hijos/sucesores del item hijo/sucesor en cuestion pasan a cambiar el valor de su padre raiz por el identificador
+        del item hijo/sucesor en cuestion.
+            - request: contiene informacion sobre la sesion actual.
+            - id_item: el identificador del item.
+            - id_fase: el identificador del la fase.
+            - id_relacion: el identificador del item a relacionar.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    item = fase.items.get(id=id_item)
+    relacion = Item.objects.get(id=id_relacion)
+    
+    relacion.padre_raiz = None
+    relacion.padre = None
+    relacion.tipo_relacion = None
+    relacion.save()
+    
+    relaciones = relacion.relaciones.all()
+    for r in relaciones:
+        r.adan = relacion.id
+        r.cain = None
+        r.save()
+        hijos = r.relaciones.all()
+        resultados = []
+        
+        while 1:
+            nuevas_relaciones = []
+            if len(hijos) == 0:
+                break
+            for h in hijos:
+                resultados.append(h)
+                if h.relaciones.count() > 0:
+                    for s in h.relaciones.all():
+                        nuevas_relaciones.append(s)
+            hijos = nuevas_relaciones
+        
+        for h in resultados:
+            h.adan = relacion.id
+            h.cain = r.id
+            h.save()
+            
+    ctx = {'item':item, 'relacion':relacion, 'fase':fase, 'proyecto':proyecto}
+    return render_to_response('item/quitar_relacion.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar lineas base de fase")
+@fase_miembro_proyecto()
+def lineas_base_fase_view(request, id_fase, id_proyecto):
+    """
+    ::
+    
+        La vista del listado de lineas base por fase. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+                - El usuario debe estar logueado.
+                - El usuario debe poseer el permiso: Gestionar lineas base de fase.
+                - Debe ser miembro del proyecto en cuestion.
+        
+        Esta vista permite al usuario listar y conocer las opciones de las lineas base por fase.
+        Inicialmente, se verifican los permisos del usuario solicitante para restringir (si es necesario) 
+        los botones de accion sobre cada linea base.
+                
+        La vista recibe los siguientes parametros:
+    
+                - request: contiene informacion sobre la sesion actual.
+                - id_fase: el identificador de la fase.
+            
+        La vista retorna lo siguiente:
+        
+                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    crear_linea_base = False
+    cerrar_linea_base = False
+    quebrar_linea_base = False
+    visualizar_linea_base = False
+    gestionar_items = False
+    roles = request.user.roles.all()
+    for r in roles:
+        for p in r.permisos.all():
+            if p.nombre == 'Crear linea base':
+                crear_linea_base = True
+            elif p.nombre == 'Cerrar linea base':
+                cerrar_linea_base= True
+            elif p.nombre == 'Quebrar linea base':
+                quebrar_linea_base = True
+            elif p.nombre == 'Visualizar linea base':
+                visualizar_linea_base = True
+            elif p.nombre == 'Gestionar items de linea base':
+                gestionar_items = True
+                
+            if crear_linea_base and cerrar_linea_base and quebrar_linea_base and visualizar_linea_base and  gestionar_items:
+                break
+        if crear_linea_base and cerrar_linea_base and quebrar_linea_base and visualizar_linea_base and  gestionar_items:
+                break
+                
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    valido = True
+    if fase.estado == 0:
+        valido = False
+    lineas_base = fase.lineas_base.all()
+    ctx = {'valido':valido, 'proyecto':proyecto, 'fase':fase, 'lineas_base':lineas_base, 'crear_linea_base':crear_linea_base, 'cerrar_linea_base':cerrar_linea_base, 'quebrar_linea_base':quebrar_linea_base, 'visualizar_linea_base':visualizar_linea_base,  'gestionar_items':gestionar_items}
+    return render_to_response('fase/lineas_base_fase.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Crear linea base")
+@fase_miembro_proyecto()
+def crear_linea_base_view(request, id_fase, id_proyecto):
+    """
+    ::
+    
+        La vista para crear una linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Crear linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario crear y agregar una linea base a la fase previamente seleccionada, para lograr esto, 
+        se verifica la validez de cada campo ingresado y luego se crea la linea base de acuerdo a los campos ingresados y 
+        se almacena en la fase. 
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
+            generado en la vista, al template correspondiente.
+            - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de lineas base por fase. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    
+    form = CrearLineaBaseForm()
+    if request.method == "POST":
+        form = CrearLineaBaseForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            
+            linea_base = LineaBase.objects.create(nombre=nombre, descripcion=descripcion, num_secuencia=fase.lineas_base.count()+1)
+            linea_base.save()
+            fase.lineas_base.add(linea_base)
+            fase.save()
+            return HttpResponseRedirect('/desarrollo/fases/lineas_base/fase/%s/proyecto/%s'%(id_fase, id_proyecto))
+            
+        else:
+            ctx = {'form':form, 'fase':fase, 'proyecto':proyecto}
+            return render_to_response('linea_base/crear_linea_base.html', ctx, context_instance=RequestContext(request))
+    ctx = {'form':form, 'fase':fase, 'proyecto':proyecto}
+    return render_to_response('linea_base/crear_linea_base.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar linea base")
+@fase_miembro_proyecto()
+def visualizar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
+    """
+    ::
+    
+        La vista para visualizar una linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Visualizar linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    
+        Esta vista permite al usuario visualizar todos los campos guardados de una linea base de la fase previamente seleccionada.
+        La vista recibe los siguientes parametros:
+    
+            - request: contiene informacion sobre la sesion actual.
+            - id_linea_base: el identificador de la linea base.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    linea_base = fase.lineas_base.get(id=id_linea_base)
+    ctx = {'linea_base': linea_base, 'fase':fase, 'proyecto':proyecto}
+    return render_to_response('linea_base/visualizar_linea_base.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar items de linea base")
+@fase_miembro_proyecto()
+def items_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
+    """
+    ::
+    
+        La vista del listado de items por linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar items de linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario listar y conocer las opciones de los items de la linea base previamente seleccionada.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_linea_base: identificador de la linea base.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    items = Item.objects.filter(linea_base__id=id_linea_base)
+    linea_base = fase.lineas_base.get(id=id_linea_base)
+    ctx = {'fase':fase, 'proyecto':proyecto, 'items':items, 'linea_base':linea_base}
+    return render_to_response('linea_base/items_linea_base.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@fase_miembro_proyecto()
+def linea_base_agregar_item_view(request, id_fase, id_linea_base, id_proyecto):
+    """
+    ::
+    
+        La vista del listado de items de la fase ligados a la linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            
+        Esta vista permite al usuario listar todos los items de la fase al cual esta ligada la linea base, ademas, el template relacionado concede 
+        las opciones para agregar un item seleccionado.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_linea_base: el identificador de la linea base.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = fase.proyecto
+#    items = fase.items.all()
+    items = fase.items.filter(estado=1)
+    linea_base = fase.lineas_base.get(id=id_linea_base)
+    ctx = {'fase':fase, 'proyecto':proyecto, 'items':items, 'linea_base':linea_base}
+    return render_to_response('linea_base/agregar_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Agregar item a linea base")
+@fase_miembro_proyecto()
+def linea_base_confirmacion_agregar_item_view(request, id_fase, id_linea_base, id_item, id_proyecto):
+    """
+    ::
+    
+        La vista de confirmacion de agregacion de un item a una linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Agregar item a linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario agregar un item seleccionado a la linea base seleccionada previamente. Se verifica si el item a agregar ya 
+        pertenece a la linea base, en cuyo caso se cancelara la operacion.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_item: el identificador del item.
+            - id_linea_base: el identificador de la linea base.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    valido = False
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = fase.proyecto
+    linea_base = LineaBase.objects.get(id=id_linea_base)
+    item = Item.objects.get(id=id_item)
+    try:
+        item = linea_base.items.get(id=id_item)
+    except item.DoesNotExist:
+        valido = True      
+    if valido:
+        linea_base.items.add(item)
+        linea_base.save()
+    ctx = {'fase':fase, 'item':item, 'linea_base':linea_base, 'proyecto':proyecto, 'valido':valido}
+    return render_to_response('linea_base/confirmacion_agregar_item.html', ctx, context_instance=RequestContext(request))  
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Quitar item de linea base")
+@fase_miembro_proyecto()
+def linea_base_quitar_item_view(request, id_fase, id_item, id_linea_base, id_proyecto):
+    """
+    ::
+    
+        La vista para quitar un item de una linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quitar item de linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+        
+        Esta vista permite al usuario quitar un item seleccionado de la linea base seleccionada previamente.
+        
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_item: el identificador del item.
+            - id_linea_base: el identificador del linea base.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = fase.proyecto
+    linea_base = LineaBase.objects.get(id=id_linea_base)
+    item = Item.objects.get(id=id_item)
+    linea_base.items.remove(item)
+    linea_base.save()
+    ctx = {'fase':fase, 'item':item, 'linea_base':linea_base,  'proyecto':proyecto}
+    return render_to_response('linea_base/quitar_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Cerrar linea base")
+@fase_miembro_proyecto()
+def cerrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
+    """
+    ::
+    
+        La vista para cerrar una linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Cerrar linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario cerrar una linea base si es que cumple con las siguientes condiciones:
+        
+            - Debe estar en estado Abierta.
+            - Todos sus items deben estar en estado Bloqueado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_linea_base: el identificador de la linea base
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    linea_base = fase.lineas_base.get(id=id_linea_base)
+    
+    cerrado_valido = True
+    estado_valido = True
+    if linea_base.estado == 1:
+        estado_valido = False
+        cerrado_valido = False
+    
+    if estado_valido:
+        cerrado_valido = True
+        items = linea_base.items.all()
+        for i in items:
+            if i.estado != 2:
+                cerrado_valido = False
+                break
+            
+        if cerrado_valido:
+            linea_base.estado = 1
+            linea_base.save()
+            ctx = {'fase':fase, 'cerrado_valido':cerrado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
+            return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
+        else:
+            ctx = {'fase':fase, 'cerrado_valido':cerrado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
+            return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
+    else:
+        ctx = {'fase':fase, 'cerrado_valido':cerrado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
+        return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Quebrar linea base")
+@fase_miembro_proyecto()
+def quebrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
+    """
+    ::
+    
+        La vista para quebrar una linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quebrar linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario quebrar una linea base si es que cumple con las siguientes condiciones:
+        
+            - Debe estar en estado Cerrado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_linea_base: el identificador de la linea base
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    linea_base = fase.lineas_base.get(id=id_linea_base)
+    
+    estado_valido = True
+    
+    if linea_base.estado != 1:
+        estado_valido = False
+    
+    if estado_valido:
+        items = linea_base.items.all()
+        linea_base.estado = 2
+        linea_base.save()
+        for i in items:
+            i.estado = 3
+            i.save()
+    
+    ctx = {'fase':fase, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
+    return render_to_response('linea_base/quebrar_linea_base.html', ctx, context_instance=RequestContext(request))

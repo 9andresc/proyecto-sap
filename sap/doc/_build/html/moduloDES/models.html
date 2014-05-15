@@ -57,9 +57,21 @@
 </pre></div>
 </div>
 <span class="target" id="module-desarrollo.models"></span><dl class="class">
-<dt id="desarrollo.models.HistoricalItem">
-<em class="property">class </em><tt class="descclassname">desarrollo.models.</tt><tt class="descname">HistoricalItem</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#desarrollo.models.HistoricalItem" title="Permalink to this definition">¶</a></dt>
-<dd><p>HistoricalItem(id, nombre, descripcion, costo, complejidad, estado, archivos, fase_id, tipo_item_id, history_id, history_date, history_user_id, history_type)</p>
+<dt id="desarrollo.models.Fase">
+<em class="property">class </em><tt class="descclassname">desarrollo.models.</tt><tt class="descname">Fase</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/models.html#Fase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.models.Fase" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de una Fase, los atributos 
+que posee una fase son:
+
+nombre: nombre de la fase.
+descripcion: una breve descripcion sobre la fase.
+estado: estado actual de la fase.
+num_secuencia: define el orden numerico de la fase dentro de un proyecto.
+fecha de inicio: fecha de inicio de la fase.
+duracion: duracion de la fase.
+roles: roles asociados a la fase.
+proyecto: el proyecto al cual pertenece la fase.
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="class">
@@ -70,20 +82,65 @@ que posee un Item son:
 
 nombre: nombre del item.
 descripcion: una breve descripcion sobre el item.
-costo: costo del item.
+costo_*: costo del item.
 complejidad: complejidad respectiva del item.
 estado: estado actual del item.
-archivos: historial del item..
 fase: fase en la que esta el item.
 tipo_item: tipo de item vinculado al item.
+padre: es item padre/antecesor del item.
+tipo_relacion: indica que tipo de relacion tiene el item con el padre/antecesor (Hijo o Sucesor).
 </pre></div>
 </div>
-<dl class="method">
-<dt id="desarrollo.models.Item.save_without_historical_record">
-<tt class="descname">save_without_historical_record</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#desarrollo.models.Item.save_without_historical_record" title="Permalink to this definition">¶</a></dt>
-<dd><p>Caution! Make sure you know what you&#8217;re doing before you use this method.</p>
 </dd></dl>
 
+<dl class="class">
+<dt id="desarrollo.models.TipoItem">
+<em class="property">class </em><tt class="descclassname">desarrollo.models.</tt><tt class="descname">TipoItem</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/models.html#TipoItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.models.TipoItem" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de un Tipo de item, los atributos 
+que posee un tipo de item son:
+
+nombre: nombre del tipo de item.
+descripcion: breve descripcion del tipo de item.
+tipos_atributo: tipos de atributo que posee el tipo de item.
+fase: la fase a la cual pertenece el tipo de item.
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="desarrollo.models.ValorAtributo">
+<em class="property">class </em><tt class="descclassname">desarrollo.models.</tt><tt class="descname">ValorAtributo</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/models.html#ValorAtributo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.models.ValorAtributo" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la relacion entre un tipo de atributo con un tipo de item y un item, los atributos 
+que posee son:
+
+item: item al que va ligado.
+tipo_item:tipo de item al que va ligado.
+tipo_atributo: tipo de atributo al que va ligado.
+valor_*: valor del tipo de atributo, que puede ser Fecha, Numerico, Logico, Texto grande o Texto chico.
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="desarrollo.models.VersionItem">
+<em class="property">class </em><tt class="descclassname">desarrollo.models.</tt><tt class="descname">VersionItem</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/models.html#VersionItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.models.VersionItem" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de una VersionItem, los atributos 
+que posee una VersionItem son:
+
+version: numero de serie de la version del item.
+id_item: identificador del item.
+nombre: nombre del item.
+descripcion: una breve descripcion sobre el item.
+costo_*: costo del item.
+complejidad: complejidad respectiva del item.
+estado: estado actual del item.
+fase: fase en la que esta el item.
+tipo_item: tipo de item vinculado al item.
+padre: el padre (o antecesor) del item.
+tipo_relacion: indica que clase de relacion se mantiene con el item padre o antecesor.
+fecha_version: fecha de la creacion de la version.
+</pre></div>
+</div>
 </dd></dl>
 
 </div>

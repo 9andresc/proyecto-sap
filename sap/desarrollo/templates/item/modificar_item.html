@@ -51,8 +51,13 @@
         </div>
 		<br>
 		<div class="input-group">
-			<span class="input-group-addon"><b>* Costo</b></span>
-			<input type="text" class="form-control" id="costo" name="costo" value="{{ item.costo|stringformat:"f" }}">
+			<span class="input-group-addon"><b>* Costo monetario</b></span>
+			<input type="text" class="form-control" id="costo_monetario" name="costo_monetario" value="{{ item.costo_monetario|stringformat:"f" }}">
+        </div>
+        <br>
+		<div class="input-group">
+			<span class="input-group-addon"><b>* Costo temporal</b></span>
+			<input type="text" class="form-control" id="costo_temporal" name="costo_temporal" value="{{ item.costo_temporal|stringformat:"f" }}">
         </div>
 		<br>
 		{% for a in atributos %}

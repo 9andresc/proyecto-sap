@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}SAP - Lineas base de la fase {{ fase.nombre }}{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		{% if valido %}
+			<h1><small>Lineas base de la fase {{ fase.nombre }}</small></h1>
+			{% if crear_linea_base %}
+			<a class="btn btn-default" href="/desarrollo/fases/lineas_base/crear_linea_base/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-record"></span> Crear</a>
+			<br>
+			{% endif %}
+			<br>
+			{% if lineas_base %}
+				<div class="table-responsive"> 
+	        		<table class="table table-hover">
+	            		<thead>
+	                		<tr>
+	                    		<th>ID</th>
+	                    		<th>Nombre de Linea Base</th>
+	                    		<th>Estado</th>
+	                    		<th></th>
+	                    	</tr>
+	                    </thead>
+	                	<tbody>
+	                		{% for l in lineas_base %}
+	                			<tr>
+	                    			<td>{{ l.id }}</td>
+	                    			<td>{{ l.nombre }}</td>
+	                    			<td>
+	                    			{% ifequal l.estado 0 %}
+										Abierta
+									{% endifequal %}
+									{% ifequal l.estado 1 %}
+										Cerrada
+									{% endifequal %}
+									{% ifequal l.estado 2 %}
+										En revisión
+									{% endifequal %}
+	                    			</td>
+	                    			<td>
+	                    			{% if  visualizar_linea_base or gestionar_items or cerrar_linea_base or quebrar_linea_base %}
+	                    			<div class="btn-group">
+	      								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
+	      								<ul class="dropdown-menu">
+	        								{% if visualizar_linea_base %}
+	        									<li><a href="/desarrollo/fases/lineas_base/linea_base/{{ l.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-search"></span> Visualizar</a></li>
+	      									{% endif %}
+	      									{% if gestionar_items %}
+	      										<li class="divider"></li>
+	      									{% endif %}
+	      									{% if gestionar_items %}
+	        									<li><a href="/desarrollo/lineas_base/items/linea_base/{{ l.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-cog"></span> Items</a></li>
+	      									{% endif %}
+	      									{% if cerrar_linea_base %}
+        										<li class="divider"></li>
+        									{% endif %}
+        									{% if cerrar_linea_base %}
+        										<li><a href="/desarrollo/lineas_base/cerrar_linea_base/{{ l.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-play"></span> Cerrar</a></li>
+        									{% endif %}
+        									{% if quebrar_linea_base %}
+        										<li><a href="/desarrollo/lineas_base/quebrar_linea_base/{{ l.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-play"></span> Quebrar</a></li>
+        									{% endif %}
+	      								</ul>
+	    							</div>
+	    							{% endif %}
+	                    			</td>
+	                			</tr>
+	                		{% endfor %}
+	                	</tbody>
+	        		</table>
+	    		</div>
+	    	{% else %}
+	    		<h3>No posee Lineas base.</h3>
+	    	{% endif %}
+	    {% else %}
+	    	<br>
+	    	<div class="panel panel-warning">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Alto ahí!</h3>
+      			</div>
+      			<div class="panel-body">
+        			La fase {{ fase.nombre }} no se encuentra en estado En curso. Por tanto, no se pueden gestionar las lineas base de esta fase.
+      			</div>
+      		</div>
+	    {% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_fases_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
+</div>
+{% endblock %}

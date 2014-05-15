@@ -52,6 +52,24 @@
 </pre></div>
 </div>
 <span class="target" id="module-desarrollo.forms"></span><dl class="class">
+<dt id="desarrollo.forms.CrearFaseForm">
+<em class="property">class </em><tt class="descclassname">desarrollo.forms.</tt><tt class="descname">CrearFaseForm</tt><big>(</big><em>data=None</em>, <em>files=None</em>, <em>auto_id=u'id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.util.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/forms.html#CrearFaseForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.forms.CrearFaseForm" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>Formulario utilizado para la creacion de una fase.
+
+Se especifican todos los atributos de la fase que deben 
+ingresarse estableciendo como required=True, si es indispensable
+completar ese atributo para la creacion de la fase o caso 
+contrario required=False.
+
+Se utilizan funciones para verificar que el nombre no este registrado
+en el sistema.
+
+Se utiliza una funciona para verificar que la fecha ingresada sea valida.
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
 <dt id="desarrollo.forms.CrearItemForm">
 <em class="property">class </em><tt class="descclassname">desarrollo.forms.</tt><tt class="descname">CrearItemForm</tt><big>(</big><em>data=None</em>, <em>files=None</em>, <em>auto_id=u'id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.util.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/forms.html#CrearItemForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.forms.CrearItemForm" title="Permalink to this definition">¶</a></dt>
 <dd><div class="highlight-python"><div class="highlight"><pre>Formulario utilizado para la creacion de un item.
@@ -69,6 +87,39 @@ Se verifica mediante una funcion que el valor del costo sea valido.
 </dd></dl>
 
 <dl class="class">
+<dt id="desarrollo.forms.CrearTipoItemForm">
+<em class="property">class </em><tt class="descclassname">desarrollo.forms.</tt><tt class="descname">CrearTipoItemForm</tt><big>(</big><em>data=None</em>, <em>files=None</em>, <em>auto_id=u'id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.util.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/forms.html#CrearTipoItemForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.forms.CrearTipoItemForm" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>Formulario utilizado para la creacion de un tipo de item.
+
+Se especifican todos los atributos del tipo de item que deben 
+ingresarse estableciendo como required=True, si es indispensable
+completar ese atributo para la creacion del tipo de item o caso 
+contrario required=False.
+
+Se utilizan funciones para verificar que el nombre no este registrado
+en el sistema.
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="desarrollo.forms.ModificarFaseForm">
+<em class="property">class </em><tt class="descclassname">desarrollo.forms.</tt><tt class="descname">ModificarFaseForm</tt><big>(</big><em>data=None</em>, <em>files=None</em>, <em>auto_id=u'id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.util.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/forms.html#ModificarFaseForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.forms.ModificarFaseForm" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>Formulario utilizado para la modificacion de una fase.
+
+Se especifican todos los atributos de la fase que deben 
+ingresarse sin posibilidad de dejar el campo vacio estableciendo
+como required=True, caso contrarios required=False.
+
+Se utilizan funciones para verificar que el nombre no este registrado
+en el sistema.
+
+Se utiliza una funciona para verificar que la fecha ingresada sea valida.
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
 <dt id="desarrollo.forms.ModificarItemForm">
 <em class="property">class </em><tt class="descclassname">desarrollo.forms.</tt><tt class="descname">ModificarItemForm</tt><big>(</big><em>data=None</em>, <em>files=None</em>, <em>auto_id=u'id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.util.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/forms.html#ModificarItemForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.forms.ModificarItemForm" title="Permalink to this definition">¶</a></dt>
 <dd><div class="highlight-python"><div class="highlight"><pre>Formulario utilizado para la modificacion de un item.
@@ -80,6 +131,21 @@ como required=True, caso contrarios required=False.
 Se verifica mediante una funcion que el valor de la complejidad sea valido.
 
 Se verifica mediante una funcion que el valor del costo sea valido.
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="desarrollo.forms.ModificarTipoItemForm">
+<em class="property">class </em><tt class="descclassname">desarrollo.forms.</tt><tt class="descname">ModificarTipoItemForm</tt><big>(</big><em>data=None</em>, <em>files=None</em>, <em>auto_id=u'id_%s'</em>, <em>prefix=None</em>, <em>initial=None</em>, <em>error_class=&lt;class 'django.forms.util.ErrorList'&gt;</em>, <em>label_suffix=None</em>, <em>empty_permitted=False</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/forms.html#ModificarTipoItemForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.forms.ModificarTipoItemForm" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>Formulario utilizado para la modificacion de un tipo de item.
+
+Se especifican todos los atributos del tipo de item que deben 
+ingresarse sin posibilidad de dejar el campo vacio estableciendo
+como required=True, caso contrarios required=False.
+
+Se utilizan funciones para verificar que el nombre no este registrado
+en el sistema.
 </pre></div>
 </div>
 </dd></dl>

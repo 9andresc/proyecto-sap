@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}SAP - Quitar relación{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<div class="panel panel-success">
+      		<div class="panel-heading">
+        		<h3 class="panel-title">¡Éxito!</h3>
+      		</div>
+      		<div class="panel-body">
+        		La relación entre el item padre/antecesor <i>{{ item.nombre }}</i> y el item hijo/sucesor <i>{{ relacion.nombre }}</i> fue correctamente eliminada.
+      		</div>
+      	</div>
+	</div>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/fases/items/relaciones/item/{{ item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de relaciones del item {{ item.nombre }}</a>
+</div>
+{% endblock %}

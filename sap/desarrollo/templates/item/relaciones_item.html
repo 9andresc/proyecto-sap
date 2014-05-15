@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}SAP - Hijos/Sucesores del item {{ item.nombre }}{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Hijos/Sucesores del item <i>{{ item.nombre }}</i></small></h1>
+		<a class="btn btn-default" href="/desarrollo/fases/items/agregar_relacion/item/{{ item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
+		<br><br>
+		{% if relaciones %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre del item</th>
+                    		<th>Tipo de relación</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for r in relaciones %}
+                			<tr>
+                    			<td>{{ r.id }}</td>
+                    			<td>{{ r.nombre }}</td>
+                    			<td>
+                    			{% ifequal r.tipo_relacion 0 %}
+									Hijo-Padre
+								{% endifequal %}
+								{% ifequal r.tipo_relacion 1 %}
+									Sucesor-Antecesor
+								{% endifequal %}
+                    			<td><a class="btn btn-default" href="/desarrollo/fases/items/quitar_relacion/{{ r.id }}/item/{{ item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-minus"></span> Quitar</a></td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No posee hijos/sucesores.</h3>
+    	{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/fases/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
+</div>
+{% endblock %}
