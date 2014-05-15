@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-{% block title %}SAP - Confirmación de cerrado de la linea base {{ linea_base.nombre }}{% endblock %}
+{% block title %}SAP - Confirmación de quebrado de la linea base {{ linea_base.nombre }}{% endblock %}
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if cerrado_valido %}
+		{% if estado_valido %}
 			<div class="panel panel-success">
       			<div class="panel-heading">
         			<h3 class="panel-title">¡Éxito!</h3>
       			</div>
       			<div class="panel-body">
-        			La linea base {{ linea_base.nombre }} cumple con todos los requisitos. Ya está cerrada.
+        			La linea base {{ linea_base.nombre }} cumple con todos los requisitos. Ya está en revisión.
       			</div>
       		</div>
 		{% else %}
@@ -22,9 +22,7 @@
 					<br><br>
 					<ul class="list-styled">
 						{% if estado_valido == False %}
-							<li>La linea base debe estar en estado Abierta o en Revisión.</li>
-						{% elif cerrado_valido == False %}
-							<li>La linea base posee al menos un item que no se encuentra en estado Bloqueado.</li>
+							<li>La linea base debe estar en estado Cerrada.</li>
 						{% endif %}
 					</ul>        			
       			</div>

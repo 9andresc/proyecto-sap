@@ -12,7 +12,7 @@ from desarrollo.views import finalizar_fase_view
 from desarrollo.views import items_fase_view
 from desarrollo.views import crear_item_view, modificar_item_view, eliminar_item_view, visualizar_item_view, aprobar_item_view
 from desarrollo.views import relaciones_item_view, agregar_relacion_view, confirmacion_agregar_relacion_view, quitar_relacion_view
-from desarrollo.views import lineas_base_fase_view, crear_linea_base_view, visualizar_linea_base_view, cerrar_linea_base_view
+from desarrollo.views import lineas_base_fase_view, crear_linea_base_view, visualizar_linea_base_view, cerrar_linea_base_view, quebrar_linea_base_view
 from desarrollo.views import items_linea_base_view, linea_base_agregar_item_view,linea_base_confirmacion_agregar_item_view, linea_base_quitar_item_view
 
 urlpatterns = patterns('',
@@ -58,4 +58,5 @@ urlpatterns = patterns('',
     url(r'^desarrollo/lineas_base/confirmacion_agregar_item/(?P<id_item>\d+)/linea_base/(?P<id_linea_base>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', linea_base_confirmacion_agregar_item_view, name="vista_confirmacion_linea_base_agregar_item"),
     url(r'^desarrollo/lineas_base/quitar_item/(?P<id_item>\d+)/linea_base/(?P<id_linea_base>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', linea_base_quitar_item_view, name="vista_linea_base_quitar_item"),
     url(r'^desarrollo/lineas_base/cerrar_linea_base/(?P<id_linea_base>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', cerrar_linea_base_view, name="vista_cerrar_linea_base"),
+    url(r'^desarrollo/lineas_base/quebrar_linea_base/(?P<id_linea_base>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', quebrar_linea_base_view, name="vista_quebrar_linea_base"),
 )

@@ -1754,11 +1754,9 @@ def lineas_base_fase_view(request, id_fase, id_proyecto):
     """
     crear_linea_base = False
     cerrar_linea_base = False
-    eliminar_linea_base = False
+    quebrar_linea_base = False
     visualizar_linea_base = False
     gestionar_items = False
-#    iniciar_fase = False
-#    finalizar_fase = False
     roles = request.user.roles.all()
     for r in roles:
         for p in r.permisos.all():
@@ -1766,20 +1764,16 @@ def lineas_base_fase_view(request, id_fase, id_proyecto):
                 crear_linea_base = True
             elif p.nombre == 'Cerrar linea base':
                 cerrar_linea_base= True
-            elif p.nombre == 'Eliminar linea base':
-                eliminar_linea_base = True
+            elif p.nombre == 'Quebrar linea base':
+                quebrar_linea_base = True
             elif p.nombre == 'Visualizar linea base':
                 visualizar_linea_base = True
-#            elif p.nombre == 'Iniciar fase':
-#                iniciar_fase = True
-#            elif p.nombre == 'Finalizar fase':
-#                finalizar_fase = True
             elif p.nombre == 'Gestionar items de linea base':
                 gestionar_items = True
                 
-            if crear_linea_base and cerrar_linea_base and eliminar_linea_base and visualizar_linea_base and  gestionar_items:
+            if crear_linea_base and cerrar_linea_base and quebrar_linea_base and visualizar_linea_base and  gestionar_items:
                 break
-        if crear_linea_base and cerrar_linea_base and eliminar_linea_base and visualizar_linea_base and  gestionar_items:
+        if crear_linea_base and cerrar_linea_base and quebrar_linea_base and visualizar_linea_base and  gestionar_items:
                 break
                 
     proyecto = Proyecto.objects.get(id=id_proyecto)
@@ -1788,7 +1782,7 @@ def lineas_base_fase_view(request, id_fase, id_proyecto):
     if fase.estado == 0:
         valido = False
     lineas_base = fase.lineas_base.all()
-    ctx = {'valido':valido, 'proyecto':proyecto, 'fase':fase, 'lineas_base':lineas_base, 'crear_linea_base':crear_linea_base, 'cerrar_linea_base':cerrar_linea_base, 'eliminar_linea_base':eliminar_linea_base, 'visualizar_linea_base':visualizar_linea_base,  'gestionar_items':gestionar_items}
+    ctx = {'valido':valido, 'proyecto':proyecto, 'fase':fase, 'lineas_base':lineas_base, 'crear_linea_base':crear_linea_base, 'cerrar_linea_base':cerrar_linea_base, 'quebrar_linea_base':quebrar_linea_base, 'visualizar_linea_base':visualizar_linea_base,  'gestionar_items':gestionar_items}
     return render_to_response('fase/lineas_base_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -2082,3 +2076,52 @@ def cerrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
     else:
         ctx = {'fase':fase, 'cerrado_valido':cerrado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
         return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Quebrar linea base")
+@fase_miembro_proyecto()
+def quebrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
+    """
+    ::
+    
+        La vista para quebrar una linea base. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Quebrar linea base.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            
+        Esta vista permite al usuario quebrar una linea base si es que cumple con las siguientes condiciones:
+        
+            - Debe estar en estado Cerrado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_linea_base: el identificador de la linea base
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    fase = Fase.objects.get(id=id_fase)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    linea_base = fase.lineas_base.get(id=id_linea_base)
+    
+    estado_valido = True
+    
+    if linea_base.estado != 1:
+        estado_valido = False
+    
+    if estado_valido:
+        items = linea_base.items.all()
+        linea_base.estado = 2
+        linea_base.save()
+        for i in items:
+            i.estado = 3
+            i.save()
+    
+    ctx = {'fase':fase, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
+    return render_to_response('linea_base/quebrar_linea_base.html', ctx, context_instance=RequestContext(request))
