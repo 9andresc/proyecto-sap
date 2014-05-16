@@ -2813,7 +2813,8 @@ def visualizar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fase = proyecto.fases.get(id=id_fase)
     linea_base = fase.lineas_base.get(id=id_linea_base)
-    ctx = {'linea_base': linea_base, 'fase':fase, 'proyecto':proyecto}
+    items = linea_base.items.all()
+    ctx = {'linea_base': linea_base, 'items':items, 'fase':fase, 'proyecto':proyecto}
     return render_to_response('linea_base/visualizar_linea_base.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')

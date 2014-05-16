@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}SAP - Linea base {{ linea_base.nombre }}{% endblock %}
+{% block title %}SAP - Línea base {{ linea_base.nombre }}{% endblock %}
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1><small>Detalles de la Linea base</small></h1>
+		<h1><small>Detalles de la línea base</small></h1>
 		
 		<div class="input-group">
 			<span class="input-group-addon"><b>Nombre</b></span>
@@ -28,7 +28,74 @@
 			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" disabled="disabled">{{ linea_base.descripcion }}</textarea>
         </div>
         <br>
-		<a class="btn btn-default" href="/desarrollo/fases/lineas_base/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de lineas base de la fase {{ fase.nombre }}</a>
+        {% if items %}
+        	<h2 align="center"><small>Items de la línea base <i>{{ linea_base.nombre }}</i></small></h2>
+        	<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre del item</th>
+                    		<th>Versión</th>
+                    		<th>Estado</th>
+                    		<th>Costo</th>
+                    		<th>Padre</th>
+                    		<th>Tipo de relación</th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for i in items %}
+                			<tr>
+                    			<td>{{ i.id }}</td>
+                    			<td>{{ i.nombre }}</td>
+                    			<td>{{ i.version }}</td>
+                    			<td>
+	                    			{% ifequal i.estado 0 %}
+										En Construcción
+									{% endifequal %}
+									{% ifequal i.estado 1 %}
+										Aprobado
+									{% endifequal %}
+									{% ifequal i.estado 2 %}
+										Bloqueado
+									{% endifequal %}
+									{% ifequal i.estado 3 %}
+										En Revisión
+									{% endifequal %}
+	                    		</td>
+	                    		<td>{{ i.costo_monetario }}</td>
+	                    		{% if i.padre == None %}
+	                    			<td>No posee padre</td>
+	                    		{% else %}
+	                    			<td>{{ i.padre.nombre }}</td>
+	                    		{% endif %}
+	                    		{% if i.tipo_relacion == None %}
+	                    			<td>No hay relación</td>
+	                    		{% else %}
+	                    			{% ifequal i.tipo_relacion 0 %}
+	                    				<td>Hijo</td>
+	                    			{% endifequal %}
+	                    			{% ifequal i.tipo_relacion 1 %}
+	                    				<td>Sucesor</td>
+	                    			{% endifequal %}
+	                    		{% endif %}
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+        {% else %}
+        	<div class="panel panel-info">
+				<div class="panel-heading">
+			    	<h3 class="panel-title">Info</h3>
+			    </div>
+			    <div class="panel-body">
+			        No hay items en esta línea base.
+			    </div>
+	      	</div>
+        {% endif %}
+        <br>
+		<a class="btn btn-default" href="/desarrollo/fases/lineas_base/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de líneas base de la fase {{ fase.nombre }}</a>
 	</div>
 </div>
 {% endblock %}

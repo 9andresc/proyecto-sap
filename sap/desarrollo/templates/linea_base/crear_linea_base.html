@@ -1,12 +1,8 @@
 {% extends "base.html" %}
-{% block title %}SAP - Crear linea base{% endblock %}
+{% block title %}SAP - Crear línea base{% endblock %}
 {% block content %}
 <div class="jumbotron">
-<!-- datepicker script -->
-            <script>
-                $(".input-group.date").datepicker({ autoclose: true, todayHighlight: true });
-            </script>
-	<h1><small>Crear linea base</small></h1>
+	<h1><small>Crear línea base</small></h1>
 	<form class="form-horizontal" method="POST">
 		{% csrf_token %}
 		
@@ -40,17 +36,17 @@
 		<p class="text-muted">Campos obligatorios (*)</p>
 		<div class="input-group">
 			<span class="input-group-addon"><b>* Nombre</b></span>
-			<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de la linea base">
+			<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de la línea base">
         </div>
         <br>
         <div class="input-group">
 			<span class="input-group-addon"><b>Descripción</b></span>
-			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción de la linea base"></textarea>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción de la línea base"></textarea>
         </div>  
         <br>
         <button type="submit" class="btn btn-success">Crear</button>
 	</form>
 	<br>
-	<a class="btn btn-default" href="/desarrollo/fases/lineas_base/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de lineas base de la fase {{ fase.nombre }}</a>
+	<a class="btn btn-default" href="/desarrollo/fases/lineas_base/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de líneas base de la fase {{ fase.nombre }}</a>
 </div>
 {% endblock %}

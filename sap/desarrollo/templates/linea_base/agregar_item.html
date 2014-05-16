@@ -5,7 +5,7 @@
 <div class="jumbotron">
 	<div class="bs-example">
 		{% if fase %}
-		<h1><small>Items de la fase {{ fase.nombre }}</small></h1>
+		<h1><small>Items de la fase <i>{{ fase.nombre }}</i></small></h1>
 			{% if items %}
 				<div class="table-responsive"> 
         			<table class="table table-hover">
@@ -13,6 +13,7 @@
                 			<tr>
                     			<th>ID</th>
                     			<th>Nombre de item</th>
+                    			<th>Estado</th>
                     			<th></th>
                     		</tr>
                     	</thead>
@@ -21,6 +22,20 @@
                 				<tr>
                     				<td>{{ i.id }}</td>
                     				<td>{{ i.nombre }}</td>
+                    				<td>
+		                    			{% ifequal i.estado 0 %}
+											En Construcción
+										{% endifequal %}
+										{% ifequal i.estado 1 %}
+											Aprobado
+										{% endifequal %}
+										{% ifequal i.estado 2 %}
+											Bloqueado
+										{% endifequal %}
+										{% ifequal i.estado 3 %}
+											En Revisión
+										{% endifequal %}
+		                    		</td>
                     				<td><a class="btn btn-default" href="/desarrollo/lineas_base/confirmacion_agregar_item/{{ i.id }}/linea_base/{{ linea_base.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
                 				</tr>
                 			{% endfor %}
@@ -28,7 +43,7 @@
         			</table>
     			</div>
     		{% else %}
-    			<h3>La Fase {{ fase.nombre }} no posee items en estado Aprobado.</h3>
+    			<h3>La fase <i>{{ fase.nombre }}</i> no posee items en estado <b>Aprobado</b>.</h3>
     		{% endif %}
     	{% else %}
     		<h1><small>Items</small></h1>
@@ -36,6 +51,6 @@
     	{% endif %}
 	</div>
 	<br>
-	<a class="btn btn-default" href="/desarrollo/lineas_base/items/linea_base/{{ linea_base.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la linea base {{ linea_base.nombre }}</a>
+	<a class="btn btn-default" href="/desarrollo/lineas_base/items/linea_base/{{ linea_base.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la línea base {{ linea_base.nombre }}</a>
 </div>
 {% endblock %}
