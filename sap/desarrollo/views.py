@@ -172,7 +172,7 @@ def fases_proyecto_view(request, id_proyecto):
         for p in partes:
             nombre_cluster_fase = nombre_cluster_fase + p
         cluster_fase = pydot.Cluster(nombre_cluster_fase, label=nombre_cluster_fase, shape='rectangle', fontsize=15, style='filled', color='#E6E6E6', fillcolor="#BDBDBD", fontcolor="white")
-        items = f.items.all()
+        items = f.items.exclude(estado=2).exclude(estado=3).filter(linea_base=None)
         if items:
             for i in items:
                 partes = i.nombre.split(" ")
@@ -182,12 +182,30 @@ def fases_proyecto_view(request, id_proyecto):
                 color_estado = "white"
                 if i.estado == 1:
                     color_estado = "#80FF00"
-                elif i.estado == 2:
-                    color_estado = "#DF0101"
-                elif i.estado == 3:
-                    color_estado = "#045FB4"
                 
                 cluster_fase.add_node(pydot.Node(nombre_cluster_fase + "_" + nombre_nodo_item, label=nombre_nodo_item, fillcolor=color_estado, fontsize=15))
+        items = f.items.exclude(estado=0).exclude(estado=1).exclude(linea_base=None)
+        if items:
+            lineas_base = f.lineas_base.all()
+            for lb in lineas_base:
+                partes = lb.nombre.split(" ")
+                nombre_cluster_linea_base = ""
+                for p in partes:
+                    nombre_cluster_linea_base = nombre_cluster_linea_base + p
+                cluster_linea_base = pydot.Cluster(nombre_cluster_linea_base, label=nombre_cluster_linea_base, shape='rectangle', fontsize=15, style='filled', color='#E6E6E6', fillcolor="#FFFFFF", fontcolor="black")
+                items = lb.items.all()
+                for i in items:
+                    partes = i.nombre.split(" ")
+                    nombre_nodo_item = ""
+                    for p in partes:
+                        nombre_nodo_item = nombre_nodo_item + p
+                    color_estado = "#DF0101"
+                    if i.estado == 3:
+                        color_estado = "#045FB4"
+                    
+                    cluster_linea_base.add_node(pydot.Node(nombre_cluster_fase + "_" + nombre_nodo_item, label=nombre_nodo_item, fillcolor=color_estado, fontsize=15))
+                cluster_fase.add_subgraph(cluster_linea_base)
+            
         grafo_proyecto.add_subgraph(cluster_fase)
 
     for f in fases:
@@ -212,13 +230,13 @@ def fases_proyecto_view(request, id_proyecto):
                     nombre_cluster_fase_relacion = ""
                     for p in partes:
                         nombre_cluster_fase_relacion = nombre_cluster_fase_relacion + p
-                    grafo_proyecto.add_edge(pydot.Edge(nombre_cluster_fase + "_" + nombre_nodo_item, nombre_cluster_fase_relacion + "_" + nombre_nodo_r, label='costo='+str(i.costo_monetario)))
+                    grafo_proyecto.add_edge(pydot.Edge(nombre_cluster_fase + "_" + nombre_nodo_item, nombre_cluster_fase_relacion + "_" + nombre_nodo_r, label='costo='+str(i.costo_monetario), fontsize=10))
                 else:
                     partes = r.nombre.split(" ")
                     nombre_nodo_r = ""
                     for p in partes:
                         nombre_nodo_r = nombre_nodo_r + p
-                    grafo_proyecto.add_edge(pydot.Edge(nombre_cluster_fase + "_" + nombre_nodo_item, nombre_cluster_fase + "_" + nombre_nodo_r, label='costo='+str(i.costo_monetario)))
+                    grafo_proyecto.add_edge(pydot.Edge(nombre_cluster_fase + "_" + nombre_nodo_item, nombre_cluster_fase + "_" + nombre_nodo_r, label='costo='+str(i.costo_monetario), fontsize=10))
             
     ruta_grafo = str(settings.MEDIA_ROOT) + "grafos/grafo_proyecto_" + str(proyecto.nombre) + ".png"
     grafo_proyecto.write(ruta_grafo, prog='dot', format='png')
@@ -1973,7 +1991,7 @@ def agregar_relacion_view(request, id_fase, id_item, id_proyecto):
             if estado_valido and num_fases_valido:
                 fase_vecina = proyecto.fases.get(num_secuencia = (fase.num_secuencia + 1))
                 items_sucesores = fase_vecina.items.filter(padre=None)
-                ctx = {'item':item, 'items_sucesores':items_sucesores, 'fase':fase, 'fase_vecina':fase_vecina, 'proyecto':proyecto, 'valido':valido}
+                ctx = {'item':item, 'items_sucesores':items_sucesores, 'fase':fase, 'fase_vecina':fase_vecina, 'proyecto':proyecto, 'valido':valido, 'estado_valido':estado_valido, 'num_fases_valido':num_fases_valido}
                 return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
             else:
                 ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'valido':valido, 'estado_valido':estado_valido, 'num_fases_valido':num_fases_valido}
@@ -2019,56 +2037,22 @@ def confirmacion_agregar_relacion_view(request, id_fase, id_item, id_relacion, i
     fase = proyecto.fases.get(id=id_fase)
     item = fase.items.get(id=id_item)
     relacion = Item.objects.get(id=id_relacion)
-    modificar_relaciones = False
-    
-    if relacion.relaciones and relacion.adan == None and relacion.cain == None and relacion.padre == None:
-        modificar_relaciones = True
     
     if item.fase.id == relacion.fase.id:
-        if item.adan:
-            relacion.adan = item.adan
-        else:
-            relacion.adan = item.id
-            
-        if item.adan and item.cain == None:
-            relacion.adan = item.adan
-            relacion.cain = item.id
-        elif item.adan and item.cain:
-            relacion.cain = item.cain
-            
-        if modificar_relaciones:
-            relaciones = relacion.relaciones.all()
-            resultados = []
-                
-            while 1:
-                hijos = []
-                if len(relaciones) == 0:
-                    break
-                for r in relaciones:
-                    resultados.append(r)
-                    if r.relaciones.count() > 0:
-                        for h in r.relaciones.all():
-                            hijos.append(h)
-                relaciones = hijos
-                
-            for r in resultados:
-                r.adan = item.id
-                r.cain = relacion.id
-                r.version = r.version + 1
-                r.save()
-                version_r = VersionItem.objects.create(version=r.version, id_item=r.id, nombre=r.nombre, 
-                                                       descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
-                                                       costo_temporal=r.costo_temporal, complejidad=r.complejidad,
-                                                       estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
-                                                       adan=r.adan, cain=r.cain,
-                                                       tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
-                if r.padre:
-                    version_r.padre = r.padre.id
-                version_r.save()
-            
         relacion.tipo_relacion = 0
+    else:
+        relacion.tipo_relacion = 1
+    relacion.save()
+        
+    # Si el padre del item a relacionar es adan.
+    if item.adan == None:
+        relacion.adan = item.id
+        relacion.cain = None
+        relacion.padre = item
         relacion.version = relacion.version + 1
         relacion.save()
+                    
+        # Version del item guardada.
         version_relacion = VersionItem.objects.create(version=relacion.version, id_item=relacion.id, nombre=relacion.nombre, 
                                                       descripcion=relacion.descripcion, costo_monetario=relacion.costo_monetario, 
                                                       costo_temporal=relacion.costo_temporal, complejidad=relacion.complejidad,
@@ -2078,38 +2062,31 @@ def confirmacion_agregar_relacion_view(request, id_fase, id_item, id_relacion, i
         if relacion.padre:
             version_relacion.padre = relacion.padre.id
         version_relacion.save()
-    else:
-        if item.adan:
-            relacion.adan = item.adan
-        else:
-            relacion.adan = item.id
-            
-        if item.adan and item.cain == None:
-            relacion.adan = item.adan
-            relacion.cain = item.id
-        elif item.adan and item.cain:
-            relacion.cain = item.cain
-            
-        if modificar_relaciones:
-            relaciones = relacion.relaciones.all()
-            resultados = []
                 
+        # Verificamos si existen items que son hijos/sucesores del item a relacionar.
+        relaciones = relacion.relaciones.all()
+        # Si existe al menos uno, se cargaran todos los hijos/sucesores en la lista resultados.
+        if relaciones:
+            resultados = []
+                        
             while 1:
-                hijos = []
+                nuevas_relaciones = []
                 if len(relaciones) == 0:
                     break
                 for r in relaciones:
                     resultados.append(r)
                     if r.relaciones.count() > 0:
                         for h in r.relaciones.all():
-                            hijos.append(h)
-                relaciones = hijos
-                
+                            nuevas_relaciones.append(h)
+                relaciones = nuevas_relaciones
+                        
+            # Por cada hijo/sucesor se modificaran sus campos de gestion de cosistencia del grafo.
             for r in resultados:
-                r.adan = item.id
+                r.adan = relacion.padre.id
                 r.cain = relacion.id
                 r.version = r.version + 1
                 r.save()
+                            
                 version_r = VersionItem.objects.create(version=r.version, id_item=r.id, nombre=r.nombre, 
                                                        descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
                                                        costo_temporal=r.costo_temporal, complejidad=r.complejidad,
@@ -2119,10 +2096,16 @@ def confirmacion_agregar_relacion_view(request, id_fase, id_item, id_relacion, i
                 if r.padre:
                     version_r.padre = r.padre.id
                 version_r.save()
-        
-        relacion.tipo_relacion = 1
+    # Fin--> Si el padre del item a relacionar es adan.
+    # Si el padre del item a relacionar no es adan.
+    else:
+        relacion.adan = item.adan
+        relacion.cain = item.id
+        relacion.padre = item
         relacion.version = relacion.version + 1
         relacion.save()
+                    
+        # Version del item guardada.
         version_relacion = VersionItem.objects.create(version=relacion.version, id_item=relacion.id, nombre=relacion.nombre, 
                                                       descripcion=relacion.descripcion, costo_monetario=relacion.costo_monetario, 
                                                       costo_temporal=relacion.costo_temporal, complejidad=relacion.complejidad,
@@ -2132,6 +2115,41 @@ def confirmacion_agregar_relacion_view(request, id_fase, id_item, id_relacion, i
         if relacion.padre:
             version_relacion.padre = relacion.padre.id
         version_relacion.save()
+                    
+        # Verificamos si existen items que son hijos/sucesores del item a relacionar.
+        relaciones = relacion.relaciones.all()
+        # Si existe al menos uno, se cargaran todos los hijos/sucesores en la lista resultados.
+        if relaciones:
+            resultados = []
+                        
+            while 1:
+                nuevas_relaciones = []
+                if len(relaciones) == 0:
+                    break
+                for r in relaciones:
+                    resultados.append(r)
+                    if r.relaciones.count() > 0:
+                        for h in r.relaciones.all():
+                            nuevas_relaciones.append(h)
+                relaciones = nuevas_relaciones
+                        
+            # Por cada hijo/sucesor se modificaran sus campos de gestion de cosistencia del grafo.
+            for r in resultados:
+                r.adan = relacion.padre.id
+                r.cain = relacion.id
+                r.version = r.version + 1
+                r.save()
+                            
+                version_r = VersionItem.objects.create(version=r.version, id_item=r.id, nombre=r.nombre, 
+                                                       descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
+                                                       costo_temporal=r.costo_temporal, complejidad=r.complejidad,
+                                                       estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
+                                                       adan=r.adan, cain=r.cain,
+                                                       tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
+                if r.padre:
+                    version_r.padre = r.padre.id
+                version_r.save()
+    # Fin--> Si el padre del item a relacionar no es adan.
         
     item.relaciones.add(relacion)
     item.save()
@@ -2349,7 +2367,7 @@ def confirmacion_reversionar_item_view(request, id_fase, id_item, id_reversion, 
                 
                 # Si el padre del item a reversionar es adan.
                 if item_padre.adan == None:
-                    item.adan = item_padre.adan
+                    item.adan = item_padre.id
                     item.cain = None
                     item.padre = item_padre
                     item.save()
@@ -2389,7 +2407,7 @@ def confirmacion_reversionar_item_view(request, id_fase, id_item, id_reversion, 
                         
                         # Por cada hijo/sucesor se modificaran sus campos de gestion de cosistencia del grafo.
                         for r in resultados:
-                            r.adan = item_padre.id
+                            r.adan = item.padre.id
                             r.cain = item.id
                             r.version = r.version + 1
                             r.save()
@@ -2448,7 +2466,7 @@ def confirmacion_reversionar_item_view(request, id_fase, id_item, id_reversion, 
                         
                         # Por cada hijo/sucesor se modificaran sus campos de gestion de cosistencia del grafo.
                         for r in resultados:
-                            r.adan = item_padre.id
+                            r.adan = item.padre.id
                             r.cain = item.id
                             r.version = r.version + 1
                             r.save()
@@ -2859,7 +2877,6 @@ def linea_base_agregar_item_view(request, id_fase, id_linea_base, id_proyecto):
     """
     fase = Fase.objects.get(id=id_fase)
     proyecto = fase.proyecto
-#    items = fase.items.all()
     items = fase.items.filter(estado=1)
     linea_base = fase.lineas_base.get(id=id_linea_base)
     ctx = {'fase':fase, 'proyecto':proyecto, 'items':items, 'linea_base':linea_base}
@@ -2894,11 +2911,11 @@ def linea_base_confirmacion_agregar_item_view(request, id_fase, id_linea_base, i
         
             - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    linea_base = fase.lineas_base.get(id=id_linea_base)
+    item = fase.items.get(id=id_item)
     valido = False
-    fase = Fase.objects.get(id=id_fase)
-    proyecto = fase.proyecto
-    linea_base = LineaBase.objects.get(id=id_linea_base)
-    item = Item.objects.get(id=id_item)
     try:
         item = linea_base.items.get(id=id_item)
     except item.DoesNotExist:
@@ -2906,6 +2923,19 @@ def linea_base_confirmacion_agregar_item_view(request, id_fase, id_linea_base, i
     if valido:
         linea_base.items.add(item)
         linea_base.save()
+        item.version = item.version + 1
+        item.save()
+        
+        version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
+                                                  descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                  costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                  estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                                  adan=item.adan, cain=item.cain,
+                                                  tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
+        if item.padre:
+            version_item.padre = item.padre.id
+        version_item.save()
+        
     ctx = {'fase':fase, 'item':item, 'linea_base':linea_base, 'proyecto':proyecto, 'valido':valido}
     return render_to_response('linea_base/confirmacion_agregar_item.html', ctx, context_instance=RequestContext(request))  
 
@@ -2937,12 +2967,30 @@ def linea_base_quitar_item_view(request, id_fase, id_item, id_linea_base, id_pro
         
             - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
-    fase = Fase.objects.get(id=id_fase)
-    proyecto = fase.proyecto
-    linea_base = LineaBase.objects.get(id=id_linea_base)
-    item = Item.objects.get(id=id_item)
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    linea_base = fase.lineas_base.get(id=id_linea_base)
+    item = linea_base.items.get(id=id_item)
     linea_base.items.remove(item)
     linea_base.save()
+    
+    if item.relaciones.all():
+        item.estado = 1
+    else:
+        item.estado = 0
+    item.version = item.version + 1
+    item.save()
+        
+    version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
+                                              descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                              costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                              estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                              adan=item.adan, cain=item.cain,
+                                              tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
+    if item.padre:
+        version_item.padre = item.padre.id
+    version_item.save()
+    
     ctx = {'fase':fase, 'item':item, 'linea_base':linea_base,  'proyecto':proyecto}
     return render_to_response('linea_base/quitar_item.html', ctx, context_instance=RequestContext(request))
 
@@ -2980,30 +3028,32 @@ def cerrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
     proyecto = Proyecto.objects.get(id=id_proyecto)
     linea_base = fase.lineas_base.get(id=id_linea_base)
     
-    cerrado_valido = True
     estado_valido = True
     if linea_base.estado == 1:
         estado_valido = False
-        cerrado_valido = False
     
     if estado_valido:
-        cerrado_valido = True
         items = linea_base.items.all()
         for i in items:
-            if i.estado != 2:
-                cerrado_valido = False
-                break
+            i.estado = 2
+            i.save()
             
-        if cerrado_valido:
-            linea_base.estado = 1
-            linea_base.save()
-            ctx = {'fase':fase, 'cerrado_valido':cerrado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
-            return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
-        else:
-            ctx = {'fase':fase, 'cerrado_valido':cerrado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
-            return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
+            version_i = VersionItem.objects.create(version=i.version, id_item=i.id, nombre=i.nombre, 
+                                                      descripcion=i.descripcion, costo_monetario=i.costo_monetario, 
+                                                      costo_temporal=i.costo_temporal, complejidad=i.complejidad,
+                                                      estado=i.estado, fase=i.fase, tipo_item=i.tipo_item,
+                                                      adan=i.adan, cain=i.cain,
+                                                      tipo_relacion=i.tipo_relacion, fecha_version=datetime.datetime.now())
+            if i.padre:
+                version_i.padre = i.padre.id
+            version_i.save()
+            
+        linea_base.estado = 1
+        linea_base.save()
+        ctx = {'fase':fase, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
+        return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
     else:
-        ctx = {'fase':fase, 'cerrado_valido':cerrado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
+        ctx = {'fase':fase, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
         return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -3035,8 +3085,8 @@ def quebrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
         
             - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
-    fase = Fase.objects.get(id=id_fase)
     proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
     linea_base = fase.lineas_base.get(id=id_linea_base)
     
     estado_valido = True
