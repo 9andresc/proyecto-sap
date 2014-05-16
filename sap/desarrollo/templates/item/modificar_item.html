@@ -67,12 +67,12 @@
 					{% if a.tipo_atributo.obligatorio == True %}
 						<div class="input-group">
 							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
-							<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"."|add:a.tipo_atributo.num_precision|add:"f" }}" required="required">
+							<input type="number" step="{{ a.tipo_atributo.patron_precision }}" max="{{ a.tipo_atributo.num_max }}" min="{{ a.tipo_atributo.num_min }}" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:".f" }}" required="required">
 						</div>
 					{% else %}
 						<div class="input-group">
 							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-							<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"."|add:a.tipo_atributo.num_precision|add:"f" }}">
+							<input type="number" step="{{ a.tipo_atributo.patron_precision }}" max="{{ a.tipo_atributo.num_max }}" min="{{ a.tipo_atributo.num_min }}" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:".f" }}">
 						</div>
 					{% endif %}
 				{% elif a.tipo_atributo.tipo_dato == 1 %}

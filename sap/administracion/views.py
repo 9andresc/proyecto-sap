@@ -801,7 +801,22 @@ def crear_tipo_atributo_view(request):
             if tipo_dato == "0":
                 valido = True
                 if num_longitud > num_precision:
-                    tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato, num_longitud=num_longitud, num_precision=num_precision, obligatorio=obligatorio)
+                    num_max = ""
+                    for x in xrange(1, int(num_longitud) - int(num_precision) + 1):
+                        num_max = num_max + "9"
+                    num_min = "-" + num_max
+                    if int(num_precision) > 0:
+                        precision = ""
+                        num_max = num_max + "."
+                        for x in xrange(1, int(num_precision)):
+                            precision = precision + "0"
+                            num_max = num_max + "9"
+                        precision = "0." + precision + "1"
+                        num_max = num_max + "9"
+                        num_min = "-" + num_max
+                    else:
+                        precision = "1"
+                    tipo_atributo = TipoAtributo.objects.create(nombre=nombre, descripcion=descripcion, tipo_dato=tipo_dato, num_longitud=num_longitud, num_max=num_max, num_min=num_min, num_precision=num_precision, patron_precision=precision, obligatorio=obligatorio)
                     tipo_atributo.save()
                 else:
                     valido = False
@@ -876,11 +891,25 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
             if tipo_dato == "0":
                 valido = True
                 if num_longitud > num_precision:
+                    num_max = ""
+                    for x in xrange(1, int(num_longitud) - int(num_precision) + 1):
+                        num_max = num_max + "9"
+                    num_min = "-" + num_max
+                    if int(num_precision) > 0:
+                        precision = ""
+                        for x in xrange(1, int(num_precision)):
+                            precision = precision + "0"
+                        precision = "0." + precision + "1"
+                    else:
+                        precision = "1"
                     tipo_atributo.nombre = nombre
                     tipo_atributo.descripcion = descripcion
                     tipo_atributo.tipo_dato = tipo_dato
                     tipo_atributo.num_longitud = num_longitud
+                    tipo_atributo.num_max = num_max
+                    tipo_atributo.num_min = num_min
                     tipo_atributo.num_precision = num_precision
+                    tipo_atributo.patron_precision = precision
                     tipo_atributo.textg_longitud = None
                     tipo_atributo.textch_longitud = None
                     tipo_atributo.obligatorio = obligatorio
@@ -894,7 +923,10 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
                 tipo_atributo.descripcion = descripcion
                 tipo_atributo.tipo_dato = tipo_dato
                 tipo_atributo.num_longitud = None
+                tipo_atributo.num_max = ""
+                tipo_atributo.num_min = ""
                 tipo_atributo.num_precision = None
+                tipo_atributo.patron_precision = ""
                 tipo_atributo.textg_longitud = None
                 tipo_atributo.textch_longitud = None
                 tipo_atributo.obligatorio = obligatorio
@@ -905,7 +937,10 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
                 tipo_atributo.descripcion = descripcion
                 tipo_atributo.tipo_dato = tipo_dato
                 tipo_atributo.num_longitud = None
+                tipo_atributo.num_max = ""
+                tipo_atributo.num_min = ""
                 tipo_atributo.num_precision = None
+                tipo_atributo.patron_precision = ""
                 tipo_atributo.textg_longitud = longitud
                 tipo_atributo.textch_longitud = None
                 tipo_atributo.obligatorio = obligatorio
@@ -916,7 +951,10 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
                 tipo_atributo.descripcion = descripcion
                 tipo_atributo.tipo_dato = tipo_dato
                 tipo_atributo.num_longitud = None
+                tipo_atributo.num_max = ""
+                tipo_atributo.num_min = ""
                 tipo_atributo.num_precision = None
+                tipo_atributo.patron_precision = ""
                 tipo_atributo.textg_longitud = None
                 tipo_atributo.textch_longitud = longitud
                 tipo_atributo.obligatorio = obligatorio
@@ -929,7 +967,8 @@ def modificar_tipo_atributo_view(request, id_tipo_atributo):
             'nombre': tipo_atributo.nombre,
             'descripcion': tipo_atributo.descripcion,
             'tipo_dato': tipo_atributo.tipo_dato,
-            'num_longitud':tipo_atributo.num_longitud,
+            'num_max':tipo_atributo.num_max,
+            'num_min':tipo_atributo.num_min,
             'num_precision':tipo_atributo.num_precision,
             'textg_longitud':tipo_atributo.textg_longitud,
             'textch_longitud':tipo_atributo.textch_longitud,

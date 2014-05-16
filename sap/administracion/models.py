@@ -58,7 +58,9 @@ class TipoAtributo(models.Model):
         nombre: nombre del tipo atributo.
         tipo de dato: el tipo de dato al que corresponde.
         descripcion: una breve descripcion del tipo atributo.
-        num_longitud: longitud de un tipo de dato Numerico.
+        num_longitud: indica la cantidad de digitos no decimales
+        num_max: indica el mayor valor para el dato de tipo Numerico.
+        num_min: indica el minimo valor para el dato de tipo Numerico.
         num_precision: precision decimal de un tipo de dato Numerico.
         textg_longitud: longitud de un tipo de dato Texto grande.
         textch_longitud: longitud de un tipo de dato Texto chico.
@@ -69,6 +71,9 @@ class TipoAtributo(models.Model):
     descripcion = models.TextField(blank=True)
     num_longitud = models.IntegerField(null=True, blank=True)
     num_precision = models.IntegerField(null=True, blank=True)
+    num_max = models.CharField(max_length=20, null=True, blank=True)
+    num_min = models.CharField(max_length=20, null=True, blank=True)
+    patron_precision = models.CharField(max_length=15, null=True, blank=True)
     textg_longitud = models.IntegerField(null=True, blank=True)
     textch_longitud = models.IntegerField(null=True, blank=True)
     obligatorio = models.BooleanField(default=False, blank=True)

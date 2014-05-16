@@ -56,10 +56,18 @@
 			<div class="input-group">
 				{% if a.tipo_atributo.tipo_dato == 0 %}
 					<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-					<input type="number" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:"."|add:a.tipo_atributo.num_precision|add:"f" }}" disabled="disabled">
+					{% if a.valor_numerico == None %}
+						<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="" disabled="disabled">
+					{% else %}
+						<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico }}" disabled="disabled">
+					{% endif %}
 				{% elif a.tipo_atributo.tipo_dato == 1 %}
 					<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
-					<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}" disabled="disabled">
+					{% if a.valor_fecha == None %}
+						<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="" disabled="disabled">
+					{% else %}
+						<input type="text" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha }}" disabled="disabled">
+					{% endif %}
 				{% elif a.tipo_atributo.tipo_dato == 2 %}
 					<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
 					<textarea rows="3" class="form-control" maxlength="{{ a.tipo_atributo.textg_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" disabled="disabled">{{ a.valor_texto_grande }}</textarea>

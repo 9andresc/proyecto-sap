@@ -464,7 +464,6 @@ def subir_fase_view(request, id_fase, id_proyecto):
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fase = proyecto.fases.get(id=id_fase)
-    subir_valido = True
     secuencia_valida = True
     f_estado_valido = True
     fs_estado_valido = True
@@ -1381,7 +1380,7 @@ def is_number(s):
     
 def is_date(s):
     try:
-        datetime.datetime.strptime(s, '%d/%m/%Y')
+        datetime.datetime.strptime(s, '%Y-%m-%d')
         return True
     except ValueError:
         return False
