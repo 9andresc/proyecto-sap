@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from administracion.models import Proyecto, Rol, TipoAtributo
 from desarrollo.models import Item, Fase, TipoItem, ValorAtributo, VersionItem, LineaBase
 from desarrollo.forms import CrearItemForm, ModificarItemForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm, ModificarTipoItemForm, CrearLineaBaseForm
-from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto
+from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto, fase_finalizada
 
 @login_required(login_url='/login/')
 def desarrollo_view(request):
@@ -184,7 +184,7 @@ def fases_proyecto_view(request, id_proyecto):
                     color_estado = "#80FF00"
                 
                 cluster_fase.add_node(pydot.Node(nombre_cluster_fase + "_" + nombre_nodo_item, label=nombre_nodo_item, fillcolor=color_estado, fontsize=15))
-        items = f.items.exclude(estado=0).exclude(estado=1).exclude(linea_base=None)
+        items = f.items.exclude(linea_base=None)
         if items:
             lineas_base = f.lineas_base.all()
             for lb in lineas_base:
@@ -199,8 +199,11 @@ def fases_proyecto_view(request, id_proyecto):
                     nombre_nodo_item = ""
                     for p in partes:
                         nombre_nodo_item = nombre_nodo_item + p
-                    color_estado = "#DF0101"
-                    if i.estado == 3:
+                    if i.estado == 1:
+                        color_estado = "#80FF00"
+                    elif i.estado == 2:
+                        color_estado = "#DF0101"
+                    else:
                         color_estado = "#045FB4"
                     
                     cluster_linea_base.add_node(pydot.Node(nombre_cluster_fase + "_" + nombre_nodo_item, label=nombre_nodo_item, fillcolor=color_estado, fontsize=15))
@@ -298,6 +301,7 @@ def crear_fase_view(request, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Modificar fase")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def modificar_fase_view(request, id_fase, id_proyecto):
     """
     ::
@@ -326,20 +330,25 @@ def modificar_fase_view(request, id_fase, id_proyecto):
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fase = proyecto.fases.get(id=id_fase)
-    if request.method == "POST":
-        form = ModificarFaseForm(data=request.POST)
-        if form.is_valid():
-            nombre = form.cleaned_data['nombre']
-            descripcion = form.cleaned_data['descripcion']
-            duracion = form.cleaned_data['duracion']
-            fecha_inicio = form.cleaned_data['fecha_inicio']
-            
-            fase.nombre = nombre
-            fase.descripcion = descripcion
-            fase.duracion = duracion
-            fase.fecha_inicio = fecha_inicio
-            fase.save()
-            return HttpResponseRedirect('/desarrollo/fases/fase/%s/proyecto/%s'%(id_fase, id_proyecto))
+    estado_valido = True
+    if fase.estado == 2:
+        estado_valido = False
+    
+    if estado_valido:
+        if request.method == "POST":
+            form = ModificarFaseForm(data=request.POST)
+            if form.is_valid():
+                nombre = form.cleaned_data['nombre']
+                descripcion = form.cleaned_data['descripcion']
+                duracion = form.cleaned_data['duracion']
+                fecha_inicio = form.cleaned_data['fecha_inicio']
+                
+                fase.nombre = nombre
+                fase.descripcion = descripcion
+                fase.duracion = duracion
+                fase.fecha_inicio = fecha_inicio
+                fase.save()
+                return HttpResponseRedirect('/desarrollo/fases/fase/%s/proyecto/%s'%(id_fase, id_proyecto))
             
     if request.method == "GET":
         form = ModificarFaseForm(initial={
@@ -347,12 +356,13 @@ def modificar_fase_view(request, id_fase, id_proyecto):
             'descripcion': fase.descripcion,
             'presupuesto': fase.duracion,
             })
-    ctx = {'form': form, 'fase': fase, 'proyecto':proyecto}
+    ctx = {'form': form, 'fase': fase, 'proyecto':proyecto, 'estado_valido':estado_valido}
     return render_to_response('fase/modificar_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Eliminar fase")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def eliminar_fase_view(request, id_fase, id_proyecto):
     """
     ::
@@ -434,6 +444,7 @@ def visualizar_fase_view(request, id_fase, id_proyecto):
 
 @login_required(login_url='/login/')
 @fase_miembro_proyecto()
+@fase_finalizada()
 def subir_fase_view(request, id_fase, id_proyecto):
     """
     ::
@@ -516,6 +527,8 @@ def subir_fase_view(request, id_fase, id_proyecto):
         return HttpResponseRedirect('/desarrollo/fases/proyecto/%s'%id_proyecto)
     
 @login_required(login_url='/login/')
+@fase_miembro_proyecto()
+@fase_finalizada()
 def bajar_fase_view(request, id_fase, id_proyecto):
     """
     ::
@@ -659,6 +672,7 @@ def fase_agregar_rol_view(request, id_fase, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar rol a fase")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def fase_confirmacion_agregar_rol_view(request, id_fase, id_rol, id_proyecto):
     """
     ::
@@ -701,6 +715,7 @@ def fase_confirmacion_agregar_rol_view(request, id_fase, id_rol, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar rol de fase")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def fase_quitar_rol_view(request, id_fase, id_rol, id_proyecto):
     """
     ::
@@ -793,6 +808,7 @@ def tipos_item_fase_view(request, id_fase, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear tipo de item")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def crear_tipo_item_view(request, id_fase, id_proyecto):
     """
     ::
@@ -843,6 +859,7 @@ def crear_tipo_item_view(request, id_fase, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Modificar tipo de item")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def modificar_tipo_item_view(request, id_fase, id_tipo_item, id_proyecto):
     """
     ::
@@ -929,6 +946,7 @@ def visualizar_tipo_item_view(request, id_fase, id_tipo_item, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Eliminar tipo de item")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def eliminar_tipo_item_view(request, id_fase, id_tipo_item, id_proyecto):
     """
     ::
@@ -1035,6 +1053,7 @@ def agregar_tipo_atributo_view(request, id_fase, id_tipo_item, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar tipo de atributo a tipo de item")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def confirmacion_agregar_tipo_atributo_view(request, id_fase, id_tipo_atributo, id_tipo_item, id_proyecto):
     """
     ::
@@ -1079,6 +1098,7 @@ def confirmacion_agregar_tipo_atributo_view(request, id_fase, id_tipo_atributo, 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar tipo de atributo de tipo de item")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def quitar_tipo_atributo_view(request, id_fase, id_tipo_atributo, id_tipo_item, id_proyecto):
     """
     ::
@@ -1121,6 +1141,7 @@ def quitar_tipo_atributo_view(request, id_fase, id_tipo_atributo, id_tipo_item, 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Iniciar fase")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def iniciar_fase_view(request, id_fase, id_proyecto):
     """
     ::
@@ -1177,6 +1198,7 @@ def iniciar_fase_view(request, id_fase, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Finalizar fase")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def finalizar_fase_view(request, id_fase, id_proyecto):
     """
     ::
@@ -1203,33 +1225,33 @@ def finalizar_fase_view(request, id_fase, id_proyecto):
         
             - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
     """
-    fase = Fase.objects.get(id=id_fase)
     proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
     finalizado_valido = True
-    estado_valido = True
+    estado_valido = False
+    secuencia_valida = True
     
-    if fase.estado != 1:
-        estado_valido = False
-        finalizado_valido = False
+    if fase.estado == 1:
+        estado_valido = True
     
-    if estado_valido:
-        finalizado_valido = True
-        items = fase.items.all()
-        for i in items:
-            if i.estado != 2:
-                finalizado_valido = False
-                break
+    if fase.num_secuencia > 1:
+        num_secuencia = fase.num_secuencia - 1
+        fase_anterior = proyecto.fases.get(num_secuencia=num_secuencia)
+        if fase_anterior.estado != 2:
+            secuencia_valida = False
+
+    items = fase.items.all()
+    for i in items:
+        if i.estado != 2:
+            finalizado_valido = False
             
-        if finalizado_valido:
-            fase.estado = 2
-            fase.save()
-            ctx = {'fase':fase, 'finalizado_valido':finalizado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto}
-            return render_to_response('fase/finalizar_fase.html', ctx, context_instance=RequestContext(request))
-        else:
-            ctx = {'fase':fase, 'finalizado_valido':finalizado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto}
-            return render_to_response('fase/finalizar_fase.html', ctx, context_instance=RequestContext(request))
+    if finalizado_valido and secuencia_valida and estado_valido:
+        fase.estado = 2
+        fase.save()
+        ctx = {'fase':fase, 'finalizado_valido':finalizado_valido, 'estado_valido':estado_valido, 'secuencia_valida':secuencia_valida, 'proyecto':proyecto}
+        return render_to_response('fase/finalizar_fase.html', ctx, context_instance=RequestContext(request))
     else:
-        ctx = {'fase':fase, 'finalizado_valido':finalizado_valido, 'estado_valido':estado_valido, 'proyecto':proyecto}
+        ctx = {'fase':fase, 'finalizado_valido':finalizado_valido, 'estado_valido':estado_valido, 'secuencia_valida':secuencia_valida, 'proyecto':proyecto}
         return render_to_response('fase/finalizar_fase.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1302,6 +1324,7 @@ def items_fase_view(request, id_fase, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear item")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def crear_item_view(request, id_fase, id_proyecto):
     """
     ::
@@ -1388,6 +1411,7 @@ def is_date(s):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Modificar item")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def modificar_item_view(request, id_fase, id_item, id_proyecto):
     """
     ::
@@ -1502,6 +1526,7 @@ def modificar_item_view(request, id_fase, id_item, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Eliminar item")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def eliminar_item_view(request, id_fase, id_item, id_proyecto):
     """
     ::
@@ -1652,6 +1677,7 @@ def visualizar_item_view(request, id_fase, id_item, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Aprobar item")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def aprobar_item_view(request, id_fase, id_item, id_proyecto):
     """
     ::
@@ -1700,6 +1726,7 @@ def aprobar_item_view(request, id_fase, id_item, id_proyecto):
 
 @login_required(login_url='/login/')
 @fase_miembro_proyecto()
+@fase_finalizada()
 def desaprobar_item_view(request, id_fase, id_item, id_proyecto):
     """
     ::
@@ -1782,6 +1809,7 @@ def revivir_item_view(request, id_fase, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Revivir item")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def confirmacion_revivir_item_view(request, id_fase, id_item, id_proyecto):
     """
     ::
@@ -2291,6 +2319,7 @@ def versiones_item_view(request, id_fase, id_item, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Reversionar item")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def confirmacion_reversionar_item_view(request, id_fase, id_item, id_reversion, id_proyecto):
     """
     ::
@@ -2734,6 +2763,7 @@ def lineas_base_fase_view(request, id_fase, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear linea base")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def crear_linea_base_view(request, id_fase, id_proyecto):
     """
     ::
@@ -2885,6 +2915,7 @@ def linea_base_agregar_item_view(request, id_fase, id_linea_base, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar item a linea base")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def linea_base_confirmacion_agregar_item_view(request, id_fase, id_linea_base, id_item, id_proyecto):
     """
     ::
@@ -2942,6 +2973,7 @@ def linea_base_confirmacion_agregar_item_view(request, id_fase, id_linea_base, i
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar item de linea base")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def linea_base_quitar_item_view(request, id_fase, id_item, id_linea_base, id_proyecto):
     """
     ::
@@ -2997,6 +3029,7 @@ def linea_base_quitar_item_view(request, id_fase, id_item, id_linea_base, id_pro
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Cerrar linea base")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def cerrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
     """
     ::
@@ -3059,6 +3092,7 @@ def cerrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quebrar linea base")
 @fase_miembro_proyecto()
+@fase_finalizada()
 def quebrar_linea_base_view(request, id_fase, id_linea_base, id_proyecto):
     """
     ::

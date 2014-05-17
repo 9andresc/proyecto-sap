@@ -4,7 +4,7 @@
 
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1><small>Fases del proyecto {{ proyecto.nombre }}</small></h1>
+		<h1><small>Fases del proyecto <i>{{ proyecto.nombre }}</i></small></h1>
 		{% if crear_fase %}
 		<a class="btn btn-default" href="/desarrollo/fases/crear_fase/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-record"></span> Crear</a>
 		<br>
@@ -94,7 +94,7 @@
                 	</tbody>
         		</table>
     		</div>
-    		<h2 align="center"><small>Grafo de items del proyecto {{ proyecto.nombre }}</small></h2>
+    		<h2 align="center"><small>Grafo de items del proyecto <i>{{ proyecto.nombre }}</i></small></h2>
     		<div align="center">
 			 	<img src="{{ ruta_grafo }}" alt="Grafo del proyecto {{ proyecto.nombre }}" class="img-thumbnail">
 			</div>

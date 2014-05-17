@@ -1,14 +1,13 @@
 {% extends "base.html" %}
-{% block title %}SAP - Lineas base de la fase {{ fase.nombre }}{% endblock %}
+{% block title %}SAP - Líneas base de la fase {{ fase.nombre }}{% endblock %}
 {% block content %}
 
 <div class="jumbotron">
 	<div class="bs-example">
 		{% if valido %}
-			<h1><small>Lineas base de la fase {{ fase.nombre }}</small></h1>
+			<h1><small>Líneas base de la fase <i>{{ fase.nombre }}</i></small></h1>
 			{% if crear_linea_base %}
 			<a class="btn btn-default" href="/desarrollo/fases/lineas_base/crear_linea_base/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-record"></span> Crear</a>
-			<br>
 			{% endif %}
 			<br>
 			{% if lineas_base %}
@@ -17,7 +16,7 @@
 	            		<thead>
 	                		<tr>
 	                    		<th>ID</th>
-	                    		<th>Nombre de Linea Base</th>
+	                    		<th>Nombre de línea base</th>
 	                    		<th>Estado</th>
 	                    		<th></th>
 	                    	</tr>
@@ -71,7 +70,7 @@
 	        		</table>
 	    		</div>
 	    	{% else %}
-	    		<h3>No posee Lineas base.</h3>
+	    		<h3>No posee líneas base.</h3>
 	    	{% endif %}
 	    {% else %}
 	    	<br>
@@ -80,7 +79,7 @@
         			<h3 class="panel-title">¡Alto ahí!</h3>
       			</div>
       			<div class="panel-body">
-        			La fase {{ fase.nombre }} no se encuentra en estado En curso. Por tanto, no se pueden gestionar las lineas base de esta fase.
+        			La fase <i>{{ fase.nombre }}</i> no se encuentra en estado <b>En curso</b>. Por tanto, no se pueden gestionar las líneas base de esta fase.
       			</div>
       		</div>
 	    {% endif %}

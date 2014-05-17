@@ -45,3 +45,15 @@ def fase_miembro_proyecto():
             return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
         return wraps(func)(inner_decorator)
     return decorator
+
+def fase_finalizada():
+    def decorator(func):
+        def inner_decorator(request, id_fase, *args, **kwargs):
+            fase = Fase.objects.get(id=id_fase)
+            if fase.estado != 2:
+                return func(request, id_fase, *args, **kwargs)
+            fase_finalizada = True
+            ctx = {'fase_finalizada':fase_finalizada}
+            return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
+        return wraps(func)(inner_decorator)
+    return decorator

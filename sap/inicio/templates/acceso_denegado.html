@@ -8,11 +8,13 @@
 		</div>
 		<div class="panel-body">
 			{% if permiso %}
-			No tienes el permiso "{{ permiso }}" para acceder a esta funcionalidad. Consulta con el administrador para obtener permisos.
+				No tienes el permiso "{{ permiso }}" para acceder a esta funcionalidad. Consulta con el administrador para obtener permisos.
 			{% elif no_es_miembro %}
-			No puedes realizar acciones sobre este proyecto, ya que, no eres miembro del mismo. Consulta con el líder del proyecto para obtener el permiso.
+				No puedes realizar acciones sobre este proyecto, ya que, no eres miembro del mismo. Consulta con el líder del proyecto para obtener el permiso.
 			{% elif fase_no_es_miembro %}
-			No puedes realizar acciones sobre esta fase, ya que, no eres miembro del proyecto al cual esta ligada esta fase. Consulta con el líder del proyecto para obtener el permiso.
+				No puedes realizar acciones sobre esta fase, ya que, no eres miembro del proyecto al cual esta ligada esta fase. Consulta con el líder del proyecto para obtener el permiso.
+			{% elif fase_finalizada %}
+				No puedes realizar acciones sobre esta fase, ya que, se encuentra en estado <b>Finalizado</b>.
 			{% endif %}
 		</div>
 	</div>

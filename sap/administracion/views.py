@@ -1138,10 +1138,15 @@ def crear_proyecto_view(request):
             
             lider = User.objects.get(id=id_lider)
             rol_lider = Rol.objects.get(nombre="Lider de proyecto")
-            lider.roles.add(rol_lider)
+            try:
+                rol = lider.roles.get(nombre="Lider de proyecto")
+            except Rol.DoesNotExist:
+                lider.roles.add(rol_lider)
             
             proyecto = Proyecto.objects.create(nombre=nombre, descripcion=descripcion, presupuesto=presupuesto, complejidad=complejidad, fecha_inicio=fecha_inicio, usuario_lider=lider)
             proyecto.roles.add(rol_lider)
+            rol_desarrollador = Rol.objects.get(nombre="Desarrollador")
+            proyecto.roles.add(rol_desarrollador)
             proyecto.usuarios.add(lider)
             proyecto.save()
             return HttpResponseRedirect('/administracion/gestion_proyectos/')
@@ -1252,7 +1257,10 @@ def eliminar_proyecto_view(request, id_proyecto):
         if valido == True:
             proyecto = Proyecto.objects.get(id=id_proyecto)
             rol_lider = Rol.objects.get(nombre="Lider de proyecto")
-            proyecto.usuario_lider.roles.remove(rol_lider)
+            lider = proyecto.usuario_lider
+            if lider.proyectos.count() == 1:
+                lider.roles.remove(rol_lider)
+                lider.save()
             proyecto.delete()
             return HttpResponseRedirect('/administracion/gestion_proyectos/')
         else:
@@ -1383,6 +1391,12 @@ def proyecto_confirmacion_agregar_usuario_view(request, id_proyecto, id_usuario)
     except User.DoesNotExist:
         valido = True      
     if valido:
+        try:
+            rol = usuario.roles.get(id=3)
+        except Rol.DoesNotExist:
+            rol_desarrollador = Rol.objects.get(id=3)
+            usuario.roles.add(rol_desarrollador)
+            usuario.save()
         proyecto.usuarios.add(usuario)
         proyecto.save()
     ctx = {'proyecto':proyecto, 'usuario':usuario, 'valido':valido}

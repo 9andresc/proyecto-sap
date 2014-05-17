@@ -3,13 +3,13 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if finalizado_valido %}
+		{% if finalizado_valido and secuencia_valida and estado_valido %}
 			<div class="panel panel-success">
       			<div class="panel-heading">
         			<h3 class="panel-title">¡Éxito!</h3>
       			</div>
       			<div class="panel-body">
-        			La fase {{ fase.nombre }} cumple con todos los requisitos. Ya está finalizada.
+        			La fase <i>{{ fase.nombre }}</i> cumple con todos los requisitos. Ya está finalizada.
       			</div>
       		</div>
 		{% else %}
@@ -18,13 +18,17 @@
         			<h3 class="panel-title">¡Alto ahí!</h3>
       			</div>
       			<div class="panel-body">
-        			La fase {{ fase.nombre }} no cumple con todos los requisitos para finalizar. A continuación, un listado de todos los requisitos no cumplidos:
+        			La fase <i>{{ fase.nombre }}</i> no cumple con todos los requisitos para finalizar. A continuación, un listado de todos los requisitos no cumplidos:
 					<br><br>
 					<ul class="list-styled">
 						{% if estado_valido == False %}
-							<li>La fase debe estar en estado En curso.</li>
-						{% elif finalizado_valido == False %}
+							<li>La fase debe estar en estado <b>En curso</b>.</li>
+						{% endif %}
+						{% if finalizado_valido == False %}
 							<li>La fase posee al menos un item que no se encuentra en estado Bloqueado.</li>
+						{% endif %}
+						{% if secuencia_valida == False %}
+							<li>La fase anterior debe estar en estado <b>Finalizado</b>.</li>
 						{% endif %}
 					</ul>        			
       			</div>
