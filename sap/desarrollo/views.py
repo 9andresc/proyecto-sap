@@ -163,7 +163,7 @@ def fases_proyecto_view(request, id_proyecto):
             
     fases = proyecto.fases.all()
     grafo_proyecto = pydot.Dot(graph_type='digraph', fontname="Verdana", rankdir="TB")
-    grafo_proyecto.set_node_defaults(style="filled", fillcolor="white")
+    grafo_proyecto.set_node_defaults(style="filled", fillcolor="white", shape="record")
     grafo_proyecto.set_edge_defaults(color="black", arrowhead="vee")
     
     for f in fases:
@@ -182,8 +182,8 @@ def fases_proyecto_view(request, id_proyecto):
                 if i.estado == 1:
                     color_estado = "#80FF00"
                 
-                cluster_fase.add_node(pydot.Node("item"+str(i.id), 
-                                      label="Item: " + str(i.nombre), 
+                cluster_fase.add_node(pydot.Node("item"+str(i.id),
+                                      label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario),
                                       fillcolor=color_estado, 
                                       fontsize=15))
         items = f.items.exclude(linea_base=None)
@@ -208,7 +208,7 @@ def fases_proyecto_view(request, id_proyecto):
                         color_estado = "#045FB4"
                     
                     cluster_linea_base.add_node(pydot.Node("item"+str(i.id), 
-                                                           label="Item: " + str(i.nombre), 
+                                                           label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario), 
                                                            fillcolor=color_estado, 
                                                            fontsize=15))
                 cluster_fase.add_subgraph(cluster_linea_base)
