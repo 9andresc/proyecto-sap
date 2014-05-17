@@ -1,25 +1,54 @@
 [
 {
     "pk": 1, 
-    "model": "administracion.tipoitem", 
+    "model": "desarrollo.tipoitem", 
     "fields": {
         "descripcion": "", 
-        "nombre": "Tipo de item 1", 
+        "nombre": "TPUno", 
         "tipos_atributo": [
-            1, 
-            2
-        ]
+            3, 
+            1
+        ], 
+        "fase": 1
     }
 },
 {
     "pk": 2, 
-    "model": "administracion.tipoitem", 
+    "model": "desarrollo.tipoitem", 
     "fields": {
         "descripcion": "", 
-        "nombre": "Tipo de item 2", 
+        "nombre": "TPDos", 
         "tipos_atributo": [
+            4, 
             2
-        ]
+        ], 
+        "fase": 1
+    }
+},
+{
+    "pk": 3, 
+    "model": "desarrollo.tipoitem", 
+    "fields": {
+        "descripcion": "", 
+        "nombre": "TPTres", 
+        "tipos_atributo": [
+            4, 
+            1
+        ], 
+        "fase": 2
+    }
+},
+{
+    "pk": 4, 
+    "model": "desarrollo.tipoitem", 
+    "fields": {
+        "descripcion": "", 
+        "nombre": "TPCuatro", 
+        "tipos_atributo": [
+            2, 
+            3
+        ], 
+        "fase": 3
     }
 }
 ]

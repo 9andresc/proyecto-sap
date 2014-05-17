@@ -167,38 +167,39 @@ def fases_proyecto_view(request, id_proyecto):
     grafo_proyecto.set_edge_defaults(color="black", arrowhead="vee")
     
     for f in fases:
-        partes = f.nombre.split(" ")
-        nombre_cluster_fase = ""
-        for p in partes:
-            nombre_cluster_fase = nombre_cluster_fase + p
-        cluster_fase = pydot.Cluster(nombre_cluster_fase, label=nombre_cluster_fase, shape='rectangle', fontsize=15, style='filled', color='#E6E6E6', fillcolor="#BDBDBD", fontcolor="white")
+        cluster_fase = pydot.Cluster("fase"+str(f.id),
+                                     label="Fase: " + str(f.nombre), 
+                                     shape='rectangle', 
+                                     fontsize=15, 
+                                     style='filled', 
+                                     color='#E6E6E6', 
+                                     fillcolor="#BDBDBD", 
+                                     fontcolor="white")
         items = f.items.exclude(estado=2).exclude(estado=3).filter(linea_base=None)
         if items:
             for i in items:
-                partes = i.nombre.split(" ")
-                nombre_nodo_item = ""
-                for p in partes:
-                    nombre_nodo_item = nombre_nodo_item + p
                 color_estado = "white"
                 if i.estado == 1:
                     color_estado = "#80FF00"
                 
-                cluster_fase.add_node(pydot.Node(nombre_cluster_fase + "_" + nombre_nodo_item, label=nombre_nodo_item, fillcolor=color_estado, fontsize=15))
+                cluster_fase.add_node(pydot.Node("item"+str(i.id), 
+                                      label="Item: " + str(i.nombre), 
+                                      fillcolor=color_estado, 
+                                      fontsize=15))
         items = f.items.exclude(linea_base=None)
         if items:
             lineas_base = f.lineas_base.all()
             for lb in lineas_base:
-                partes = lb.nombre.split(" ")
-                nombre_cluster_linea_base = ""
-                for p in partes:
-                    nombre_cluster_linea_base = nombre_cluster_linea_base + p
-                cluster_linea_base = pydot.Cluster(nombre_cluster_linea_base, label=nombre_cluster_linea_base, shape='rectangle', fontsize=15, style='filled', color='#E6E6E6', fillcolor="#FFFFFF", fontcolor="black")
+                cluster_linea_base = pydot.Cluster("lb"+str(lb.id), 
+                                                   label="Linea base: " + str(lb.nombre), 
+                                                   shape='rectangle', 
+                                                   fontsize=15, 
+                                                   style='filled', 
+                                                   color='#E6E6E6', 
+                                                   fillcolor="#FFFFFF", 
+                                                   fontcolor="black")
                 items = lb.items.all()
                 for i in items:
-                    partes = i.nombre.split(" ")
-                    nombre_nodo_item = ""
-                    for p in partes:
-                        nombre_nodo_item = nombre_nodo_item + p
                     if i.estado == 1:
                         color_estado = "#80FF00"
                     elif i.estado == 2:
@@ -206,40 +207,22 @@ def fases_proyecto_view(request, id_proyecto):
                     else:
                         color_estado = "#045FB4"
                     
-                    cluster_linea_base.add_node(pydot.Node(nombre_cluster_fase + "_" + nombre_nodo_item, label=nombre_nodo_item, fillcolor=color_estado, fontsize=15))
+                    cluster_linea_base.add_node(pydot.Node("item"+str(i.id), 
+                                                           label="Item: " + str(i.nombre), 
+                                                           fillcolor=color_estado, 
+                                                           fontsize=15))
                 cluster_fase.add_subgraph(cluster_linea_base)
             
         grafo_proyecto.add_subgraph(cluster_fase)
 
     for f in fases:
-        partes = f.nombre.split(" ")
-        nombre_cluster_fase = ""
-        for p in partes:
-            nombre_cluster_fase = nombre_cluster_fase + p
         items = f.items.all()
         for i in items:
-            partes = i.nombre.split(" ")
-            nombre_nodo_item = ""
-            for p in partes:
-                nombre_nodo_item = nombre_nodo_item + p
             relaciones = i.relaciones.all()
             for r in relaciones:
-                if r.fase != i.fase:
-                    partes = r.nombre.split(" ")
-                    nombre_nodo_r = ""
-                    for p in partes:
-                        nombre_nodo_r = nombre_nodo_r + p
-                    partes = r.fase.nombre.split(" ")
-                    nombre_cluster_fase_relacion = ""
-                    for p in partes:
-                        nombre_cluster_fase_relacion = nombre_cluster_fase_relacion + p
-                    grafo_proyecto.add_edge(pydot.Edge(nombre_cluster_fase + "_" + nombre_nodo_item, nombre_cluster_fase_relacion + "_" + nombre_nodo_r, label='costo='+str(i.costo_monetario), fontsize=10))
-                else:
-                    partes = r.nombre.split(" ")
-                    nombre_nodo_r = ""
-                    for p in partes:
-                        nombre_nodo_r = nombre_nodo_r + p
-                    grafo_proyecto.add_edge(pydot.Edge(nombre_cluster_fase + "_" + nombre_nodo_item, nombre_cluster_fase + "_" + nombre_nodo_r, label='costo='+str(i.costo_monetario), fontsize=10))
+                grafo_proyecto.add_edge(pydot.Edge("item"+str(i.id), "item"+str(r.id), 
+                                                   label='costo='+str(i.costo_monetario), 
+                                                   fontsize=10))
             
     ruta_grafo = str(settings.MEDIA_ROOT) + "grafos/grafo_proyecto_" + str(proyecto.nombre) + ".png"
     grafo_proyecto.write(ruta_grafo, prog='dot', format='png')
@@ -1565,9 +1548,12 @@ def eliminar_item_view(request, id_fase, id_item, id_proyecto):
         valido = False
     if request.method == "POST":
         if valido == True:
-            version_eliminada = VersionItem.objects.filter(id_item=item.id).get(version=item.version)
-            version_eliminada.estado = 4
-            version_eliminada.save()
+            try:
+                version_eliminada = VersionItem.objects.filter(id_item=item.id).get(version=item.version)
+                version_eliminada.estado = 4
+                version_eliminada.save()
+            except VersionItem.DoesNotExist:
+                pass
             
             if item.relaciones:
                 relaciones = item.relaciones.all()

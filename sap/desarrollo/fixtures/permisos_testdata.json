@@ -404,5 +404,117 @@
     "fields": {
         "nombre": "Visualizar tipo de item"
     }
+},
+{
+    "pk": 60, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar tipos de item de fase"
+    }
+},
+{
+    "pk": 61, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar relaciones de item"
+    }
+},
+{
+    "pk": 62, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar relacion a item"
+    }
+},
+{
+    "pk": 63, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar relacion de item"
+    }
+},
+{
+    "pk": 64, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Aprobar item"
+    }
+},
+{
+    "pk": 65, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Revivir item"
+    }
+},
+{
+    "pk": 66, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar versiones de item"
+    }
+},
+{
+    "pk": 67, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Reversionar item"
+    }
+},
+{
+    "pk": 68, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar lineas base de fase"
+    }
+},
+{
+    "pk": 69, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear linea base"
+    }
+},
+{
+    "pk": 70, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar linea base"
+    }
+},
+{
+    "pk": 71, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar items de linea base"
+    }
+},
+{
+    "pk": 72, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Agregar item a linea base"
+    }
+},
+{
+    "pk": 73, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quitar item de linea base"
+    }
+},
+{
+    "pk": 74, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Cerrar linea base"
+    }
+},
+{
+    "pk": 75, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Quebrar linea base"
+    }
 }
 ]

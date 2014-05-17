@@ -1,6 +1,6 @@
 from django.test import TestCase
 from administracion.models import Permiso, Rol, TipoAtributo, Proyecto
-
+"""
 class PermisoTest(TestCase):
     def crear_permiso(self, nombre="Un permiso"):
         return Permiso.objects.create(nombre=nombre)
@@ -48,3 +48,4 @@ class ProyectoTest(TestCase):
         self.assertTrue(isinstance(p, Proyecto), "La variable p no es instancia de la clase Proyecto.")
         self.assertEqual(p.__unicode__(), p.nombre, "El campo nombre de la variable p no coincide con el valor retornado por la funcion __unicode__().")
         print "Creacion de la clase Proyecto sin errores\n"
+"""

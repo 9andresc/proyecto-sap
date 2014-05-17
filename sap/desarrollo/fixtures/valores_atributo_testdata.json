@@ -1,0 +1,422 @@
+[
+{
+    "pk": 1, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 1, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 2, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 1, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 3, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 2, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 4, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 2, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 5, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 3, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 6, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 3, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 7, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 4, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 8, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 4, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 9, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 5, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 10, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 5, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 11, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 6, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 12, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 6, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 13, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 7, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 14, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 7, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 15, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 4, 
+        "valor_fecha": null, 
+        "item": 8, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 3, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 16, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 8, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 3, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 17, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 4, 
+        "valor_fecha": null, 
+        "item": 9, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 3, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 18, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 9, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 3, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 19, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 4, 
+        "valor_fecha": null, 
+        "item": 10, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 3, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 20, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 10, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 3, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 21, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 4, 
+        "valor_fecha": null, 
+        "item": 11, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 3, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 22, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 11, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 3, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 23, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 2, 
+        "valor_fecha": null, 
+        "item": 12, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 4, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 24, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 12, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 4, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 25, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 2, 
+        "valor_fecha": null, 
+        "item": 13, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 4, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 26, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 13, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 4, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 27, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 2, 
+        "valor_fecha": null, 
+        "item": 14, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 4, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 28, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 14, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 4, 
+        "valor_texto_chico": ""
+    }
+}
+]

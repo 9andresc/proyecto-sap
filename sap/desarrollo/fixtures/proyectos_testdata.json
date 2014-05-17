@@ -1,84 +1,52 @@
 [
 {
-    "pk": 6, 
+    "pk": 1, 
     "model": "administracion.proyecto", 
     "fields": {
         "comite_de_cambios": [
-            1
+            9
         ], 
         "roles": [
+            3, 
             2
         ], 
         "usuario_lider": 2, 
-        "fecha_inicio": "2014-05-02", 
-        "complejidad": 1, 
-        "presupuesto": 0.0, 
-        "descripcion": "Descripci\u00f3n del proyecto 1.", 
-        "nombre": "Proyecto 1", 
+        "fecha_inicio": "2014-05-16", 
+        "complejidad": 5, 
+        "presupuesto": 1000000.0, 
+        "descripcion": "", 
+        "nombre": "Proyecto Uno", 
         "usuarios": [
+            4, 
+            6, 
             2
         ], 
         "estado": 1
     }
 },
 {
-    "pk": 7, 
+    "pk": 2, 
     "model": "administracion.proyecto", 
     "fields": {
-        "comite_de_cambios": [], 
+        "comite_de_cambios": [
+            8
+        ], 
         "roles": [
+            3, 
             2
         ], 
         "usuario_lider": 3, 
-        "fecha_inicio": "2014-05-03", 
-        "complejidad": 1, 
-        "presupuesto": 0.0, 
-        "descripcion": "Descripci\u00f3n del proyecto 2.", 
-        "nombre": "Proyecto 2", 
+        "fecha_inicio": "2014-05-17", 
+        "complejidad": 8, 
+        "presupuesto": 5000000.0, 
+        "descripcion": "", 
+        "nombre": "Proyecto Dos", 
         "usuarios": [
+            7, 
+            5, 
             3
         ], 
-        "estado": 0
-    }
-},
-{
-    "pk": 8, 
-    "model": "administracion.proyecto", 
-    "fields": {
-        "comite_de_cambios": [], 
-        "roles": [
-            2
-        ], 
-        "usuario_lider": 4, 
-        "fecha_inicio": "2014-05-04", 
-        "complejidad": 1, 
-        "presupuesto": 0.0, 
-        "descripcion": "Descripci\u00f3n del proyecto 3.", 
-        "nombre": "Proyecto 3", 
-        "usuarios": [
-            4
-        ], 
-        "estado": 0
-    }
-},
-{
-    "pk": 9, 
-    "model": "administracion.proyecto", 
-    "fields": {
-        "comite_de_cambios": [], 
-        "roles": [
-            2
-        ], 
-        "usuario_lider": 5, 
-        "fecha_inicio": "2014-05-05", 
-        "complejidad": 1, 
-        "presupuesto": 0.0, 
-        "descripcion": "Descripci\u00f3n del proyecto 4.", 
-        "nombre": "Proyecto 4", 
-        "usuarios": [
-            5
-        ], 
-        "estado": 0
+        "estado": 1
     }
 }
 ]

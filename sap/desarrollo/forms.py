@@ -24,8 +24,8 @@ class CrearFaseForm(forms.Form):
         Se utiliza una funciona para verificar que la fecha ingresada sea valida.
         
     """
-    nombre = forms.CharField(label="Nombre de fase", required=True)
-    descripcion = forms.CharField(label="Descripcion", required=False)
+    nombre = forms.CharField(label="Nombre de fase", max_length=50, required=True, error_messages={'max_length': 'Longitud maxima 50'})
+    descripcion = forms.CharField(label="Descripcion", required=False, max_length=300, error_messages={'max_length':'Longitud maxima 300'})
     duracion = forms.IntegerField(label="Duracion", required=True)
     fecha_inicio = CustomDateField(required=True)
 
@@ -67,8 +67,8 @@ class ModificarFaseForm(forms.Form):
         Se utiliza una funciona para verificar que la fecha ingresada sea valida.
         
     """
-    nombre = forms.CharField(label="Nombre de fase", required=True)
-    descripcion = forms.CharField(label="Descripcion", required=False)
+    nombre = forms.CharField(label="Nombre de fase", max_length=50, required=True, error_messages={'max_length': 'Longitud maxima 50'})
+    descripcion = forms.CharField(label="Descripcion", required=False, max_length=300, error_messages={'max_length':'Longitud maxima 300'})
     duracion = forms.IntegerField(label="Duracion", required=True)
     fecha_inicio = CustomDateField(required=True)
 
@@ -112,8 +112,8 @@ class CrearTipoItemForm(forms.Form):
         en el sistema.
         
     """
-    nombre = forms.CharField(label="Nombre de tipo de item", required=True)
-    descripcion = forms.CharField(label="Descripcion", required=False)
+    nombre = forms.CharField(label="Nombre de tipo de item", required=True, max_length=20, error_messages={'max_length': 'Longitud maxima 20'})
+    descripcion = forms.CharField(label="Descripcion", required=False, max_length=300, error_messages={'max_length':'Longitud maxima 300'})
   
     def clean_nombre(self):
         nombre = self.cleaned_data['nombre']
@@ -137,8 +137,8 @@ class ModificarTipoItemForm(forms.Form):
         en el sistema.
         
     """
-    nombre = forms.CharField(label="Nombre de tipo de item", required=True)
-    descripcion = forms.CharField(label="Descripcion", required=False)
+    nombre = forms.CharField(label="Nombre de tipo de item", required=True, max_length=20, error_messages={'max_length': 'Longitud maxima 20'})
+    descripcion = forms.CharField(label="Descripcion", required=False, max_length=300, error_messages={'max_length':'Longitud maxima 300'})
 
     def clean_nombre(self): 
         nombre = self.cleaned_data['nombre'] 
@@ -165,8 +165,8 @@ class CrearItemForm(forms.Form):
         
         Se verifica mediante una funcion que el valor del costo sea valido.
     """
-    nombre = forms.CharField(label="Nombre de item", required=True)
-    descripcion = forms.CharField(label="Descripcion", required=False)
+    nombre = forms.CharField(label="Nombre de item", required=True, max_length=50, error_messages={'max_length': 'Longitud maxima 50'})
+    descripcion = forms.CharField(label="Descripcion", required=False, max_length=300, error_messages={'max_length':'Longitud maxima 300'})
     complejidad = forms.IntegerField(label="Complejidad", required=True)
     costo_monetario = forms.FloatField(label="Costo monetario", required=True)
     costo_temporal = forms.FloatField(label="Costo temporal", required=True)
@@ -206,8 +206,8 @@ class ModificarItemForm(forms.Form):
         
         Se verifica mediante una funcion que el valor del costo sea valido.
     """
-    nombre = forms.CharField(label="Nombre de item", required=True)
-    descripcion = forms.CharField(label="Descripcion", required=False)
+    nombre = forms.CharField(label="Nombre de item", required=True, max_length=50, error_messages={'max_length': 'Longitud maxima 50'})
+    descripcion = forms.CharField(label="Descripcion", required=False, max_length=300, error_messages={'max_length':'Longitud maxima 300'})
     complejidad = forms.IntegerField(label="Complejidad", required=True)
     costo_monetario = forms.FloatField(label="Costo monetario", required=True)
     costo_temporal = forms.FloatField(label="Costo temporal", required=True)
@@ -244,5 +244,5 @@ class CrearLineaBaseForm(forms.Form):
         completar ese atributo para la creacion de la linea base o caso 
         contrario required=False.
     """
-    nombre = forms.CharField(label="Nombre de la linea base", required=True)
-    descripcion = forms.CharField(label="Descripcion", required=False)
+    nombre = forms.CharField(label="Nombre de la linea base", required=True, max_length=50, error_messages={'max_length': 'Longitud maxima 50'})
+    descripcion = forms.CharField(label="Descripcion", required=False, max_length=300, error_messages={'max_length':'Longitud maxima 300'})

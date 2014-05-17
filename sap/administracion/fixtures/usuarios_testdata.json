@@ -14,7 +14,7 @@
         "direccion": "", 
         "is_superuser": true, 
         "is_staff": true, 
-        "last_login": "2014-05-07T06:02:09.501Z", 
+        "last_login": "2014-05-16T15:31:40.206Z", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$u9UhE2ICdPeP$ihyjAOyaClNXAt6L2TAZqxDqJl59k30ZnFsJs2dDuQo=", 
@@ -30,17 +30,19 @@
         "username": "gustavo", 
         "first_name": "Gustavo", 
         "last_name": "Cabral", 
-        "roles": [], 
+        "roles": [
+            2
+        ], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
         "is_superuser": false, 
         "is_staff": false, 
-        "last_login": "2014-05-07T02:42:12.150Z", 
+        "last_login": "2014-05-16T15:32:27.378Z", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$xP5EtVFCxgJZ$F53IGwFUrRMRFUDYdwQmi7xwz+GCGgQ5Wk16gnj8w7A=", 
-        "estado": 0, 
+        "estado": 1, 
         "email": "gustavo@sap.com", 
         "date_joined": "2014-05-06T19:49:56.934Z"
     }
@@ -52,17 +54,19 @@
         "username": "rodrigo", 
         "first_name": "Rodrigo", 
         "last_name": "Santos", 
-        "roles": [], 
+        "roles": [
+            2
+        ], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
         "is_superuser": false, 
         "is_staff": false, 
-        "last_login": "2014-05-07T01:54:16.980Z", 
+        "last_login": "2014-05-16T15:23:53.094Z", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$0tls7L0w5UYv$p8WkVeYxRvAkQujDPVEku4A55+Hb4qS7YoqB/55Lzm0=", 
-        "estado": 0, 
+        "estado": 1, 
         "email": "rodrigo@sap.com", 
         "date_joined": "2014-05-06T19:50:23.398Z"
     }
@@ -74,7 +78,9 @@
         "username": "andres", 
         "first_name": "Andres", 
         "last_name": "Cabral", 
-        "roles": [], 
+        "roles": [
+            3
+        ], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
@@ -84,7 +90,7 @@
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$zMoCHpVyDF7b$6VfNgS2YXL7UL2vJxnhLxZb+uL+9PzR63BSla1QhoI4=", 
-        "estado": 0, 
+        "estado": 1, 
         "email": "andres@sap.com", 
         "date_joined": "2014-05-06T19:51:26.809Z"
     }
@@ -96,7 +102,9 @@
         "username": "gabriel", 
         "first_name": "Gabriel", 
         "last_name": "Santos", 
-        "roles": [], 
+        "roles": [
+            3
+        ], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
@@ -106,7 +114,7 @@
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$7RD4XdN3BAIW$BM+P2Rxz3d1+LI1SSq66lkaj5Y4BUaGH792/g3pPZS8=", 
-        "estado": 0, 
+        "estado": 1, 
         "email": "gabriel@sap.com", 
         "date_joined": "2014-05-06T19:51:52.210Z"
     }
@@ -118,7 +126,9 @@
         "username": "akira", 
         "first_name": "Akira", 
         "last_name": "Shimosoeda", 
-        "roles": [], 
+        "roles": [
+            3
+        ], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
@@ -128,7 +138,7 @@
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$iJQWUWRf19pz$HwHUyRgdIFgColcAxLQeX4yUFT2CniWhBBM0HDgYbpI=", 
-        "estado": 0, 
+        "estado": 1, 
         "email": "akira@sap.com", 
         "date_joined": "2014-05-06T19:54:14.947Z"
     }
@@ -140,7 +150,9 @@
         "username": "marcos", 
         "first_name": "Marcos", 
         "last_name": "Aquino", 
-        "roles": [], 
+        "roles": [
+            3
+        ], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
@@ -150,7 +162,7 @@
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$NrB88Oek4Yak$Z2PeNgT75iFq4vt8Pdst6e8NjFpp6ZXgrE7Hp7/VbmI=", 
-        "estado": 0, 
+        "estado": 1, 
         "email": "marcos@sap.com", 
         "date_joined": "2014-05-06T19:54:45.236Z"
     }
@@ -172,7 +184,7 @@
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$e2RGNNYpy3E9$LdiqwaH3+rGOyB0ghMoecSorCz8U3nxI1qUjFTi4hAk=", 
-        "estado": 0, 
+        "estado": 1, 
         "email": "alexis@sap.com", 
         "date_joined": "2014-05-06T19:55:33.092Z"
     }
@@ -194,31 +206,9 @@
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$QSnQCFjeXmVJ$Qt3c8qS6VKGp96InPvHIrcYwJmPrhCmGvGFiGCeBLEo=", 
-        "estado": 0, 
+        "estado": 1, 
         "email": "gerardo@sap.com", 
         "date_joined": "2014-05-06T19:56:04.665Z"
-    }
-},
-{
-    "pk": 10, 
-    "model": "auth.user", 
-    "fields": {
-        "username": "saul", 
-        "first_name": "Saul", 
-        "last_name": "Zalimben", 
-        "roles": [], 
-        "telefono": "", 
-        "is_active": true, 
-        "direccion": "", 
-        "is_superuser": false, 
-        "is_staff": false, 
-        "last_login": "2014-05-06T20:19:06.034Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$12000$UlT7gpmhEjib$5v2QBCRWtBY0T3s+wLZ34E75og2Bk8+7yHCHKxo9hZo=", 
-        "estado": 0, 
-        "email": "saul@sap.com", 
-        "date_joined": "2014-05-06T20:19:06.034Z"
     }
 }
 ]

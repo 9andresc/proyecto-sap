@@ -26,8 +26,8 @@ class TipoItemTest(TestCase):
         print "Creacion de la clase TipoItem sin errores\n"
 
 class ItemTest(TestCase):
-    def crear_item(self, nombre="Un item", descripcion="Descripcion de un item.", costo=15, complejidad=5):
-        return Item.objects.create(nombre=nombre, descripcion=descripcion, costo=costo, complejidad=complejidad)
+    def crear_item(self, nombre="Un item", descripcion="Descripcion de un item.", costo_monetario=15, costo_temporal=0, complejidad=5):
+        return Item.objects.create(nombre=nombre, descripcion=descripcion, costo_monetario=costo_monetario, costo_temporal=costo_temporal, complejidad=complejidad)
     
     def test_creacion_item(self):
         print "Prueba: Creacion de la clase Item"

@@ -3,18 +3,68 @@
     "pk": 1, 
     "model": "administracion.tipoatributo", 
     "fields": {
+        "num_longitud": 8, 
+        "patron_precision": "0.01", 
+        "num_precision": 2, 
+        "textch_longitud": null, 
+        "num_min": "-999999.99", 
+        "textg_longitud": null, 
+        "tipo_dato": 0, 
         "descripcion": "", 
-        "nombre": "Fecha de vencimiento", 
-        "tipo_dato": 1
+        "nombre": "Valor", 
+        "obligatorio": false, 
+        "num_max": "999999.99"
     }
 },
 {
     "pk": 2, 
     "model": "administracion.tipoatributo", 
     "fields": {
+        "num_longitud": null, 
+        "patron_precision": null, 
+        "num_precision": null, 
+        "textch_longitud": null, 
+        "num_min": null, 
+        "textg_longitud": null, 
+        "tipo_dato": 1, 
         "descripcion": "", 
-        "nombre": "Numero de serie", 
-        "tipo_dato": 0
+        "nombre": "Fecha de creaci\u00f3n", 
+        "obligatorio": true, 
+        "num_max": null
+    }
+},
+{
+    "pk": 3, 
+    "model": "administracion.tipoatributo", 
+    "fields": {
+        "num_longitud": null, 
+        "patron_precision": null, 
+        "num_precision": null, 
+        "textch_longitud": 15, 
+        "num_min": null, 
+        "textg_longitud": null, 
+        "tipo_dato": 3, 
+        "descripcion": "", 
+        "nombre": "Usuario creador", 
+        "obligatorio": true, 
+        "num_max": null
+    }
+},
+{
+    "pk": 4, 
+    "model": "administracion.tipoatributo", 
+    "fields": {
+        "num_longitud": null, 
+        "patron_precision": null, 
+        "num_precision": null, 
+        "textch_longitud": null, 
+        "num_min": null, 
+        "textg_longitud": null, 
+        "tipo_dato": 5, 
+        "descripcion": "", 
+        "nombre": "Adjunto", 
+        "obligatorio": false, 
+        "num_max": null
     }
 }
 ]

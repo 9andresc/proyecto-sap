@@ -24,7 +24,7 @@ class Fase(models.Model):
         roles: roles asociados a la fase.
         proyecto: el proyecto al cual pertenece la fase.
     """
-    nombre = models.CharField(max_length=20)
+    nombre = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=True)
     estado = models.IntegerField(max_length=1, choices=ESTADOS_FASE, default=0)
     num_secuencia = models.IntegerField(max_length=30, null=True)
