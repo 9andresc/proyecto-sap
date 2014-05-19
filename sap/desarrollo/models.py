@@ -237,3 +237,6 @@ class SolicitudCambio(models.Model):
     aprobada = models.NullBooleanField(null=True)
     votantes = models.CharField(max_length=50, null=False)
     votos = models.IntegerField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ["usuario"]

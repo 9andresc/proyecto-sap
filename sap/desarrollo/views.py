@@ -34,6 +34,7 @@ def desarrollo_view(request):
     """
     calcular_costo = False
     gestionar_fases = False
+    gestionar_solicitudes = False
     roles = request.user.roles.all()
     for r in roles:
         for p in r.permisos.all():
@@ -41,14 +42,16 @@ def desarrollo_view(request):
                 calcular_costo = True
             elif p.nombre == 'Gestionar fases de proyecto':
                 gestionar_fases = True
+            elif p.nombre == 'Gestionar solicitudes':
+                gestionar_solicitudes = True
                 
-            if calcular_costo and gestionar_fases:
+            if calcular_costo and gestionar_fases and gestionar_solicitudes:
                 break
-        if calcular_costo and gestionar_fases:
+        if calcular_costo and gestionar_fases and gestionar_solicitudes:
                 break
             
     proyectos = Proyecto.objects.filter(estado=1)
-    ctx = {'proyectos': proyectos, 'calcular_costo':calcular_costo, 'gestionar_fases':gestionar_fases}
+    ctx = {'proyectos': proyectos, 'calcular_costo':calcular_costo, 'gestionar_fases':gestionar_fases, 'gestionar_solicitudes':gestionar_solicitudes}
     return render_to_response('desarrollo/desarrollo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -93,6 +96,36 @@ def calcular_costo_view(request, id_proyecto):
                     costo_total = costo_total + i.costo
     ctx = {'proyecto':proyecto, 'fases_valido':fases_valido, 'items_valido':items_valido, 'costo_total':costo_total}
     return render_to_response('desarrollo/costo_total.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar solicitudes")
+@miembro_proyecto()
+def solicitudes_proyecto_view(request, id_proyecto):
+    """
+    ::
+    
+        La vista de gestion de solicitudes de cambio. Se deben cumplir los siguientes requisitos para utilizar esta vista:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar solicitudes.
+            - Debe ser miembro del proyecto en cuestion.
+            
+        Esta vista permite al usuario (miembro del comite de cambios) gestionar todas las solicitudes de cambio del proyecto. 
+        Se cargan todas las solicitudes del proyecto y se envian como un listado al template de gestion de solicitudes
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+    
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    solicitudes = SolicitudCambio.objects.filter(proyecto=proyecto)
+    ctx = {'proyecto':proyecto, 'solicitudes':solicitudes}
+    return render_to_response('desarrollo/gestion_solicitudes.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear solicitud")

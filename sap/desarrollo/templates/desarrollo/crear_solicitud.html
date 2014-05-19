@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}SAP - Crear solicitud{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<h1><small>Crear solicitud</small></h1>
+	<form class="form-horizontal" method="POST">
+		{% csrf_token %}
+		
+		<!-- Manejo de errores del formulario -->
+    	{% if form.errors %}
+    	<div class="panel panel-warning">
+    		<div class="panel-heading">
+    			<h3 class="panel-title">¡Alto ahí!</h3>
+            </div>
+            <div class="panel-body">
+            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
+            	<br>
+            	<ul class="list-unstyled">
+            		{% for field in form %}
+            			{% if field.errors %} 
+  							<li><b>{{ field.label }}</b></li>
+  								{% for error in field.errors %}
+    								<ul>
+      									<li>{{ error }}</li>
+    								</ul>
+    							{% endfor %}
+  							</li>
+  						{% endif %}
+  					{% endfor %}
+				</ul>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Fin del manejo de errores del formulario -->
+        
+        <!-- Script para el selector de tipo de dato -->
+		<script>
+			function miFuncion(obj) {
+				var value = obj.value;
+				switch (value) {
+					case "1":
+						document.getElementById("descripcion").removeAttribute("placeholder");
+				    	document.getElementById("descripcion").setAttribute("placeholder", "Redacte el porqué quiere modificar el item");
+				    	break;
+					case "2":
+						document.getElementById("descripcion").removeAttribute("placeholder");
+				    	document.getElementById("descripcion").setAttribute("placeholder", "Redacte el porqué quiere eliminar el item");
+						break;
+					case "3":
+						document.getElementById("descripcion").removeAttribute("placeholder");
+				    	document.getElementById("descripcion").setAttribute("placeholder", "Redacte el porqué quiere agregar una relación al item");
+						break;
+					case "4":
+						document.getElementById("descripcion").removeAttribute("placeholder");
+				    	document.getElementById("descripcion").setAttribute("placeholder", "Redacte el porqué quiere quitar una relacion del item");
+						break;
+					case "5":
+						document.getElementById("descripcion").removeAttribute("placeholder");
+				    	document.getElementById("descripcion").setAttribute("placeholder", "Redacte el porqué quiere reversionar el item");
+						break;
+				}
+			}
+		</script>
+		<!-- Fin del script para el selector de tipo de dato -->
+		
+		<p class="text-muted">Campos obligatorios (*)</p>
+		<div class="input-group">
+			<span class="input-group-addon"><b>Solicitante</b></span>
+			<input type="text" class="form-control" id="solicitante" name="solicitante" value="{{ user.username }}" disabled="disabled">
+        </div>
+        <br>
+		<div class="input-group">
+			<span class="input-group-addon"><b>Proyecto</b></span>
+			<input type="text" class="form-control" id="proyecto" name="proyecto" value="{{ proyecto.nombre }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Fase</b></span>
+			<input type="text" class="form-control" id="fase" name="fase" value="{{ fase.nombre }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Línea base</b></span>
+			<input type="text" class="form-control" id="linea_base" name="linea_base" value="{{ linea_base.nombre }}" disabled="disabled">
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>Item</b></span>
+			<input type="text" class="form-control" id="item" name="item" value="{{ item.nombre }}" disabled="disabled">
+        </div>
+        <br>
+		<div class="input-group">
+			<span class="input-group-addon"><b>* Acción</b></span>
+			<select class="form-control" id="accion" name="accion" onchange="miFuncion(this)">
+				<option value="1">Modificar item</option>
+				<option value="2">Eliminar item</option>
+				<option value="3">Agregar relacion a item</option>
+				<option value="4">Quitar relacion de item</option>
+				<option value="5">Reversionar item</option>
+			</select>
+        </div>
+        <br>
+        <div class="input-group">
+			<span class="input-group-addon"><b>* Descripción</b></span>
+			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" placeholder="Redacte el porqué quiere modificar el item"></textarea>
+        </div>
+        
+        <br>
+        <button type="submit" class="btn btn-success">Crear</button>
+	</form>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/fases/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
+</div>
+{% endblock %}

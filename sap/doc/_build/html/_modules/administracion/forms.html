@@ -240,7 +240,9 @@
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de tipo atributo&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">tipo_dato</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Tipo dato&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">TIPO_DATO</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    
+    <span class="n">num_longitud</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Longitud numerica&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">num_precision</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Precision numerica&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">clean_nombre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">nombre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;nombre&#39;</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
@@ -248,6 +250,14 @@
         <span class="k">except</span> <span class="n">TipoAtributo</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">nombre</span>
         <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;Nombre de tipo atributo ya registrado.&#39;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">clean_num_precision</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">num_precision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;num_precision&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">num_precision</span>
+    
+    <span class="k">def</span> <span class="nf">clean_num_longitud</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">num_longitud</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;num_longitud&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">num_longitud</span>
 </div>
 <div class="viewcode-block" id="ModificarTipoAtributoForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.ModificarTipoAtributoForm">[docs]</a><span class="k">class</span> <span class="nc">ModificarTipoAtributoForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -266,6 +276,8 @@
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de tipo atributo&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     <span class="n">tipo_dato</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Tipo dato&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">TIPO_DATO</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">num_longitud</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Longitud numerica&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">num_precision</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Precision numerica&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
         
     <span class="k">def</span> <span class="nf">clean_nombre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
         <span class="n">nombre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;nombre&#39;</span><span class="p">]</span> 
@@ -276,6 +288,14 @@
         <span class="k">except</span> <span class="n">TipoAtributo</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">nombre</span> 
         <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;Nombre de tipo atributo ya registrado.&#39;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">clean_num_precision</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">num_precision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;num_precision&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">num_precision</span>
+    
+    <span class="k">def</span> <span class="nf">clean_num_longitud</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">num_longitud</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;num_longitud&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">num_longitud</span>
     </div>
 <div class="viewcode-block" id="CrearProyectoForm"><a class="viewcode-back" href="../../moduloADM/forms.html#administracion.forms.CrearProyectoForm">[docs]</a><span class="k">class</span> <span class="nc">CrearProyectoForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>

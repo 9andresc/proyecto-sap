@@ -15,6 +15,19 @@
 				No puedes realizar acciones sobre esta fase, ya que, no eres miembro del proyecto al cual esta ligada esta fase. Consulta con el líder del proyecto para obtener el permiso.
 			{% elif fase_finalizada %}
 				No puedes realizar acciones sobre esta fase, ya que, se encuentra en estado <b>Finalizado</b>.
+			{% elif existe_solicitud %}
+				{% if solicitud_aprobada == False %}
+					La solicitud de cambio sobre el item <i>{{ item.nombre }}</i> fue <b>desaprobada</b>. Puedes intentar redactar otra solicitud si deseas.
+					<br><br>
+					<a class="btn btn-default" href="#"><span class="glyphicon glyphicon-envelope"></span> Crear solicitud</a>
+				{% else %}
+					La solicitud de cambio sobre el item <i>{{ item.nombre }}</i> está en <b>trámite</b>. Aguarde la decisión del comité.
+				{% endif %}
+			{% elif existe_solicitud == False %}
+				No se pueden realizar cambios sobre el item <i>{{ item.nombre }}</i> puesto que está en estado <b>Bloqueado</b>.<br>
+				Puede crear una solicitud de cambio sobre este item para que posteriormente sea evaluada por el comité de cambios.
+				<br><br>
+				<a class="btn btn-default" href="/desarrollo/crear_solicitud/item/{{ item.id }}/linea_base/{{ linea_base.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-envelope"></span> Crear solicitud</a>
 			{% endif %}
 		</div>
 	</div>

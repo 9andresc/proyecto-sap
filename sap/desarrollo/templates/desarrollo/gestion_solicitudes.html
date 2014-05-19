@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}SAP - Solicitudes del proyecto {{ proyecto.nombre }}{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Solicitudes del proyecto <i>{{ proyecto.nombre }}</i></small></h1>
+		<br>
+		{% if solicitudes %}
+			<br>
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>Solicitante</th>
+                    		<th>Item</th>
+                    		<th>Fase</th>
+    						<th>Acción</th>
+    						<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for s in solicitudes %}
+                			<tr>
+                    			<td>{{ s.usuario.username }}</td>
+                    			<td>{{ s.item.nombre }}</td>
+                    			<td>{{ s.fase.nombre }}</td>
+                    			<td>{{ s.accion }}</td>
+                    			<td><a class="btn btn-default" href="#"><span class="glyphicon glyphicon-eye-open"></span> Analizar</a></td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No existen solicitudes.</h3>
+    	{% endif %}
+    </div>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/"><span class="glyphicon glyphicon-chevron-left"></span> Volver al módulo de desarrollo</a>
+</div>
+{% endblock %}

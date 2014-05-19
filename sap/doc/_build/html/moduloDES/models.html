@@ -81,14 +81,32 @@ proyecto: el proyecto al cual pertenece la fase.
 que posee un Item son:
 
 nombre: nombre del item.
+version: indica la version actual del item.
 descripcion: una breve descripcion sobre el item.
 costo_*: costo del item.
 complejidad: complejidad respectiva del item.
 estado: estado actual del item.
 fase: fase en la que esta el item.
 tipo_item: tipo de item vinculado al item.
+adan: es el identificador de un item raiz, su proposito es evitar bucles en el grafo de items.
+cain: es el identificador de un item post-raiz, su proposito es evitar bucles en el grafo de items.
 padre: es item padre/antecesor del item.
 tipo_relacion: indica que tipo de relacion tiene el item con el padre/antecesor (Hijo o Sucesor).
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="desarrollo.models.LineaBase">
+<em class="property">class </em><tt class="descclassname">desarrollo.models.</tt><tt class="descname">LineaBase</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/models.html#LineaBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.models.LineaBase" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de una Linea Base, los atributos 
+que posee una Linea Base son:
+
+nombre: nombre de la linea base.
+descripcion: una breve descripcion sobre la linea base.
+num_secuencia: define el orden numerico de la linea base dentro de una fase.
+estado: estado actual de la linea base
+fase: fase en la que esta la linea base.
 </pre></div>
 </div>
 </dd></dl>
@@ -116,7 +134,7 @@ que posee son:
 item: item al que va ligado.
 tipo_item:tipo de item al que va ligado.
 tipo_atributo: tipo de atributo al que va ligado.
-valor_*: valor del tipo de atributo, que puede ser Fecha, Numerico, Logico, Texto grande o Texto chico.
+valor_*: valor del tipo de atributo, que puede ser Fecha, Numerico, Logico, Texto grande, Texto chico o Archivo.
 </pre></div>
 </div>
 </dd></dl>
@@ -136,6 +154,8 @@ complejidad: complejidad respectiva del item.
 estado: estado actual del item.
 fase: fase en la que esta el item.
 tipo_item: tipo de item vinculado al item.
+adan: es el identificador de un item raiz, su proposito es evitar bucles en el grafo de items.
+cain: es el identificador de un item post-raiz, su proposito es evitar bucles en el grafo de items.
 padre: el padre (o antecesor) del item.
 tipo_relacion: indica que clase de relacion se mantiene con el item padre o antecesor.
 fecha_version: fecha de la creacion de la version.

@@ -38,15 +38,18 @@
                     			<td>{{ p.usuario_lider.username }}</td>
                     			<td>{{ p.fecha_inicio }}</td>
                     			<td>
-                    			{% if calcular_costo or gestionar_fases %}
+                    			{% if calcular_costo or gestionar_fases or gestionar_solicitudes %}
                     			<div class="btn-group">
       								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
       								<ul class="dropdown-menu">
         								{% if gestionar_fases %}
-        								<li><a href="{% url 'vista_fases_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-cog"></span> Fases</a></li>
+        									<li><a href="{% url 'vista_fases_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-cog"></span> Fases</a></li>
         								{% endif %}
         								{% if calcular_costo %}
-        								<li><a href="{% url 'vista_calcular_costo' id_proyecto=p.id %}"><span class="glyphicon glyphicon-usd"></span> Costo total</a></li>
+        									<li><a href="{% url 'vista_calcular_costo' id_proyecto=p.id %}"><span class="glyphicon glyphicon-usd"></span> Costo total</a></li>
+      									{% endif %}
+      									{% if gestionar_solicitudes %}
+      										<li><a href="{% url 'vista_solicitudes_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-envelope"></span> Solicitudes de cambio</a></li>
       									{% endif %}
       								</ul>
     							</div>
