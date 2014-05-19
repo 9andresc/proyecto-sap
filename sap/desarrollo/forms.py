@@ -7,6 +7,27 @@ class CustomDateField(forms.DateField):
         kwargs.setdefault('input_formats', ("%d/%m/%Y",))
         super(CustomDateField, self).__init__(*args, **kwargs)
 
+class CrearSolicitudForm(forms.Form):
+    """
+    ::
+    
+        Formulario utilizado para la creacion de una solicitud.
+        
+        Se verifica que la descripcion de la solicitud no sobrepase el 
+        limite establecido por el modelo. Ademas, se verifica si se ha 
+        ingresado alguna descripcion puesto que es obligatoria.
+        
+    """
+    ACCIONES = (
+        (1, "Modificar item"),
+        (2, "Eliminar item"),
+        (3, "Agregar relacion a item"),
+        (3, "Quitar relacion de item"),
+        (3, "Reversionar item"),
+    )
+    descripcion = forms.CharField(label="Descripcion", required=True, max_length=250, error_messages={'max_length':'Longitud maxima 250'})
+    accion = forms.ChoiceField(label="Accion", choices=ACCIONES, required=True)
+
 class CrearFaseForm(forms.Form):
     """
     ::

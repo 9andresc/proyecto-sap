@@ -6,9 +6,9 @@ from django.http.response import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from administracion.models import Proyecto, Rol, TipoAtributo
-from desarrollo.models import Item, Fase, TipoItem, ValorAtributo, VersionItem, LineaBase
-from desarrollo.forms import CrearItemForm, ModificarItemForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm, ModificarTipoItemForm, CrearLineaBaseForm
-from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto, fase_finalizada
+from desarrollo.models import Item, Fase, TipoItem, ValorAtributo, VersionItem, LineaBase, SolicitudCambio
+from desarrollo.forms import CrearItemForm, ModificarItemForm, CrearFaseForm, ModificarFaseForm, CrearTipoItemForm, ModificarTipoItemForm, CrearLineaBaseForm, CrearSolicitudForm
+from inicio.decorators import permiso_requerido, miembro_proyecto, fase_miembro_proyecto, fase_finalizada, solicitud_requerida
 
 @login_required(login_url='/login/')
 def desarrollo_view(request):
@@ -93,6 +93,66 @@ def calcular_costo_view(request, id_proyecto):
                     costo_total = costo_total + i.costo
     ctx = {'proyecto':proyecto, 'fases_valido':fases_valido, 'items_valido':items_valido, 'costo_total':costo_total}
     return render_to_response('desarrollo/costo_total.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Crear solicitud")
+@miembro_proyecto()
+def crear_solicitud_view(request, id_proyecto, id_fase, id_linea_base, id_item):
+    """
+    ::
+    
+        La vista de creacion de una solicitud de cambio. Se deben cumplir los siguientes requisitos para utilizar esta vista:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Crear solicitud.
+            - Debe ser miembro del proyecto en cuestion.
+            
+        Esta vista permite al usuario crear una solicitud de cambio para alterar un item bloqueado de una fase en curso.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            - id_fase: el identificador de la fase.
+            - id_linea_base: el identificador de la linea base.
+            - id_item: el identificador del item.
+            
+        La vista retorna lo siguiente:
+    
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    linea_base = fase.lineas_base.get(id=id_linea_base)
+    item = linea_base.items.get(id=id_item)
+    
+    form = CrearSolicitudForm()
+    if request.method == "POST":
+        form = CrearSolicitudForm(request.POST)
+        if form.is_valid():
+            descripcion = form.cleaned_data['descripcion']
+            accion = form.cleaned_data['accion']
+            
+            solicitud = SolicitudCambio.objects.create(usuario=request.user, proyecto=proyecto, 
+                                                       fase=fase, linea_base=linea_base, 
+                                                       item=item, descripcion=descripcion,
+                                                       votantes="", votos=0)
+            if accion == "1":
+                solicitud.accion = "Modificar item"
+            elif accion == "2":
+                solicitud.accion = "Eliminar item"
+            elif accion == "3":
+                solicitud.accion = "Agregar relacion a item"
+            elif accion == "4":
+                solicitud.accion = "Quitar relacion de item"
+            else:
+                solicitud.accion = "Reversionar item"
+            
+            solicitud.save()
+            return HttpResponseRedirect('/desarrollo/fases/items/fase/%s/proyecto/%s'%(id_fase, id_proyecto))
+                
+    ctx = {'item':item, 'linea_base':linea_base, 'fase':fase, 'proyecto':proyecto, 'form':form}
+    return render_to_response('desarrollo/crear_solicitud.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar fases de proyecto")
@@ -1395,6 +1455,7 @@ def is_date(s):
 @permiso_requerido(permiso="Modificar item")
 @fase_miembro_proyecto()
 @fase_finalizada()
+@solicitud_requerida(accion="Modificar item")
 def modificar_item_view(request, id_fase, id_item, id_proyecto):
     """
     ::

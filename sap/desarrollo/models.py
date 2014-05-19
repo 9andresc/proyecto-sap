@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MaxLengthValidator
+from django.contrib.auth.models import User
 from administracion.models import Rol, Proyecto, TipoAtributo
 
 ESTADOS_FASE = (
@@ -208,3 +209,31 @@ class ValorAtributo(models.Model):
     valor_texto_grande = models.TextField(validators=[MaxLengthValidator(250)], blank=True)
     valor_texto_chico = models.CharField(max_length=30, blank=True)
     valor_archivo = models.FileField(upload_to='archivos/items/')
+
+class SolicitudCambio(models.Model):
+    """
+    ::
+    
+        Clase que describe la estructura de una solicitud de cambio, en ella se establecen los siguientes campos:
+
+        usuario: indica cual usuario genero la solicitud de cambio.
+        proyecto: indica en cual proyecto sera aplicada esta solicitud de cambio.
+        fase: indica en cual fase sera aplicada esta solicitud de cambio.
+        linea_base: indica cual linea base sera quebrada mediante esta solicitud de cambio.
+        item: indica cual item sera afectado por la aprobacion de esta solicitud de cambio.
+        accion: es una cadena que indica que accion se desea realizar sobre el item.
+        descripcion: establece el porque del cambio sobre el item.
+        aprobada: es un valor booleano que indicara si la solicitud es aprobada o no.
+        votantes: es una cadena que indica los identificadores de los usuarios que ya votaron la solicitud de cambio.
+        votos: indica el valor de los votos.
+    """
+    usuario = models.ForeignKey(User, null=False)
+    proyecto = models.ForeignKey(Proyecto, null=False)
+    fase = models.ForeignKey(Fase, null=False)
+    linea_base = models.ForeignKey(LineaBase, null=False)
+    item = models.ForeignKey(Item, null=False)
+    accion = models.CharField(max_length=50, null=True)
+    descripcion = models.TextField(max_length=250, null=False)
+    aprobada = models.NullBooleanField(null=True)
+    votantes = models.CharField(max_length=50, null=False)
+    votos = models.IntegerField(null=True, blank=True)
