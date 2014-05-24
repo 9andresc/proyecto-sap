@@ -8,11 +8,13 @@
 		</div>
 		<div class="panel-body">
 			{% if permiso %}
-				No tienes el permiso "{{ permiso }}" para acceder a esta funcionalidad. Consulta con el administrador para obtener permisos.
+				No tienes el permiso <i>{{ permiso }}</i> para acceder a esta funcionalidad. Consulta con el <b>Administrador</b> para obtener permisos.
 			{% elif es_miembro == False %}
-				No puedes realizar acciones sobre este proyecto, ya que, no eres miembro del mismo. Consulta con el líder del proyecto para obtener el permiso.
+				No puedes realizar acciones sobre este proyecto, ya que, no eres miembro del mismo. Consulta con el <b>Líder del proyecto</b> para obtener el permiso.
 			{% elif es_miembro_comite == False %}
 				No puedes gestionar las solicitudes de cambio, puesto que, no eres miembro del comité de cambios de este proyecto.
+			{% elif posee_rol_fase == False %}
+				No puedes acceder o realizar cambios, puesto que, no posees un rol válido para esta fase.
 			{% elif existe_solicitud %}
 				{% if solicitud_aprobada == False %}
 					La solicitud de cambio sobre el item <i>{{ item.nombre }}</i> fue <b>desaprobada</b>. Puedes intentar redactar otra solicitud si deseas.

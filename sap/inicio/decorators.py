@@ -40,6 +40,35 @@ def miembro_proyecto():
         return wraps(func)(inner_decorator)
     return decorator
 
+def rol_fase_requerido():
+    def decorator(func):
+        def inner_decorator(request, id_proyecto, id_fase, *args, **kwargs):
+            proyecto = Proyecto.objects.get(id=id_proyecto)
+            fase = proyecto.fases.get(id=id_fase)
+            
+            if fase.estado == 1 or fase.estado == 2:
+                posee_rol_fase = False
+                roles_usuario = request.user.roles.all()
+                roles_fase = fase.roles.all()
+                
+                for ru in roles_usuario:
+                    for rf in roles_fase:
+                        if rf.nombre == ru.nombre:
+                            posee_rol_fase = True
+                            break
+                    if posee_rol_fase:
+                        break
+                
+                if posee_rol_fase:
+                    return func(request, id_proyecto, id_fase, *args, **kwargs)
+                else:
+                    ctx = {'posee_rol_fase':posee_rol_fase}
+                    return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
+            else:
+                return func(request, id_proyecto, id_fase, *args, **kwargs)
+        return wraps(func)(inner_decorator)
+    return decorator
+
 def miembro_comite():
     def decorator(func):
         def inner_decorator(request, id_proyecto, *args, **kwargs):

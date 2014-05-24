@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from administracion.models import Proyecto, Rol, TipoAtributo
 from desarrollo.models import Item, Fase, TipoItem, ValorAtributo, VersionItem, LineaBase, SolicitudCambio
 from desarrollo.forms import CrearItemForm, ModificarItemForm, CrearTipoItemForm, ModificarTipoItemForm, CrearLineaBaseForm, CrearSolicitudForm
-from inicio.decorators import permiso_requerido, miembro_proyecto, miembro_comite, solicitud_requerida
+from inicio.decorators import permiso_requerido, miembro_proyecto, rol_fase_requerido, miembro_comite, solicitud_requerida
 
 @login_required(login_url='/login/')
 def desarrollo_view(request):
@@ -551,6 +551,7 @@ def fases_proyecto_view(request, id_proyecto):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar roles de fase")
 @miembro_proyecto()
+@rol_fase_requerido()
 def roles_fase_view(request, id_proyecto, id_fase):
     """
     ::
@@ -582,6 +583,7 @@ def roles_fase_view(request, id_proyecto, id_fase):
     
 @login_required(login_url='/login/')
 @miembro_proyecto()
+@rol_fase_requerido()
 def fase_agregar_rol_view(request, id_proyecto, id_fase):
     """
     ::
@@ -618,6 +620,7 @@ def fase_agregar_rol_view(request, id_proyecto, id_fase):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar rol a fase")
 @miembro_proyecto()
+@rol_fase_requerido()
 def fase_confirmacion_agregar_rol_view(request, id_proyecto, id_fase, id_rol):
     """
     ::
@@ -666,6 +669,7 @@ def fase_confirmacion_agregar_rol_view(request, id_proyecto, id_fase, id_rol):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar rol de fase")
 @miembro_proyecto()
+@rol_fase_requerido()
 def fase_quitar_rol_view(request, id_proyecto, id_fase, id_rol):
     """
     ::
@@ -706,6 +710,7 @@ def fase_quitar_rol_view(request, id_proyecto, id_fase, id_rol):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar tipos de item de fase")
 @miembro_proyecto()
+@rol_fase_requerido()
 def tipos_item_fase_view(request, id_proyecto, id_fase):
     """
     ::
@@ -764,6 +769,7 @@ def tipos_item_fase_view(request, id_proyecto, id_fase):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear tipo de item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def crear_tipo_item_view(request, id_proyecto, id_fase):
     """
     ::
@@ -820,6 +826,7 @@ def crear_tipo_item_view(request, id_proyecto, id_fase):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Modificar tipo de item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def modificar_tipo_item_view(request, id_proyecto, id_fase, id_tipo_item):
     """
     ::
@@ -879,6 +886,7 @@ def modificar_tipo_item_view(request, id_proyecto, id_fase, id_tipo_item):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Visualizar tipo de item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def visualizar_tipo_item_view(request, id_proyecto, id_fase, id_tipo_item):
     """
     ::
@@ -912,6 +920,7 @@ def visualizar_tipo_item_view(request, id_proyecto, id_fase, id_tipo_item):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Eliminar tipo de item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def eliminar_tipo_item_view(request, id_proyecto, id_fase, id_tipo_item):
     """
     ::
@@ -958,6 +967,7 @@ def eliminar_tipo_item_view(request, id_proyecto, id_fase, id_tipo_item):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar tipos de atributo de tipo de item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def tipos_atributo_tipo_item_view(request, id_proyecto, id_fase, id_tipo_item):
     """
     ::
@@ -991,6 +1001,7 @@ def tipos_atributo_tipo_item_view(request, id_proyecto, id_fase, id_tipo_item):
 
 @login_required(login_url='/login/')
 @miembro_proyecto()
+@rol_fase_requerido()
 def agregar_tipo_atributo_view(request, id_proyecto, id_fase, id_tipo_item):
     """
     ::
@@ -1030,6 +1041,7 @@ def agregar_tipo_atributo_view(request, id_proyecto, id_fase, id_tipo_item):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar tipo de atributo a tipo de item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def confirmacion_agregar_tipo_atributo_view(request, id_proyecto, id_fase, id_tipo_atributo, id_tipo_item):
     """
     ::
@@ -1081,6 +1093,7 @@ def confirmacion_agregar_tipo_atributo_view(request, id_proyecto, id_fase, id_ti
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar tipo de atributo de tipo de item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def quitar_tipo_atributo_view(request, id_proyecto, id_fase, id_tipo_atributo, id_tipo_item):
     """
     ::
@@ -1130,6 +1143,7 @@ def quitar_tipo_atributo_view(request, id_proyecto, id_fase, id_tipo_atributo, i
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Iniciar fase")
 @miembro_proyecto()
+@rol_fase_requerido()
 def iniciar_fase_view(request, id_proyecto, id_fase):
     """
     ::
@@ -1186,6 +1200,7 @@ def iniciar_fase_view(request, id_proyecto, id_fase):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Finalizar fase")
 @miembro_proyecto()
+@rol_fase_requerido()
 def finalizar_fase_view(request, id_proyecto, id_fase):
     """
     ::
@@ -1244,6 +1259,7 @@ def finalizar_fase_view(request, id_proyecto, id_fase):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar items de fase")
 @miembro_proyecto()
+@rol_fase_requerido()
 def items_fase_view(request, id_proyecto, id_fase):
     """
     ::
@@ -1311,6 +1327,7 @@ def items_fase_view(request, id_proyecto, id_fase):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def crear_item_view(request, id_proyecto, id_fase):
     """
     ::
@@ -1401,6 +1418,7 @@ def is_date(s):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Modificar item")
 @miembro_proyecto()
+@rol_fase_requerido()
 @solicitud_requerida(accion="Modificar item")
 def modificar_item_view(request, id_proyecto, id_fase, id_item):
     """
@@ -1522,6 +1540,7 @@ def modificar_item_view(request, id_proyecto, id_fase, id_item):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Eliminar item")
 @miembro_proyecto()
+@rol_fase_requerido()
 @solicitud_requerida(accion="Eliminar item")
 def eliminar_item_view(request, id_proyecto, id_fase, id_item):
     """
@@ -1588,6 +1607,7 @@ def eliminar_item_view(request, id_proyecto, id_fase, id_item):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Visualizar item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def visualizar_item_view(request, id_proyecto, id_fase, id_item):
     """
     ::
@@ -1621,6 +1641,7 @@ def visualizar_item_view(request, id_proyecto, id_fase, id_item):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Aprobar item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def aprobar_item_view(request, id_proyecto, id_fase, id_item):
     """
     ::
@@ -1676,6 +1697,7 @@ def aprobar_item_view(request, id_proyecto, id_fase, id_item):
 
 @login_required(login_url='/login/')
 @miembro_proyecto()
+@rol_fase_requerido()
 def desaprobar_item_view(request, id_proyecto, id_fase, id_item):
     """
     ::
@@ -1731,6 +1753,7 @@ def desaprobar_item_view(request, id_proyecto, id_fase, id_item):
 
 @login_required(login_url='/login/')
 @miembro_proyecto()
+@rol_fase_requerido()
 def revivir_item_view(request, id_proyecto, id_fase):
     """
     ::
@@ -1769,6 +1792,7 @@ def revivir_item_view(request, id_proyecto, id_fase):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Revivir item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def confirmacion_revivir_item_view(request, id_proyecto, id_fase, id_item):
     """
     ::
@@ -1897,6 +1921,7 @@ def confirmacion_revivir_item_view(request, id_proyecto, id_fase, id_item):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar relaciones de item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def relaciones_item_view(request, id_proyecto, id_fase, id_item):
     """
     ::
@@ -1932,6 +1957,7 @@ def relaciones_item_view(request, id_proyecto, id_fase, id_item):
 
 @login_required(login_url='/login/')
 @miembro_proyecto()
+@rol_fase_requerido()
 def agregar_relacion_view(request, id_proyecto, id_fase, id_item):
     """
     ::
@@ -2058,6 +2084,8 @@ def agregar_relacion_view(request, id_proyecto, id_fase, id_item):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar relacion a item")
 @miembro_proyecto()
+@rol_fase_requerido()
+@solicitud_requerida(accion="Agregar relacion a item")
 def confirmacion_agregar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, eleccion):
     """
     ::
@@ -2228,6 +2256,8 @@ def confirmacion_agregar_relacion_view(request, id_proyecto, id_fase, id_item, i
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar relacion de item")
 @miembro_proyecto()
+@rol_fase_requerido()
+@solicitud_requerida(accion="Quitar relacion de item")
 def quitar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, eleccion):
     """
     ::
@@ -2341,6 +2371,7 @@ def quitar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, el
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar versiones de item")
 @miembro_proyecto()
+@rol_fase_requerido()
 def versiones_item_view(request, id_proyecto, id_fase, id_item):
     """
     ::
@@ -2377,6 +2408,8 @@ def versiones_item_view(request, id_proyecto, id_fase, id_item):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Reversionar item")
 @miembro_proyecto()
+@rol_fase_requerido()
+@solicitud_requerida(accion="Reversionar item")
 def confirmacion_reversionar_item_view(request, id_proyecto, id_fase, id_item, id_reversion):
     """
     ::
@@ -2536,6 +2569,7 @@ def confirmacion_reversionar_item_view(request, id_proyecto, id_fase, id_item, i
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar lineas base de fase")
 @miembro_proyecto()
+@rol_fase_requerido()
 def lineas_base_fase_view(request, id_proyecto, id_fase):
     """
     ::
@@ -2593,6 +2627,7 @@ def lineas_base_fase_view(request, id_proyecto, id_fase):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear linea base")
 @miembro_proyecto()
+@rol_fase_requerido()
 def crear_linea_base_view(request, id_proyecto, id_fase):
     """
     ::
@@ -2650,6 +2685,7 @@ def crear_linea_base_view(request, id_proyecto, id_fase):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Visualizar linea base")
 @miembro_proyecto()
+@rol_fase_requerido()
 def visualizar_linea_base_view(request, id_proyecto, id_fase, id_linea_base):
     """
     ::
@@ -2683,6 +2719,7 @@ def visualizar_linea_base_view(request, id_proyecto, id_fase, id_linea_base):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar items de linea base")
 @miembro_proyecto()
+@rol_fase_requerido()
 def items_linea_base_view(request, id_proyecto, id_fase, id_linea_base):
     """
     ::
@@ -2716,6 +2753,7 @@ def items_linea_base_view(request, id_proyecto, id_fase, id_linea_base):
 
 @login_required(login_url='/login/')
 @miembro_proyecto()
+@rol_fase_requerido()
 def linea_base_agregar_item_view(request, id_proyecto, id_fase, id_linea_base):
     """
     ::
@@ -2749,6 +2787,7 @@ def linea_base_agregar_item_view(request, id_proyecto, id_fase, id_linea_base):
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Agregar item a linea base")
 @miembro_proyecto()
+@rol_fase_requerido()
 def linea_base_confirmacion_agregar_item_view(request, id_proyecto, id_fase, id_linea_base, id_item):
     """
     ::
@@ -2806,6 +2845,7 @@ def linea_base_confirmacion_agregar_item_view(request, id_proyecto, id_fase, id_
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Quitar item de linea base")
 @miembro_proyecto()
+@rol_fase_requerido()
 def linea_base_quitar_item_view(request, id_proyecto, id_fase, id_item, id_linea_base):
     """
     ::
@@ -2857,6 +2897,7 @@ def linea_base_quitar_item_view(request, id_proyecto, id_fase, id_item, id_linea
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Cerrar linea base")
 @miembro_proyecto()
+@rol_fase_requerido()
 def cerrar_linea_base_view(request, id_proyecto, id_fase, id_linea_base):
     """
     ::
