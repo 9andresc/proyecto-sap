@@ -112,6 +112,31 @@ La vista retorna lo siguiente:
 </dd></dl>
 
 <dl class="function">
+<dt id="desarrollo.views.analizar_solicitud_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">analizar_solicitud_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#analizar_solicitud_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.analizar_solicitud_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para analizar una solicitud de cambio. Se deben cumplir los siguientes requisitos para utilizar esta vista:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Crear solicitud.
+    - Debe ser miembro del proyecto en cuestion.
+    
+Esta vista permite al usuario visualizar todos los campos de una solicitud de cambio. Ademas, en el template generado por 
+la vista, otorga los botones necesarios para votar la solicitud.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    - id_solicitud: el identificador de la solicitud de cambio.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="desarrollo.views.aprobar_item_view">
 <tt class="descclassname">desarrollo.views.</tt><tt class="descname">aprobar_item_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#aprobar_item_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.aprobar_item_view" title="Permalink to this definition">¶</a></dt>
 <dd><div class="highlight-python"><div class="highlight"><pre>La vista para aprobar un item. Para acceder a esta vista se deben cumplir los siguientes
@@ -138,36 +163,6 @@ La vista retorna lo siguiente:
 </dd></dl>
 
 <dl class="function">
-<dt id="desarrollo.views.bajar_fase_view">
-<tt class="descclassname">desarrollo.views.</tt><tt class="descname">bajar_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#bajar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.bajar_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-python"><div class="highlight"><pre>La vista para bajar de secuencia una fase. Para acceder a esta vista se deben cumplir los siguientes
-requisitos:
-
-    - El usuario debe estar logueado.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    
-Esta vista permite al usuario bajar el numero de secuencia de una fase y por medio de ello subir el numero de secuencia de la
-fase ubicada inmediatamente abajo de la fase seleccionada para bajar. Sin embargo, para poder bajar el numero de secuencia
-se deben cumplir los siguientes requisitos:
-    
-    - La fase a bajar no debe estar en estado Finalizado y ninguno de sus items debe ser sucesor o antecesor de los items 
-    de sus dos fases vecinas (la inmediatamente superior e inferior).
-    - La fase de abajo debe cumplir los mismos requisitos que la fase a bajar.
-
-La vista recibe los siguientes parametros:
-
-    - request: contiene informacion sobre la sesion actual.
-    - num_secuencia: el numero de secuencia de la fase.
-    - id_proyecto: el identificador del proyecto.
-    
-La vista retorna lo siguiente:
-
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
 <dt id="desarrollo.views.calcular_costo_view">
 <tt class="descclassname">desarrollo.views.</tt><tt class="descname">calcular_costo_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#calcular_costo_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.calcular_costo_view" title="Permalink to this definition">¶</a></dt>
 <dd><div class="highlight-python"><div class="highlight"><pre>La vista del calculo del costo total de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
@@ -189,6 +184,31 @@ La vista recibe los siguientes parametros:
 La vista retorna lo siguiente:
 
     - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="desarrollo.views.calcular_impacto_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">calcular_impacto_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#calcular_impacto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.calcular_impacto_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista para calcular impacto. Para acceder a esta vista se deben cumplir los siguientes
+requisitos:
+
+    - El usuario debe estar logueado.
+    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    - El usuario debe poseer un rol valido para la fase.
+
+Esta vista permite al usuario visualizar el calculo de impacto monetario y temporal de un item.
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_item: el identificador del item.
+    - id_fase: el identificador de la fase.
+    - id_proyecto: el identificador del proyecto.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
 </pre></div>
 </div>
 </dd></dl>
@@ -336,33 +356,6 @@ La vista retorna lo siguiente:
 </dd></dl>
 
 <dl class="function">
-<dt id="desarrollo.views.crear_fase_view">
-<tt class="descclassname">desarrollo.views.</tt><tt class="descname">crear_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#crear_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.crear_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-python"><div class="highlight"><pre>La vista para crear una fase dentro de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
-requisitos:
-
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Crear fase.
-    - Debe ser miembro del proyecto en cuestion.
-    
-Esta vista permite al usuario crear una fase para lograr esto, se verifica la validez de cada campo ingresado y 
-luego se crea la fase de acuerdo a los campos ingresados. 
-    
-La vista recibe los siguientes parametros:
-
-    - request: contiene informacion sobre la sesion actual.
-    - id_proyecto: el identificador del proyecto.
-    
-La vista retorna lo siguiente:
-
-    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
-    generado en la vista, al template correspondiente.
-    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de usuarios. 
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
 <dt id="desarrollo.views.crear_item_view">
 <tt class="descclassname">desarrollo.views.</tt><tt class="descname">crear_item_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#crear_item_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.crear_item_view" title="Permalink to this definition">¶</a></dt>
 <dd><div class="highlight-python"><div class="highlight"><pre>La vista para crear un item. Para acceder a esta vista se deben cumplir los siguientes
@@ -421,6 +414,32 @@ La vista retorna lo siguiente:
 </dd></dl>
 
 <dl class="function">
+<dt id="desarrollo.views.crear_solicitud_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">crear_solicitud_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#crear_solicitud_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.crear_solicitud_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista de creacion de una solicitud de cambio. Se deben cumplir los siguientes requisitos para utilizar esta vista:
+
+    - El usuario debe estar logueado.
+    - El usuario debe poseer el permiso: Crear solicitud.
+    - Debe ser miembro del proyecto en cuestion.
+    
+Esta vista permite al usuario crear una solicitud de cambio para alterar un item bloqueado de una fase en curso.
+    
+La vista recibe los siguientes parametros:
+
+    - request: contiene informacion sobre la sesion actual.
+    - id_proyecto: el identificador del proyecto.
+    - id_fase: el identificador de la fase.
+    - id_linea_base: el identificador de la linea base.
+    - id_item: el identificador del item.
+    
+La vista retorna lo siguiente:
+
+    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="desarrollo.views.crear_tipo_item_view">
 <tt class="descclassname">desarrollo.views.</tt><tt class="descname">crear_tipo_item_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#crear_tipo_item_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.crear_tipo_item_view" title="Permalink to this definition">¶</a></dt>
 <dd><div class="highlight-python"><div class="highlight"><pre>La vista para crear un tipo de item. Para acceder a esta vista se deben cumplir los siguientes
@@ -455,7 +474,6 @@ La vista retorna lo siguiente:
 requisitos:
 
     - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Desaprobar item.
     - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
 
 Esta vista permite al usuario desaprobar un item, es decir, cambiar el estado del item a En construccion. Para lograr esto, el
@@ -493,36 +511,6 @@ La vista recibe los siguientes parametros:
 La vista retorna lo siguiente:
 
         - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="desarrollo.views.eliminar_fase_view">
-<tt class="descclassname">desarrollo.views.</tt><tt class="descname">eliminar_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#eliminar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.eliminar_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-python"><div class="highlight"><pre>La vista para eliminar una fase. Para acceder a esta vista se deben cumplir los siguientes
-requisitos:
-
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Eliminar fase.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    
-Esta vista permite al usuario eliminar una fase previamente seleccionada, para lograr esto, 
-se verifica si la fase cumple las siguientes condiciones:
-
-    - La fase debe estar en estado Inactivo.
-    
-La vista recibe los siguientes parametros:
-
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    - id_proyecto: el identificador del proyecto.
-    
-La vista retorna lo siguiente:
-
-    - render_to_response: si la operacion resulto ser de tipo GET o no se cumplieron las condiciones para eliminar, devuelve el contexto, 
-    generado en la vista, al template correspondiente.
-    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template del listado de fases. 
 </pre></div>
 </div>
 </dd></dl>
@@ -905,34 +893,6 @@ La vista retorna lo siguiente:
 </dd></dl>
 
 <dl class="function">
-<dt id="desarrollo.views.modificar_fase_view">
-<tt class="descclassname">desarrollo.views.</tt><tt class="descname">modificar_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#modificar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.modificar_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-python"><div class="highlight"><pre>La vista para modificar una fase. Para acceder a esta vista se deben cumplir los siguientes
-requisitos:
-
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Modificar fase.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    
-Esta vista permite al usuario modificar una fase previamente seleccionada, para lograr esto, 
-se verifica la validez de cada campo modificado y luego se guarda la fase de acuerdo a los campos ingresados.
-
-La vista recibe los siguientes parametros:
-
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    - id_proyecto: el identificador del proyecto.
-    
-La vista retorna lo siguiente:
-
-    - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
-    generado en la vista, al template correspondiente.
-    - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
 <dt id="desarrollo.views.modificar_item_view">
 <tt class="descclassname">desarrollo.views.</tt><tt class="descname">modificar_item_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#modificar_item_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.modificar_item_view" title="Permalink to this definition">¶</a></dt>
 <dd><div class="highlight-python"><div class="highlight"><pre>La vista para modificar un item. Para acceder a esta vista se deben cumplir los siguientes
@@ -986,34 +946,6 @@ La vista retorna lo siguiente:
     - render_to_response: si la operacion resulto ser de tipo GET o el formulario resulto invalido, devuelve el contexto, 
     generado en la vista, al template correspondiente.
     - HttpResponseRedirect: si la operacion resulto valida, se redirige al template de visualizacion de la fase modificada. 
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="desarrollo.views.quebrar_linea_base_view">
-<tt class="descclassname">desarrollo.views.</tt><tt class="descname">quebrar_linea_base_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#quebrar_linea_base_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.quebrar_linea_base_view" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-python"><div class="highlight"><pre>La vista para quebrar una linea base. Para acceder a esta vista se deben cumplir los siguientes
-requisitos:
-
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Quebrar linea base.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    
-Esta vista permite al usuario quebrar una linea base si es que cumple con las siguientes condiciones:
-
-    - Debe estar en estado Cerrado.
-    
-La vista recibe los siguientes parametros:
-
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    - id_linea_base: el identificador de la linea base
-    - id_proyecto: el identificador del proyecto.
-    
-La vista retorna lo siguiente:
-
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
 </pre></div>
 </div>
 </dd></dl>
@@ -1149,26 +1081,20 @@ La vista retorna lo siguiente:
 </dd></dl>
 
 <dl class="function">
-<dt id="desarrollo.views.subir_fase_view">
-<tt class="descclassname">desarrollo.views.</tt><tt class="descname">subir_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#subir_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.subir_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-python"><div class="highlight"><pre>La vista para subir de secuencia una fase. Para acceder a esta vista se deben cumplir los siguientes
-requisitos:
+<dt id="desarrollo.views.solicitudes_proyecto_view">
+<tt class="descclassname">desarrollo.views.</tt><tt class="descname">solicitudes_proyecto_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#solicitudes_proyecto_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.solicitudes_proyecto_view" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>La vista de gestion de solicitudes de cambio. Se deben cumplir los siguientes requisitos para utilizar esta vista:
 
     - El usuario debe estar logueado.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+    - El usuario debe poseer el permiso: Gestionar solicitudes.
+    - Debe ser miembro del proyecto en cuestion.
     
-Esta vista permite al usuario subir el numero de secuencia de una fase y por medio de ello bajar el numero de secuencia de la
-fase ubicada inmediatamente arriba de la fase seleccionada para subir. Sin embargo, para poder subir el numero de secuencia
-se deben cumplir los siguientes requisitos:
+Esta vista permite al usuario (miembro del comite de cambios) gestionar todas las solicitudes de cambio del proyecto. 
+Se cargan todas las solicitudes del proyecto y se envian como un listado al template de gestion de solicitudes
     
-    - La fase a subir no debe estar en estado Finalizado y ninguno de sus items debe ser sucesor o antecesor de los items 
-    de sus dos fases vecinas (la inmediatamente superior e inferior).
-    - La fase de arriba debe cumplir los mismos requisitos que la fase a subir.
-
 La vista recibe los siguientes parametros:
 
     - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
     - id_proyecto: el identificador del proyecto.
     
 La vista retorna lo siguiente:
@@ -1254,31 +1180,6 @@ La vista recibe los siguientes parametros:
 La vista retorna lo siguiente:
 
     - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="desarrollo.views.visualizar_fase_view">
-<tt class="descclassname">desarrollo.views.</tt><tt class="descname">visualizar_fase_view</tt><big>(</big><em>request</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/views.html#visualizar_fase_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.views.visualizar_fase_view" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-python"><div class="highlight"><pre>La vista para visualizar una fase. Para acceder a esta vista se deben cumplir los siguientes
-requisitos:
-
-    - El usuario debe estar logueado.
-    - El usuario debe poseer el permiso: Visualizar fase.
-    - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
-    
-Esta vista permite al usuario visualizar todos los campos guardados de una fase previamente seleccionada.
-
-La vista recibe los siguientes parametros:
-
-    - request: contiene informacion sobre la sesion actual.
-    - id_fase: el identificador de la fase.
-    - id_proyecto: el identificador del proyecto.
-    
-La vista retorna lo siguiente:
-
-    - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
 </pre></div>
 </div>
 </dd></dl>

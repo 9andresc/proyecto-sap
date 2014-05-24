@@ -52,95 +52,26 @@
         <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;input_formats&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;</span><span class="si">%d</span><span class="s">/%m/%Y&quot;</span><span class="p">,))</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CustomDateField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CrearFaseForm"><a class="viewcode-back" href="../../moduloDES/forms.html#desarrollo.forms.CrearFaseForm">[docs]</a><span class="k">class</span> <span class="nc">CrearFaseForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+<div class="viewcode-block" id="CrearSolicitudForm"><a class="viewcode-back" href="../../moduloDES/forms.html#desarrollo.forms.CrearSolicitudForm">[docs]</a><span class="k">class</span> <span class="nc">CrearSolicitudForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ::</span>
 <span class="sd">    </span>
-<span class="sd">        Formulario utilizado para la creacion de una fase.</span>
+<span class="sd">        Formulario utilizado para la creacion de una solicitud.</span>
 <span class="sd">        </span>
-<span class="sd">        Se especifican todos los atributos de la fase que deben </span>
-<span class="sd">        ingresarse estableciendo como required=True, si es indispensable</span>
-<span class="sd">        completar ese atributo para la creacion de la fase o caso </span>
-<span class="sd">        contrario required=False.</span>
-<span class="sd">        </span>
-<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
-<span class="sd">        en el sistema.</span>
-<span class="sd">        </span>
-<span class="sd">        Se utiliza una funciona para verificar que la fecha ingresada sea valida.</span>
+<span class="sd">        Se verifica que la descripcion de la solicitud no sobrepase el </span>
+<span class="sd">        limite establecido por el modelo. Ademas, se verifica si se ha </span>
+<span class="sd">        ingresado alguna descripcion puesto que es obligatoria.</span>
 <span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de fase&quot;</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;max_length&#39;</span><span class="p">:</span> <span class="s">&#39;Longitud maxima 50&#39;</span><span class="p">})</span>
-    <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;max_length&#39;</span><span class="p">:</span><span class="s">&#39;Longitud maxima 300&#39;</span><span class="p">})</span>
-    <span class="n">duracion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Duracion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">fecha_inicio</span> <span class="o">=</span> <span class="n">CustomDateField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">clean_nombre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">nombre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;nombre&#39;</span><span class="p">]</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">fase</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">Fase</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">nombre</span>
-        <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;Nombre de fase ya registrado.&#39;</span><span class="p">)</span>
-        
-    <span class="k">def</span> <span class="nf">clean_duracion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">duracion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;duracion&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">duracion</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">duracion</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;El valor de la duracion (en semanas) debe ser mayor a cero.&#39;</span><span class="p">)</span>
-        
-    <span class="k">def</span> <span class="nf">clean_fecha_inicio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">fecha_inicio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;fecha_inicio&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">fecha_inicio</span> <span class="o">&gt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
-            <span class="k">return</span> <span class="n">fecha_inicio</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;La fecha introducida es anterior a la fecha actual. Ingrese una fecha posterior.&#39;</span><span class="p">)</span>
-        </div>
-<div class="viewcode-block" id="ModificarFaseForm"><a class="viewcode-back" href="../../moduloDES/forms.html#desarrollo.forms.ModificarFaseForm">[docs]</a><span class="k">class</span> <span class="nc">ModificarFaseForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ::</span>
-<span class="sd">    </span>
-<span class="sd">        Formulario utilizado para la modificacion de una fase.</span>
-<span class="sd">        </span>
-<span class="sd">        Se especifican todos los atributos de la fase que deben </span>
-<span class="sd">        ingresarse sin posibilidad de dejar el campo vacio estableciendo</span>
-<span class="sd">        como required=True, caso contrarios required=False.</span>
-<span class="sd">        </span>
-<span class="sd">        Se utilizan funciones para verificar que el nombre no este registrado</span>
-<span class="sd">        en el sistema.</span>
-<span class="sd">        </span>
-<span class="sd">        Se utiliza una funciona para verificar que la fecha ingresada sea valida.</span>
-<span class="sd">        </span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">nombre</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Nombre de fase&quot;</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;max_length&#39;</span><span class="p">:</span> <span class="s">&#39;Longitud maxima 50&#39;</span><span class="p">})</span>
-    <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;max_length&#39;</span><span class="p">:</span><span class="s">&#39;Longitud maxima 300&#39;</span><span class="p">})</span>
-    <span class="n">duracion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Duracion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">fecha_inicio</span> <span class="o">=</span> <span class="n">CustomDateField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">clean_nombre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
-        <span class="n">nombre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;nombre&#39;</span><span class="p">]</span> 
-        <span class="k">try</span><span class="p">:</span> 
-            <span class="n">fase</span> <span class="o">=</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">)</span> 
-            <span class="k">if</span> <span class="n">fase</span><span class="o">.</span><span class="n">nombre</span> <span class="o">==</span> <span class="n">nombre</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">nombre</span> 
-        <span class="k">except</span> <span class="n">Fase</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">nombre</span> 
-        <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;Nombre de fase ya registrado.&#39;</span><span class="p">)</span>
-        
-    <span class="k">def</span> <span class="nf">clean_duracion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">duracion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;duracion&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">duracion</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">duracion</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;El valor de la duracion (en semanas) debe ser mayor a cero.&#39;</span><span class="p">)</span>
-        
-    <span class="k">def</span> <span class="nf">clean_fecha_inicio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">nombre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;nombre&#39;</span><span class="p">]</span>
-        <span class="n">fecha_inicio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">&#39;fecha_inicio&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">fecha_inicio</span> <span class="o">&gt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="ow">or</span> <span class="n">fecha_inicio</span> <span class="o">==</span> <span class="n">Fase</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nombre</span><span class="o">=</span><span class="n">nombre</span><span class="p">)</span><span class="o">.</span><span class="n">fecha_inicio</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">fecha_inicio</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s">&#39;La fecha introducida es distinta a la fecha original o anterior a la fecha actual. Ingrese una fecha valida.&#39;</span><span class="p">)</span>
+    <span class="n">ACCIONES</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;Modificar item&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">&quot;Eliminar item&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">&quot;Agregar relacion a item&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s">&quot;Quitar relacion de item&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s">&quot;Reversionar item&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">descripcion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Descripcion&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;max_length&#39;</span><span class="p">:</span><span class="s">&#39;Longitud maxima 250&#39;</span><span class="p">})</span>
+    <span class="n">accion</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Accion&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ACCIONES</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="CrearTipoItemForm"><a class="viewcode-back" href="../../moduloDES/forms.html#desarrollo.forms.CrearTipoItemForm">[docs]</a><span class="k">class</span> <span class="nc">CrearTipoItemForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>

@@ -57,24 +57,6 @@
 </pre></div>
 </div>
 <span class="target" id="module-desarrollo.models"></span><dl class="class">
-<dt id="desarrollo.models.Fase">
-<em class="property">class </em><tt class="descclassname">desarrollo.models.</tt><tt class="descname">Fase</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/models.html#Fase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.models.Fase" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de una Fase, los atributos 
-que posee una fase son:
-
-nombre: nombre de la fase.
-descripcion: una breve descripcion sobre la fase.
-estado: estado actual de la fase.
-num_secuencia: define el orden numerico de la fase dentro de un proyecto.
-fecha de inicio: fecha de inicio de la fase.
-duracion: duracion de la fase.
-roles: roles asociados a la fase.
-proyecto: el proyecto al cual pertenece la fase.
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="class">
 <dt id="desarrollo.models.Item">
 <em class="property">class </em><tt class="descclassname">desarrollo.models.</tt><tt class="descname">Item</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/models.html#Item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.models.Item" title="Permalink to this definition">¶</a></dt>
 <dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de cada instancia de un Item, los atributos 
@@ -107,6 +89,26 @@ descripcion: una breve descripcion sobre la linea base.
 num_secuencia: define el orden numerico de la linea base dentro de una fase.
 estado: estado actual de la linea base
 fase: fase en la que esta la linea base.
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="desarrollo.models.SolicitudCambio">
+<em class="property">class </em><tt class="descclassname">desarrollo.models.</tt><tt class="descname">SolicitudCambio</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/desarrollo/models.html#SolicitudCambio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#desarrollo.models.SolicitudCambio" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-python"><div class="highlight"><pre>Clase que describe la estructura de una solicitud de cambio, en ella se establecen los siguientes campos:
+
+usuario: indica cual usuario genero la solicitud de cambio.
+proyecto: indica en cual proyecto sera aplicada esta solicitud de cambio.
+fase: indica en cual fase sera aplicada esta solicitud de cambio.
+linea_base: indica cual linea base sera quebrada mediante esta solicitud de cambio.
+item: indica cual item sera afectado por la aprobacion de esta solicitud de cambio.
+accion: es una cadena que indica que accion se desea realizar sobre el item.
+descripcion: establece el porque del cambio sobre el item.
+aprobada: es un valor booleano que indicara si la solicitud es aprobada o no.
+votantes: es una cadena que indica los identificadores de los usuarios que ya votaron la solicitud de cambio.
+votos: indica el valor de los votos.
+fecha_emision: indica en cual fecha y hora fue emitida la solicitud de cambio.
 </pre></div>
 </div>
 </dd></dl>

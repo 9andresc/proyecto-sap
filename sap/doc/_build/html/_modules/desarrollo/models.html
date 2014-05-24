@@ -45,45 +45,9 @@
   <h1>Source code for desarrollo.models</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
 <span class="kn">from</span> <span class="nn">django.core.validators</span> <span class="kn">import</span> <span class="n">MaxLengthValidator</span>
-<span class="kn">from</span> <span class="nn">administracion.models</span> <span class="kn">import</span> <span class="n">Rol</span><span class="p">,</span> <span class="n">Proyecto</span><span class="p">,</span> <span class="n">TipoAtributo</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">administracion.models</span> <span class="kn">import</span> <span class="n">Rol</span><span class="p">,</span> <span class="n">Proyecto</span><span class="p">,</span> <span class="n">TipoAtributo</span><span class="p">,</span> <span class="n">Fase</span>
 
-<span class="n">ESTADOS_FASE</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">&quot;Inactivo&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;En curso&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">&quot;Finalizada&quot;</span><span class="p">),</span>
-<span class="p">)</span>
-
-<div class="viewcode-block" id="Fase"><a class="viewcode-back" href="../../moduloDES/models.html#desarrollo.models.Fase">[docs]</a><span class="k">class</span> <span class="nc">Fase</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ::</span>
-<span class="sd">    </span>
-<span class="sd">        Clase que describe la estructura de cada instancia de una Fase, los atributos </span>
-<span class="sd">        que posee una fase son:</span>
-
-<span class="sd">        nombre: nombre de la fase.</span>
-<span class="sd">        descripcion: una breve descripcion sobre la fase.</span>
-<span class="sd">        estado: estado actual de la fase.</span>
-<span class="sd">        num_secuencia: define el orden numerico de la fase dentro de un proyecto.</span>
-<span class="sd">        fecha de inicio: fecha de inicio de la fase.</span>
-<span class="sd">        duracion: duracion de la fase.</span>
-<span class="sd">        roles: roles asociados a la fase.</span>
-<span class="sd">        proyecto: el proyecto al cual pertenece la fase.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">nombre</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    <span class="n">descripcion</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">estado</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ESTADOS_FASE</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">num_secuencia</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">fecha_inicio</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">duracion</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">roles</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Rol</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Proyecto</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&quot;fases&quot;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    
-    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nombre</span>
-    
-    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;num_secuencia&quot;</span><span class="p">]</span>
-</div>
 <div class="viewcode-block" id="TipoItem"><a class="viewcode-back" href="../../moduloDES/models.html#desarrollo.models.TipoItem">[docs]</a><span class="k">class</span> <span class="nc">TipoItem</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ::</span>
@@ -123,7 +87,7 @@
     <span class="n">ESTADOS_LINEA_BASE</span> <span class="o">=</span> <span class="p">(</span>
         <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">&quot;Abierta&quot;</span><span class="p">),</span>
         <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;Cerrada&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">&quot;En revision&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">&quot;Quebrada&quot;</span><span class="p">),</span>
     <span class="p">)</span>
 
     <span class="n">nombre</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -136,7 +100,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nombre</span>
     
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;num_secuencia&quot;</span><span class="p">]</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;nombre&quot;</span><span class="p">]</span>
         </div>
 <div class="viewcode-block" id="Item"><a class="viewcode-back" href="../../moduloDES/models.html#desarrollo.models.Item">[docs]</a><span class="k">class</span> <span class="nc">Item</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -223,6 +187,7 @@
     <span class="n">estado</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">Item</span><span class="o">.</span><span class="n">ESTADOS_ITEM</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">fase</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Fase</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">tipo_item</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">TipoItem</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">linea_base</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">LineaBase</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s">&quot;versiones_item&quot;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">adan</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">cain</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">padre</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -252,7 +217,40 @@
     <span class="n">valor_logico</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">NullBooleanField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">valor_texto_grande</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">MaxLengthValidator</span><span class="p">(</span><span class="mi">250</span><span class="p">)],</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">valor_texto_chico</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">valor_archivo</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">FileField</span><span class="p">(</span><span class="n">upload_to</span><span class="o">=</span><span class="s">&#39;archivos/items/&#39;</span><span class="p">)</span></div>
+    <span class="n">valor_archivo</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">FileField</span><span class="p">(</span><span class="n">upload_to</span><span class="o">=</span><span class="s">&#39;archivos/items/&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="SolicitudCambio"><a class="viewcode-back" href="../../moduloDES/models.html#desarrollo.models.SolicitudCambio">[docs]</a><span class="k">class</span> <span class="nc">SolicitudCambio</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        Clase que describe la estructura de una solicitud de cambio, en ella se establecen los siguientes campos:</span>
+
+<span class="sd">        usuario: indica cual usuario genero la solicitud de cambio.</span>
+<span class="sd">        proyecto: indica en cual proyecto sera aplicada esta solicitud de cambio.</span>
+<span class="sd">        fase: indica en cual fase sera aplicada esta solicitud de cambio.</span>
+<span class="sd">        linea_base: indica cual linea base sera quebrada mediante esta solicitud de cambio.</span>
+<span class="sd">        item: indica cual item sera afectado por la aprobacion de esta solicitud de cambio.</span>
+<span class="sd">        accion: es una cadena que indica que accion se desea realizar sobre el item.</span>
+<span class="sd">        descripcion: establece el porque del cambio sobre el item.</span>
+<span class="sd">        aprobada: es un valor booleano que indicara si la solicitud es aprobada o no.</span>
+<span class="sd">        votantes: es una cadena que indica los identificadores de los usuarios que ya votaron la solicitud de cambio.</span>
+<span class="sd">        votos: indica el valor de los votos.</span>
+<span class="sd">        fecha_emision: indica en cual fecha y hora fue emitida la solicitud de cambio.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">usuario</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">proyecto</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Proyecto</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">fase</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Fase</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">linea_base</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">LineaBase</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Item</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">accion</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">descripcion</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">aprobada</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">NullBooleanField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">votantes</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">votos</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">fecha_emision</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;usuario&quot;</span><span class="p">]</span></div>
 </pre></div>
 
       </div>
