@@ -1706,7 +1706,6 @@ def desaprobar_item_view(request, id_proyecto, id_fase, id_item):
         requisitos:
     
             - El usuario debe estar logueado.
-            - El usuario debe poseer el permiso: Desaprobar item.
             - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
     
         Esta vista permite al usuario desaprobar un item, es decir, cambiar el estado del item a En construccion. Para lograr esto, el
@@ -1750,6 +1749,66 @@ def desaprobar_item_view(request, id_proyecto, id_fase, id_item):
         
     ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'estado_valido':estado_valido, 'item_valido':item_valido}
     return render_to_response('item/desaprobar_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@miembro_proyecto()
+@rol_fase_requerido()
+def calcular_impacto_view(request, id_proyecto, id_fase, id_item):
+    """
+    ::
+    
+        La vista para calcular impacto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            - El usuario debe poseer un rol valido para la fase.
+    
+        Esta vista permite al usuario visualizar el calculo de impacto monetario y temporal de un item.
+        La vista recibe los siguientes parametros:
+    
+            - request: contiene informacion sobre la sesion actual.
+            - id_item: el identificador del item.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    item = fase.items.get(id=id_item)
+    relaciones = item.relaciones.all()
+    costo_monetario = item.costo_monetario
+    costo_temporal = item.costo_temporal
+    posee_hijos = False
+    
+    if relaciones:
+        posee_hijos = True
+        
+    if posee_hijos:
+        resultados = []
+                            
+        # Obtenemos todos los hijos/sucesores del item.
+        while 1:
+            nuevas_relaciones = []
+            if len(relaciones) == 0:
+                break
+            for r in relaciones:
+                resultados.append(r)
+                if r.relaciones.count() > 0:
+                    for h in r.relaciones.all():
+                        nuevas_relaciones.append(h)
+                relaciones = nuevas_relaciones
+                            
+        # Por cada hijo/sucesor se suma su costo monetario y temporal para los calculos a retornar en el template.
+        for r in resultados:
+            costo_monetario = costo_monetario + r.costo_monetario
+            costo_temporal = costo_temporal + r.costo_temporal
+            
+    ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'posee_hijos':posee_hijos, 'costo_monetario':costo_monetario, 'costo_temporal':costo_temporal}
+    return render_to_response('item/calculo_impacto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 @miembro_proyecto()

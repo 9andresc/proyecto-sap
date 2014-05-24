@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}SAP - Cálculo de impacto del item {{ item.nombre }}{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Cálculo de impacto del item <i>{{ item.nombre }}</i></small></h1>
+		
+		{% if posee_hijos %}
+			<div class="input-group">
+				<span class="input-group-addon"><b>Costo monetario</b></span>
+				<input type="text" class="form-control" id="costo_monetario" name="costo_monetario" value="{{ costo_monetario }}" disabled="disabled">
+       	 	</div>
+	      	<br>
+	      	<div class="input-group">
+				<span class="input-group-addon"><b>Costo temporal</b></span>
+				<input type="text" class="form-control" id="costo_temporal" name="costo_temporal" value="{{ costo_temporal }}" disabled="disabled">
+       	 	</div>
+		{% else %}
+			<div class="panel panel-info">
+				<div class="panel-heading">
+			       	<h3 class="panel-title">Info</h3>
+			    </div>
+			    <div class="panel-body">
+			        El item <i>{{ item.nombre }}</i> no posee hijos/sucesores.
+			   	</div>
+	      	</div>
+	      	<br>
+	      	<div class="input-group">
+				<span class="input-group-addon"><b>Costo monetario</b></span>
+				<input type="text" class="form-control" id="costo_monetario" name="costo_monetario" value="{{ costo_monetario }}" disabled="disabled">
+       	 	</div>
+	      	<br>
+	      	<div class="input-group">
+				<span class="input-group-addon"><b>Costo temporal</b></span>
+				<input type="text" class="form-control" id="costo_temporal" name="costo_temporal" value="{{ costo_temporal }}" disabled="disabled">
+       	 	</div>
+		{% endif %}
+	</div>
+	<br><br>
+	<a class="btn btn-default" href="/desarrollo/fases/items/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de items de la fase {{ fase.nombre }}</a>
+</div>
+{% endblock %}
