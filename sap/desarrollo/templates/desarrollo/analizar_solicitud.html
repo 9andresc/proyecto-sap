@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}SAP - Analizar solicitud del usuario {{ solicitud.usuario.username }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<h1><small>Analizar solicitud del usuario <i>{{ solicitud.usuario.username }}</i></small></h1>
+	
+	<div class="input-group">
+		<span class="input-group-addon"><b>Solicitante</b></span>
+		<input type="text" class="form-control" id="solicitante" name="solicitante" value="{{ solicitud.usuario.username }}" disabled="disabled">
+   	</div>
+    <br>
+    <div class="input-group">
+		<span class="input-group-addon"><b>Fecha y hora de emisión</b></span>
+		<input type="text" class="form-control" id="fecha_emision" name="fecha_emision" value="{{ solicitud.fecha_emision|date:'d-m-Y H:i' }}" disabled="disabled">
+   	</div>
+    <br>
+	<div class="input-group">
+		<span class="input-group-addon"><b>Proyecto</b></span>
+		<input type="text" class="form-control" id="proyecto" name="proyecto" value="{{ solicitud.proyecto.nombre }}" disabled="disabled">
+   	</div>
+    <br>
+    <div class="input-group">
+		<span class="input-group-addon"><b>Fase</b></span>
+		<input type="text" class="form-control" id="fase" name="fase" value="{{ solicitud.fase.nombre }}" disabled="disabled">
+    </div>
+    <br>
+    <div class="input-group">
+		<span class="input-group-addon"><b>Línea base</b></span>
+		<input type="text" class="form-control" id="linea_base" name="linea_base" value="{{ solicitud.linea_base.nombre }}" disabled="disabled">
+    </div>
+    <br>
+    <div class="input-group">
+		<span class="input-group-addon"><b>Item</b></span>
+		<input type="text" class="form-control" id="item" name="item" value="{{ solicitud.item.nombre }}" disabled="disabled">
+    </div>
+    <br>
+	<div class="input-group">
+		<span class="input-group-addon"><b>Acción</b></span>
+		<input type="text" class="form-control" id="accion" name="accion" value="{{ solicitud.accion }}" disabled="disabled">
+    </div>
+    <br>
+    <div class="input-group">
+		<span class="input-group-addon"><b>Descripción</b></span>
+		<textarea rows="3" class="form-control" id="descripcion" name="descripcion" disabled="disabled">{{ solicitud.descripcion }}</textarea>
+    </div>
+    <br>
+    <div class="input-group">
+		<span class="input-group-addon"><b>Votos</b></span>
+		<input type="text" class="form-control" id="votos" name="votos" value="{{ solicitud.votos }}" disabled="disabled">
+    </div>
+    <br>
+	<div class="input-group">
+		<span class="input-group-addon"><b>Cantidad de votos</b></span>
+		<input type="text" class="form-control" id="cant_votos" name="cant_votos" value="{{ cant_votos }}" disabled="disabled">
+    </div>
+    <br>
+    <div class="input-group">
+		<span class="input-group-addon"><b>Aprobada</b></span>
+		{% if solicitud.aprobada == False %}
+			<input type="text" class="form-control" id="aprobada" name="aprobada" value="No" disabled="disabled">
+		{% elif solicitud.aprobada == True %}
+			<input type="text" class="form-control" id="aprobada" name="aprobada" value="Si" disabled="disabled">
+		{% else %}
+			<input type="text" class="form-control" id="aprobada" name="aprobada" value="En tramite" disabled="disabled">
+		{% endif %}
+    </div>
+	{% if solicitud.aprobada == None %}
+		<br>
+		<form class="form-horizontal" method="POST">
+			{% csrf_token %}
+			<div class="input-group">
+				<span class="input-group-addon"><b>Voto</b></span>
+				<select class="form-control" id="eleccion" name="eleccion">
+					<option value="0">Negativo</option>
+					<option value="1">Positivo</option>
+				</select>
+	        </div>
+	        <br>
+	        <button type="submit" class="btn btn-success">Votar</button>
+		</form>
+	{% else %}
+		<br>
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title">Info</h3>
+			</div>
+			<div class="panel-body">
+				La solicitud ya ha sido concretada. Ya no puedes votar.
+			</div>
+	   	</div>
+	{% endif %}
+	<br>
+	<a class="btn btn-default" href="/desarrollo/solicitudes/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de solicitudes del proyecto {{ proyecto.nombre }}</a>
+</div>
+{% endblock %}

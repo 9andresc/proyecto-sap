@@ -2,17 +2,17 @@
 {% block title %}SAP - Costo total del proyecto {{ proyecto.nombre }}{% endblock %}
 {% block content %}
 <div class="jumbotron">
-	<h1><small>Costo total</small></h1>
+	<h1><small>Costo total del proyecto <i>{{ proyecto.nombre }}</i></small></h1>
 	{% if fases_valido %}
 		{% if items_valido %}
-			<h3>El costo total del proyecto {{ proyecto.nombre }} es: {{ costo_total }}</h3>
+			<h3>El costo total del proyecto <i>{{ proyecto.nombre }}</i> es: <b>{{ costo_total }}</b></h3>
 		{% else %}
 			<div class="panel panel-warning">
       			<div class="panel-heading">
         			<h3 class="panel-title">¡Alto ahí!</h3>
       			</div>
       			<div class="panel-body">
-        			El proyecto {{ proyecto.nombre }} no posee items en sus fases. Por lo tanto, no se puede calcular su costo total.
+        			El proyecto <i>{{ proyecto.nombre }}</i> no posee items en sus fases. Por lo tanto, no se puede calcular su costo total.
       			</div>
       		</div>
       	{% endif %}
@@ -22,7 +22,7 @@
         		<h3 class="panel-title">¡Alto ahí!</h3>
       		</div>
       		<div class="panel-body">
-        		El proyecto {{ proyecto.nombre }} no posee ninguna fase. Por lo tanto, no se puede calcular su costo total.
+        		El proyecto <i>{{ proyecto.nombre }}</i> no posee ninguna fase. Por lo tanto, no se puede calcular su costo total.
       		</div>
       	</div>
     {% endif %}

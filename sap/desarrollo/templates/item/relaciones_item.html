@@ -1,13 +1,15 @@
 {% extends "base.html" %}
-{% block title %}SAP - Hijos/Sucesores del item {{ item.nombre }}{% endblock %}
+{% block title %}SAP - Relaciones del item {{ item.nombre }}{% endblock %}
 {% block content %}
 
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1><small>Hijos/Sucesores del item <i>{{ item.nombre }}</i></small></h1>
+		<h1><small>Relaciones del item <i>{{ item.nombre }}</i></small></h1>
 		<a class="btn btn-default" href="/desarrollo/fases/items/agregar_relacion/item/{{ item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a>
 		<br><br>
-		{% if relaciones %}
+		
+		<h2><small>Padre/Antecesor</small></h2>
+		{% if padre %}
 			<div class="table-responsive"> 
         		<table class="table table-hover">
             		<thead>
@@ -19,25 +21,71 @@
                     	</tr>
                     </thead>
                 	<tbody>
-                		{% for r in relaciones %}
+                		<tr>
+                    		<td>{{ padre.id }}</td>
+                    		<td>{{ padre.nombre }}</td>
+                    		<td>
+                    		{% ifequal item.tipo_relacion 0 %}
+								Padre
+							{% endifequal %}
+							{% ifequal item.tipo_relacion 1 %}
+								Antecesor
+							{% endifequal %}
+                    		<td><a class="btn btn-default" href="/desarrollo/fases/items/quitar_relacion/2/{{ item.id }}/item/{{ padre.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-minus"></span> Quitar</a></td>
+                		</tr>
+                	</tbody>
+        		</table>
+    		</div>
+		{% else %}
+			<div class="panel panel-info">
+				<div class="panel-heading">
+			       	<h3 class="panel-title">Info</h3>
+			    </div>
+			    <div class="panel-body">
+			        El item <i>{{ item.nombre }}</i> no posee ni padre ni antecesor.
+			   	</div>
+	      	</div>
+		{% endif %}
+		
+		<h2><small>Hijos/Sucesores</small></h2>
+		{% if hijos %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre del item</th>
+                    		<th>Tipo de relación</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for h in hijos %}
                 			<tr>
-                    			<td>{{ r.id }}</td>
-                    			<td>{{ r.nombre }}</td>
+                    			<td>{{ h.id }}</td>
+                    			<td>{{ h.nombre }}</td>
                     			<td>
-                    			{% ifequal r.tipo_relacion 0 %}
-									Hijo-Padre
+                    			{% ifequal h.tipo_relacion 0 %}
+									Hijo
 								{% endifequal %}
-								{% ifequal r.tipo_relacion 1 %}
-									Sucesor-Antecesor
+								{% ifequal h.tipo_relacion 1 %}
+									Sucesor
 								{% endifequal %}
-                    			<td><a class="btn btn-default" href="/desarrollo/fases/items/quitar_relacion/{{ r.id }}/item/{{ item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-minus"></span> Quitar</a></td>
+                    			<td><a class="btn btn-default" href="/desarrollo/fases/items/quitar_relacion/0/{{ h.id }}/item/{{ item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-minus"></span> Quitar</a></td>
                 			</tr>
                 		{% endfor %}
                 	</tbody>
         		</table>
     		</div>
     	{% else %}
-    		<h3>No posee hijos/sucesores.</h3>
+    		<div class="panel panel-info">
+				<div class="panel-heading">
+			       	<h3 class="panel-title">Info</h3>
+			    </div>
+			    <div class="panel-body">
+			        El item <i>{{ item.nombre }}</i> no posee ni hijos ni sucesores.
+			   	</div>
+	      	</div>
     	{% endif %}
 	</div>
 	<br>

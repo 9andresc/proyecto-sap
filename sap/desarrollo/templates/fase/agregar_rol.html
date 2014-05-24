@@ -4,8 +4,8 @@
 
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if proyecto %}
-		<h1><small>Roles del proyecto {{ proyecto.nombre }}</small></h1>
+		{% if estado_valido %}
+			<h1><small>Roles del proyecto <i>{{ proyecto.nombre }}</i></small></h1>
 			{% if roles %}
 				<div class="table-responsive"> 
         			<table class="table table-hover">
@@ -28,11 +28,17 @@
         			</table>
     			</div>
     		{% else %}
-    			<h3>El proyecto {{ proyecto.nombre }} no posee roles.</h3>
+    			<h3>El proyecto <i>{{ proyecto.nombre }}</i> no posee roles.</h3>
     		{% endif %}
     	{% else %}
-    		<h1><small>Roles</small></h1>
-    		<h3>La fase {{ fase.nombre }} no está vinculada a ningún proyecto. Por lo tanto, no se pueden agregar roles.</h3>
+    		<div class="panel panel-warning">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Alto ahí!</h3>
+      			</div>
+      			<div class="panel-body">
+        			No se pueden agregar más roles a la fase <i>{{ fase.nombre }}</i>, puesto que, esta fase se encuentra en estado <b>En curso</b> o <b>Finalizado</b>.
+      			</div>
+      		</div>
     	{% endif %}
 	</div>
 	<br>

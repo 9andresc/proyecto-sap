@@ -2,7 +2,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from functools import wraps
 from administracion.models import Rol, Permiso, Proyecto
-from desarrollo.models import Fase, SolicitudCambio
+from desarrollo.models import SolicitudCambio
 
 def permiso_requerido(permiso):
     def decorator(func):
@@ -21,51 +21,61 @@ def permiso_requerido(permiso):
 def miembro_proyecto():
     def decorator(func):
         def inner_decorator(request, id_proyecto, *args, **kwargs):
+            es_miembro = False
             proyecto = Proyecto.objects.get(id=id_proyecto)
             for u in proyecto.usuarios.all():
                 if request.user.id == u.id:
-                    return func(request, id_proyecto, *args, **kwargs)
-            no_es_miembro = True
-            ctx = {'no_es_miembro':no_es_miembro}
+                    es_miembro = True
+                    break
+            if es_miembro:
+                return func(request, id_proyecto, *args, **kwargs)
+            for u in proyecto.comite_de_cambios.all():
+                if request.user.id == u.id:
+                    es_miembro = True
+                    break
+            if es_miembro:
+                return func(request, id_proyecto, *args, **kwargs)
+            ctx = {'es_miembro':es_miembro}
             return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
         return wraps(func)(inner_decorator)
     return decorator
 
-def fase_miembro_proyecto():
+def miembro_comite():
     def decorator(func):
-        def inner_decorator(request, id_fase, *args, **kwargs):
-            fase = Fase.objects.get(id=id_fase)
-            if fase.proyecto or fase.proyecto != None:
-                proyecto = Proyecto.objects.get(id=fase.proyecto.id)
-                for u in proyecto.usuarios.all():
-                    if request.user.id == u.id:
-                        return func(request, id_fase, *args, **kwargs)
-            fase_no_es_miembro = True
-            ctx = {'fase_no_es_miembro':fase_no_es_miembro}
-            return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
-        return wraps(func)(inner_decorator)
-    return decorator
-
-def fase_finalizada():
-    def decorator(func):
-        def inner_decorator(request, id_fase, *args, **kwargs):
-            fase = Fase.objects.get(id=id_fase)
-            if fase.estado != 2:
-                return func(request, id_fase, *args, **kwargs)
-            fase_finalizada = True
-            ctx = {'fase_finalizada':fase_finalizada}
+        def inner_decorator(request, id_proyecto, *args, **kwargs):
+            es_miembro_comite = False
+            proyecto = Proyecto.objects.get(id=id_proyecto)
+            for u in proyecto.comite_de_cambios.all():
+                if request.user.id == u.id:
+                    es_miembro_comite = True
+                    break
+            if es_miembro_comite:
+                return func(request, id_proyecto, *args, **kwargs)
+            ctx = {'es_miembro_comite':es_miembro_comite}
             return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
         return wraps(func)(inner_decorator)
     return decorator
 
 def solicitud_requerida(accion):
     def decorator(func):
-        def inner_decorator(request, id_fase, id_item, *args, **kwargs):
-            fase = Fase.objects.get(id=id_fase)
+        def inner_decorator(request, id_proyecto, id_fase, id_item, *args, **kwargs):
+            proyecto = Proyecto.objects.get(id=id_proyecto)
+            fase = proyecto.fases.get(id=id_fase)
             item = fase.items.get(id=id_item)
+            solicitudes_item = SolicitudCambio.objects.filter(item=item)
+            
+            if item.estado != 2 and solicitudes_item:
+                try:
+                    solicitud = solicitudes_item.get(accion=accion)
+                except SolicitudCambio.DoesNotExist:
+                    estado_bloqueado = False
+                    existe_solicitud = False
+                    ctx = {'item':item, 'existe_solicitud':existe_solicitud, 'estado_bloqueado':estado_bloqueado}
+                    return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
+            
             # Verificamos si el item a modificar esta en un estado distinto a Bloqueado.
             if item.estado != 2:
-                return func(request, id_fase, id_item, *args, **kwargs)
+                return func(request, id_proyecto, id_fase, id_item, *args, **kwargs)
             # Si no esta Bloqueado, se buscaran solicitudes del item a modificar.
             else:
                 proyecto = fase.proyecto
@@ -87,7 +97,7 @@ def solicitud_requerida(accion):
                         # Verificamos si la solicitud encontrada esta aprobada o no
                         if solicitud.aprobada == True:
                             # Si esta aprobada, entonces, se continua con la accion a realizar sobre el item.
-                            return func(request, id_fase, id_item, *args, **kwargs)
+                            return func(request, id_proyecto, id_fase, id_item, *args, **kwargs)
                         # Si no esta aprobada, entonces, se envia una notificacion al usuario de que su solicitud se encuentra en tramite.
                         elif solicitud.aprobada == False:
                             solicitud_aprobada = False

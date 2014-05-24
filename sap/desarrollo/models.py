@@ -1,44 +1,7 @@
 from django.db import models
 from django.core.validators import MaxLengthValidator
 from django.contrib.auth.models import User
-from administracion.models import Rol, Proyecto, TipoAtributo
-
-ESTADOS_FASE = (
-    (0, "Inactivo"),
-    (1, "En curso"),
-    (2, "Finalizada"),
-)
-
-class Fase(models.Model):
-    """
-    ::
-    
-        Clase que describe la estructura de cada instancia de una Fase, los atributos 
-        que posee una fase son:
-
-        nombre: nombre de la fase.
-        descripcion: una breve descripcion sobre la fase.
-        estado: estado actual de la fase.
-        num_secuencia: define el orden numerico de la fase dentro de un proyecto.
-        fecha de inicio: fecha de inicio de la fase.
-        duracion: duracion de la fase.
-        roles: roles asociados a la fase.
-        proyecto: el proyecto al cual pertenece la fase.
-    """
-    nombre = models.CharField(max_length=50, blank=False)
-    descripcion = models.TextField(blank=True)
-    estado = models.IntegerField(max_length=1, choices=ESTADOS_FASE, default=0)
-    num_secuencia = models.IntegerField(max_length=30, null=True)
-    fecha_inicio = models.DateField(null=True)
-    duracion = models.IntegerField(null=True, blank=True, default=0)
-    roles = models.ManyToManyField(Rol, null=True, blank=True)
-    proyecto = models.ForeignKey(Proyecto, related_name="fases", null=True, blank=True)
-    
-    def __unicode__(self):
-        return self.nombre
-    
-    class Meta:
-        ordering = ["num_secuencia"]
+from administracion.models import Rol, Proyecto, TipoAtributo, Fase
 
 class TipoItem(models.Model):
     """
@@ -79,7 +42,7 @@ class LineaBase(models.Model):
     ESTADOS_LINEA_BASE = (
         (0, "Abierta"),
         (1, "Cerrada"),
-        (2, "En revision"),
+        (2, "Quebrada"),
     )
 
     nombre = models.CharField(max_length=50, blank=False)
@@ -92,7 +55,7 @@ class LineaBase(models.Model):
         return self.nombre
     
     class Meta:
-        ordering = ["num_secuencia"]
+        ordering = ["nombre"]
         
 class Item(models.Model):
     """
@@ -179,6 +142,7 @@ class VersionItem(models.Model):
     estado = models.IntegerField(max_length=30, choices=Item.ESTADOS_ITEM, default=0)
     fase = models.ForeignKey(Fase, null=True, blank=True)
     tipo_item = models.ForeignKey(TipoItem, null=True, blank=True)
+    linea_base = models.ForeignKey(LineaBase, related_name="versiones_item", null=True, blank=True)
     adan = models.IntegerField(null=True)
     cain = models.IntegerField(null=True)
     padre = models.IntegerField(null=True)
@@ -226,6 +190,7 @@ class SolicitudCambio(models.Model):
         aprobada: es un valor booleano que indicara si la solicitud es aprobada o no.
         votantes: es una cadena que indica los identificadores de los usuarios que ya votaron la solicitud de cambio.
         votos: indica el valor de los votos.
+        fecha_emision: indica en cual fecha y hora fue emitida la solicitud de cambio.
     """
     usuario = models.ForeignKey(User, null=False)
     proyecto = models.ForeignKey(Proyecto, null=False)
@@ -237,6 +202,7 @@ class SolicitudCambio(models.Model):
     aprobada = models.NullBooleanField(null=True)
     votantes = models.CharField(max_length=50, null=False)
     votos = models.IntegerField(null=True, blank=True)
+    fecha_emision = models.DateTimeField(null=True)
     
     class Meta:
         ordering = ["usuario"]

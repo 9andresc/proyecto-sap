@@ -511,10 +511,24 @@
     }
 },
 {
-    "pk": 75, 
+    "pk": 76, 
     "model": "administracion.permiso", 
     "fields": {
-        "nombre": "Quebrar linea base"
+        "nombre": "Gestionar solicitudes"
+    }
+},
+{
+    "pk": 77, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Analizar solicitud"
+    }
+},
+{
+    "pk": 78, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear solicitud"
     }
 }
 ]

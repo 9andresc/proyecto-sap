@@ -5,7 +5,6 @@
 <div class="jumbotron">
 	<div class="bs-example">
 		<h1><small>Solicitudes del proyecto <i>{{ proyecto.nombre }}</i></small></h1>
-		<br>
 		{% if solicitudes %}
 			<br>
 			<div class="table-responsive"> 
@@ -26,7 +25,7 @@
                     			<td>{{ s.item.nombre }}</td>
                     			<td>{{ s.fase.nombre }}</td>
                     			<td>{{ s.accion }}</td>
-                    			<td><a class="btn btn-default" href="#"><span class="glyphicon glyphicon-eye-open"></span> Analizar</a></td>
+                    			<td><a class="btn btn-default" href="/desarrollo/solicitudes/analizar_solicitud/{{ s.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-eye-open"></span> Analizar</a></td>
                 			</tr>
                 		{% endfor %}
                 	</tbody>

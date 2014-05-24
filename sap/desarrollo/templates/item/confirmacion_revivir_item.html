@@ -3,8 +3,8 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if padre_valido %}
-			{% if fase_valida %}
+		{% if posee_padre %}
+			{% if estado_valido %}
 				{% if existe_padre %}
 					<div class="panel panel-success">
 		      			<div class="panel-heading">
@@ -21,7 +21,7 @@
 		        			<h3 class="panel-title">Info</h3>
 		      			</div>
 		      			<div class="panel-body">
-		        			El item <i>{{ item_revivido.nombre }}</i> fue revivido exitosamente. No obstante, el padre del item revivido ya no existe. Por lo 
+		        			El item <i>{{ item_revivido.nombre }}</i> fue revivido exitosamente. No obstante, el padre/antecesor del item revivido ya no existe. Por lo 
 		        			tanto, no posee padre ni antecesor.
 		      			</div>
 		      		</div>
@@ -32,12 +32,12 @@
 	        			<h3 class="panel-title">¡Alto ahí!</h3>
 	      			</div>
 	      			<div class="panel-body">
-	        			El item <i>{{ item.nombre }}</i> no pudo ser revivido debido a que la fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>Finalizado</b>.
+	        			El item <i>{{ item.nombre }}</i> no puede ser revivido, puesto que, la fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>Finalizado</b>.
 	      			</div>
 	      		</div>
 	      	{% endif %}
 		{% else %}
-			{% if fase_valida %}
+			{% if estado_valido %}
 				<div class="panel panel-success">
 	      			<div class="panel-heading">
 	        			<h3 class="panel-title">¡Éxito!</h3>
@@ -53,7 +53,7 @@
 	        			<h3 class="panel-title">¡Alto ahí!</h3>
 	      			</div>
 	      			<div class="panel-body">
-	        			El item <i>{{ item.nombre }}</i> no pudo ser revivido debido a que la fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>Finalizado</b>.
+	        			El item <i>{{ item.nombre }}</i> no puede ser revivido, puesto que, la fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>Finalizado</b>.
 	      			</div>
 	      		</div>
 	      	{% endif %}

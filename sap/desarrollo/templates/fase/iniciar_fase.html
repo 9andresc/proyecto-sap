@@ -9,7 +9,7 @@
         			<h3 class="panel-title">¡Éxito!</h3>
       			</div>
       			<div class="panel-body">
-        			La fase {{ fase.nombre }} cumple con todos los requisitos. Ya está en marcha.
+        			La fase <i>{{ fase.nombre }}</i> cumple con todos los requisitos. Ya está en marcha.
       			</div>
       		</div>
 		{% else %}
@@ -18,11 +18,11 @@
         			<h3 class="panel-title">¡Alto ahí!</h3>
       			</div>
       			<div class="panel-body">
-        			La fase {{ fase.nombre }} no cumple con todos los requisitos para iniciar. A continuación, un listado de todos los requisitos no cumplidos:
+        			La fase <i>{{ fase.nombre }}</i> no cumple con todos los requisitos para iniciar. A continuación, un listado de todos los requisitos no cumplidos:
 					<br><br>
 					<ul class="list-styled">
 						{% if estado_valido == False %}
-						<li>La fase debe estar en estado Inactivo.</li>
+						<li>La fase debe estar en estado <b>Inactivo</b>.</li>
 						{% endif %}
         				{% if tipos_item_valido == False %}
         				<li>La fase debe poseer al menos un tipo de item.</li>
@@ -36,6 +36,6 @@
 		{% endif %}
 	</div>
 	<br>
-	<a class="btn btn-default" href="{% url 'vista_fases_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
+	<a class="btn btn-default" href="{% url 'vista_desarrollo_fases_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
 </div>
 {% endblock %}

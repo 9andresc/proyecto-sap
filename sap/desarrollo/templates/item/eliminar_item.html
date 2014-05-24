@@ -85,7 +85,7 @@
 			<br>
 		{% endfor %}
 		
-		{% if valido %}
+		{% if estado_valido and item_valido and posee_relaciones == False %}
 			<form action="" method="POST">
 				{% csrf_token %}
 				<div class="panel panel-danger">
@@ -106,7 +106,19 @@
         			<h3 class="panel-title">¡Alto ahí!</h3>
       			</div>
       			<div class="panel-body">
-        			El item {{ item.nombre }} se encuentra en uno de los siguientes estados: Aprobado, Bloqueado o Eliminado. Por lo tanto, no puede ser eliminado.
+        			El item <i>{{ item.nombre }}</i> no puede ser eliminado porque:
+        			<br><br>
+        			<ul>
+        				{% if estado_valido == False %}
+        					<li>La fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>Finalizado</b>.</li>
+        				{% endif %}
+        				{% if item_valido == False %}
+        					<li>El item <i>{{ item.nombre }}</i> se encuentra en estado <b>Aprobado</b> o <b>Bloqueado</b>.</li>
+        				{% endif %}
+        				{% if posee_relaciones %}
+        					<li>El item <i>{{ item.nombre }}</i> posee al menos un hijo/sucesor. Debe borrar las relaciones con sus hijos/sucesores para eliminarlo.</li>
+        				{% endif %}
+        			</ul>
       			</div>
       		</div>
       		<br>

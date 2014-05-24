@@ -3,13 +3,13 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if valido %}
+		{% if estado_valido and existe_tipo_atributo == False %}
 			<div class="panel panel-success">
       			<div class="panel-heading">
         			<h3 class="panel-title">¡Éxito!</h3>
       			</div>
       			<div class="panel-body">
-        			El tipo de atributo {{ tipo_atributo.nombre }} fue asignado al tipo de item {{ tipo_item.nombre }}.
+        			El tipo de atributo <i>{{ tipo_atributo.nombre }}</i> fue asignado al tipo de item <i>{{ tipo_item.nombre }}</i>.
       			</div>
       		</div>
 		{% else %}
@@ -18,7 +18,16 @@
         			<h3 class="panel-title">¡Alto ahí!</h3>
       			</div>
       			<div class="panel-body">
-        			El tipo de atributo {{ tipo_atributo.nombre }} no puede ser asignado porque ya está asignado al tipo de item {{ tipo_item.nombre }}.
+        			El tipo de atributo <i>{{ tipo_atributo.nombre }}</i> no puede ser asignado al conjunto de tipos de atributo porque:
+        			<br><br>
+        			<ul>
+        				{% if estado_valido == False %}
+        					<li>La fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>En curso</b> o <b>Finalizado</b>.</li>
+        				{% endif %}
+        				{% if existe_tipo_atributo %}
+        					<li>El tipo de atributo <i>{{ tipo_atributo.nombre }}</i> ya está asignado al conjunto de tipos de atributo del tipo de item <i>{{ tipo_item.nombre }}</i>.</li>
+        				{% endif %}
+        			</ul>
       			</div>
       		</div>
 		{% endif %}

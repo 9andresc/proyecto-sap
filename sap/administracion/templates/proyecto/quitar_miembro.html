@@ -2,17 +2,28 @@
 {% block title %}SAP - Confirmación{% endblock %}
 {% block content %}
 <div class="jumbotron">
-	<div class="bs-example">
-		<div class="panel panel-success">
+	{% if estado_valido %}
+		<div class="bs-example">
+			<div class="panel panel-success">
+	      		<div class="panel-heading">
+	        		<h3 class="panel-title">¡Éxito!</h3>
+	      		</div>
+	      		<div class="panel-body">
+	        		El usuario <i>{{ usuario.username }}</i> fue desasignado del comité de cambios del proyecto <i>{{ proyecto.nombre }}</i>.
+	      		</div>
+	      	</div>
+		</div>
+	{% else %}
+		<div class="panel panel-warning">
       		<div class="panel-heading">
-        		<h3 class="panel-title">¡Éxito!</h3>
+        		<h3 class="panel-title">¡Alto ahí!</h3>
       		</div>
       		<div class="panel-body">
-        		El usuario {{ usuario.username }} fue desasignado del comité de cambios del proyecto {{ proyecto.nombre }}.
+        		El usuario <i>{{ usuario.username }}</i> no puede ser desasignado del comité de cambios, puesto que, el proyecto <i>{{ proyecto.nombre }}</i> se encuentra en estado <b>En curso</b> o <b>Finalizado</b>.
       		</div>
       	</div>
-		<br>
-		<a class="btn btn-default" href="{% url 'vista_comite_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de comité del proyecto {{ proyecto.nombre }}</a>
-	</div>
+	{% endif %}
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_comite_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de comité del proyecto {{ proyecto.nombre }}</a>
 </div>
 {% endblock %}

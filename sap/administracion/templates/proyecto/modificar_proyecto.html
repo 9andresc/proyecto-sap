@@ -2,90 +2,101 @@
 {% block title %}SAP - Modificar proyecto{{ proyecto.nombre }}{% endblock %}
 {% block content %}
 <div class="jumbotron">
-	<h1><small>Modificar proyecto</small></h1>
-	<form class="form-horizontal" method="POST">
-		{% csrf_token %}
-		
-		<!-- Manejo de errores del formulario -->
-    	{% if form.errors %}
-    	<div class="panel panel-warning">
-    		<div class="panel-heading">
-    			<h3 class="panel-title">¡Alto ahí!</h3>
-            </div>
-            <div class="panel-body">
-            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
-            	<br>
-            	<ul class="list-unstyled">
-            		{% for field in form %}
-            			{% if field.errors %} 
-  							<li><b>{{ field.label }}</b></li>
-  								{% for error in field.errors %}
-    								<ul>
-      									<li>{{ error }}</li>
-    								</ul>
-    							{% endfor %}
-  							</li>
-  						{% endif %}
-  					{% endfor %}
-				</ul>
-            </div>
-        </div>
-        {% endif %}
-        <!-- Fin del manejo de errores del formulario -->
-        
-        <p class="text-muted">Campos obligatorios (*)</p>
-		<div class="input-group">
-			<span class="input-group-addon"><b>* Nombre</b></span>
-			<input type="text" class="form-control" id="nombre" name="nombre" value="{{ proyecto.nombre }}">
-        </div>
-        <br>
-        <div class="input-group">
-			<span class="input-group-addon"><b>* Lider</b></span>
-			<select class="form-control" id="usuario_lider" name="usuario_lider">
-				{% for u in usuarios %}
-					{% ifequal proyecto.usuario_lider.id u.id %}
-						<option value="{{ u.id }}" selected="selected">{{ u.username }}</option>
-					{% else %}
-						<option value="{{ u.id }}">{{ u.username }}</option>
-					{% endifequal %}
-				{% endfor %}
-			</select>
-        </div>
-        <br>
-        <div class="input-group">
-			<span class="input-group-addon"><b>Descripción</b></span>
-			<textarea rows="3" class="form-control" id="descripcion" name="descripcion">{{ proyecto.descripcion }}</textarea>
-        </div>
-        <br>
-        
-        <div class="input-group">
-			<span class="input-group-addon"><b>* Fecha de inicio</b></span>
-            <input type="text" class="form-control" value="{{ proyecto.fecha_inicio|date:"d/m/Y" }}" id="fecha" name="fecha_inicio">
-        </div>
-        <script type="text/javascript">
-            // When the document is ready
-            $(document).ready(function () {
-                
-                $('#fecha').datepicker({
-                    format: "dd/mm/yyyy"
-                });  
-            
-            });
-        </script>
-        <br>
-        
-        <div class="input-group">
-			<span class="input-group-addon"><b>* Presupuesto</b></span>
-			<input type="text" class="form-control" id="presupuesto" name="presupuesto" value="{{ proyecto.presupuesto|stringformat:"f" }}">
-        </div>
-        <br>
-        <div class="input-group">
-			<span class="input-group-addon"><b>* Complejidad</b></span>
-			<input type="text" class="form-control" id="complejidad" name="complejidad" value="{{ proyecto.complejidad }}">
-        </div>
-		<br>
-        <button type="submit" class="btn btn-success">Modificar</button>
-	</form>
+	{% if estado_valido %}
+		<h1><small>Modificar proyecto</small></h1>
+		<form class="form-horizontal" method="POST">
+			{% csrf_token %}
+			
+			<!-- Manejo de errores del formulario -->
+	    	{% if form.errors %}
+	    	<div class="panel panel-warning">
+	    		<div class="panel-heading">
+	    			<h3 class="panel-title">¡Alto ahí!</h3>
+	            </div>
+	            <div class="panel-body">
+	            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
+	            	<br>
+	            	<ul class="list-unstyled">
+	            		{% for field in form %}
+	            			{% if field.errors %} 
+	  							<li><b>{{ field.label }}</b></li>
+	  								{% for error in field.errors %}
+	    								<ul>
+	      									<li>{{ error }}</li>
+	    								</ul>
+	    							{% endfor %}
+	  							</li>
+	  						{% endif %}
+	  					{% endfor %}
+					</ul>
+	            </div>
+	        </div>
+	        {% endif %}
+	        <!-- Fin del manejo de errores del formulario -->
+	        
+	        <p class="text-muted">Campos obligatorios (*)</p>
+			<div class="input-group">
+				<span class="input-group-addon"><b>* Nombre</b></span>
+				<input type="text" class="form-control" id="nombre" name="nombre" value="{{ proyecto.nombre }}">
+	        </div>
+	        <br>
+	        <div class="input-group">
+				<span class="input-group-addon"><b>* Lider</b></span>
+				<select class="form-control" id="usuario_lider" name="usuario_lider">
+					{% for u in usuarios %}
+						{% ifequal proyecto.usuario_lider.id u.id %}
+							<option value="{{ u.id }}" selected="selected">{{ u.username }}</option>
+						{% else %}
+							<option value="{{ u.id }}">{{ u.username }}</option>
+						{% endifequal %}
+					{% endfor %}
+				</select>
+	        </div>
+	        <br>
+	        <div class="input-group">
+				<span class="input-group-addon"><b>Descripción</b></span>
+				<textarea rows="3" class="form-control" id="descripcion" name="descripcion">{{ proyecto.descripcion }}</textarea>
+	        </div>
+	        <br>
+	        
+	        <div class="input-group">
+				<span class="input-group-addon"><b>* Fecha de inicio</b></span>
+	            <input type="text" class="form-control" value="{{ proyecto.fecha_inicio|date:"d/m/Y" }}" id="fecha" name="fecha_inicio">
+	        </div>
+	        <script type="text/javascript">
+	            // When the document is ready
+	            $(document).ready(function () {
+	                
+	                $('#fecha').datepicker({
+	                    format: "dd/mm/yyyy"
+	                });  
+	            
+	            });
+	        </script>
+	        <br>
+	        
+	        <div class="input-group">
+				<span class="input-group-addon"><b>* Presupuesto</b></span>
+				<input type="text" class="form-control" id="presupuesto" name="presupuesto" value="{{ proyecto.presupuesto|stringformat:"f" }}">
+	        </div>
+	        <br>
+	        <div class="input-group">
+				<span class="input-group-addon"><b>* Complejidad</b></span>
+				<input type="text" class="form-control" id="complejidad" name="complejidad" value="{{ proyecto.complejidad }}">
+	        </div>
+			<br>
+	        <button type="submit" class="btn btn-success">Modificar</button>
+		</form>
+	{% else %}
+		<div class="panel panel-warning">
+      		<div class="panel-heading">
+        		<h3 class="panel-title">¡Alto ahí!</h3>
+      		</div>
+      		<div class="panel-body">
+        		El proyecto <i>{{ proyecto.nombre }}</i> no puede ser modificado, puesto que, se encuentra en estado <b>En curso</b> o <b>Finalizado</b>.
+      		</div>
+      	</div>
+	{% endif %}
 	<br>
 	<a class="btn btn-default" href="{% url 'vista_gestion_proyectos' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de proyectos</a>
 </div>

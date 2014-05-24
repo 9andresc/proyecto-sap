@@ -4,31 +4,42 @@
 
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1><small>Tipos de atributo</small></h1>
-		{% if tipos_atributo %}
-			<div class="table-responsive"> 
-        		<table class="table table-hover">
-            		<thead>
-                		<tr>
-                    		<th>ID</th>
-                    		<th>Nombre del tipo de atributo</th>
-                    		<th></th>
-                    	</tr>
-                    </thead>
-                	<tbody>
-                		{% for t in tipos_atributo %}
-                			<tr>
-                    			<td>{{ t.id }}</td>
-                    			<td>{{ t.nombre }}</td>
-                    			<td><a class="btn btn-default" href="/desarrollo/fases/tipos_item/confirmacion_agregar_tipo_atributo/{{ t.id }}/tipo_item/{{ tipo_item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
-                			</tr>
-                		{% endfor %}
-                	</tbody>
-        		</table>
-    		</div>
-    	{% else %}
-    		<h3>No existen tipos de atributo.</h3>
-    	{% endif %}
+		{% if estado_valido %}
+			<h1><small>Tipos de atributo</small></h1>
+			{% if tipos_atributo %}
+				<div class="table-responsive"> 
+	        		<table class="table table-hover">
+	            		<thead>
+	                		<tr>
+	                    		<th>ID</th>
+	                    		<th>Nombre del tipo de atributo</th>
+	                    		<th></th>
+	                    	</tr>
+	                    </thead>
+	                	<tbody>
+	                		{% for t in tipos_atributo %}
+	                			<tr>
+	                    			<td>{{ t.id }}</td>
+	                    			<td>{{ t.nombre }}</td>
+	                    			<td><a class="btn btn-default" href="/desarrollo/fases/tipos_item/confirmacion_agregar_tipo_atributo/{{ t.id }}/tipo_item/{{ tipo_item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
+	                			</tr>
+	                		{% endfor %}
+	                	</tbody>
+	        		</table>
+	    		</div>
+	    	{% else %}
+	    		<h3>No existen tipos de atributo.</h3>
+	    	{% endif %}
+	    {% else %}
+	    	<div class="panel panel-warning">
+	      		<div class="panel-heading">
+	        		<h3 class="panel-title">¡Alto ahí!</h3>
+	      		</div>
+	      		<div class="panel-body">
+	        		No se pueden agregar más tipos de atributo al tipo de item <i>{{ tipo_item.nombre }}</i>, puesto que, la fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>En curso</b> o <b>Finalizado</b>.
+	      		</div>
+	      	</div>
+	    {% endif %}
 	</div>
 	<br>
 	<a class="btn btn-default" href="/desarrollo/fases/tipos_item/tipos_atributo/tipo_item/{{ tipo_item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de tipos de atributo del tipo de item {{ tipo_item.nombre }}</a>

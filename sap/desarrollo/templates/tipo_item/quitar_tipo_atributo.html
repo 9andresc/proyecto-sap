@@ -3,13 +3,13 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if valido %}
+		{% if estado_valido and posee_atributos == False %}
 			<div class="panel panel-success">
 	      		<div class="panel-heading">
 	        		<h3 class="panel-title">¡Éxito!</h3>
 	      		</div>
 	      		<div class="panel-body">
-	        		El tipo de atributo {{ tipo_atributo.nombre }} fue desasignado del tipo de item {{ tipo_item.nombre }}.
+	        		El tipo de atributo <i>{{ tipo_atributo.nombre }}</i> fue desasignado del tipo de item <i>{{ tipo_item.nombre }}</i>.
 	      		</div>
 	      	</div>
 	    {% else %}
@@ -18,7 +18,16 @@
         			<h3 class="panel-title">¡Alto ahí!</h3>
       			</div>
       			<div class="panel-body">
-        			El tipo de atributo {{ tipo_atributo.nombre }} no puede ser quitado porque ya está ligado a un item.
+        			El tipo de atributo <i>{{ tipo_atributo.nombre }}</i> no puede ser quitado del conjunto de tipos de atributo porque:
+        			<br><br>
+        			<ul>
+        				{% if estado_valido == False %}
+        					<li>La fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>En curso</b> o <b>Finalizado</b>.</li>
+        				{% endif %}
+        				{% if posee_atributos %}
+        					<li>El tipo de atributo <i>{{ tipo_atributo.nombre }}</i> ya se encuentra ligado a uno o varios items.</li>
+        				{% endif %}
+        			</ul>
       			</div>
       		</div>
 	    {% endif %}

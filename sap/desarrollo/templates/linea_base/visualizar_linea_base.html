@@ -13,13 +13,13 @@
         <div class="input-group">
 			<span class="input-group-addon"><b>Estado</b></span>
 			{% ifequal linea_base.estado 0 %}
-				<input type="text" class="form-control" id="estado" name="estado" value="Abierta" disabled="disabled">
+				<input type="text" class="form-control" id="estado" name="estado" value="Abierto" disabled="disabled">
 			{% endifequal %}
 			{% ifequal linea_base.estado 1 %}
-				<input type="text" class="form-control" id="estado" name="estado" value="Cerrada" disabled="disabled">
+				<input type="text" class="form-control" id="estado" name="estado" value="Cerrado" disabled="disabled">
 			{% endifequal %}
 			{% ifequal linea_base.estado 2 %}
-				<input type="text" class="form-control" id="estado" name="estado" value="En Revisión" disabled="disabled">
+				<input type="text" class="form-control" id="estado" name="estado" value="Quebrado" disabled="disabled">
 			{% endifequal %}
 		</div>
         <br>

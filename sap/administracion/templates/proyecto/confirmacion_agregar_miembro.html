@@ -3,13 +3,13 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if valido %}
+		{% if estado_valido and existe_miembro == False %}
 			<div class="panel panel-success">
       			<div class="panel-heading">
         			<h3 class="panel-title">¡Éxito!</h3>
       			</div>
       			<div class="panel-body">
-        			El usuario {{ usuario.username }} fue asignado al comité de cambios del proyecto {{ proyecto.nombre }}.
+        			El usuario <i>{{ usuario.username }}</i> fue asignado al comité de cambios del proyecto <i>{{ proyecto.nombre }}</i>.
       			</div>
       		</div>
 		{% else %}
@@ -18,7 +18,16 @@
         			<h3 class="panel-title">¡Alto ahí!</h3>
       			</div>
       			<div class="panel-body">
-        			El usuario {{ usuario.username }} no puede ser asignado al porque ya está asignado al comité de cambios del proyecto {{ proyecto.nombre }}.
+        			El usuario <i>{{ usuario.username }}</i> no puede ser asignado al comité de cambios porque:
+        			<br><br>
+        			<ul>
+        				{% if estado_valido == False %}
+        					<li>El proyecto <i>{{ proyecto.nombre }}</i> se encuentra en estado <b>En curso</b> o <b>Finalizado</b>.</li>
+        				{% endif %}
+        				{% if existe_miembro %}
+        					<li>El usuario <i>{{ usuario.username }}</i> ya está asignado al comité de cambios.</li>
+        				{% endif %}
+        			</ul>
       			</div>
       		</div>
 		{% endif %}

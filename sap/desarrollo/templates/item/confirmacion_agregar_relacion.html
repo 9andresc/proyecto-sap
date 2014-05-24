@@ -3,16 +3,40 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		<div class="panel panel-success">
-      		<div class="panel-heading">
-        		<h3 class="panel-title">¡Éxito!</h3>
-      		</div>
-      		<div class="panel-body">
-        		El item <i>{{ relacion.nombre }}</i> fue asignado al conjunto de relaciones del item <i>{{ item.nombre }}</i>.
-      		</div>
-      	</div>
+		{% if estado_valido and item_valido %}
+			<div class="panel panel-success">
+	      		<div class="panel-heading">
+	        		<h3 class="panel-title">¡Éxito!</h3>
+	      		</div>
+	      		<div class="panel-body">
+	        		El item <i>{{ relacion.nombre }}</i> fue asignado al conjunto de hijos/sucesores del item <i>{{ item.nombre }}</i>.
+	      		</div>
+	      	</div>
+      	{% else %}
+      		<div class="panel panel-warning">
+	      		<div class="panel-heading">
+	        		<h3 class="panel-title">¡Alto ahí!</h3>
+	      		</div>
+	      		<div class="panel-body">
+	        		No se pueden agregar más relaciones al item {% if eleccion == "0" or eleccion == "1" %}<i>{{ item.nombre }}</i>{% else %}<i>{{ relacion.nombre }}</i>{% endif %} porque:
+	        		<br><br>
+	        		<ul>
+	        			{% if item_valido == False %}
+	        				<li>El item {% if eleccion == "0" or eleccion == "1" %}<i>{{ item.nombre }}</i>{% else %}<i>{{ relacion.nombre }}</i>{% endif %} se encuentra en estado <b>Aprobado</b> o <b>Bloqueado</b>.</li>
+	        			{% endif %}
+	        			{% if estado_valido == False %}
+	        				<li>La fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>Finalizado</b>.</li>
+	        			{% endif %}
+	        		</ul>
+	      		</div>
+	      	</div>
+      	{% endif %}
 	</div>
 	<br>
-	<a class="btn btn-default" href="/desarrollo/fases/items/relaciones/item/{{ item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de relaciones del item {{ item.nombre }}</a>
+	{% if eleccion == "0" or eleccion == "1" %}
+		<a class="btn btn-default" href="/desarrollo/fases/items/relaciones/item/{{ item.id }}/fase/{{ item.fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de relaciones del item {{ item.nombre }}</a>
+	{% else %}
+		<a class="btn btn-default" href="/desarrollo/fases/items/relaciones/item/{{ relacion.id }}/fase/{{ relacion.fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de relaciones del item {{ relacion.nombre }}</a>
+	{% endif %}
 </div>
 {% endblock %}

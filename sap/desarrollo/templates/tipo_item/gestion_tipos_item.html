@@ -4,7 +4,7 @@
 
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1><small>Gestión de tipos de item de la fase {{ fase.nombre }}</small></h1>
+		<h1><small>Gestión de tipos de item de la fase <i>{{ fase.nombre }}</i></small></h1>
 		{% if crear_tipo_de_item %}
 		<a class="btn btn-default" href="/desarrollo/fases/tipos_item/crear_tipo_item/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-record"></span> Crear</a>
 		<br>
@@ -57,6 +57,6 @@
     	{% endif %}
 	</div>
 	<br>
-	<a class="btn btn-default" href="{% url 'vista_fases_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
+	<a class="btn btn-default" href="{% url 'vista_desarrollo_fases_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
 </div>
 {% endblock %}

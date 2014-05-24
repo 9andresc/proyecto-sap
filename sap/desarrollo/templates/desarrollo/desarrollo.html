@@ -4,7 +4,7 @@
 
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1><small>Módulo de Desarrollo - Proyectos en curso</small></h1>
+		<h1><small>Proyectos en curso</small></h1>
 		<br>
 		{% if proyectos %}
 			<div class="table-responsive"> 
@@ -43,7 +43,7 @@
       								<a class="btn btn-default" data-toggle="dropdown" href="#"><font color="BLACK">Opciones</font> <span class="glyphicon glyphicon-align-justify black"></span></a>
       								<ul class="dropdown-menu">
         								{% if gestionar_fases %}
-        									<li><a href="{% url 'vista_fases_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-cog"></span> Fases</a></li>
+        									<li><a href="{% url 'vista_desarrollo_fases_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-cog"></span> Fases</a></li>
         								{% endif %}
         								{% if calcular_costo %}
         									<li><a href="{% url 'vista_calcular_costo' id_proyecto=p.id %}"><span class="glyphicon glyphicon-usd"></span> Costo total</a></li>

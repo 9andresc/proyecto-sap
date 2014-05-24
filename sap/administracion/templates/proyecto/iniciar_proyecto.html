@@ -22,19 +22,22 @@
 					<br><br>
 					<ul class="list-styled">
 						{% if estado_valido == False %}
-						<li>El proyecto debe estar en estado Inactivo.</li>
+							<li>El proyecto debe estar en estado <b>Inactivo</b>.</li>
 						{% endif %}
 						{% if lider_valido == False %}
-						<li>El proyecto debe poseer un lider.</li>
+							<li>El proyecto debe poseer un lider.</li>
 						{% endif %}
 						{% if comite_valido == False %}
-        				<li>El proyecto debe poseer al menos un miembro en su comite de cambios.</li>
+        					<li>El proyecto debe poseer un número impar de miembros en el comité de cambios.</li>
         				{% endif %}
         				{% if fases_valido == False %}
-        				<li>El proyecto debe poseer al menos una fase.</li>
+        					<li>El proyecto debe poseer al menos una fase.</li>
         				{% endif %}
         				{% if roles_valido == False %}
-        				<li>El proyecto debe poseer al menos un rol.</li>
+        					<li>El proyecto debe poseer al menos un rol.</li>
+        				{% endif %}
+        				{% if fases_valido == False %}
+        					<li>El proyecto debe poseer al menos una fase.</li>
         				{% endif %}
 					</ul>        			
       			</div>

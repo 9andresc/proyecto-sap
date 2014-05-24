@@ -25,7 +25,7 @@
 							<li>La fase debe estar en estado <b>En curso</b>.</li>
 						{% endif %}
 						{% if finalizado_valido == False %}
-							<li>La fase posee al menos un item que no se encuentra en estado Bloqueado.</li>
+							<li>Todos los items de la fase deben estar en estado <b>Bloqueado</b>.</li>
 						{% endif %}
 						{% if secuencia_valida == False %}
 							<li>La fase anterior debe estar en estado <b>Finalizado</b>.</li>
@@ -36,6 +36,6 @@
 		{% endif %}
 	</div>
 	<br>
-	<a class="btn btn-default" href="{% url 'vista_fases_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
+	<a class="btn btn-default" href="{% url 'vista_desarrollo_fases_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de fases del proyecto {{ proyecto.nombre }}</a>
 </div>
 {% endblock %}

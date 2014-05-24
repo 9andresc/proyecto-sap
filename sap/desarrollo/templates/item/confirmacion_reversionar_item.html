@@ -3,9 +3,9 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if estado_valido and fase_valida %}
-			{% if existe_padre %}
-				{% if estado_padre_valido %}
+		{% if estado_valido and fase_valida and posee_hijos == False %}
+			{% if posee_padre %}
+				{% if existe_padre and estado_padre_valido %}
 					<div class="panel panel-success">
 			      		<div class="panel-heading">
 			        		<h3 class="panel-title">¡Éxito!</h3>
@@ -21,7 +21,16 @@
 			      		</div>
 			      		<div class="panel-body">
 			        		La versión <b>{{ item_reversion.version }}</b> reemplazo correctamente a la versión anterior del item <i>{{ item.nombre }}</i>. No obstante, 
-			        		el padre del item reversionado no está en estado <b>Aprobado</b> ni <b>Bloqueado</b>. Por ello, el item reversionado a quedado sin padre/antecesor.
+			        		el item <i>{{ item.nombre }}</i> se ha quedado sin padre/antecesor porque:
+			        		<br><br>
+			        		<ul>
+			        			{% if estado_padre_valido == False %}
+			        				<li>El antecesor del item <i>{{ item_reversion.nombre }}</i> no se encuentra en estado <b>Bloqueado</b>.</li>
+			        			{% endif %}
+			        			{% if existe_padre == False %}
+			        				<li>El padre/antecesor del item <i>{{ item_reversion.nombre }}</i> no existe actualmente.</li>
+			        			{% endif %}
+			        		</ul>
 			      		</div>
 	      			</div>
 	      		{% endif %}
@@ -46,10 +55,13 @@
 	        		<br><br>
 	        		<ul>
 	        			{% if estado_valido == False %}
-	        				<li>El estado del item <i>{{ item.nombre }}</i> es <b>Aprobado</b> o <b>Bloqueado</b>. Por tanto, no se puede reversionar este item.</li>
+	        				<li>El item <i>{{ item.nombre }}</i> se encuentra en estado <b>Aprobado</b> o <b>Bloqueado</b>.</li>
 	        			{% endif %}
 	        			{% if fase_valida == False %}
-	        				<li>El estado de la fase <i>{{ fase.nombre }}</i> es <b>Finalizado</b>. Por tanto, no se pueden reversionar los items de esta fase.</li>
+	        				<li>La fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>Finalizado</b>.</li>
+	        			{% endif %}
+	        			{% if posee_hijos %}
+	        				<li>El item <i>{{ item.nombre }}</i> posee al menos un hijo/sucesor. Debe borrar las relaciones con sus hijos/sucesores para reversionarlo.</li>
 	        			{% endif %}
 	        		</ul>
 	      		</div>

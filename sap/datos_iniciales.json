@@ -511,10 +511,24 @@
     }
 },
 {
-    "pk": 75, 
+    "pk": 76, 
     "model": "administracion.permiso", 
     "fields": {
-        "nombre": "Quebrar linea base"
+        "nombre": "Gestionar solicitudes"
+    }
+},
+{
+    "pk": 77, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Analizar solicitud"
+    }
+},
+{
+    "pk": 78, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Crear solicitud"
     }
 },
 {
@@ -565,6 +579,7 @@
             37, 
             45, 
             69, 
+            78, 
             16, 
             52, 
             39, 
@@ -592,7 +607,6 @@
             21, 
             17, 
             53, 
-            75, 
             33, 
             73, 
             30, 
@@ -623,6 +637,7 @@
             64, 
             5, 
             45, 
+            78, 
             48, 
             44, 
             61, 
@@ -632,6 +647,18 @@
             67, 
             65, 
             47
+        ]
+    }
+},
+{
+    "pk": 4, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee los permisos necesarios para listar, analizar y votar solicitudes de cambio pendientes.", 
+        "nombre": "Miembro de comite de cambios", 
+        "permisos": [
+            77, 
+            76
         ]
     }
 },
@@ -666,9 +693,7 @@
         "username": "gustavo", 
         "first_name": "Gustavo", 
         "last_name": "Cabral", 
-        "roles": [
-            2
-        ], 
+        "roles": [], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
@@ -690,9 +715,7 @@
         "username": "rodrigo", 
         "first_name": "Rodrigo", 
         "last_name": "Santos", 
-        "roles": [
-            2
-        ], 
+        "roles": [], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
@@ -714,9 +737,7 @@
         "username": "andres", 
         "first_name": "Andres", 
         "last_name": "Cabral", 
-        "roles": [
-            3
-        ], 
+        "roles": [], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
@@ -738,9 +759,7 @@
         "username": "gabriel", 
         "first_name": "Gabriel", 
         "last_name": "Santos", 
-        "roles": [
-            3
-        ], 
+        "roles": [], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
@@ -762,9 +781,7 @@
         "username": "akira", 
         "first_name": "Akira", 
         "last_name": "Shimosoeda", 
-        "roles": [
-            3
-        ], 
+        "roles": [], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
@@ -786,9 +803,7 @@
         "username": "marcos", 
         "first_name": "Marcos", 
         "last_name": "Aquino", 
-        "roles": [
-            3
-        ], 
+        "roles": [], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
@@ -913,892 +928,6 @@
         "nombre": "Adjunto", 
         "obligatorio": false, 
         "num_max": null
-    }
-},
-{
-    "pk": 1, 
-    "model": "administracion.proyecto", 
-    "fields": {
-        "comite_de_cambios": [
-            9
-        ], 
-        "roles": [
-            3, 
-            2
-        ], 
-        "usuario_lider": 2, 
-        "fecha_inicio": "2014-05-16", 
-        "complejidad": 5, 
-        "presupuesto": 1000000.0, 
-        "descripcion": "", 
-        "nombre": "Proyecto Uno", 
-        "usuarios": [
-            4, 
-            6, 
-            2
-        ], 
-        "estado": 1
-    }
-},
-{
-    "pk": 2, 
-    "model": "administracion.proyecto", 
-    "fields": {
-        "comite_de_cambios": [
-            8
-        ], 
-        "roles": [
-            3, 
-            2
-        ], 
-        "usuario_lider": 3, 
-        "fecha_inicio": "2014-05-17", 
-        "complejidad": 8, 
-        "presupuesto": 5000000.0, 
-        "descripcion": "", 
-        "nombre": "Proyecto Dos", 
-        "usuarios": [
-            7, 
-            5, 
-            3
-        ], 
-        "estado": 1
-    }
-},
-{
-    "pk": 1, 
-    "model": "desarrollo.fase", 
-    "fields": {
-        "roles": [
-            3, 
-            2
-        ], 
-        "num_secuencia": 1, 
-        "fecha_inicio": "2014-05-20", 
-        "duracion": 3, 
-        "descripcion": "", 
-        "nombre": "Fase de inicio", 
-        "proyecto": 1, 
-        "estado": 2
-    }
-},
-{
-    "pk": 2, 
-    "model": "desarrollo.fase", 
-    "fields": {
-        "roles": [
-            3, 
-            2
-        ], 
-        "num_secuencia": 2, 
-        "fecha_inicio": "2014-05-22", 
-        "duracion": 5, 
-        "descripcion": "", 
-        "nombre": "Fase de desarrollo", 
-        "proyecto": 1, 
-        "estado": 2
-    }
-},
-{
-    "pk": 3, 
-    "model": "desarrollo.fase", 
-    "fields": {
-        "roles": [
-            3, 
-            2
-        ], 
-        "num_secuencia": 3, 
-        "fecha_inicio": "2014-05-24", 
-        "duracion": 3, 
-        "descripcion": "", 
-        "nombre": "Fase de cierre", 
-        "proyecto": 1, 
-        "estado": 1
-    }
-},
-{
-    "pk": 1, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": null, 
-        "linea_base": 1, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": null, 
-        "costo_monetario": 100.0, 
-        "version": 3.0, 
-        "complejidad": 5, 
-        "adan": null, 
-        "cain": null, 
-        "descripcion": "", 
-        "nombre": "a", 
-        "estado": 2, 
-        "tipo_item": 1, 
-        "fase": 1
-    }
-},
-{
-    "pk": 2, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": 1, 
-        "linea_base": 1, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": 0, 
-        "costo_monetario": 150.0, 
-        "version": 5.0, 
-        "complejidad": 5, 
-        "adan": 1, 
-        "cain": null, 
-        "descripcion": "", 
-        "nombre": "b", 
-        "estado": 2, 
-        "tipo_item": 1, 
-        "fase": 1
-    }
-},
-{
-    "pk": 3, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": 1, 
-        "linea_base": 1, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": 0, 
-        "costo_monetario": 160.0, 
-        "version": 5.0, 
-        "complejidad": 5, 
-        "adan": 1, 
-        "cain": null, 
-        "descripcion": "", 
-        "nombre": "c", 
-        "estado": 2, 
-        "tipo_item": 1, 
-        "fase": 1
-    }
-},
-{
-    "pk": 4, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": 2, 
-        "linea_base": 2, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": 0, 
-        "costo_monetario": 110.0, 
-        "version": 5.0, 
-        "complejidad": 5, 
-        "adan": 1, 
-        "cain": 2, 
-        "descripcion": "", 
-        "nombre": "d", 
-        "estado": 2, 
-        "tipo_item": 1, 
-        "fase": 1
-    }
-},
-{
-    "pk": 5, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": 2, 
-        "linea_base": 2, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": 0, 
-        "costo_monetario": 120.0, 
-        "version": 5.0, 
-        "complejidad": 5, 
-        "adan": 1, 
-        "cain": 2, 
-        "descripcion": "", 
-        "nombre": "e", 
-        "estado": 2, 
-        "tipo_item": 1, 
-        "fase": 1
-    }
-},
-{
-    "pk": 6, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": 3, 
-        "linea_base": 2, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": 0, 
-        "costo_monetario": 130.0, 
-        "version": 5.0, 
-        "complejidad": 5, 
-        "adan": 1, 
-        "cain": 3, 
-        "descripcion": "", 
-        "nombre": "f", 
-        "estado": 2, 
-        "tipo_item": 1, 
-        "fase": 1
-    }
-},
-{
-    "pk": 7, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": 3, 
-        "linea_base": 2, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": 0, 
-        "costo_monetario": 140.0, 
-        "version": 5.0, 
-        "complejidad": 5, 
-        "adan": 1, 
-        "cain": 3, 
-        "descripcion": "", 
-        "nombre": "g", 
-        "estado": 2, 
-        "tipo_item": 1, 
-        "fase": 1
-    }
-},
-{
-    "pk": 8, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": 1, 
-        "linea_base": 3, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": 1, 
-        "costo_monetario": 90.0, 
-        "version": 5.0, 
-        "complejidad": 5, 
-        "adan": 1, 
-        "cain": null, 
-        "descripcion": "", 
-        "nombre": "h", 
-        "estado": 2, 
-        "tipo_item": 3, 
-        "fase": 2
-    }
-},
-{
-    "pk": 9, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": 8, 
-        "linea_base": 3, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": 0, 
-        "costo_monetario": 95.0, 
-        "version": 7.0, 
-        "complejidad": 5, 
-        "adan": 1, 
-        "cain": 8, 
-        "descripcion": "", 
-        "nombre": "i", 
-        "estado": 2, 
-        "tipo_item": 3, 
-        "fase": 2
-    }
-},
-{
-    "pk": 10, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": 9, 
-        "linea_base": 3, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": 0, 
-        "costo_monetario": 100.0, 
-        "version": 7.0, 
-        "complejidad": 5, 
-        "adan": 1, 
-        "cain": 8, 
-        "descripcion": "", 
-        "nombre": "j", 
-        "estado": 2, 
-        "tipo_item": 3, 
-        "fase": 2
-    }
-},
-{
-    "pk": 11, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": 9, 
-        "linea_base": 3, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": 0, 
-        "costo_monetario": 100.0, 
-        "version": 7.0, 
-        "complejidad": 5, 
-        "adan": 1, 
-        "cain": 8, 
-        "descripcion": "", 
-        "nombre": "k", 
-        "estado": 2, 
-        "tipo_item": 3, 
-        "fase": 2
-    }
-},
-{
-    "pk": 12, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": null, 
-        "linea_base": null, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": null, 
-        "costo_monetario": 110.0, 
-        "version": 2.0, 
-        "complejidad": 5, 
-        "adan": null, 
-        "cain": null, 
-        "descripcion": "", 
-        "nombre": "l", 
-        "estado": 1, 
-        "tipo_item": 4, 
-        "fase": 3
-    }
-},
-{
-    "pk": 13, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": 12, 
-        "linea_base": null, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": 0, 
-        "costo_monetario": 120.0, 
-        "version": 4.0, 
-        "complejidad": 5, 
-        "adan": 12, 
-        "cain": null, 
-        "descripcion": "", 
-        "nombre": "m", 
-        "estado": 1, 
-        "tipo_item": 4, 
-        "fase": 3
-    }
-},
-{
-    "pk": 14, 
-    "model": "desarrollo.item", 
-    "fields": {
-        "padre": 13, 
-        "linea_base": null, 
-        "costo_temporal": 0.0, 
-        "tipo_relacion": 0, 
-        "costo_monetario": 130.0, 
-        "version": 3.0, 
-        "complejidad": 5, 
-        "adan": 12, 
-        "cain": 13, 
-        "descripcion": "", 
-        "nombre": "n", 
-        "estado": 0, 
-        "tipo_item": 4, 
-        "fase": 3
-    }
-},
-{
-    "pk": 1, 
-    "model": "desarrollo.tipoitem", 
-    "fields": {
-        "descripcion": "", 
-        "nombre": "TPUno", 
-        "tipos_atributo": [
-            3, 
-            1
-        ], 
-        "fase": 1
-    }
-},
-{
-    "pk": 2, 
-    "model": "desarrollo.tipoitem", 
-    "fields": {
-        "descripcion": "", 
-        "nombre": "TPDos", 
-        "tipos_atributo": [
-            4, 
-            2
-        ], 
-        "fase": 1
-    }
-},
-{
-    "pk": 3, 
-    "model": "desarrollo.tipoitem", 
-    "fields": {
-        "descripcion": "", 
-        "nombre": "TPTres", 
-        "tipos_atributo": [
-            4, 
-            1
-        ], 
-        "fase": 2
-    }
-},
-{
-    "pk": 4, 
-    "model": "desarrollo.tipoitem", 
-    "fields": {
-        "descripcion": "", 
-        "nombre": "TPCuatro", 
-        "tipos_atributo": [
-            2, 
-            3
-        ], 
-        "fase": 3
-    }
-},
-{
-    "pk": 1, 
-    "model": "desarrollo.lineabase", 
-    "fields": {
-        "descripcion": "", 
-        "nombre": "LBUno", 
-        "num_secuencia": 1, 
-        "estado": 1, 
-        "fase": 1
-    }
-},
-{
-    "pk": 2, 
-    "model": "desarrollo.lineabase", 
-    "fields": {
-        "descripcion": "", 
-        "nombre": "LBDos", 
-        "num_secuencia": 2, 
-        "estado": 1, 
-        "fase": 1
-    }
-},
-{
-    "pk": 3, 
-    "model": "desarrollo.lineabase", 
-    "fields": {
-        "descripcion": "", 
-        "nombre": "LBTres", 
-        "num_secuencia": 1, 
-        "estado": 1, 
-        "fase": 2
-    }
-},
-{
-    "pk": 1, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 3, 
-        "valor_fecha": null, 
-        "item": 1, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 2, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 1, 
-        "valor_fecha": null, 
-        "item": 1, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 3, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 3, 
-        "valor_fecha": null, 
-        "item": 2, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 4, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 1, 
-        "valor_fecha": null, 
-        "item": 2, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 5, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 3, 
-        "valor_fecha": null, 
-        "item": 3, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 6, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 1, 
-        "valor_fecha": null, 
-        "item": 3, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 7, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 3, 
-        "valor_fecha": null, 
-        "item": 4, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 8, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 1, 
-        "valor_fecha": null, 
-        "item": 4, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 9, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 3, 
-        "valor_fecha": null, 
-        "item": 5, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 10, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 1, 
-        "valor_fecha": null, 
-        "item": 5, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 11, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 3, 
-        "valor_fecha": null, 
-        "item": 6, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 12, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 1, 
-        "valor_fecha": null, 
-        "item": 6, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 13, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 3, 
-        "valor_fecha": null, 
-        "item": 7, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 14, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 1, 
-        "valor_fecha": null, 
-        "item": 7, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 1, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 15, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 4, 
-        "valor_fecha": null, 
-        "item": 8, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 3, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 16, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 1, 
-        "valor_fecha": null, 
-        "item": 8, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 3, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 17, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 4, 
-        "valor_fecha": null, 
-        "item": 9, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 3, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 18, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 1, 
-        "valor_fecha": null, 
-        "item": 9, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 3, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 19, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 4, 
-        "valor_fecha": null, 
-        "item": 10, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 3, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 20, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 1, 
-        "valor_fecha": null, 
-        "item": 10, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 3, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 21, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 4, 
-        "valor_fecha": null, 
-        "item": 11, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 3, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 22, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 1, 
-        "valor_fecha": null, 
-        "item": 11, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 3, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 23, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 2, 
-        "valor_fecha": null, 
-        "item": 12, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 4, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 24, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 3, 
-        "valor_fecha": null, 
-        "item": 12, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 4, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 25, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 2, 
-        "valor_fecha": null, 
-        "item": 13, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 4, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 26, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 3, 
-        "valor_fecha": null, 
-        "item": 13, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 4, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 27, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 2, 
-        "valor_fecha": null, 
-        "item": 14, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 4, 
-        "valor_texto_chico": ""
-    }
-},
-{
-    "pk": 28, 
-    "model": "desarrollo.valoratributo", 
-    "fields": {
-        "valor_texto_grande": "", 
-        "valor_logico": null, 
-        "tipo_atributo": 3, 
-        "valor_fecha": null, 
-        "item": 14, 
-        "valor_archivo": "", 
-        "valor_numerico": null, 
-        "tipo_item": 4, 
-        "valor_texto_chico": ""
     }
 }
 ]

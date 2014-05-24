@@ -126,6 +126,43 @@ class Proyecto(models.Model):
     class Meta:
         ordering = ["nombre"]
 
+class Fase(models.Model):
+    """
+    ::
+    
+        Clase que describe la estructura de cada instancia de una Fase, los atributos 
+        que posee una fase son:
+
+        nombre: nombre de la fase.
+        descripcion: una breve descripcion sobre la fase.
+        estado: estado actual de la fase.
+        num_secuencia: define el orden numerico de la fase dentro de un proyecto.
+        fecha de inicio: fecha de inicio de la fase.
+        duracion: duracion de la fase.
+        roles: roles asociados a la fase.
+        proyecto: el proyecto al cual pertenece la fase.
+    """
+    ESTADOS_FASE = (
+        (0, "Inactivo"),
+        (1, "En curso"),
+        (2, "Finalizada"),
+    )
+    
+    nombre = models.CharField(max_length=50, blank=False)
+    descripcion = models.TextField(blank=True)
+    estado = models.IntegerField(max_length=1, choices=ESTADOS_FASE, default=0)
+    num_secuencia = models.IntegerField(max_length=30, null=True)
+    fecha_inicio = models.DateField(null=True)
+    duracion = models.IntegerField(null=True, blank=True, default=0)
+    roles = models.ManyToManyField(Rol, null=True, blank=True)
+    proyecto = models.ForeignKey(Proyecto, related_name="fases", null=True, blank=True)
+    
+    def __unicode__(self):
+        return self.nombre
+    
+    class Meta:
+        ordering = ["num_secuencia"]
+
 ESTADOS_USUARIO = (
     (0, "Activo"),
     (1, "Inactivo"),

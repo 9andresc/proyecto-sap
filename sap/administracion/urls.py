@@ -16,6 +16,7 @@ from administracion.views import crear_proyecto_view, visualizar_proyecto_view, 
 from administracion.views import usuarios_proyecto_view, proyecto_agregar_usuario_view, proyecto_confirmacion_agregar_usuario_view, proyecto_quitar_usuario_view
 from administracion.views import roles_proyecto_view, proyecto_agregar_rol_view, proyecto_confirmacion_agregar_rol_view, proyecto_quitar_rol_view
 from administracion.views import comite_proyecto_view, proyecto_agregar_miembro_view, proyecto_confirmacion_agregar_miembro_view, proyecto_quitar_miembro_view
+from administracion.views import fases_proyecto_view, crear_fase_view, modificar_fase_view, eliminar_fase_view, visualizar_fase_view, subir_fase_view, bajar_fase_view
 from administracion.views import iniciar_proyecto_view
 
 urlpatterns = patterns('',
@@ -60,6 +61,12 @@ urlpatterns = patterns('',
     url(r'^administracion/gestion_proyectos/agregar_miembro_comite/proyecto/(?P<id_proyecto>\d+)/$', proyecto_agregar_miembro_view, name="vista_proyecto_agregar_miembro"),
     url(r'^administracion/gestion_proyectos/confirmacion_agregar_miembro/(?P<id_usuario>\d+)/proyecto/(?P<id_proyecto>\d+)/$', proyecto_confirmacion_agregar_miembro_view, name="vista_proyecto_confirmacion_agregar_miembro"),
     url(r'^administracion/gestion_proyectos/quitar_miembro/(?P<id_usuario>\d+)/proyecto/(?P<id_proyecto>\d+)/$', proyecto_quitar_miembro_view, name="vista_proyecto_quitar_miembro"),
-    url(r'^administracion/gestion_proyectos/iniciar_proyecto/(?P<id_proyecto>\d+)/$', iniciar_proyecto_view, name="vista_iniciar_proyecto"),
-    
+    url(r'^administracion/gestion_proyectos/fases/proyecto/(?P<id_proyecto>\d+)/$', fases_proyecto_view, name="vista_fases_proyecto"),
+    url(r'^administracion/gestion_proyectos/fases/crear_fase/proyecto/(?P<id_proyecto>\d+)/$', crear_fase_view, name="vista_crear_fase"),
+    url(r'^administracion/gestion_proyectos/fases/modificar_fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', modificar_fase_view, name="vista_modificar_fase"),
+    url(r'^administracion/gestion_proyectos/fases/eliminar_fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', eliminar_fase_view, name="vista_eliminar_fase"),
+    url(r'^administracion/gestion_proyectos/fases/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', visualizar_fase_view, name="vista_visualizar_fase"),
+    url(r'^administracion/gestion_proyectos/fases/subir_fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', subir_fase_view, name="vista_subir_fase"),
+    url(r'^administracion/gestion_proyectos/fases/bajar_fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', bajar_fase_view, name="vista_bajar_fase"),
+    url(r'^administracion/gestion_proyectos/iniciar_proyecto/(?P<id_proyecto>\d+)/$', iniciar_proyecto_view, name="vista_iniciar_proyecto"),   
 )

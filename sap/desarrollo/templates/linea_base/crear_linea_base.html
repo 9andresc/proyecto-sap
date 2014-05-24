@@ -2,50 +2,61 @@
 {% block title %}SAP - Crear línea base{% endblock %}
 {% block content %}
 <div class="jumbotron">
-	<h1><small>Crear línea base</small></h1>
-	<form class="form-horizontal" method="POST">
-		{% csrf_token %}
-		
-		<!-- Manejo de errores del formulario -->
-    	{% if form.errors %}
-    	<div class="panel panel-warning">
-    		<div class="panel-heading">
-    			<h3 class="panel-title">¡Alto ahí!</h3>
-            </div>
-            <div class="panel-body">
-            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
-            	<br>
-            	<ul class="list-unstyled">
-            		{% for field in form %}
-            			{% if field.errors %} 
-  							<li><b>{{ field.label }}</b></li>
-  								{% for error in field.errors %}
-    								<ul>
-      									<li>{{ error }}</li>
-    								</ul>
-    							{% endfor %}
-  							</li>
-  						{% endif %}
-  					{% endfor %}
-				</ul>
-            </div>
-        </div>
-        {% endif %}
-        <!-- Fin del manejo de errores del formulario -->
-		
-		<p class="text-muted">Campos obligatorios (*)</p>
-		<div class="input-group">
-			<span class="input-group-addon"><b>* Nombre</b></span>
-			<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de la línea base">
-        </div>
-        <br>
-        <div class="input-group">
-			<span class="input-group-addon"><b>Descripción</b></span>
-			<textarea rows="3" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción de la línea base"></textarea>
-        </div>  
-        <br>
-        <button type="submit" class="btn btn-success">Crear</button>
-	</form>
+	{% if estado_valido %}
+		<h1><small>Crear línea base</small></h1>
+		<form class="form-horizontal" method="POST">
+			{% csrf_token %}
+			
+			<!-- Manejo de errores del formulario -->
+	    	{% if form.errors %}
+	    	<div class="panel panel-warning">
+	    		<div class="panel-heading">
+	    			<h3 class="panel-title">¡Alto ahí!</h3>
+	            </div>
+	            <div class="panel-body">
+	            	<h3 class="panel-title">No has completado correctamente el formulario. Los campos afectados son:</h3>
+	            	<br>
+	            	<ul class="list-unstyled">
+	            		{% for field in form %}
+	            			{% if field.errors %} 
+	  							<li><b>{{ field.label }}</b></li>
+	  								{% for error in field.errors %}
+	    								<ul>
+	      									<li>{{ error }}</li>
+	    								</ul>
+	    							{% endfor %}
+	  							</li>
+	  						{% endif %}
+	  					{% endfor %}
+					</ul>
+	            </div>
+	        </div>
+	        {% endif %}
+	        <!-- Fin del manejo de errores del formulario -->
+			
+			<p class="text-muted">Campos obligatorios (*)</p>
+			<div class="input-group">
+				<span class="input-group-addon"><b>* Nombre</b></span>
+				<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de la línea base">
+	        </div>
+	        <br>
+	        <div class="input-group">
+				<span class="input-group-addon"><b>Descripción</b></span>
+				<textarea rows="3" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción de la línea base"></textarea>
+	        </div>  
+	        <br>
+	        <button type="submit" class="btn btn-success">Crear</button>
+		</form>
+	{% else %}
+		<div class="panel panel-warning">
+	      	<div class="panel-heading">
+	        	<h3 class="panel-title">¡Alto ahí!</h3>
+	      	</div>
+	      	<div class="panel-body">
+	        	No se pueden crear más líneas bases, puesto que, la fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>Finalizado</b>.
+	      	</div>
+	   	</div>
+	{% endif %}
 	<br>
 	<a class="btn btn-default" href="/desarrollo/fases/lineas_base/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de líneas base de la fase {{ fase.nombre }}</a>
 </div>

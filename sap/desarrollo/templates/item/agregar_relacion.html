@@ -4,141 +4,323 @@
 
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if valido %}
+		{% if estado_fase_valido and item_valido %}
 			<h1><small>Relaciones para el item <i>{{ item.nombre }}</i></small></h1>
 			<br>
 			<form class="form-horizontal" method="POST">
 				{% csrf_token %}
 				<div class="col-xs-5">
 				<div class="input-group">
-					<span class="input-group-addon"><b>* Tipo de relación</b></span>
+					<span class="input-group-addon"><b>* Tipo de relación del item</b></span>
 					<select class="form-control" id="eleccion_relacion" name="eleccion_relacion">
-						<option value="0">Padre-Hijo</option>
-						<option value="1">Antecesor-Sucesor</option>
+						{% if eleccion == "0" %}
+							<option value="0" selected="selected">Padre</option>
+						{% else %}
+							<option value="0">Padre</option>
+						{% endif %}
+						{% if eleccion == "1" %}
+							<option value="1" selected="selected">Antecesor</option>
+						{% else %}
+							<option value="1">Antecesor</option>
+						{% endif %}
+						{% if eleccion == "2" %}
+							<option value="2" selected="selected">Hijo</option>
+						{% else %}
+							<option value="2">Hijo</option>
+						{% endif %}
+						{% if eleccion == "3" %}
+							<option value="3" selected="selected">Sucesor</option>
+						{% else %}
+							<option value="3">Sucesor</option>
+						{% endif %}
 					</select>
 	        	</div>
 	        	</div>
 	        	<br><br><br>
 	        	<button type="submit" class="btn btn-success">Aceptar</button>
 	        </form>
-			{% if items_hijos %}
-				<h1><small>Items de la fase <i>{{ fase.nombre }}</i></small></h1>
-				<br>
-				<div class="table-responsive"> 
-	        		<table class="table table-hover">
-	        			<thead>
-	                		<tr>
-	                    		<th>ID</th>
-	                    		<th>Nombre del item</th>
-	                    		<th>Estado</th>
-	                    		<th></th>
-	                    	</tr>
-	                    </thead>
-	               	 	<tbody>
-	                		{% for i in items_hijos %}
-	                			<tr>
-	                    			<td>{{ i.id }}</td>
-	                    			<td>{{ i.nombre }}</td>
-	                    			<td>
-	                    			{% ifequal i.estado 0 %}
-										En construcción
-									{% endifequal %}
-									{% ifequal i.estado 1 %}
-										Aprobado
-									{% endifequal %}
-									{% ifequal i.estado 2 %}
-										Bloqueado
-									{% endifequal %}
-									{% ifequal i.estado 3 %}
-										En revisión
-									{% endifequal %}
-									{% ifequal i.estado 4 %}
-										Eliminado
-									{% endifequal %}
-	                    			</td>
-	                    			<td><a class="btn btn-default" href="/desarrollo/fases/items/confirmacion_agregar_relacion/{{ i.id }}/item/{{ item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
-	                			</tr>
-	                		{% endfor %}
-	                	</tbody>
-	        		</table>
-	    		</div>
-	    	{% elif estado_valido and num_fases_valido and items_sucesores %}
-	    		<h1><small>Items de la fase <i>{{ fase_vecina.nombre }}</i></small></h1>
-				<br>
-				<div class="table-responsive"> 
-	        		<table class="table table-hover">
-	        			<thead>
-	                		<tr>
-	                    		<th>ID</th>
-	                    		<th>Nombre del item</th>
-	                    		<th>Estado</th>
-	                    	</tr>
-	                    </thead>
-	               	 	<tbody>
-	                		{% for i in items_sucesores %}
-	                			<tr>
-	                    			<td>{{ i.id }}</td>
-	                    			<td>{{ i.nombre }}</td>
-	                    			<td>
-	                    			{% ifequal i.estado 0 %}
-										En construcción
-									{% endifequal %}
-									{% ifequal i.estado 1 %}
-										Aprobado
-									{% endifequal %}
-									{% ifequal i.estado 2 %}
-										Bloqueado
-									{% endifequal %}
-									{% ifequal i.estado 3 %}
-										En revisión
-									{% endifequal %}
-									{% ifequal i.estado 4 %}
-										Eliminado
-									{% endifequal %}
-	                    			</td>
-	                    			<td><a class="btn btn-default" href="/desarrollo/fases/items/confirmacion_agregar_relacion/{{ i.id }}/item/{{ item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
-	                			</tr>
-	                		{% endfor %}
-	                	</tbody>
-	        		</table>
-	    		</div>
-	    	{% elif estado_valido == False or num_fases_valido == False %}
-	    		<br>
-	    		<div class="panel panel-warning">
-      				<div class="panel-heading">
-        				<h3 class="panel-title">¡Alto ahí!</h3>
-      				</div>
-      				<div class="panel-body">
-        				No se pueden agregar sucesores al item <i>{{ item.nombre }}</i>, puesto que, no cumple con las siguientes condiciones:
-        				<br><br>
-        				<ul>
-        					{% if estado_valido == False %}
-        						<li>El item <i>{{ item.nombre }}</i> debe encontrarse en estado <b>Bloqueado</b>.</li>
-        					{% endif %}
-        					{% if num_fases_valido == False %}
-        						<li>Debe existir una fase cuyo número de secuencia sea mayor al número de secuencia de la fase <i>{{ fase.nombre }}</i>.</li>
-        					{% endif %}
-        				</ul>
-      				</div>
-      			</div>
-	    	{% else %}
-	    		<br>
-	    		<div class="panel panel-warning">
-      				<div class="panel-heading">
-        				<h3 class="panel-title">¡Alto ahí!</h3>
-      				</div>
-      				<div class="panel-body">
-        				No se han encontrado items habilitados de acuerdo a esta selección.
-      				</div>
-      			</div>
-	    	{% endif %}
+	        <br>
+	        
+	        {% if eleccion == "0" %}
+				{% if existen_items_hijos and item_valido %}
+					<h1><small>Posibles items hijos de la fase <i>{{ fase.nombre }}</i></small></h1>
+					<br>
+					<div class="table-responsive"> 
+		        		<table class="table table-hover">
+		        			<thead>
+		                		<tr>
+		                    		<th>ID</th>
+		                    		<th>Nombre del item</th>
+		                    		<th>Estado</th>
+		                    		<th></th>
+		                    	</tr>
+		                    </thead>
+		               	 	<tbody>
+		                		{% for i in items_hijos %}
+		                			<tr>
+		                    			<td>{{ i.id }}</td>
+		                    			<td>{{ i.nombre }}</td>
+		                    			<td>
+		                    			{% ifequal i.estado 0 %}
+											En construcción
+										{% endifequal %}
+										{% ifequal i.estado 1 %}
+											Aprobado
+										{% endifequal %}
+										{% ifequal i.estado 2 %}
+											Bloqueado
+										{% endifequal %}
+										{% ifequal i.estado 3 %}
+											En revisión
+										{% endifequal %}
+										{% ifequal i.estado 4 %}
+											Eliminado
+										{% endifequal %}
+		                    			</td>
+		                    			<td><a class="btn btn-default" href="/desarrollo/fases/items/confirmacion_agregar_relacion/{{ eleccion }}/{{ i.id }}/item/{{ item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
+		                			</tr>
+		                		{% endfor %}
+		                	</tbody>
+		        		</table>
+		    		</div>
+		    	{% elif item_valido == False or existen_items_hijos == False %}
+		    		<div class="panel panel-warning">
+	      				<div class="panel-heading">
+	        				<h3 class="panel-title">¡Alto ahí!</h3>
+	      				</div>
+	      				<div class="panel-body">
+	        				No se pueden agregar hijos al item <i>{{ item.nombre }}</i> porque:
+	        				<br><br>
+	        				<ul>
+	        					{% if item_valido == False %}
+	        						<li>El item <i>{{ item.nombre }}</i> se encuentra en estado <b>Aprobado</b> o <b>Bloqueado</b>.</li>
+	        					{% endif %}
+	        					{% if existen_items_hijos == False %}
+	        						<li>No existen items en estado <b>En construcción</b> en la fase <i>{{ fase.nombre }}</i>.</li>
+	        					{% endif %}
+	        				</ul>
+	      				</div>
+	      			</div>
+		    	{% endif %}
+		    {% endif %}
+	    	
+	    	{% if eleccion == "1" %}
+		    	{% if existen_items_sucesores and secuencia_fase_valida and estado_item_valido %}
+					<h1><small>Posibles items sucesores de la fase <i>{{ fase_vecina.nombre }}</i></small></h1>
+					<br>
+					<div class="table-responsive"> 
+		        		<table class="table table-hover">
+		        			<thead>
+		                		<tr>
+		                    		<th>ID</th>
+		                    		<th>Nombre del item</th>
+		                    		<th>Estado</th>
+		                    		<th></th>
+		                    	</tr>
+		                    </thead>
+		               	 	<tbody>
+		                		{% for i in items_sucesores %}
+		                			<tr>
+		                    			<td>{{ i.id }}</td>
+		                    			<td>{{ i.nombre }}</td>
+		                    			<td>
+		                    			{% ifequal i.estado 0 %}
+											En construcción
+										{% endifequal %}
+										{% ifequal i.estado 1 %}
+											Aprobado
+										{% endifequal %}
+										{% ifequal i.estado 2 %}
+											Bloqueado
+										{% endifequal %}
+										{% ifequal i.estado 3 %}
+											En revisión
+										{% endifequal %}
+										{% ifequal i.estado 4 %}
+											Eliminado
+										{% endifequal %}
+		                    			</td>
+		                    			<td><a class="btn btn-default" href="/desarrollo/fases/items/confirmacion_agregar_relacion/{{ eleccion }}/{{ i.id }}/item/{{ item.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
+		                			</tr>
+		                		{% endfor %}
+		                	</tbody>
+		        		</table>
+		    		</div>
+		    	{% elif existen_items_sucesores == False or secuencia_fase_valida == False or estado_item_valido == False %}
+		    		<div class="panel panel-warning">
+	      				<div class="panel-heading">
+	        				<h3 class="panel-title">¡Alto ahí!</h3>
+	      				</div>
+	      				<div class="panel-body">
+	        				No se pueden agregar sucesores al item <i>{{ item.nombre }}</i> porque:
+	        				<br><br>
+	        				<ul>
+	        					{% if existen_items_sucesores == False %}
+	        						<li>No existen items en estado <b>En construcción</b> en la fase <i>{{ fase_vecina.nombre }}</i>.</li>
+	        					{% endif %}
+	        					{% if secuencia_fase_valida == False %}
+	        						<li>No existe una fase cuyo número de secuencia sea superior al número de secuencia de la fase <i>{{ fase.nombre }}</i>.</li>
+	        					{% endif %}
+	        					{% if estado_item_valido == False %}
+	        						<li>El item <i>{{ item.nombre }}</i> no se encuentra en estado <b>Bloqueado</b>.</li>
+	        					{% endif %}
+	        				</ul>
+	      				</div>
+	      			</div>
+		    	{% endif %}
+		    {% endif %}
+	    	
+	    	{% if eleccion == "2" %}
+		    	{% if item_valido and existen_items_padres and posee_padre == False %}
+		    		<h1><small>Posibles items padres de la fase <i>{{ fase.nombre }}</i></small></h1>
+					<br>
+					<div class="table-responsive"> 
+		        		<table class="table table-hover">
+		        			<thead>
+		                		<tr>
+		                    		<th>ID</th>
+		                    		<th>Nombre del item</th>
+		                    		<th>Estado</th>
+		                    		<th></th>
+		                    	</tr>
+		                    </thead>
+		               	 	<tbody>
+		                		{% for i in items_padres %}
+		                			<tr>
+		                    			<td>{{ i.id }}</td>
+		                    			<td>{{ i.nombre }}</td>
+		                    			<td>
+		                    			{% ifequal i.estado 0 %}
+											En construcción
+										{% endifequal %}
+										{% ifequal i.estado 1 %}
+											Aprobado
+										{% endifequal %}
+										{% ifequal i.estado 2 %}
+											Bloqueado
+										{% endifequal %}
+										{% ifequal i.estado 3 %}
+											En revisión
+										{% endifequal %}
+										{% ifequal i.estado 4 %}
+											Eliminado
+										{% endifequal %}
+		                    			</td>
+		                    			<td><a class="btn btn-default" href="/desarrollo/fases/items/confirmacion_agregar_relacion/{{ eleccion }}/{{ item.id }}/item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
+		                			</tr>
+		                		{% endfor %}
+		                	</tbody>
+		        		</table>
+		    		</div>
+		    	{% elif item_valido == False or existen_items_padres == False or posee_padre %}
+		    		<div class="panel panel-warning">
+	      				<div class="panel-heading">
+	        				<h3 class="panel-title">¡Alto ahí!</h3>
+	      				</div>
+	      				<div class="panel-body">
+	        				No se puede agregar un padre para el item <i>{{ item.nombre }}</i> porque:
+	        				<br><br>
+	        				<ul>
+	        					{% if item_valido == False %}
+	        						<li>El item <i>{{ item.nombre }}</i> se encuentra en estado <b>Aprobado</b> o <b>Bloqueado</b>.</li>
+	        					{% endif %}
+	        					{% if existen_items_padres == False %}
+	        						<li>No existen items que no provoque inconsistencias para el grafo de relaciones en la fase <i>{{ fase.nombre }}</i>.</li>
+	        					{% endif %}
+	        					{% if posee_padre %}
+	        						<li>El item <i>{{ item.nombre }}</i> ya posee un padre/antecesor.</li>
+	        					{% endif %}
+	        				</ul>
+	      				</div>
+	      			</div>
+		    	{% endif %}
+		    {% endif %}
+	    	
+	    	{% if eleccion == "3" %}
+		    	{% if item_valido and secuencia_fase_valida and existen_items_antecesores and posee_padre == False %}
+		    		<h1><small>Posibles items antecesores de la fase <i>{{ fase_vecina.nombre }}</i></small></h1>
+					<br>
+					<div class="table-responsive"> 
+		        		<table class="table table-hover">
+		        			<thead>
+		                		<tr>
+		                    		<th>ID</th>
+		                    		<th>Nombre del item</th>
+		                    		<th>Estado</th>
+		                    		<th></th>
+		                    	</tr>
+		                    </thead>
+		               	 	<tbody>
+		                		{% for i in items_antecesores %}
+		                			<tr>
+		                    			<td>{{ i.id }}</td>
+		                    			<td>{{ i.nombre }}</td>
+		                    			<td>
+		                    			{% ifequal i.estado 0 %}
+											En construcción
+										{% endifequal %}
+										{% ifequal i.estado 1 %}
+											Aprobado
+										{% endifequal %}
+										{% ifequal i.estado 2 %}
+											Bloqueado
+										{% endifequal %}
+										{% ifequal i.estado 3 %}
+											En revisión
+										{% endifequal %}
+										{% ifequal i.estado 4 %}
+											Eliminado
+										{% endifequal %}
+		                    			</td>
+		                    			<td><a class="btn btn-default" href="/desarrollo/fases/items/confirmacion_agregar_relacion/{{ eleccion }}/{{ item.id }}/item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
+		                			</tr>
+		                		{% endfor %}
+		                	</tbody>
+		        		</table>
+		    		</div>
+		    	{% elif item_valido == False or secuencia_fase_valida == False or existen_items_antecesores == False or posee_padre %}
+		    		<div class="panel panel-warning">
+	      				<div class="panel-heading">
+	        				<h3 class="panel-title">¡Alto ahí!</h3>
+	      				</div>
+	      				<div class="panel-body">
+	        				No se puede agregar un antecesor para el item <i>{{ item.nombre }}</i> porque:
+	        				<br><br>
+	        				<ul>
+	        					{% if item_valido == False %}
+	        						<li>El item <i>{{ item.nombre }}</i> se encuentra en estado <b>Aprobado</b> o <b>Bloqueado</b>.</li>
+	        					{% endif %}
+	        					{% if existen_items_antecesores == False %}
+	        						<li>No existen items en estado <b>Bloqueado</b> en la fase <i>{{ fase_vecina.nombre }}</i>.</li>
+	        					{% endif %}
+	        					{% if posee_padre %}
+	        						<li>El item <i>{{ item.nombre }}</i> ya posee un padre/antecesor.</li>
+	        					{% endif %}
+	        					{% if secuencia_fase_valida == False %}
+	        						<li>No existe una fase cuyo número de secuencia sea inferior al número de secuencia de la fase <i>{{ fase.nombre }}</i>.</li>
+	        					{% endif %}
+	        				</ul>
+	      				</div>
+	      			</div>
+		    	{% endif %}
+		    {% endif %}
+
 	    {% else %}
 	    	<div class="panel panel-warning">
       			<div class="panel-heading">
         			<h3 class="panel-title">¡Alto ahí!</h3>
       			</div>
       			<div class="panel-body">
-        			El item <i>{{ item.nombre }}</i> no se encuentra en estado <b>Aprobado</b> o <b>Bloqueado</b>. Por tanto, no se pueden agregar relaciones.
+      				No se pueden agregar más relaciones al item <i>{{ item.nombre }}</i> porque:
+      				<br><br>
+      				<ul>
+      					{% if estado_fase_valido == False %}
+      						<li>La fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>Finalizado</b>.</li>
+      					{% endif %}
+      					{% if item_valido == False %}
+      						<li>El item <i>{{ item.nombre }}</i> se encuentra en estado <b>Aprobado</b> o <b>Bloqueado</b>.</li>
+      					{% endif %}
+      				</ul>
       			</div>
       		</div>
 	    {% endif %}
