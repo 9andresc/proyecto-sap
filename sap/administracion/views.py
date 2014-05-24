@@ -1339,6 +1339,7 @@ def usuarios_proyecto_view(request, id_proyecto):
     return render_to_response('proyecto/usuarios_proyecto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@miembro_proyecto()
 def proyecto_agregar_usuario_view(request, id_proyecto):
     """
     ::
@@ -1475,6 +1476,7 @@ def roles_proyecto_view(request, id_proyecto):
     return render_to_response('proyecto/roles_proyecto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@miembro_proyecto()
 def proyecto_agregar_rol_view(request, id_proyecto):
     """
     ::
@@ -1605,6 +1607,7 @@ def comite_proyecto_view(request, id_proyecto):
     return render_to_response('proyecto/comite_proyecto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@miembro_proyecto()
 def proyecto_agregar_miembro_view(request, id_proyecto):
     """
     ::

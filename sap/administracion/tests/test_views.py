@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
-from administracion.models import Rol, TipoAtributo, Proyecto
+from administracion.models import Rol, TipoAtributo, Proyecto, Fase
 # -------------- Vistas de usuarios -------------- #
 from administracion.views import gestion_usuarios_view
 from administracion.views import crear_usuario_view, modificar_usuario_view, eliminar_usuario_view
@@ -20,8 +20,10 @@ from administracion.views import usuarios_proyecto_view, proyecto_confirmacion_a
 from administracion.views import roles_proyecto_view, proyecto_confirmacion_agregar_rol_view, proyecto_quitar_rol_view
 from administracion.views import comite_proyecto_view, proyecto_confirmacion_agregar_miembro_view, proyecto_quitar_miembro_view
 from administracion.views import iniciar_proyecto_view
+# -------------- Vistas de proyectos -------------- #
+from administracion.views import crear_fase_view, modificar_fase_view, eliminar_fase_view
 
-"""
+
 class UserTestCase(TestCase):
     fixtures = ['usuarios_testdata.json'] + ['roles_testdata.json'] + ['permisos_testdata.json']
     
@@ -411,7 +413,7 @@ class TipoAtributoTestCase(TestCase):
         print "Eliminacion de tipo de atributo sin errores\n"
 
 class ProyectoTestCase(TestCase):
-    fixtures = ['proyectos_testdata.json'] + ['usuarios_testdata'] + ['roles_testdata.json'] + ['permisos_testdata.json']
+    fixtures = ['proyectos_testdata.json'] + ['fases_testdata.json'] + ['usuarios_testdata'] + ['roles_testdata.json'] + ['permisos_testdata.json']
     
     def setUp(self):
         self.factory = RequestFactory()
@@ -438,6 +440,7 @@ class ProyectoTestCase(TestCase):
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina de creacion de proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('form' in response.content, "[GET] No se ha encontrado el contenido form en la pagina retornada.")
+        
         self.client.login(username='admin', password='admin')
         
         response = self.client.post('/administracion/gestion_proyectos/crear_proyecto/', {'nombre': 'Proyecto Original', 'descripcion':'Descripcion del proyecto.', 'fecha_inicio':'19/12/2014', 'usuario_lider':1, 'presupuesto':1000000, 'complejidad':5})
@@ -453,22 +456,23 @@ class ProyectoTestCase(TestCase):
     def test_modificar_proyecto_view(self):
         print "Prueba: Modificar proyecto"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/modificar_proyecto/1/')
-        self.user = User.objects.get(pk=2)
+        request = self.factory.get('/administracion/gestion_proyectos/modificar_proyecto/2/')
+        self.user = User.objects.get(pk=3)
         request.user = self.user
-        response = modificar_proyecto_view(request, 1)
+        response = modificar_proyecto_view(request, 2)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina de modificacion de proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('form' in response.content, "[GET] No se ha encontrado el contenido form en la pagina retornada.")
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
-        self.client.login(username='gustavo', password='gustavo')
         
-        response = self.client.post('/administracion/gestion_proyectos/modificar_proyecto/1/', {'nombre': 'Proyecto Nuevo', 'descripcion':'Descripcion del proyecto.', 'fecha_inicio':'19/12/2014', 'usuario_lider':2, 'presupuesto':1000000, 'complejidad':5})
+        self.client.login(username='rodrigo', password='rodrigo')
+        
+        response = self.client.post('/administracion/gestion_proyectos/modificar_proyecto/2/', {'nombre': 'Proyecto Nuevo', 'descripcion':'Descripcion del proyecto.', 'fecha_inicio':'19/12/2014', 'usuario_lider':2, 'presupuesto':1000000, 'complejidad':5})
         
         self.assertEqual(response.status_code, 302, "[POST] La pagina de modificacion de proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 302"%response.status_code)
-        self.assertEqual(response['Location'], 'http://testserver/administracion/gestion_proyectos/proyecto/1', "[POST] La direccion de la pagina de modificacion de proyecto retornada no es correcta.\nDireccion de la pagina retornada: %s\nDireccion de la pagina esperada: http://testserver/administracion/gestion_proyectos/proyecto/1"%response['Location'])
+        self.assertEqual(response['Location'], 'http://testserver/administracion/gestion_proyectos/proyecto/2', "[POST] La direccion de la pagina de modificacion de proyecto retornada no es correcta.\nDireccion de la pagina retornada: %s\nDireccion de la pagina esperada: http://testserver/administracion/gestion_proyectos/proyecto/2"%response['Location'])
         
-        nombre = Proyecto.objects.get(pk=1).nombre
+        nombre = Proyecto.objects.get(pk=2).nombre
         
         self.assertEqual(nombre, 'Proyecto Nuevo', "La modificacion del proyecto no se ha concretado correctamente.")
         print "Modificacion de proyecto sin errores\n"
@@ -483,15 +487,25 @@ class ProyectoTestCase(TestCase):
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina de eliminacion de proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         
+        self.client.login(username='rodrigo', password='rodrigo')
+        
+        response = self.client.post('/administracion/gestion_proyectos/eliminar_proyecto/2/')
+        
+        self.assertEqual(response.status_code, 302, "[POST] La pagina de eliminacion de proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 302"%response.status_code)
+        self.assertEqual(response['Location'], 'http://testserver/administracion/gestion_proyectos/', "[POST] La direccion de la pagina de eliminacion de proyecto retornada no es correcta.\nDireccion de la pagina retornada: %s\nDireccion de la pagina esperada: http://testserver/administracion/gestion_proyectos/"%response['Location'])
+        
+        proyecto = Proyecto.objects.filter(pk=2)
+        
+        self.assertFalse(proyecto, "Se ha encontrado el proyecto recientemente eliminado.")
         print "Eliminacion de proyecto sin errores\n"
     
     def test_usuarios_proyecto_view(self):
         print "Prueba: Gestion de usuarios de proyecto"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/usuarios/proyecto/1/')
-        self.user = User.objects.get(pk=2)
+        request = self.factory.get('/administracion/gestion_proyectos/usuarios/proyecto/2/')
+        self.user = User.objects.get(pk=3)
         request.user = self.user
-        response = usuarios_proyecto_view(request, 1)
+        response = usuarios_proyecto_view(request, 2)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina de gestion de usuarios de un proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
@@ -501,17 +515,17 @@ class ProyectoTestCase(TestCase):
     def test_proyecto_confirmacion_agregar_usuario_view(self):
         print "Prueba: Confirmacion de agregacion de usuario a proyecto"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/confirmacion_agregar_usuario/1/proyecto/1/')
-        self.user = User.objects.get(pk=2)
+        request = self.factory.get('/administracion/gestion_proyectos/confirmacion_agregar_usuario/2/proyecto/2/')
+        self.user = User.objects.get(pk=3)
         request.user = self.user
-        response = proyecto_confirmacion_agregar_usuario_view(request, 1, 1)
+        response = proyecto_confirmacion_agregar_usuario_view(request, 2, 2)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina de confirmacion de agregacion de usuario a un proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
         self.assertTrue('usuario' in response.content, "[GET] No se ha encontrado el contenido usuario en la pagina retornada.")
         
-        proyecto = Proyecto.objects.get(pk=1)
-        usuario = proyecto.usuarios.filter(pk=1)
+        proyecto = Proyecto.objects.get(pk=2)
+        usuario = proyecto.usuarios.filter(pk=2)
         
         self.assertTrue(usuario, "No se ha encontrado el usuario recientemente agregado al proyecto.")
         print "Confirmacion de agregacion de usuario a proyecto sin errores\n"
@@ -519,17 +533,17 @@ class ProyectoTestCase(TestCase):
     def test_proyecto_quitar_usuario_view(self):
         print "Prueba: Quitar usuario de proyecto"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/quitar_usuario/1/proyecto/1/')
-        self.user = User.objects.get(pk=2)
+        request = self.factory.get('/administracion/gestion_proyectos/quitar_usuario/4/proyecto/2/')
+        self.user = User.objects.get(pk=3)
         request.user = self.user
-        response = proyecto_quitar_usuario_view(request, 1, 1)
+        response = proyecto_quitar_usuario_view(request, 2, 4)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina para quitar un usuario de un proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
         self.assertTrue('usuario' in response.content, "[GET] No se ha encontrado el contenido usuario en la pagina retornada.")
         
-        proyecto = Proyecto.objects.get(pk=1)
-        usuario = proyecto.usuarios.filter(pk=1)
+        proyecto = Proyecto.objects.get(pk=2)
+        usuario = proyecto.usuarios.filter(pk=4)
         
         self.assertFalse(usuario, "Se ha encontrado el usuario recientemente quitado del proyecto.")
         print "Quitar usuario de proyecto sin errores\n"
@@ -537,10 +551,10 @@ class ProyectoTestCase(TestCase):
     def test_roles_proyecto_view(self):
         print "Prueba: Gestion de roles de proyecto"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/roles/proyecto/1/')
-        self.user = User.objects.get(pk=2)
+        request = self.factory.get('/administracion/gestion_proyectos/roles/proyecto/2/')
+        self.user = User.objects.get(pk=3)
         request.user = self.user
-        response = roles_proyecto_view(request, 1)
+        response = roles_proyecto_view(request, 2)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina de gestion de roles de un proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
@@ -550,17 +564,17 @@ class ProyectoTestCase(TestCase):
     def test_proyecto_confirmacion_agregar_rol_view(self):
         print "Prueba: Confirmacion de agregacion de rol a proyecto"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/confirmacion_agregar_rol/1/proyecto/1/')
-        self.user = User.objects.get(pk=2)
+        request = self.factory.get('/administracion/gestion_proyectos/confirmacion_agregar_rol/4/proyecto/2/')
+        self.user = User.objects.get(pk=3)
         request.user = self.user
-        response = proyecto_confirmacion_agregar_rol_view(request, 1, 1)
+        response = proyecto_confirmacion_agregar_rol_view(request, 2, 4)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina de confirmacion de agregacion de rol a un proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
         self.assertTrue('rol' in response.content, "[GET] No se ha encontrado el contenido rol en la pagina retornada.")
         
-        proyecto = Proyecto.objects.get(pk=1)
-        rol = proyecto.roles.filter(pk=1)
+        proyecto = Proyecto.objects.get(pk=2)
+        rol = proyecto.roles.filter(pk=4)
         
         self.assertTrue(rol, "No se ha encontrado el rol recientemente agregado al proyecto.")
         print "Confirmacion de agregacion de rol a proyecto sin errores\n"
@@ -568,17 +582,17 @@ class ProyectoTestCase(TestCase):
     def test_proyecto_quitar_rol_view(self):
         print "Prueba: Quitar rol de proyecto"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/quitar_rol/1/proyecto/1/')
-        self.user = User.objects.get(pk=2)
+        request = self.factory.get('/administracion/gestion_proyectos/quitar_rol/3/proyecto/2/')
+        self.user = User.objects.get(pk=3)
         request.user = self.user
-        response = proyecto_quitar_rol_view(request, 1, 1)
+        response = proyecto_quitar_rol_view(request, 2, 3)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina para quitar un rol de un proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
         self.assertTrue('rol' in response.content, "[GET] No se ha encontrado el contenido rol en la pagina retornada.")
         
-        proyecto = Proyecto.objects.get(pk=1)
-        rol = proyecto.roles.filter(pk=1)
+        proyecto = Proyecto.objects.get(pk=2)
+        rol = proyecto.roles.filter(pk=3)
         
         self.assertFalse(rol, "Se ha encontrado el rol recientemente quitado del proyecto.")
         print "Quitar rol de proyecto sin errores\n"
@@ -586,10 +600,10 @@ class ProyectoTestCase(TestCase):
     def test_comite_proyecto_view(self):
         print "Prueba: Gestion de comite de cambios de proyecto"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/comite/proyecto/1/')
-        self.user = User.objects.get(pk=2)
+        request = self.factory.get('/administracion/gestion_proyectos/comite/proyecto/2/')
+        self.user = User.objects.get(pk=3)
         request.user = self.user
-        response = comite_proyecto_view(request, 1)
+        response = comite_proyecto_view(request, 2)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina de gestion de comite de un proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
@@ -599,17 +613,17 @@ class ProyectoTestCase(TestCase):
     def test_proyecto_confirmacion_agregar_miembro_view(self):
         print "Prueba: Confirmacion de agregacion de miembro a comite de cambios"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/confirmacion_agregar_miembro/1/proyecto/1/')
-        self.user = User.objects.get(pk=2)
+        request = self.factory.get('/administracion/gestion_proyectos/confirmacion_agregar_miembro/4/proyecto/2/')
+        self.user = User.objects.get(pk=3)
         request.user = self.user
-        response = proyecto_confirmacion_agregar_miembro_view(request, 1, 1)
+        response = proyecto_confirmacion_agregar_miembro_view(request, 2, 4)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina de confirmacion de agregacion de miembro a un comite de cambios retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
         self.assertTrue('usuario' in response.content, "[GET] No se ha encontrado el contenido usuario en la pagina retornada.")
         
-        proyecto = Proyecto.objects.get(pk=1)
-        miembro = proyecto.comite_de_cambios.filter(pk=1)
+        proyecto = Proyecto.objects.get(pk=2)
+        miembro = proyecto.comite_de_cambios.filter(pk=4)
         
         self.assertTrue(miembro, "No se ha encontrado el miembro recientemente agregado al comite de cambios.")
         print "Confirmacion de agregacion de miembro a comite de cambios sin errores\n"
@@ -617,30 +631,99 @@ class ProyectoTestCase(TestCase):
     def test_proyecto_quitar_miembro_view(self):
         print "Prueba: Quitar miembro de comite de cambios"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/quitar_miembro/1/proyecto/1/')
-        self.user = User.objects.get(pk=2)
+        request = self.factory.get('/administracion/gestion_proyectos/quitar_miembro/2/proyecto/2/')
+        self.user = User.objects.get(pk=3)
         request.user = self.user
-        response = proyecto_quitar_miembro_view(request, 1, 1)
+        response = proyecto_quitar_miembro_view(request, 2, 2)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina para quitar un miembro de un comite de cambios retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
         self.assertTrue('usuario' in response.content, "[GET] No se ha encontrado el contenido usuario en la pagina retornada.")
         
-        proyecto = Proyecto.objects.get(pk=1)
-        miembro = proyecto.comite_de_cambios.filter(pk=1)
+        proyecto = Proyecto.objects.get(pk=2)
+        miembro = proyecto.comite_de_cambios.filter(pk=2)
         
         self.assertFalse(miembro, "Se ha encontrado el miembro recientemente quitado del comite de cambios.")
         print "Quitar miembro de comite de cambios sin errores\n"
+        
+    def test_crear_fase_view(self):
+        print "Prueba: Crear fase"
+        print ""
+        request = self.factory.get('/administracion/gestion_proyectos/fases/crear_fase/proyecto/2/')
+        self.user = User.objects.get(pk=3)
+        request.user = self.user
+        response = crear_fase_view(request, 2)
+        
+        self.assertEqual(response.status_code, 200, "[GET] La pagina de creacion de fase retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
+        self.assertTrue('form' in response.content, "[GET] No se ha encontrado el contenido form en la pagina retornada.")
+        
+        self.client.login(username='rodrigo', password='rodrigo')
+        
+        response = self.client.post('/administracion/gestion_proyectos/fases/crear_fase/proyecto/2/', {'nombre': 'Fase', 'descripcion':'Descripcion de la fase.', 'fecha_inicio':'19/12/2014', 'duracion':2})
+        
+        self.assertEqual(response.status_code, 302, "[POST] La pagina de creacion de fase no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 302"%response.status_code)
+        self.assertEqual(response['Location'], 'http://testserver/administracion/gestion_proyectos/fases/proyecto/2', "[POST] La direccion de la pagina de creacion de fase retornada no es correcta.\nDireccion de la pagina retornada: %s\nDireccion de la pagina esperada: http://testserver/administracion/gestion_proyectos/fases/proyecto/2"%response['Location'])
+        
+        fase = Fase.objects.filter(pk=6)
+        
+        self.assertTrue(fase, "No se ha encontrado la fase recientemente creada.")
+        print "Creacion de fase sin errores\n"
+
+    def test_modificar_fase_view(self):
+        print "Prueba: Modificar fase"
+        print ""
+        request = self.factory.get('/administracion/gestion_proyectos/fases/modificar_fase/4/proyecto/2/')
+        self.user = User.objects.get(pk=3)
+        request.user = self.user
+        response = modificar_fase_view(request, 2, 4)
+        
+        self.assertEqual(response.status_code, 200, "[GET] La pagina de modificacion de fase retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
+        self.assertTrue('form' in response.content, "[GET] No se ha encontrado el contenido form en la pagina retornada.")
+        self.assertTrue('fase' in response.content, "[GET] No se ha encontrado el contenido fase en la pagina retornada.")
+        
+        self.client.login(username='rodrigo', password='rodrigo')
+        
+        response = self.client.post('/administracion/gestion_proyectos/fases/modificar_fase/4/proyecto/2/', {'nombre': 'Fase Nueva', 'descripcion':'Descripcion de la fase.', 'fecha_inicio':'19/12/2014', 'duracion':2})
+        
+        self.assertEqual(response.status_code, 302, "[POST] La pagina de modificacion de fase retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 302"%response.status_code)
+        self.assertEqual(response['Location'], 'http://testserver/administracion/gestion_proyectos/fases/proyecto/2', "[POST] La direccion de la pagina de modificacion de proyecto retornada no es correcta.\nDireccion de la pagina retornada: %s\nDireccion de la pagina esperada: http://testserver/administracion/gestion_proyectos/fases/proyecto/2"%response['Location'])
+        
+        nombre = Fase.objects.get(pk=4).nombre
+        
+        self.assertEqual(nombre, 'Fase Nueva', "La modificacion de la fase no se ha concretado correctamente.")
+        print "Modificacion de fase sin errores\n"
+
+    def test_eliminar_fase_view(self):
+        print "Prueba: Eliminar fase"
+        print ""
+        request = self.factory.get('/administracion/gestion_proyectos/fases/eliminar_fase/4/proyecto/2/')
+        self.user = User.objects.get(pk=3)
+        request.user = self.user
+        response = eliminar_fase_view(request, 2, 4)
+        
+        self.assertEqual(response.status_code, 200, "[GET] La pagina de eliminacion de fase retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
+        self.assertTrue('fase' in response.content, "[GET] No se ha encontrado el contenido fase en la pagina retornada.")
+        
+        self.client.login(username='rodrigo', password='rodrigo')
+        
+        response = self.client.post('/administracion/gestion_proyectos/fases/eliminar_fase/4/proyecto/2/')
+        
+        self.assertEqual(response.status_code, 302, "[POST] La pagina de eliminacion de fase retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 302"%response.status_code)
+        self.assertEqual(response['Location'], 'http://testserver/administracion/gestion_proyectos/fases/proyecto/2', "[POST] La direccion de la pagina de eliminacion de proyecto retornada no es correcta.\nDireccion de la pagina retornada: %s\nDireccion de la pagina esperada: http://testserver/administracion/gestion_proyectos/fases/proyecto/2"%response['Location'])
+        
+        fase = Fase.objects.filter(pk=4)
+        
+        self.assertFalse(fase, "Se ha encontrado la fase recientemente eliminada.")
+        print "Eliminacion de fase sin errores\n"
     
     def test_iniciar_proyecto_view(self):
         print "Prueba: Iniciar proyecto"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/iniciar_proyecto/1/')
-        self.user = User.objects.get(pk=2)
+        request = self.factory.get('/administracion/gestion_proyectos/iniciar_proyecto/2/')
+        self.user = User.objects.get(pk=3)
         request.user = self.user
         response = iniciar_proyecto_view(request, 1)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina para iniciar proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
         print "Iniciar proyecto sin errores\n"
-"""

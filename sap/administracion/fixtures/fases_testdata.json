@@ -1,0 +1,81 @@
+[
+{
+    "pk": 1, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [
+            3, 
+            2
+        ], 
+        "num_secuencia": 1, 
+        "fecha_inicio": "2014-05-22", 
+        "duracion": 1, 
+        "descripcion": "", 
+        "nombre": "Fase inicial", 
+        "proyecto": 1, 
+        "estado": 1
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [
+            3, 
+            2
+        ], 
+        "num_secuencia": 2, 
+        "fecha_inicio": "2014-05-23", 
+        "duracion": 1, 
+        "descripcion": "", 
+        "nombre": "Fase de desarrollo", 
+        "proyecto": 1, 
+        "estado": 1
+    }
+},
+{
+    "pk": 3, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [
+            3, 
+            2
+        ], 
+        "num_secuencia": 3, 
+        "fecha_inicio": "2014-05-24", 
+        "duracion": 1, 
+        "descripcion": "", 
+        "nombre": "Fase de cierre", 
+        "proyecto": 1, 
+        "estado": 1
+    }
+},
+{
+    "pk": 4, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [], 
+        "num_secuencia": 1, 
+        "fecha_inicio": "2014-05-28", 
+        "duracion": 5, 
+        "descripcion": "", 
+        "nombre": "Fase inicial", 
+        "proyecto": 2, 
+        "estado": 0
+    }
+},
+{
+    "pk": 5, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [], 
+        "num_secuencia": 2, 
+        "fecha_inicio": "2014-05-31", 
+        "duracion": 2, 
+        "descripcion": "", 
+        "nombre": "Fase final", 
+        "proyecto": 2, 
+        "estado": 0
+    }
+}
+]

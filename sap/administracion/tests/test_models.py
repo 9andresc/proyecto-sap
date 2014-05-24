@@ -1,6 +1,6 @@
 from django.test import TestCase
-from administracion.models import Permiso, Rol, TipoAtributo, Proyecto
-"""
+from administracion.models import Permiso, Rol, TipoAtributo, Proyecto, Fase
+
 class PermisoTest(TestCase):
     def crear_permiso(self, nombre="Un permiso"):
         return Permiso.objects.create(nombre=nombre)
@@ -37,6 +37,18 @@ class TipoAtributoTest(TestCase):
         self.assertEqual(t.__unicode__(), t.nombre, "El campo nombre de la variable t no coincide con el valor retornado por la funcion __unicode__().")
         print "Prueba: Creacion de la clase TipoAtributo sin errores\n"
         
+class FaseTest(TestCase):
+    def crear_fase(self, nombre="Una fase", descripcion="Descripcion de una fase.", fecha_inicio="2014-12-19"):
+        return Fase.objects.create(nombre=nombre, descripcion=descripcion, fecha_inicio=fecha_inicio)
+    
+    def test_creacion_fase(self):
+        print "Prueba: Creacion de la clase Fase"
+        print ""
+        f = self.crear_fase()
+        self.assertTrue(isinstance(f, Fase), "La variable f no es instancia de la clase Fase.")
+        self.assertEqual(f.__unicode__(), f.nombre, "El campo nombre de la variable f no coincide con el valor retornado por la funcion __unicode__().")
+        print "Creacion de la clase Fase sin errores\n"
+        
 class ProyectoTest(TestCase):
     def crear_proyecto(self, nombre="Un proyecto", descripcion="Descripcion de un proyecto.", fecha_inicio="2014-12-19"):
         return Proyecto.objects.create(nombre=nombre, descripcion=descripcion, fecha_inicio=fecha_inicio)
@@ -48,4 +60,3 @@ class ProyectoTest(TestCase):
         self.assertTrue(isinstance(p, Proyecto), "La variable p no es instancia de la clase Proyecto.")
         self.assertEqual(p.__unicode__(), p.nombre, "El campo nombre de la variable p no coincide con el valor retornado por la funcion __unicode__().")
         print "Creacion de la clase Proyecto sin errores\n"
-"""
