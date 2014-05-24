@@ -1,6 +1,350 @@
 [
 {
     "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "admin", 
+        "first_name": "", 
+        "last_name": "", 
+        "roles": [
+            1
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2014-05-24T02:58:56.806", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$u9UhE2ICdPeP$ihyjAOyaClNXAt6L2TAZqxDqJl59k30ZnFsJs2dDuQo=", 
+        "estado": 1, 
+        "email": "admin@sap.com", 
+        "date_joined": "2014-05-02T12:04:09.370"
+    }
+},
+{
+    "pk": 2, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "gustavo", 
+        "first_name": "Gustavo", 
+        "last_name": "Cabral", 
+        "roles": [
+            2, 
+            4
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-24T02:23:21.072", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$xP5EtVFCxgJZ$F53IGwFUrRMRFUDYdwQmi7xwz+GCGgQ5Wk16gnj8w7A=", 
+        "estado": 1, 
+        "email": "gustavo@sap.com", 
+        "date_joined": "2014-05-06T15:49:56.934"
+    }
+},
+{
+    "pk": 3, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "rodrigo", 
+        "first_name": "Rodrigo", 
+        "last_name": "Santos", 
+        "roles": [
+            2
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-24T02:59:58.145", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$0tls7L0w5UYv$p8WkVeYxRvAkQujDPVEku4A55+Hb4qS7YoqB/55Lzm0=", 
+        "estado": 1, 
+        "email": "rodrigo@sap.com", 
+        "date_joined": "2014-05-06T15:50:23.398"
+    }
+},
+{
+    "pk": 4, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "andres", 
+        "first_name": "Andres", 
+        "last_name": "Cabral", 
+        "roles": [
+            3
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-06T15:51:26.809", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$zMoCHpVyDF7b$6VfNgS2YXL7UL2vJxnhLxZb+uL+9PzR63BSla1QhoI4=", 
+        "estado": 1, 
+        "email": "andres@sap.com", 
+        "date_joined": "2014-05-06T15:51:26.809"
+    }
+},
+{
+    "pk": 5, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "gabriel", 
+        "first_name": "Gabriel", 
+        "last_name": "Santos", 
+        "roles": [], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-06T15:51:52.210", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$7RD4XdN3BAIW$BM+P2Rxz3d1+LI1SSq66lkaj5Y4BUaGH792/g3pPZS8=", 
+        "estado": 1, 
+        "email": "gabriel@sap.com", 
+        "date_joined": "2014-05-06T15:51:52.210"
+    }
+},
+{
+    "pk": 6, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "akira", 
+        "first_name": "Akira", 
+        "last_name": "Shimosoeda", 
+        "roles": [], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-06T15:54:14.947", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$iJQWUWRf19pz$HwHUyRgdIFgColcAxLQeX4yUFT2CniWhBBM0HDgYbpI=", 
+        "estado": 1, 
+        "email": "akira@sap.com", 
+        "date_joined": "2014-05-06T15:54:14.947"
+    }
+},
+{
+    "pk": 7, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "marcos", 
+        "first_name": "Marcos", 
+        "last_name": "Aquino", 
+        "roles": [
+            4
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-24T02:14:21.406", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$NrB88Oek4Yak$Z2PeNgT75iFq4vt8Pdst6e8NjFpp6ZXgrE7Hp7/VbmI=", 
+        "estado": 1, 
+        "email": "marcos@sap.com", 
+        "date_joined": "2014-05-06T15:54:45.236"
+    }
+},
+{
+    "pk": 8, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "alexis", 
+        "first_name": "Alexis", 
+        "last_name": "Ojeda", 
+        "roles": [
+            4
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-24T02:15:01.836", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$e2RGNNYpy3E9$LdiqwaH3+rGOyB0ghMoecSorCz8U3nxI1qUjFTi4hAk=", 
+        "estado": 1, 
+        "email": "alexis@sap.com", 
+        "date_joined": "2014-05-06T15:55:33.092"
+    }
+},
+{
+    "pk": 9, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "gerardo", 
+        "first_name": "Gerardo", 
+        "last_name": "Ramos", 
+        "roles": [
+            4
+        ], 
+        "telefono": "", 
+        "is_active": true, 
+        "direccion": "", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-05-24T02:15:29.748", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$QSnQCFjeXmVJ$Qt3c8qS6VKGp96InPvHIrcYwJmPrhCmGvGFiGCeBLEo=", 
+        "estado": 1, 
+        "email": "gerardo@sap.com", 
+        "date_joined": "2014-05-06T15:56:04.665"
+    }
+},
+{
+    "pk": 1, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee todos los permisos relacionados a los usuarios y los roles.", 
+        "nombre": "Administrador", 
+        "permisos": [
+            14, 
+            7, 
+            5, 
+            20, 
+            9, 
+            1, 
+            11, 
+            3, 
+            13, 
+            6, 
+            10, 
+            2, 
+            15, 
+            8, 
+            12, 
+            4
+        ]
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee todos los permisos relacionados a tipos de atributos, tipos de item, items, proyectos y fases.", 
+        "nombre": "Lider de proyecto", 
+        "permisos": [
+            32, 
+            72, 
+            29, 
+            62, 
+            42, 
+            35, 
+            55, 
+            26, 
+            64, 
+            49, 
+            5, 
+            74, 
+            37, 
+            45, 
+            69, 
+            78, 
+            16, 
+            52, 
+            39, 
+            48, 
+            22, 
+            18, 
+            58, 
+            51, 
+            28, 
+            31, 
+            44, 
+            71, 
+            68, 
+            61, 
+            41, 
+            34, 
+            54, 
+            60, 
+            25, 
+            66, 
+            50, 
+            24, 
+            38, 
+            46, 
+            21, 
+            17, 
+            53, 
+            33, 
+            73, 
+            30, 
+            63, 
+            43, 
+            36, 
+            56, 
+            27, 
+            67, 
+            65, 
+            40, 
+            47, 
+            70, 
+            23, 
+            19, 
+            59
+        ]
+    }
+},
+{
+    "pk": 3, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee todos los permisos de gesti\u00f3n de items.", 
+        "nombre": "Desarrollador", 
+        "permisos": [
+            62, 
+            64, 
+            5, 
+            45, 
+            78, 
+            48, 
+            44, 
+            61, 
+            66, 
+            46, 
+            63, 
+            67, 
+            65, 
+            47
+        ]
+    }
+},
+{
+    "pk": 4, 
+    "model": "administracion.rol", 
+    "fields": {
+        "descripcion": "Posee los permisos necesarios para listar, analizar y votar solicitudes de cambio pendientes.", 
+        "nombre": "Miembro de comite de cambios", 
+        "permisos": [
+            77, 
+            76
+        ]
+    }
+},
+{
+    "pk": 1, 
     "model": "administracion.permiso", 
     "fields": {
         "nombre": "Crear usuario"
@@ -533,337 +877,6 @@
 },
 {
     "pk": 1, 
-    "model": "administracion.rol", 
-    "fields": {
-        "descripcion": "Posee todos los permisos relacionados a los usuarios y los roles.", 
-        "nombre": "Administrador", 
-        "permisos": [
-            14, 
-            7, 
-            5, 
-            20, 
-            9, 
-            1, 
-            11, 
-            3, 
-            13, 
-            6, 
-            10, 
-            2, 
-            15, 
-            8, 
-            12, 
-            4
-        ]
-    }
-},
-{
-    "pk": 2, 
-    "model": "administracion.rol", 
-    "fields": {
-        "descripcion": "Posee todos los permisos relacionados a tipos de atributos, tipos de item, items, proyectos y fases.", 
-        "nombre": "Lider de proyecto", 
-        "permisos": [
-            32, 
-            72, 
-            29, 
-            62, 
-            42, 
-            35, 
-            55, 
-            26, 
-            64, 
-            49, 
-            5, 
-            74, 
-            37, 
-            45, 
-            69, 
-            78, 
-            16, 
-            52, 
-            39, 
-            48, 
-            22, 
-            18, 
-            58, 
-            51, 
-            28, 
-            31, 
-            44, 
-            71, 
-            68, 
-            61, 
-            41, 
-            34, 
-            54, 
-            60, 
-            25, 
-            66, 
-            50, 
-            24, 
-            38, 
-            46, 
-            21, 
-            17, 
-            53, 
-            33, 
-            73, 
-            30, 
-            63, 
-            43, 
-            36, 
-            56, 
-            27, 
-            67, 
-            65, 
-            40, 
-            47, 
-            70, 
-            23, 
-            19, 
-            59
-        ]
-    }
-},
-{
-    "pk": 3, 
-    "model": "administracion.rol", 
-    "fields": {
-        "descripcion": "Posee todos los permisos de gesti\u00f3n de items.", 
-        "nombre": "Desarrollador", 
-        "permisos": [
-            62, 
-            64, 
-            5, 
-            45, 
-            78, 
-            48, 
-            44, 
-            61, 
-            66, 
-            46, 
-            63, 
-            67, 
-            65, 
-            47
-        ]
-    }
-},
-{
-    "pk": 4, 
-    "model": "administracion.rol", 
-    "fields": {
-        "descripcion": "Posee los permisos necesarios para listar, analizar y votar solicitudes de cambio pendientes.", 
-        "nombre": "Miembro de comite de cambios", 
-        "permisos": [
-            77, 
-            76
-        ]
-    }
-},
-{
-    "pk": 1, 
-    "model": "auth.user", 
-    "fields": {
-        "username": "admin", 
-        "first_name": "", 
-        "last_name": "", 
-        "roles": [
-            1
-        ], 
-        "telefono": "", 
-        "is_active": true, 
-        "direccion": "", 
-        "is_superuser": true, 
-        "is_staff": true, 
-        "last_login": "2014-05-16T15:31:40.206Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$12000$u9UhE2ICdPeP$ihyjAOyaClNXAt6L2TAZqxDqJl59k30ZnFsJs2dDuQo=", 
-        "estado": 1, 
-        "email": "admin@sap.com", 
-        "date_joined": "2014-05-02T16:04:09.370Z"
-    }
-},
-{
-    "pk": 2, 
-    "model": "auth.user", 
-    "fields": {
-        "username": "gustavo", 
-        "first_name": "Gustavo", 
-        "last_name": "Cabral", 
-        "roles": [], 
-        "telefono": "", 
-        "is_active": true, 
-        "direccion": "", 
-        "is_superuser": false, 
-        "is_staff": false, 
-        "last_login": "2014-05-16T15:32:27.378Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$12000$xP5EtVFCxgJZ$F53IGwFUrRMRFUDYdwQmi7xwz+GCGgQ5Wk16gnj8w7A=", 
-        "estado": 1, 
-        "email": "gustavo@sap.com", 
-        "date_joined": "2014-05-06T19:49:56.934Z"
-    }
-},
-{
-    "pk": 3, 
-    "model": "auth.user", 
-    "fields": {
-        "username": "rodrigo", 
-        "first_name": "Rodrigo", 
-        "last_name": "Santos", 
-        "roles": [], 
-        "telefono": "", 
-        "is_active": true, 
-        "direccion": "", 
-        "is_superuser": false, 
-        "is_staff": false, 
-        "last_login": "2014-05-16T15:23:53.094Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$12000$0tls7L0w5UYv$p8WkVeYxRvAkQujDPVEku4A55+Hb4qS7YoqB/55Lzm0=", 
-        "estado": 1, 
-        "email": "rodrigo@sap.com", 
-        "date_joined": "2014-05-06T19:50:23.398Z"
-    }
-},
-{
-    "pk": 4, 
-    "model": "auth.user", 
-    "fields": {
-        "username": "andres", 
-        "first_name": "Andres", 
-        "last_name": "Cabral", 
-        "roles": [], 
-        "telefono": "", 
-        "is_active": true, 
-        "direccion": "", 
-        "is_superuser": false, 
-        "is_staff": false, 
-        "last_login": "2014-05-06T19:51:26.809Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$12000$zMoCHpVyDF7b$6VfNgS2YXL7UL2vJxnhLxZb+uL+9PzR63BSla1QhoI4=", 
-        "estado": 1, 
-        "email": "andres@sap.com", 
-        "date_joined": "2014-05-06T19:51:26.809Z"
-    }
-},
-{
-    "pk": 5, 
-    "model": "auth.user", 
-    "fields": {
-        "username": "gabriel", 
-        "first_name": "Gabriel", 
-        "last_name": "Santos", 
-        "roles": [], 
-        "telefono": "", 
-        "is_active": true, 
-        "direccion": "", 
-        "is_superuser": false, 
-        "is_staff": false, 
-        "last_login": "2014-05-06T19:51:52.210Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$12000$7RD4XdN3BAIW$BM+P2Rxz3d1+LI1SSq66lkaj5Y4BUaGH792/g3pPZS8=", 
-        "estado": 1, 
-        "email": "gabriel@sap.com", 
-        "date_joined": "2014-05-06T19:51:52.210Z"
-    }
-},
-{
-    "pk": 6, 
-    "model": "auth.user", 
-    "fields": {
-        "username": "akira", 
-        "first_name": "Akira", 
-        "last_name": "Shimosoeda", 
-        "roles": [], 
-        "telefono": "", 
-        "is_active": true, 
-        "direccion": "", 
-        "is_superuser": false, 
-        "is_staff": false, 
-        "last_login": "2014-05-06T19:54:14.947Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$12000$iJQWUWRf19pz$HwHUyRgdIFgColcAxLQeX4yUFT2CniWhBBM0HDgYbpI=", 
-        "estado": 1, 
-        "email": "akira@sap.com", 
-        "date_joined": "2014-05-06T19:54:14.947Z"
-    }
-},
-{
-    "pk": 7, 
-    "model": "auth.user", 
-    "fields": {
-        "username": "marcos", 
-        "first_name": "Marcos", 
-        "last_name": "Aquino", 
-        "roles": [], 
-        "telefono": "", 
-        "is_active": true, 
-        "direccion": "", 
-        "is_superuser": false, 
-        "is_staff": false, 
-        "last_login": "2014-05-06T19:54:45.236Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$12000$NrB88Oek4Yak$Z2PeNgT75iFq4vt8Pdst6e8NjFpp6ZXgrE7Hp7/VbmI=", 
-        "estado": 1, 
-        "email": "marcos@sap.com", 
-        "date_joined": "2014-05-06T19:54:45.236Z"
-    }
-},
-{
-    "pk": 8, 
-    "model": "auth.user", 
-    "fields": {
-        "username": "alexis", 
-        "first_name": "Alexis", 
-        "last_name": "Ojeda", 
-        "roles": [], 
-        "telefono": "", 
-        "is_active": true, 
-        "direccion": "", 
-        "is_superuser": false, 
-        "is_staff": false, 
-        "last_login": "2014-05-06T19:55:33.092Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$12000$e2RGNNYpy3E9$LdiqwaH3+rGOyB0ghMoecSorCz8U3nxI1qUjFTi4hAk=", 
-        "estado": 1, 
-        "email": "alexis@sap.com", 
-        "date_joined": "2014-05-06T19:55:33.092Z"
-    }
-},
-{
-    "pk": 9, 
-    "model": "auth.user", 
-    "fields": {
-        "username": "gerardo", 
-        "first_name": "Gerardo", 
-        "last_name": "Ramos", 
-        "roles": [], 
-        "telefono": "", 
-        "is_active": true, 
-        "direccion": "", 
-        "is_superuser": false, 
-        "is_staff": false, 
-        "last_login": "2014-05-06T19:56:04.665Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$12000$QSnQCFjeXmVJ$Qt3c8qS6VKGp96InPvHIrcYwJmPrhCmGvGFiGCeBLEo=", 
-        "estado": 1, 
-        "email": "gerardo@sap.com", 
-        "date_joined": "2014-05-06T19:56:04.665Z"
-    }
-},
-{
-    "pk": 1, 
     "model": "administracion.tipoatributo", 
     "fields": {
         "num_longitud": 8, 
@@ -928,6 +941,542 @@
         "nombre": "Adjunto", 
         "obligatorio": false, 
         "num_max": null
+    }
+},
+{
+    "pk": 1, 
+    "model": "administracion.proyecto", 
+    "fields": {
+        "comite_de_cambios": [
+            7, 
+            8, 
+            9
+        ], 
+        "roles": [
+            3, 
+            2
+        ], 
+        "usuario_lider": 2, 
+        "fecha_inicio": "2014-05-22", 
+        "complejidad": 5, 
+        "presupuesto": 1500000.0, 
+        "descripcion": "", 
+        "nombre": "Proyecto Uno", 
+        "usuarios": [
+            2
+        ], 
+        "estado": 1
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.proyecto", 
+    "fields": {
+        "comite_de_cambios": [
+            2
+        ], 
+        "roles": [
+            3, 
+            2
+        ], 
+        "usuario_lider": 3, 
+        "fecha_inicio": "2014-05-26", 
+        "complejidad": 5, 
+        "presupuesto": 1500000.0, 
+        "descripcion": "", 
+        "nombre": "Proyecto Dos", 
+        "usuarios": [
+            3, 
+            4
+        ], 
+        "estado": 0
+    }
+},
+{
+    "pk": 1, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [
+            3, 
+            2
+        ], 
+        "num_secuencia": 1, 
+        "fecha_inicio": "2014-05-22", 
+        "duracion": 1, 
+        "descripcion": "", 
+        "nombre": "Fase inicial", 
+        "proyecto": 1, 
+        "estado": 1
+    }
+},
+{
+    "pk": 2, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [
+            3, 
+            2
+        ], 
+        "num_secuencia": 2, 
+        "fecha_inicio": "2014-05-23", 
+        "duracion": 1, 
+        "descripcion": "", 
+        "nombre": "Fase de desarrollo", 
+        "proyecto": 1, 
+        "estado": 1
+    }
+},
+{
+    "pk": 3, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [
+            3, 
+            2
+        ], 
+        "num_secuencia": 3, 
+        "fecha_inicio": "2014-05-24", 
+        "duracion": 1, 
+        "descripcion": "", 
+        "nombre": "Fase de cierre", 
+        "proyecto": 1, 
+        "estado": 1
+    }
+},
+{
+    "pk": 4, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [], 
+        "num_secuencia": 1, 
+        "fecha_inicio": "2014-05-28", 
+        "duracion": 5, 
+        "descripcion": "", 
+        "nombre": "Fase inicial", 
+        "proyecto": 2, 
+        "estado": 0
+    }
+},
+{
+    "pk": 5, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [], 
+        "num_secuencia": 2, 
+        "fecha_inicio": "2014-05-31", 
+        "duracion": 2, 
+        "descripcion": "", 
+        "nombre": "Fase final", 
+        "proyecto": 2, 
+        "estado": 0
+    }
+},
+{
+    "pk": 1, 
+    "model": "desarrollo.tipoitem", 
+    "fields": {
+        "descripcion": "", 
+        "nombre": "Tipo de item inicial", 
+        "tipos_atributo": [
+            4, 
+            2
+        ], 
+        "fase": 1
+    }
+},
+{
+    "pk": 2, 
+    "model": "desarrollo.tipoitem", 
+    "fields": {
+        "descripcion": "", 
+        "nombre": "Tipo de item des", 
+        "tipos_atributo": [
+            3, 
+            1
+        ], 
+        "fase": 2
+    }
+},
+{
+    "pk": 3, 
+    "model": "desarrollo.tipoitem", 
+    "fields": {
+        "descripcion": "", 
+        "nombre": "Tipo de item cierre", 
+        "tipos_atributo": [], 
+        "fase": 3
+    }
+},
+{
+    "pk": 1, 
+    "model": "desarrollo.item", 
+    "fields": {
+        "padre": null, 
+        "linea_base": 1, 
+        "costo_temporal": 1.0, 
+        "tipo_relacion": null, 
+        "costo_monetario": 1000.0, 
+        "version": 4.0, 
+        "complejidad": 1, 
+        "adan": null, 
+        "cain": null, 
+        "descripcion": "", 
+        "nombre": "A", 
+        "estado": 2, 
+        "tipo_item": 1, 
+        "fase": 1
+    }
+},
+{
+    "pk": 2, 
+    "model": "desarrollo.item", 
+    "fields": {
+        "padre": 1, 
+        "linea_base": 1, 
+        "costo_temporal": 1.0, 
+        "tipo_relacion": 0, 
+        "costo_monetario": 1500.0, 
+        "version": 6.0, 
+        "complejidad": 1, 
+        "adan": 1, 
+        "cain": null, 
+        "descripcion": "", 
+        "nombre": "B", 
+        "estado": 2, 
+        "tipo_item": 1, 
+        "fase": 1
+    }
+},
+{
+    "pk": 3, 
+    "model": "desarrollo.item", 
+    "fields": {
+        "padre": 1, 
+        "linea_base": 1, 
+        "costo_temporal": 1.0, 
+        "tipo_relacion": 0, 
+        "costo_monetario": 1500.0, 
+        "version": 6.0, 
+        "complejidad": 1, 
+        "adan": 1, 
+        "cain": null, 
+        "descripcion": "", 
+        "nombre": "C", 
+        "estado": 2, 
+        "tipo_item": 1, 
+        "fase": 1
+    }
+},
+{
+    "pk": 4, 
+    "model": "desarrollo.item", 
+    "fields": {
+        "padre": 3, 
+        "linea_base": 2, 
+        "costo_temporal": 1.0, 
+        "tipo_relacion": 0, 
+        "costo_monetario": 2000.0, 
+        "version": 5.0, 
+        "complejidad": 1, 
+        "adan": 1, 
+        "cain": 3, 
+        "descripcion": "", 
+        "nombre": "D", 
+        "estado": 1, 
+        "tipo_item": 1, 
+        "fase": 1
+    }
+},
+{
+    "pk": 5, 
+    "model": "desarrollo.item", 
+    "fields": {
+        "padre": 1, 
+        "linea_base": null, 
+        "costo_temporal": 1.0, 
+        "tipo_relacion": 1, 
+        "costo_monetario": 2000.0, 
+        "version": 3.0, 
+        "complejidad": 1, 
+        "adan": 1, 
+        "cain": null, 
+        "descripcion": "", 
+        "nombre": "E", 
+        "estado": 0, 
+        "tipo_item": 2, 
+        "fase": 2
+    }
+},
+{
+    "pk": 6, 
+    "model": "desarrollo.item", 
+    "fields": {
+        "padre": 5, 
+        "linea_base": null, 
+        "costo_temporal": 1.0, 
+        "tipo_relacion": 0, 
+        "costo_monetario": 2500.0, 
+        "version": 5.0, 
+        "complejidad": 1, 
+        "adan": 1, 
+        "cain": 5, 
+        "descripcion": "", 
+        "nombre": "F", 
+        "estado": 0, 
+        "tipo_item": 2, 
+        "fase": 2
+    }
+},
+{
+    "pk": 7, 
+    "model": "desarrollo.item", 
+    "fields": {
+        "padre": 5, 
+        "linea_base": null, 
+        "costo_temporal": 1.0, 
+        "tipo_relacion": 0, 
+        "costo_monetario": 3000.0, 
+        "version": 5.0, 
+        "complejidad": 1, 
+        "adan": 1, 
+        "cain": 5, 
+        "descripcion": "", 
+        "nombre": "G", 
+        "estado": 0, 
+        "tipo_item": 2, 
+        "fase": 2
+    }
+},
+{
+    "pk": 1, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 4, 
+        "valor_fecha": null, 
+        "item": 1, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 2, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 2, 
+        "valor_fecha": null, 
+        "item": 1, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 3, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 4, 
+        "valor_fecha": null, 
+        "item": 2, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 4, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 2, 
+        "valor_fecha": null, 
+        "item": 2, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 5, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 4, 
+        "valor_fecha": null, 
+        "item": 3, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 6, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 2, 
+        "valor_fecha": null, 
+        "item": 3, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 7, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 4, 
+        "valor_fecha": null, 
+        "item": 4, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 8, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 2, 
+        "valor_fecha": null, 
+        "item": 4, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 1, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 9, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 5, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 2, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 10, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 5, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 2, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 11, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 6, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 2, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 12, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 6, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 2, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 13, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 7, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 2, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 14, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 7, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 2, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 1, 
+    "model": "desarrollo.lineabase", 
+    "fields": {
+        "descripcion": "", 
+        "nombre": "LB Uno", 
+        "num_secuencia": 1, 
+        "estado": 1, 
+        "fase": 1
+    }
+},
+{
+    "pk": 2, 
+    "model": "desarrollo.lineabase", 
+    "fields": {
+        "descripcion": "", 
+        "nombre": "LB Dos", 
+        "num_secuencia": 2, 
+        "estado": 0, 
+        "fase": 1
     }
 }
 ]

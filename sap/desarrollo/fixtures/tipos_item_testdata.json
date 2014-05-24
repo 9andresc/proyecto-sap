@@ -4,10 +4,10 @@
     "model": "desarrollo.tipoitem", 
     "fields": {
         "descripcion": "", 
-        "nombre": "TPUno", 
+        "nombre": "Tipo de item inicial", 
         "tipos_atributo": [
-            3, 
-            1
+            4, 
+            2
         ], 
         "fase": 1
     }
@@ -17,12 +17,12 @@
     "model": "desarrollo.tipoitem", 
     "fields": {
         "descripcion": "", 
-        "nombre": "TPDos", 
+        "nombre": "Tipo de item des", 
         "tipos_atributo": [
-            4, 
-            2
+            3, 
+            1
         ], 
-        "fase": 1
+        "fase": 2
     }
 },
 {
@@ -30,24 +30,8 @@
     "model": "desarrollo.tipoitem", 
     "fields": {
         "descripcion": "", 
-        "nombre": "TPTres", 
-        "tipos_atributo": [
-            4, 
-            1
-        ], 
-        "fase": 2
-    }
-},
-{
-    "pk": 4, 
-    "model": "desarrollo.tipoitem", 
-    "fields": {
-        "descripcion": "", 
-        "nombre": "TPCuatro", 
-        "tipos_atributo": [
-            2, 
-            3
-        ], 
+        "nombre": "Tipo de item cierre", 
+        "tipos_atributo": [], 
         "fase": 3
     }
 }

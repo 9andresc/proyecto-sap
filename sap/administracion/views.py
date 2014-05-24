@@ -1846,7 +1846,7 @@ def crear_fase_view(request, id_proyecto):
                 
             else:
                 ctx = {'form':form, 'proyecto':proyecto, 'estado_valido':estado_valido}
-                return render_to_response('fase/crear_fase.html', ctx, context_instance=RequestContext(request))
+                return render_to_response('proyecto/crear_fase.html', ctx, context_instance=RequestContext(request))
     ctx = {'form':form, 'proyecto':proyecto, 'estado_valido':estado_valido}
     return render_to_response('proyecto/crear_fase.html', ctx, context_instance=RequestContext(request))
 

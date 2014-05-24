@@ -195,7 +195,7 @@ class SolicitudCambio(models.Model):
     usuario = models.ForeignKey(User, null=False)
     proyecto = models.ForeignKey(Proyecto, null=False)
     fase = models.ForeignKey(Fase, null=False)
-    linea_base = models.ForeignKey(LineaBase, null=False)
+    linea_base = models.ForeignKey(LineaBase, null=True)
     item = models.ForeignKey(Item, null=False)
     accion = models.CharField(max_length=50, null=True)
     descripcion = models.TextField(max_length=250, null=False)

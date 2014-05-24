@@ -19,7 +19,7 @@
 				{% if solicitud_aprobada == False %}
 					La solicitud de cambio sobre el item <i>{{ item.nombre }}</i> fue <b>desaprobada</b>. Puedes intentar redactar otra solicitud si deseas.
 					<br><br>
-					<a class="btn btn-default" href="/desarrollo/crear_solicitud/item/{{ item.id }}/linea_base/{{ linea_base.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-envelope"></span> Crear solicitud</a>
+					<a class="btn btn-default" href="/desarrollo/crear_solicitud/item/{{ item.id }}/fase/{{ item.fase.id }}/proyecto/{{ item.fase.proyecto.id }}/"><span class="glyphicon glyphicon-envelope"></span> Crear solicitud</a>
 				{% else %}
 					La solicitud de cambio sobre el item <i>{{ item.nombre }}</i> está en <b>trámite</b>. Aguarde la decisión del comité.
 				{% endif %}
@@ -32,7 +32,7 @@
 					Puede crear una solicitud de cambio sobre este item para que posteriormente sea evaluada por el comité de cambios.
 				{% endif %}
 				<br><br>
-				<a class="btn btn-default" href="/desarrollo/crear_solicitud/item/{{ item.id }}/linea_base/{{ linea_base.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-envelope"></span> Crear solicitud</a>
+				<a class="btn btn-default" href="/desarrollo/crear_solicitud/item/{{ item.id }}/fase/{{ item.fase.id }}/proyecto/{{ item.fase.proyecto.id }}/"><span class="glyphicon glyphicon-envelope"></span> Crear solicitud</a>
 			{% endif %}
 		</div>
 	</div>

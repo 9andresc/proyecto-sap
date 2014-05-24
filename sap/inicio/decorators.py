@@ -107,8 +107,6 @@ def solicitud_requerida(accion):
                 return func(request, id_proyecto, id_fase, id_item, *args, **kwargs)
             # Si no esta Bloqueado, se buscaran solicitudes del item a modificar.
             else:
-                proyecto = fase.proyecto
-                linea_base = item.linea_base
                 existe_solicitud = False
                 solicitudes = SolicitudCambio.objects.filter(item=item)
                 # Verificamos si existen solicitudes del item a modificar.
@@ -130,7 +128,7 @@ def solicitud_requerida(accion):
                         # Si no esta aprobada, entonces, se envia una notificacion al usuario de que su solicitud se encuentra en tramite.
                         elif solicitud.aprobada == False:
                             solicitud_aprobada = False
-                            ctx = {'item':item, 'linea_base':linea_base, 'fase':fase, 'proyecto':proyecto, 'solicitud_aprobada':solicitud_aprobada, 'existe_solicitud':existe_solicitud}
+                            ctx = {'item':item, 'solicitud_aprobada':solicitud_aprobada, 'existe_solicitud':existe_solicitud}
                             return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
                         else:
                             ctx = {'item':item, 'existe_solicitud':existe_solicitud}
@@ -138,12 +136,12 @@ def solicitud_requerida(accion):
                     # Si no existe una solicitud de cambio para esta accion sobre el item, entonces, se envia una notificacion al usuario 
                     # de que no existe una solicitud de cambio.
                     else:
-                        ctx = {'item':item, 'linea_base':linea_base, 'fase':fase, 'proyecto':proyecto, 'existe_solicitud':existe_solicitud}
+                        ctx = {'item':item, 'existe_solicitud':existe_solicitud}
                         return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
                 # Si no existe una solicitud de cambio para el item, entonces, se envia una notificacion al usuario de que no existe
                 # una solicitud de cambio.
                 else:
-                    ctx = {'item':item, 'linea_base':linea_base, 'fase':fase, 'proyecto':proyecto, 'existe_solicitud':existe_solicitud}
+                    ctx = {'item':item, 'existe_solicitud':existe_solicitud}
                     return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
         return wraps(func)(inner_decorator)
     return decorator

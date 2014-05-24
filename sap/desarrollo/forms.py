@@ -22,8 +22,8 @@ class CrearSolicitudForm(forms.Form):
         (1, "Modificar item"),
         (2, "Eliminar item"),
         (3, "Agregar relacion a item"),
-        (3, "Quitar relacion de item"),
-        (3, "Reversionar item"),
+        (4, "Quitar relacion de item"),
+        (5, "Reversionar item"),
     )
     descripcion = forms.CharField(label="Descripcion", required=True, max_length=250, error_messages={'max_length':'Longitud maxima 250'})
     accion = forms.ChoiceField(label="Accion", choices=ACCIONES, required=True)

@@ -4,7 +4,7 @@
     "model": "desarrollo.lineabase", 
     "fields": {
         "descripcion": "", 
-        "nombre": "LBUno", 
+        "nombre": "LB Uno", 
         "num_secuencia": 1, 
         "estado": 1, 
         "fase": 1
@@ -15,43 +15,10 @@
     "model": "desarrollo.lineabase", 
     "fields": {
         "descripcion": "", 
-        "nombre": "LBDos", 
-        "num_secuencia": 2, 
-        "estado": 1, 
-        "fase": 1
-    }
-},
-{
-    "pk": 3, 
-    "model": "desarrollo.lineabase", 
-    "fields": {
-        "descripcion": "", 
-        "nombre": "LBTres", 
-        "num_secuencia": 1, 
-        "estado": 1, 
-        "fase": 2
-    }
-},
-{
-    "pk": 4, 
-    "model": "desarrollo.lineabase", 
-    "fields": {
-        "descripcion": "", 
-        "nombre": "LBCuatro", 
-        "num_secuencia": 1, 
-        "estado": 1, 
-        "fase": 3
-    }
-},
-{
-    "pk": 5, 
-    "model": "desarrollo.lineabase", 
-    "fields": {
-        "descripcion": "", 
-        "nombre": "LBCinco", 
+        "nombre": "LB Dos", 
         "num_secuencia": 2, 
         "estado": 0, 
-        "fase": 3
+        "fase": 1
     }
 }
 ]

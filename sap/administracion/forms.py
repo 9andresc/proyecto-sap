@@ -383,14 +383,6 @@ class CrearFaseForm(forms.Form):
     descripcion = forms.CharField(label="Descripcion", required=False, max_length=300, error_messages={'max_length':'Longitud maxima 300'})
     duracion = forms.IntegerField(label="Duracion", required=True)
     fecha_inicio = CustomDateField(required=True)
-
-    def clean_nombre(self):
-        nombre = self.cleaned_data['nombre']
-        try:
-            fase = Fase.objects.get(nombre=nombre)
-        except Fase.DoesNotExist:
-            return nombre
-        raise forms.ValidationError('Nombre de fase ya registrado.')
         
     def clean_duracion(self):
         duracion = self.cleaned_data['duracion']
@@ -426,16 +418,6 @@ class ModificarFaseForm(forms.Form):
     descripcion = forms.CharField(label="Descripcion", required=False, max_length=300, error_messages={'max_length':'Longitud maxima 300'})
     duracion = forms.IntegerField(label="Duracion", required=True)
     fecha_inicio = CustomDateField(required=True)
-
-    def clean_nombre(self): 
-        nombre = self.cleaned_data['nombre'] 
-        try: 
-            fase = Fase.objects.get(nombre=nombre) 
-            if fase.nombre == nombre:
-                return nombre 
-        except Fase.DoesNotExist:
-            return nombre 
-        raise forms.ValidationError('Nombre de fase ya registrado.')
         
     def clean_duracion(self):
         duracion = self.cleaned_data['duracion']
