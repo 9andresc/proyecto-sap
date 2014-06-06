@@ -15,6 +15,7 @@
                     		<th>Item</th>
                     		<th>Fase</th>
     						<th>Acción</th>
+    						<th>Aprobación</th>
     						<th></th>
                     	</tr>
                     </thead>
@@ -25,6 +26,15 @@
                     			<td>{{ s.item.nombre }}</td>
                     			<td>{{ s.fase.nombre }}</td>
                     			<td>{{ s.accion }}</td>
+                    			<td>
+                    			{% if s.aprobada == None %}
+                    				En trámite
+                    			{% elif s.aprobada == True %}
+                    				Sí
+                    			{% else %}
+                    				No
+                    			{% endif %}
+                    			</td>
                     			<td><a class="btn btn-default" href="/desarrollo/solicitudes/analizar_solicitud/{{ s.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-eye-open"></span> Analizar</a></td>
                 			</tr>
                 		{% endfor %}

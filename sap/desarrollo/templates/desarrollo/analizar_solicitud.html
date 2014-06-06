@@ -55,13 +55,13 @@
     </div>
     <br>
     <div class="input-group">
-		<span class="input-group-addon"><b>Aprobada</b></span>
+		<span class="input-group-addon"><b>Aprobación</b></span>
 		{% if solicitud.aprobada == False %}
 			<input type="text" class="form-control" id="aprobada" name="aprobada" value="No" disabled="disabled">
 		{% elif solicitud.aprobada == True %}
 			<input type="text" class="form-control" id="aprobada" name="aprobada" value="Si" disabled="disabled">
 		{% else %}
-			<input type="text" class="form-control" id="aprobada" name="aprobada" value="En tramite" disabled="disabled">
+			<input type="text" class="form-control" id="aprobada" name="aprobada" value="En trámite" disabled="disabled">
 		{% endif %}
     </div>
 	{% if solicitud.aprobada == None or usuario_ya_voto == False %}

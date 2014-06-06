@@ -15,6 +15,7 @@
                     		<th>Fase</th>
                     		<th>Proyecto</th>
     						<th>Acción</th>
+    						<th>Aprobación</th>
     						<th></th>
     						<th></th>
                     	</tr>
@@ -26,6 +27,15 @@
                     			<td>{{ s.fase.nombre }}</td>
                     			<td>{{ s.proyecto.nombre }}</td>
                     			<td>{{ s.accion }}</td>
+                    			<td>
+                    			{% if s.aprobada == None %}
+                    				En trámite
+                    			{% elif s.aprobada == True %}
+                    				Sí
+                    			{% else %}
+                    				No
+                    			{% endif %}
+                    			</td>
                     			<td><a class="btn btn-default" href="/desarrollo/solicitudes/visualizar_solicitud/{{ s.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-search"></span> Visualizar</a></td>
                 				<td><a class="btn btn-default" href="/desarrollo/solicitudes/cancelar_solicitud/{{ s.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-remove"></span> Cancelar</a></td>
                 			</tr>
