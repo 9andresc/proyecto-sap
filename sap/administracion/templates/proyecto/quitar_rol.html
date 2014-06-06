@@ -3,14 +3,25 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		<div class="panel panel-success">
-      		<div class="panel-heading">
-        		<h3 class="panel-title">¡Éxito!</h3>
+		{% if estado_valido %}
+			<div class="panel panel-success">
+	      		<div class="panel-heading">
+	        		<h3 class="panel-title">¡Éxito!</h3>
+	      		</div>
+	      		<div class="panel-body">
+	        		El rol {{ rol.nombre }} fue desasignado del proyecto {{ proyecto.nombre }}.
+	      		</div>
+	      	</div>
+	    {% else %}
+	    	<div class="panel panel-warning">
+	      		<div class="panel-heading">
+	        		<h3 class="panel-title">¡Alto ahí!</h3>
+	      		</div>
+	      		<div class="panel-body">
+	        		No puedes quitar roles del proyecto <i>{{ proyecto.nombre }}</i>, puesto que, este proyecto se encuentra en estado <b>En curso</b> o <b>Finalizado</b>.
+	      		</div>
       		</div>
-      		<div class="panel-body">
-        		El rol {{ rol.nombre }} fue desasignado del proyecto {{ proyecto.nombre }}.
-      		</div>
-      	</div>
+	    {% endif %}
 		<br>
 		<a class="btn btn-default" href="{% url 'vista_roles_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles del proyecto {{ proyecto.nombre }}</a>
 	</div>

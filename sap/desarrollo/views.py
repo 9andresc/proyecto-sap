@@ -34,7 +34,9 @@ def desarrollo_view(request):
     """
     calcular_costo = False
     gestionar_fases = False
-    gestionar_solicitudes = False
+    gestionar_solicitudes_proyecto = False
+    gestionar_solicitudes_usuario = False
+    
     roles = request.user.roles.all()
     for r in roles:
         for p in r.permisos.all():
@@ -42,16 +44,18 @@ def desarrollo_view(request):
                 calcular_costo = True
             elif p.nombre == 'Gestionar fases de proyecto':
                 gestionar_fases = True
-            elif p.nombre == 'Gestionar solicitudes':
-                gestionar_solicitudes = True
+            elif p.nombre == 'Gestionar solicitudes de proyecto':
+                gestionar_solicitudes_proyecto = True
+            elif p.nombre == 'Gestionar solicitudes de usuario':
+                gestionar_solicitudes_usuario = True
                 
-            if calcular_costo and gestionar_fases and gestionar_solicitudes:
+            if calcular_costo and gestionar_fases and gestionar_solicitudes_proyecto and gestionar_solicitudes_usuario:
                 break
-        if calcular_costo and gestionar_fases and gestionar_solicitudes:
+        if calcular_costo and gestionar_fases and gestionar_solicitudes_proyecto and gestionar_solicitudes_usuario:
                 break
             
     proyectos = Proyecto.objects.filter(estado=1)
-    ctx = {'proyectos': proyectos, 'calcular_costo':calcular_costo, 'gestionar_fases':gestionar_fases, 'gestionar_solicitudes':gestionar_solicitudes}
+    ctx = {'proyectos': proyectos, 'calcular_costo':calcular_costo, 'gestionar_fases':gestionar_fases, 'gestionar_solicitudes_proyecto':gestionar_solicitudes_proyecto, 'gestionar_solicitudes_usuario':gestionar_solicitudes_usuario}
     return render_to_response('desarrollo/desarrollo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -93,12 +97,12 @@ def calcular_costo_view(request, id_proyecto):
             if items:
                 items_valido = True
                 for i in items:
-                    costo_total = costo_total + i.costo
+                    costo_total = costo_total + i.costo_monetario
     ctx = {'proyecto':proyecto, 'fases_valido':fases_valido, 'items_valido':items_valido, 'costo_total':costo_total}
     return render_to_response('desarrollo/costo_total.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
-@permiso_requerido(permiso="Gestionar solicitudes")
+@permiso_requerido(permiso="Gestionar solicitudes de proyecto")
 @miembro_proyecto()
 @miembro_comite()
 def solicitudes_proyecto_view(request, id_proyecto):
@@ -126,7 +130,7 @@ def solicitudes_proyecto_view(request, id_proyecto):
     proyecto = Proyecto.objects.get(id=id_proyecto)
     solicitudes = SolicitudCambio.objects.filter(proyecto=proyecto)
     ctx = {'proyecto':proyecto, 'solicitudes':solicitudes}
-    return render_to_response('desarrollo/gestion_solicitudes.html', ctx, context_instance=RequestContext(request))
+    return render_to_response('desarrollo/solicitudes_proyecto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Analizar solicitud")
@@ -430,6 +434,234 @@ def crear_solicitud_view(request, id_proyecto, id_fase, id_item):
         ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'form':form}
         
     return render_to_response('desarrollo/crear_solicitud.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Gestionar solicitudes de usuario")
+@miembro_proyecto()
+def solicitudes_usuario_view(request, id_proyecto, id_usuario):
+    """
+    ::
+    
+        La vista de gestion de solicitudes de cambio de un usuario. Se deben cumplir los siguientes requisitos para utilizar esta vista:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Gestionar solicitudes de usuario.
+            - Debe ser miembro del proyecto en cuestion.
+            
+        Esta vista permite a un usuario cualquiera gestionar todas sus solicitudes de cambio enviadas. 
+        Se cargan todas las solicitudes del usuario y se envian como un listado al template de gestion de solicitudes del usuario.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+    
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    solicitudes = SolicitudCambio.objects.filter(proyecto=proyecto).filter(usuario=request.user)
+    ctx = {'proyecto':proyecto, 'solicitudes':solicitudes}
+    return render_to_response('desarrollo/solicitudes_usuario.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Visualizar solicitud")
+@miembro_proyecto()
+def visualizar_solicitud_view(request, id_proyecto, id_solicitud):
+    """
+    ::
+    
+        La vista de visualizacion de solicitud de cambio. Se deben cumplir los siguientes requisitos para utilizar esta vista:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Visualizar solicitud.
+            - Debe ser miembro del proyecto en cuestion.
+            
+        Esta vista permite a un usuario cualquiera visualizar cada una de sus solicitudes de cambio enviadas. 
+        Se cargan todos los campos de la solicitud de cambio mas un grafico que muestra las relaciones del item de la solicitud.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            - id_solicitud: el identificador de la solicitud de cambio.
+            
+        La vista retorna lo siguiente:
+    
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    solicitud = SolicitudCambio.objects.filter(proyecto=proyecto).filter(usuario=request.user).get(id=id_solicitud)
+    relaciones = solicitud.item.relaciones.all()
+    costo_monetario = solicitud.item.costo_monetario
+    costo_temporal = solicitud.item.costo_temporal
+    posee_hijos = False
+    
+    if relaciones:
+        posee_hijos = True
+        
+    if posee_hijos:
+        resultados = []
+                            
+        # Obtenemos todos los hijos/sucesores del item.
+        while 1:
+            nuevas_relaciones = []
+            if len(relaciones) == 0:
+                break
+            for r in relaciones:
+                resultados.append(r)
+                if r.relaciones.count() > 0:
+                    for h in r.relaciones.all():
+                        nuevas_relaciones.append(h)
+                relaciones = nuevas_relaciones
+    
+    if posee_hijos:
+        # Calculamos el costo de impacto monetario y temporal del item de la solicitud.
+        for r in resultados:
+            costo_monetario = costo_monetario + r.costo_monetario
+            costo_temporal = costo_temporal + r.costo_temporal
+    
+    fases = proyecto.fases.all()
+    grafo_relaciones = pydot.Dot(graph_type='digraph', fontname="Verdana", rankdir="TB")
+    grafo_relaciones.set_node_defaults(style="filled", fillcolor="white", shape="record")
+    grafo_relaciones.set_edge_defaults(color="black", arrowhead="vee")
+    
+    for f in fases:
+        cluster_fase = pydot.Cluster("fase"+str(f.id),
+                                     label="Fase: " + str(f.nombre), 
+                                     shape='rectangle', 
+                                     fontsize=15, 
+                                     style='filled', 
+                                     color='#E6E6E6', 
+                                     fillcolor="#BDBDBD", 
+                                     fontcolor="white")
+        items = f.items.exclude(estado=2).filter(linea_base=None)
+        if items:
+            for i in items:
+                if i == solicitud.item:
+                    color_estado = "white"
+                    if i.estado == 1:
+                        color_estado = "#80FF00"
+                    elif i.estado == 3:
+                        color_estado = "#045FB4"
+                    
+                    cluster_fase.add_node(pydot.Node("item"+str(i.id),
+                                          label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario),
+                                          fillcolor=color_estado, 
+                                          fontsize=15))
+                if posee_hijos:
+                    if i in resultados:
+                        color_estado = "white"
+                        if i.estado == 1:
+                            color_estado = "#80FF00"
+                        elif i.estado == 3:
+                            color_estado = "#045FB4"
+                        
+                        cluster_fase.add_node(pydot.Node("item"+str(i.id),
+                                              label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario),
+                                              fillcolor=color_estado, 
+                                              fontsize=15))
+                
+        items = f.items.exclude(linea_base=None)
+        if items:
+            lineas_base = f.lineas_base.all().exclude(estado=2)
+            for lb in lineas_base:
+                cluster_linea_base = pydot.Cluster("lb"+str(lb.id), 
+                                                   label="Linea base: " + str(lb.nombre), 
+                                                   shape='rectangle', 
+                                                   fontsize=15, 
+                                                   style='filled', 
+                                                   color='#E6E6E6', 
+                                                   fillcolor="#FFFFFF", 
+                                                   fontcolor="black")
+                items = lb.items.all()
+                for i in items:
+                    if i == solicitud.item:
+                        if i.estado == 1:
+                            color_estado = "#80FF00"
+                        elif i.estado == 2:
+                            color_estado = "#DF0101"
+                        else:
+                            color_estado = "#045FB4"
+                        
+                        cluster_linea_base.add_node(pydot.Node("item"+str(i.id), 
+                                                               label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario), 
+                                                               fillcolor=color_estado, 
+                                                               fontsize=15))
+                        
+                    if posee_hijos:
+                        if i in resultados:
+                            if i.estado == 1:
+                                color_estado = "#80FF00"
+                            elif i.estado == 2:
+                                color_estado = "#DF0101"
+                            else:
+                                color_estado = "#045FB4"
+                            
+                            cluster_linea_base.add_node(pydot.Node("item"+str(i.id), 
+                                                                   label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario), 
+                                                                   fillcolor=color_estado, 
+                                                                   fontsize=15))
+                cluster_fase.add_subgraph(cluster_linea_base)
+            
+        grafo_relaciones.add_subgraph(cluster_fase)
+
+    for f in fases:
+        items = f.items.all()
+        for i in items:
+            if i == solicitud.item:
+                relaciones = i.relaciones.all()
+                for r in relaciones:
+                    grafo_relaciones.add_edge(pydot.Edge("item"+str(i.id), "item"+str(r.id), 
+                                                       label='costo='+str(i.costo_monetario), 
+                                                       fontsize=10))
+            if posee_hijos:
+                if i in resultados:
+                    relaciones = i.relaciones.all()
+                    for r in relaciones:
+                        grafo_relaciones.add_edge(pydot.Edge("item"+str(i.id), "item"+str(r.id), 
+                                                           label='costo='+str(i.costo_monetario), 
+                                                           fontsize=10))
+                        
+    ruta_grafo = str(settings.MEDIA_ROOT) + "grafos/grafo_relaciones_item_" + str(solicitud.item.nombre) + ".png"
+    grafo_relaciones.write(ruta_grafo, prog='dot', format='png')
+    ruta_grafo = str(settings.MEDIA_URL) + "grafos/grafo_relaciones_item_" + str(solicitud.item.nombre) + ".png"
+    
+    ctx = {'proyecto':proyecto, 'solicitud':solicitud, 'ruta_grafo':ruta_grafo, 'costo_monetario':costo_monetario, 'costo_temporal':costo_temporal}
+    return render_to_response('desarrollo/visualizar_solicitud.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Cancelar solicitud")
+@miembro_proyecto()
+def cancelar_solicitud_view(request, id_proyecto, id_solicitud):
+    """
+    ::
+    
+        La vista de cancelacion de una solicitud de cambio. Se deben cumplir los siguientes requisitos para utilizar esta vista:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Cancelar solicitud.
+            - Debe ser miembro del proyecto en cuestion.
+            
+        Esta vista permite a un usuario cualquiera cancelar una de sus solicitudes de cambio enviadas. 
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            - id_solicitud: el identificador de la solicitud de cambio.
+            
+        La vista retorna lo siguiente:
+    
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    solicitud = SolicitudCambio.objects.filter(proyecto=proyecto).filter(usuario=request.user).get(id=id_solicitud)
+    solicitud.delete()
+    
+    ctx = {'proyecto':proyecto}
+    return render_to_response('desarrollo/cancelar_solicitud.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar fases de proyecto")

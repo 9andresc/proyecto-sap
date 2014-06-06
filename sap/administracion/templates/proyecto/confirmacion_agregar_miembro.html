@@ -22,7 +22,7 @@
         			<br><br>
         			<ul>
         				{% if estado_valido == False %}
-        					<li>El proyecto <i>{{ proyecto.nombre }}</i> se encuentra en estado <b>En curso</b> o <b>Finalizado</b>.</li>
+        					<li>El proyecto <i>{{ proyecto.nombre }}</i> se encuentra en estado <b>Finalizado</b>.</li>
         				{% endif %}
         				{% if existe_miembro %}
         					<li>El usuario <i>{{ usuario.username }}</i> ya está asignado al comité de cambios.</li>

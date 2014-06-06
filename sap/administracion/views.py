@@ -1363,7 +1363,12 @@ def proyecto_agregar_usuario_view(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     usuarios = User.objects.all()
-    ctx = {'proyecto':proyecto, 'usuarios':usuarios}
+    estado_valido = True
+    
+    if proyecto.estado == 2:
+        estado_valido = False
+    
+    ctx = {'proyecto':proyecto, 'usuarios':usuarios, 'estado_valido':estado_valido}
     return render_to_response('proyecto/agregar_usuario.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1396,20 +1401,26 @@ def proyecto_confirmacion_agregar_usuario_view(request, id_proyecto, id_usuario)
     valido = False
     proyecto = Proyecto.objects.get(id=id_proyecto)
     usuario = User.objects.get(id=id_usuario)
-    try:
-        user = proyecto.usuarios.get(id=id_usuario)
-    except User.DoesNotExist:
-        valido = True      
-    if valido:
+    estado_valido = True
+    
+    if proyecto.estado == 2:
+        estado_valido = False
+    
+    if estado_valido:
         try:
-            rol = usuario.roles.get(id=3)
-        except Rol.DoesNotExist:
-            rol_desarrollador = Rol.objects.get(id=3)
-            usuario.roles.add(rol_desarrollador)
-            usuario.save()
-        proyecto.usuarios.add(usuario)
-        proyecto.save()
-    ctx = {'proyecto':proyecto, 'usuario':usuario, 'valido':valido}
+            user = proyecto.usuarios.get(id=id_usuario)
+        except User.DoesNotExist:
+            valido = True      
+        if valido:
+            try:
+                rol = usuario.roles.get(id=3)
+            except Rol.DoesNotExist:
+                rol_desarrollador = Rol.objects.get(id=3)
+                usuario.roles.add(rol_desarrollador)
+                usuario.save()
+            proyecto.usuarios.add(usuario)
+            proyecto.save()
+    ctx = {'proyecto':proyecto, 'usuario':usuario, 'valido':valido, 'estado_valido':estado_valido}
     return render_to_response('proyecto/confirmacion_agregar_usuario.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1440,9 +1451,15 @@ def proyecto_quitar_usuario_view(request, id_proyecto, id_usuario):
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     usuario = User.objects.get(id=id_usuario)
-    proyecto.usuarios.remove(usuario)
-    proyecto.save()
-    ctx = {'proyecto':proyecto, 'usuario':usuario}
+    estado_valido = True
+    
+    if proyecto.estado == 2:
+        estado_valido = False
+    
+    if estado_valido:
+        proyecto.usuarios.remove(usuario)
+        proyecto.save()
+    ctx = {'proyecto':proyecto, 'usuario':usuario, 'estado_valido':estado_valido}
     return render_to_response('proyecto/quitar_usuario.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1500,7 +1517,12 @@ def proyecto_agregar_rol_view(request, id_proyecto):
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     roles = Rol.objects.all()
-    ctx = {'proyecto':proyecto, 'roles':roles}
+    estado_valido = True
+    
+    if proyecto.estado == 1 or proyecto.estado == 2:
+        estado_valido = False
+    
+    ctx = {'proyecto':proyecto, 'roles':roles, 'estado_valido':estado_valido}
     return render_to_response('proyecto/agregar_rol.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1533,14 +1555,20 @@ def proyecto_confirmacion_agregar_rol_view(request, id_proyecto, id_rol):
     valido = False
     proyecto = Proyecto.objects.get(id=id_proyecto)
     rol = Rol.objects.get(id=id_rol)
-    try:
-        role = proyecto.roles.get(id=id_rol)
-    except Rol.DoesNotExist:
-        valido = True      
-    if valido:
-        proyecto.roles.add(rol)
-        proyecto.save()
-    ctx = {'proyecto':proyecto, 'rol':rol, 'valido':valido}
+    estado_valido = True
+    
+    if proyecto.estado == 1 or proyecto.estado == 2:
+        estado_valido = False
+    
+    if estado_valido:
+        try:
+            role = proyecto.roles.get(id=id_rol)
+        except Rol.DoesNotExist:
+            valido = True      
+        if valido:
+            proyecto.roles.add(rol)
+            proyecto.save()
+    ctx = {'proyecto':proyecto, 'rol':rol, 'valido':valido, 'estado_valido':estado_valido}
     return render_to_response('proyecto/confirmacion_agregar_rol.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1571,9 +1599,15 @@ def proyecto_quitar_rol_view(request, id_proyecto, id_rol):
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     rol = Rol.objects.get(id=id_rol)
-    proyecto.roles.remove(rol)
-    proyecto.save()
-    ctx = {'proyecto':proyecto, 'rol':rol}
+    estado_valido = True
+    
+    if proyecto.estado == 1 or proyecto.estado == 2:
+        estado_valido = False
+    
+    if estado_valido:
+        proyecto.roles.remove(rol)
+        proyecto.save()
+    ctx = {'proyecto':proyecto, 'rol':rol, 'estado_valido':estado_valido}
     return render_to_response('proyecto/quitar_rol.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1633,7 +1667,7 @@ def proyecto_agregar_miembro_view(request, id_proyecto):
     usuarios = User.objects.all()
     estado_valido = True
     
-    if proyecto.estado == 1 or proyecto.estado == 2:
+    if proyecto.estado == 2:
         estado_valido = False
     
     ctx = {'proyecto':proyecto, 'usuarios':usuarios, 'estado_valido':estado_valido}
@@ -1671,7 +1705,7 @@ def proyecto_confirmacion_agregar_miembro_view(request, id_proyecto, id_usuario)
     estado_valido = True
     existe_miembro = True
     
-    if proyecto.estado == 1 or proyecto.estado == 2:
+    if proyecto.estado == 2:
         estado_valido = False
     
     try:
@@ -1724,7 +1758,7 @@ def proyecto_quitar_miembro_view(request, id_proyecto, id_usuario):
     usuario = User.objects.get(id=id_usuario)
     estado_valido = True
     
-    if proyecto.estado == 1 or proyecto.estado == 2:
+    if proyecto.estado == 2:
         estado_valido = False
     
     if estado_valido:

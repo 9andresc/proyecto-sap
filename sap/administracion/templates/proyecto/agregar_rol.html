@@ -4,31 +4,42 @@
 
 <div class="jumbotron">
 	<div class="bs-example">
-		<h1><small>Roles</small></h1>
-		{% if roles %}
-			<div class="table-responsive"> 
-        		<table class="table table-hover">
-        			<thead>
-                		<tr>
-                    		<th>ID</th>
-                    		<th>Nombre de rol</th>
-                    		<th></th>
-                    	</tr>
-                    </thead>
-                	<tbody>
-                		{% for r in roles %}
-                			<tr>
-                    			<td>{{ r.id }}</td>
-                    			<td>{{ r.nombre }}</td>
-                    			<td><a class="btn btn-default" href="/administracion/gestion_proyectos/confirmacion_agregar_rol/{{ r.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
-                			</tr>
-                		{% endfor %}
-                	</tbody>
-        		</table>
-    		</div>
-    	{% else %}
-    		<h3>No existen roles.</h3>
-    	{% endif %}
+		{% if estado_valido %}
+			<h1><small>Roles</small></h1>
+			{% if roles %}
+				<div class="table-responsive"> 
+	        		<table class="table table-hover">
+	        			<thead>
+	                		<tr>
+	                    		<th>ID</th>
+	                    		<th>Nombre de rol</th>
+	                    		<th></th>
+	                    	</tr>
+	                    </thead>
+	                	<tbody>
+	                		{% for r in roles %}
+	                			<tr>
+	                    			<td>{{ r.id }}</td>
+	                    			<td>{{ r.nombre }}</td>
+	                    			<td><a class="btn btn-default" href="/administracion/gestion_proyectos/confirmacion_agregar_rol/{{ r.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-plus"></span> Agregar</a></td>
+	                			</tr>
+	                		{% endfor %}
+	                	</tbody>
+	        		</table>
+	    		</div>
+	    	{% else %}
+	    		<h3>No existen roles.</h3>
+	    	{% endif %}
+	    {% else %}
+	    	<div class="panel panel-warning">
+	      		<div class="panel-heading">
+	        		<h3 class="panel-title">¡Alto ahí!</h3>
+	      		</div>
+	      		<div class="panel-body">
+	        		No puedes agregar más roles al proyecto <i>{{ proyecto.nombre }}</i>, puesto que, este proyecto se encuentra en estado <b>En curso</b> o <b>Finalizado</b>.
+	      		</div>
+      		</div>
+	    {% endif %}
 	</div>
 	<br>
 	<a class="btn btn-default" href="{% url 'vista_roles_proyecto' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de roles del proyecto {{ proyecto.nombre }}</a>

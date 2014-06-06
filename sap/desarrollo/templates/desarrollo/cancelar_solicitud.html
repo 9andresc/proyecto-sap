@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}SAP - Cancelación de solicitud de cambio del usuario {{ solicitud.usuario.username }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="panel panel-success">
+      	<div class="panel-heading">
+        	<h3 class="panel-title">¡Éxito!</h3>
+      	</div>
+      	<div class="panel-body">
+        	La solicitud de cambio del usuario <i>{{ user.username }}</i> ha sido correctamente cancelada.
+       	</div>
+    </div>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/solicitudes/usuario/{{ user.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-chevron-left"></span> Volver a la gestión de solicitudes del usuario {{ user.username }}</a>
+</div>
+{% endblock %}

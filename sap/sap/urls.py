@@ -8,7 +8,6 @@ urlpatterns = patterns('',
     url(r'^', include('inicio.urls')),
     url(r'^', include('administracion.urls')),
     url(r'^', include('desarrollo.urls')),
-    #url(r'^gestion_cambios/', include('gestion_cambios.urls')),
 )
 
 urlpatterns += patterns('',
