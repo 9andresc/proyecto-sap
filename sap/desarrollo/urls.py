@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from desarrollo.views import desarrollo_view
-from desarrollo.views import calcular_costo_view, crear_solicitud_view, solicitudes_proyecto_view, analizar_solicitud_view, solicitudes_usuario_view, visualizar_solicitud_view, cancelar_solicitud_view
+from desarrollo.views import calcular_costo_view, crear_solicitud_view, solicitudes_proyecto_view, analizar_solicitud_view, solicitudes_usuario_view, visualizar_solicitud_view, cancelar_solicitud_view, finalizar_proyecto_view
 from desarrollo.views import fases_proyecto_view
 from desarrollo.views import roles_fase_view, fase_agregar_rol_view, fase_confirmacion_agregar_rol_view, fase_quitar_rol_view
 from desarrollo.views import tipos_item_fase_view
@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^desarrollo/solicitudes/visualizar_solicitud/(?P<id_solicitud>\d+)/proyecto/(?P<id_proyecto>\d+)/$', visualizar_solicitud_view, name="vista_visualizar_solicitud"),
     url(r'^desarrollo/solicitudes/cancelar_solicitud/(?P<id_solicitud>\d+)/proyecto/(?P<id_proyecto>\d+)/$', cancelar_solicitud_view, name="vista_cancelar_solicitud"),
     url(r'^desarrollo/calcular_costo/proyecto/(?P<id_proyecto>\d+)/$', calcular_costo_view, name="vista_calcular_costo"),
+    url(r'^desarrollo/finalizar_proyecto/(?P<id_proyecto>\d+)/$', finalizar_proyecto_view, name="vista_finalizar_proyecto"),
     url(r'^desarrollo/fases/proyecto/(?P<id_proyecto>\d+)/$', fases_proyecto_view, name="vista_desarrollo_fases_proyecto"),
     url(r'^desarrollo/fases/roles/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', roles_fase_view, name="vista_roles_fase"),
     url(r'^desarrollo/fases/agregar_rol/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', fase_agregar_rol_view, name="vista_fase_agregar_rol"),

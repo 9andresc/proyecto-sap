@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}SAP - Confirmación de finalizado del proyecto {{ proyecto.nombre }}{% endblock %}
+{% block content %}
+<div class="jumbotron">
+	<div class="bs-example">
+		{% if estado_valido and items_bloqueados %}
+			<div class="panel panel-success">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Éxito!</h3>
+      			</div>
+      			<div class="panel-body">
+        			El proyecto <i>{{ proyecto.nombre }}</i> cumple con todas las condiciones. Ya está finalizado.
+      			</div>
+      		</div>
+		{% else %}
+			<div class="panel panel-warning">
+      			<div class="panel-heading">
+        			<h3 class="panel-title">¡Alto ahí!</h3>
+      			</div>
+      			<div class="panel-body">
+        			El proyecto <i>{{ proyecto.nombre }}</i> no cumple con todas las condiciones para finalizar. A continuación, un listado de todas las condiciones no cumplidas:
+					<br><br>
+					<ul class="list-styled">
+						{% if estado_valido == False %}
+							<li>El proyecto debe estar en estado <b>En curso</b>.</li>
+						{% endif %}
+						{% if items_bloqueados == False %}
+							<li>Todos los items de las fases del proyecto deben estar en estado <b>Bloqueado</b>.</li>
+						{% endif %}
+					</ul>        			
+      			</div>
+      		</div>
+		{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="/desarrollo/"><span class="glyphicon glyphicon-chevron-left"></span> Volver al módulo de desarrollo</a>
+</div>
+{% endblock %}

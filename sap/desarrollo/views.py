@@ -36,6 +36,7 @@ def desarrollo_view(request):
     gestionar_fases = False
     gestionar_solicitudes_proyecto = False
     gestionar_solicitudes_usuario = False
+    finalizar_proyecto = False
     
     roles = request.user.roles.all()
     for r in roles:
@@ -48,14 +49,16 @@ def desarrollo_view(request):
                 gestionar_solicitudes_proyecto = True
             elif p.nombre == 'Gestionar solicitudes de usuario':
                 gestionar_solicitudes_usuario = True
+            elif p.nombre == 'Finalizar proyecto':
+                finalizar_proyecto = True
                 
-            if calcular_costo and gestionar_fases and gestionar_solicitudes_proyecto and gestionar_solicitudes_usuario:
+            if calcular_costo and gestionar_fases and gestionar_solicitudes_proyecto and gestionar_solicitudes_usuario and finalizar_proyecto:
                 break
-        if calcular_costo and gestionar_fases and gestionar_solicitudes_proyecto and gestionar_solicitudes_usuario:
+        if calcular_costo and gestionar_fases and gestionar_solicitudes_proyecto and gestionar_solicitudes_usuario and finalizar_proyecto:
                 break
             
     proyectos = Proyecto.objects.filter(estado=1)
-    ctx = {'proyectos': proyectos, 'calcular_costo':calcular_costo, 'gestionar_fases':gestionar_fases, 'gestionar_solicitudes_proyecto':gestionar_solicitudes_proyecto, 'gestionar_solicitudes_usuario':gestionar_solicitudes_usuario}
+    ctx = {'proyectos': proyectos, 'calcular_costo':calcular_costo, 'gestionar_fases':gestionar_fases, 'gestionar_solicitudes_proyecto':gestionar_solicitudes_proyecto, 'gestionar_solicitudes_usuario':gestionar_solicitudes_usuario, 'finalizar_proyecto':finalizar_proyecto}
     return render_to_response('desarrollo/desarrollo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -101,6 +104,54 @@ def calcular_costo_view(request, id_proyecto):
     ctx = {'proyecto':proyecto, 'fases_valido':fases_valido, 'items_valido':items_valido, 'costo_total':costo_total}
     return render_to_response('desarrollo/costo_total.html', ctx, context_instance=RequestContext(request))
 
+@login_required(login_url='/login/')
+@permiso_requerido(permiso="Finalizar proyecto")
+@miembro_proyecto()
+def finalizar_proyecto_view(request, id_proyecto):
+    """
+    ::
+    
+        La vista de finalizacion de un proyecto. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe poseer el permiso: Finalizar proyecto.
+            - Debe ser miembro del proyecto en cuestion.
+            
+        Esta vista permite a un usuario lider de un proyecto, finalizarlo. Para poder finalizar un proyecto se deben cumplir 
+        las siguientes condiciones:
+        
+            - El proyecto se encuentra en estado En curso.
+            - Todos los items de las fases del proyecto se encuentran en estado Bloqueado.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+    
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fases = proyecto.fases.all()
+    estado_valido = True
+    items_bloqueados = True
+    
+    if proyecto.estado != 1:
+        estado_valido = False
+    for f in fases:
+        items = f.items.all()
+        for i in items:
+            if i.estado != 2:
+                items_bloqueados = False
+                break
+        if items_bloqueados == False:
+            break
+        
+    ctx = {'proyecto':proyecto, 'estado_valido':estado_valido, 'items_bloqueados':items_bloqueados}
+    return render_to_response('desarrollo/finalizar_proyecto.html', ctx, context_instance=RequestContext(request))
+    
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Gestionar solicitudes de proyecto")
 @miembro_proyecto()
@@ -161,198 +212,220 @@ def analizar_solicitud_view(request, id_proyecto, id_solicitud):
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     solicitud = SolicitudCambio.objects.filter(proyecto=proyecto).get(id=id_solicitud)
-    cant_votos = len(solicitud.votantes)
+    relaciones = solicitud.item.relaciones.all()
+    costo_monetario = solicitud.item.costo_monetario
+    costo_temporal = solicitud.item.costo_temporal
+    posee_hijos = False
+    usuario_ya_voto = False
+    solicitud_concretada = False
+    
+    # Comprobamos si el usuario miembro del comite ya realizado su voto.
+    if str(request.user.id) in solicitud.votantes:
+        usuario_ya_voto = True
+    # Comprobamos si la solicitud ya ha sido aprobada o no.
+    if solicitud.aprobada == False or solicitud.aprobada == True:
+        solicitud_concretada = True
+    
+    # Verificamos si el item de la solicitud de cambio posee hijos/sucesores.
+    if relaciones:
+        posee_hijos = True
+        
+    if posee_hijos:
+        # Cargamos en el listado hijos todos los hijos/sucesores del item de la solicitud de cambio.
+        hijos = []
+                            
+        # Obtenemos todos los hijos/sucesores del item.
+        while 1:
+            nuevas_relaciones = []
+            if len(relaciones) == 0:
+                break
+            for r in relaciones:
+                hijos.append(r)
+                if r.relaciones.count() > 0:
+                    for h in r.relaciones.all():
+                        nuevas_relaciones.append(h)
+                relaciones = nuevas_relaciones
+    
+        # Calculamos el costo de impacto monetario y temporal del item de la solicitud.
+        for h in hijos:
+            costo_monetario = costo_monetario + h.costo_monetario
+            costo_temporal = costo_temporal + h.costo_temporal
+    
+    # Creamos el grafo de relaciones del item de la solicitud de cambio.
+    fases = proyecto.fases.all()
+    grafo_relaciones = pydot.Dot(graph_type='digraph', fontname="Verdana", rankdir="TB")
+    grafo_relaciones.set_node_defaults(style="filled", fillcolor="white", shape="record")
+    grafo_relaciones.set_edge_defaults(color="black", arrowhead="vee")
+    
+    for f in fases:
+        cluster_fase = pydot.Cluster("fase"+str(f.id),
+                                     label="Fase: " + str(f.nombre), 
+                                     shape='rectangle', 
+                                     fontsize=15, 
+                                     style='filled', 
+                                     color='#E6E6E6', 
+                                     fillcolor="#BDBDBD", 
+                                     fontcolor="white")
+        items = f.items.exclude(estado=2).filter(linea_base=None)
+        if items:
+            for i in items:
+                if i == solicitud.item:
+                    color_estado = "white"
+                    if i.estado == 1:
+                        color_estado = "#80FF00"
+                    elif i.estado == 3:
+                        color_estado = "#045FB4"
+                    
+                    cluster_fase.add_node(pydot.Node("item"+str(i.id),
+                                          label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario),
+                                          fillcolor=color_estado, 
+                                          fontsize=15))
+                if posee_hijos:
+                    if i in hijos:
+                        color_estado = "white"
+                        if i.estado == 1:
+                            color_estado = "#80FF00"
+                        elif i.estado == 3:
+                            color_estado = "#045FB4"
+                        
+                        cluster_fase.add_node(pydot.Node("item"+str(i.id),
+                                              label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario),
+                                              fillcolor=color_estado, 
+                                              fontsize=15))
+                
+        items = f.items.exclude(linea_base=None)
+        if items:
+            lineas_base = f.lineas_base.all().exclude(estado=2)
+            for lb in lineas_base:
+                cluster_linea_base = pydot.Cluster("lb"+str(lb.id), 
+                                                   label="Linea base: " + str(lb.nombre), 
+                                                   shape='rectangle', 
+                                                   fontsize=15, 
+                                                   style='filled', 
+                                                   color='#E6E6E6', 
+                                                   fillcolor="#FFFFFF", 
+                                                   fontcolor="black")
+                items = lb.items.all()
+                for i in items:
+                    if i == solicitud.item:
+                        if i.estado == 1:
+                            color_estado = "#80FF00"
+                        elif i.estado == 2:
+                            color_estado = "#DF0101"
+                        else:
+                            color_estado = "#045FB4"
+                        
+                        cluster_linea_base.add_node(pydot.Node("item"+str(i.id), 
+                                                               label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario), 
+                                                               fillcolor=color_estado, 
+                                                               fontsize=15))
+                        
+                    if posee_hijos:
+                        if i in hijos:
+                            if i.estado == 1:
+                                color_estado = "#80FF00"
+                            elif i.estado == 2:
+                                color_estado = "#DF0101"
+                            else:
+                                color_estado = "#045FB4"
+                            
+                            cluster_linea_base.add_node(pydot.Node("item"+str(i.id), 
+                                                                   label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario), 
+                                                                   fillcolor=color_estado, 
+                                                                   fontsize=15))
+                cluster_fase.add_subgraph(cluster_linea_base)
+            
+        grafo_relaciones.add_subgraph(cluster_fase)
+
+    for f in fases:
+        items = f.items.all()
+        for i in items:
+            if i == solicitud.item:
+                relaciones = i.relaciones.all()
+                for r in relaciones:
+                    grafo_relaciones.add_edge(pydot.Edge("item"+str(i.id), "item"+str(r.id), 
+                                                       label='costo='+str(i.costo_monetario), 
+                                                       fontsize=10))
+            if posee_hijos:
+                if i in hijos:
+                    relaciones = i.relaciones.all()
+                    for r in relaciones:
+                        grafo_relaciones.add_edge(pydot.Edge("item"+str(i.id), "item"+str(r.id), 
+                                                           label='costo='+str(i.costo_monetario), 
+                                                           fontsize=10))
+    # La direccion del grafico png que representa al grafo de relaciones del item de la solicitud de cambio.
+    ruta_grafo = str(settings.MEDIA_ROOT) + "grafos/grafo_relaciones_item_" + str(solicitud.item.nombre) + ".png"
+    grafo_relaciones.write(ruta_grafo, prog='dot', format='png')
+    ruta_grafo = str(settings.MEDIA_URL) + "grafos/grafo_relaciones_item_" + str(solicitud.item.nombre) + ".png"
     
     if request.method == "POST":
         eleccion = request.POST.get('eleccion')
-        if eleccion == "0":
-            usuario_ya_voto = False
-            solicitud_concretada = False
-            
-            if str(request.user.id) in solicitud.votantes:
-                usuario_ya_voto = True
-            if solicitud.aprobada == False or solicitud.aprobada == True:
-                solicitud_concretada = True
-            
-            if usuario_ya_voto == False and solicitud_concretada == False:
+        
+        # Si el usuario todavia no voto y la solicitud de cambio no ha sido concretada.
+        if usuario_ya_voto == False and solicitud_concretada == False:
+            # Si el voto fue negativo
+            if eleccion == "0":
                 solicitud.votos = solicitud.votos - 1
                 solicitud.votantes = solicitud.votantes + str(request.user.id)
                 solicitud.save()
-                
-                if len(solicitud.votantes) == proyecto.comite_de_cambios.count():
-                    if solicitud.votos > 0:
-                        solicitud.aprobada = True
-                        item = solicitud.item
-                        item.linea_base = None
-                        item.estado = 0
-                        item.version = item.version + 1
-                        item.save()
-                        
-                        # Guardamos una version del item de la solicitud de cambio
-                        version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre,
-                                                                  descripcion=item.descripcion, costo_monetario=item.costo_monetario,
-                                                                  costo_temporal=item.costo_temporal, complejidad=item.complejidad,
-                                                                  estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
-                                                                  adan=item.adan, cain=item.cain, tipo_relacion=item.tipo_relacion,
-                                                                  fecha_version=datetime.datetime.now())
-                        if item.padre:
-                            version_item.padre = item.padre.id
-                        version_item.save()
-                        
-                        # Obtenemos todos los items dependientes del item de la solicitud de cambio
-                        relaciones = item.relaciones.all()
-                        resultados = []
-                        while 1:
-                            nuevas_relaciones = []
-                            if len(relaciones) == 0:
-                                break
-                            for r in relaciones:
-                                resultados.append(r)
-                                if r.relaciones.count() > 0:
-                                    for h in r.relaciones.all():
-                                        nuevas_relaciones.append(h)
-                            relaciones = nuevas_relaciones
-                        # Por cada item dependiente, cambiamos su estado a En revision. Ademas guardamos, por cada uno, una version.  
-                        for rs in resultados:
-                            rs.estado = 3
-                            rs.version = rs.version + 1
-                            rs.save()
-                                    
-                            version_rs = VersionItem.objects.create(version=rs.version, id_item=rs.id, nombre=rs.nombre, 
-                                                                    descripcion=rs.descripcion, costo_monetario=rs.costo_monetario, 
-                                                                    costo_temporal=rs.costo_temporal, complejidad=rs.complejidad,
-                                                                    estado=rs.estado, fase=rs.fase, tipo_item=rs.tipo_item,
-                                                                    adan=rs.adan, cain=rs.cain, tipo_relacion=rs.tipo_relacion, 
-                                                                    fecha_version=datetime.datetime.now())
-                            if rs.padre:
-                                version_rs.padre = rs.padre.id
-                            version_rs.save()
-                        
-                        # Modificamos la linea base a quebrada, y luego, almacenamos las versiones actuales de los items que correspondian a la linea base cerrada.
-                        linea_base = solicitud.linea_base
-                        linea_base.estado = 2
-                        for i in linea_base.items.all():
-                            version_item = VersionItem.objects.filter(id_item=i.id).get(version=i.version)
-                            linea_base.versiones_item.add(version_item)
-                        linea_base.save()
-                        
-                        # Creamos una nueva linea base (abierta) que contendra todos los items anteriores, excepto aquel 
-                        # item correspondiente a la solicitud de cambio.
-                        linea_base_nueva = LineaBase.objects.create(nombre=linea_base.nombre, estado=0, 
-                                                                    descripcion=linea_base.descripcion, num_secuencia=linea_base.num_secuencia, 
-                                                                    fase=linea_base.fase)
-                        for i in linea_base.items.all().exclude(id=item.id):
-                            i.linea_base = None
-                            i.save()
-                            linea_base_nueva.items.add(i)
-                        linea_base_nueva.save()
-                    else:
-                        solicitud.aprobada = False
-                    solicitud.save()
-                    
-                cant_votos = len(solicitud.votantes)
-                ctx = {'solicitud':solicitud, 'proyecto':proyecto, 'usuario_ya_voto':usuario_ya_voto, 'solicitud_concretada':solicitud_concretada, 'cant_votos':cant_votos}
-                return render_to_response('desarrollo/analizar_solicitud.html', ctx, context_instance=RequestContext(request))
-            else:
-                cant_votos = len(solicitud.votantes)
-                ctx = {'solicitud':solicitud, 'proyecto':proyecto, 'usuario_ya_voto':usuario_ya_voto, 'solicitud_concretada':solicitud_concretada, 'cant_votos':cant_votos}
-                return render_to_response('desarrollo/analizar_solicitud.html', ctx, context_instance=RequestContext(request))
-        elif eleccion == "1":
-            usuario_ya_voto = False
-            solicitud_concretada = False
-            
-            if str(request.user.id) in solicitud.votantes:
-                usuario_ya_voto = True
-            if solicitud.aprobada == False or solicitud.aprobada == True:
-                solicitud_concretada = True
-            
-            if usuario_ya_voto == False and solicitud_concretada == False:
+            # Si el voto fue positivo
+            elif eleccion == "1":
                 solicitud.votos = solicitud.votos + 1
                 solicitud.votantes = solicitud.votantes + str(request.user.id)
                 solicitud.save()
                 
-                if len(solicitud.votantes) == proyecto.comite_de_cambios.count():
-                    if solicitud.votos > 0:
-                        solicitud.aprobada = True
-                        item = solicitud.item
-                        item.linea_base = None
-                        item.estado = 0
-                        item.version = item.version + 1
-                        item.save()
+            usuario_ya_voto = True
+            # Si todos los miembros del comite ya han votado la solicitud de cambio.
+            if len(solicitud.votantes) == proyecto.comite_de_cambios.count():
+                # Si la cantidad final de votos es positiva.
+                if solicitud.votos > 0:
+                    solicitud.aprobada = True
+                    item = solicitud.item
+                    item.linea_base = None
+                    item.estado = 0
+                    item.version = item.version + 1
+                    item.save()
                         
-                        # Guardamos una version del item de la solicitud de cambio
-                        version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre,
-                                                                  descripcion=item.descripcion, costo_monetario=item.costo_monetario,
-                                                                  costo_temporal=item.costo_temporal, complejidad=item.complejidad,
-                                                                  estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
-                                                                  adan=item.adan, cain=item.cain, tipo_relacion=item.tipo_relacion,
-                                                                  fecha_version=datetime.datetime.now())
-                        if item.padre:
-                            version_item.padre = item.padre.id
-                        version_item.save()
+                    # Guardamos una version del item de la solicitud de cambio
+                    version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre,
+                                                              descripcion=item.descripcion, costo_monetario=item.costo_monetario,
+                                                              costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                              estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                                              adan=item.adan, cain=item.cain, tipo_relacion=item.tipo_relacion,
+                                                              fecha_version=datetime.datetime.now())
+                    if item.padre:
+                        version_item.padre = item.padre.id
+                    if item.linea_base:
+                        version_item.linea_base = item.linea_base
+                    version_item.save()
                         
-                        # Obtenemos todos los items dependientes del item de la solicitud de cambio
-                        relaciones = item.relaciones.all()
-                        resultados = []
-                        while 1:
-                            nuevas_relaciones = []
-                            if len(relaciones) == 0:
-                                break
-                            for r in relaciones:
-                                resultados.append(r)
-                                if r.relaciones.count() > 0:
-                                    for h in r.relaciones.all():
-                                        nuevas_relaciones.append(h)
-                            relaciones = nuevas_relaciones
-                        # Por cada item dependiente, cambiamos su estado a En revision. Ademas guardamos, por cada uno, una version.  
-                        for rs in resultados:
-                            rs.estado = 3
-                            rs.version = rs.version + 1
-                            rs.save()
+                    if posee_hijos:
+                        # Por cada item hijo/sucesor, cambiamos su estado a En revision. Ademas guardamos, por cada uno, una version.  
+                        for h in hijos:
+                            h.estado = 3
+                            h.version = h.version + 1
+                            h.save()
                                     
-                            version_rs = VersionItem.objects.create(version=rs.version, id_item=rs.id, nombre=rs.nombre, 
-                                                                    descripcion=rs.descripcion, costo_monetario=rs.costo_monetario, 
-                                                                    costo_temporal=rs.costo_temporal, complejidad=rs.complejidad,
-                                                                    estado=rs.estado, fase=rs.fase, tipo_item=rs.tipo_item,
-                                                                    adan=rs.adan, cain=rs.cain, tipo_relacion=rs.tipo_relacion, 
+                            version_h = VersionItem.objects.create(version=h.version, id_item=h.id, nombre=h.nombre, 
+                                                                    descripcion=h.descripcion, costo_monetario=h.costo_monetario, 
+                                                                    costo_temporal=h.costo_temporal, complejidad=h.complejidad,
+                                                                    estado=h.estado, fase=h.fase, tipo_item=h.tipo_item,
+                                                                    adan=h.adan, cain=h.cain, tipo_relacion=h.tipo_relacion, 
                                                                     fecha_version=datetime.datetime.now())
-                            if rs.padre:
-                                version_rs.padre = rs.padre.id
-                            version_rs.save()
-                        
-                        # Modificamos la linea base a quebrada, y luego, almacenamos las versiones actuales de los items que correspondian a la linea base cerrada.
-                        linea_base = solicitud.linea_base
-                        linea_base.estado = 2
-                        for i in linea_base.items.all():
-                            version_item = VersionItem.objects.filter(id_item=i.id).get(version=i.version)
-                            linea_base.versiones_item.add(version_item)
-                        linea_base.save()
-                        
-                        # Creamos una nueva linea base (abierta) que contendra todos los items anteriores, excepto aquel 
-                        # item correspondiente a la solicitud de cambio.
-                        linea_base_nueva = LineaBase.objects.create(nombre=linea_base.nombre, estado=0, 
-                                                                    descripcion=linea_base.descripcion, num_secuencia=linea_base.num_secuencia, 
-                                                                    fase=linea_base.fase)
-                        for i in linea_base.items.all().exclude(id=item.id):
-                            i.linea_base = None
-                            i.save()
-                            linea_base_nueva.items.add(i)
-                        linea_base_nueva.save()
-                    else:
-                        solicitud.aprobada = False
-                    solicitud.save()
-                    
-                cant_votos = len(solicitud.votantes)
-                ctx = {'solicitud':solicitud, 'proyecto':proyecto, 'usuario_ya_voto':usuario_ya_voto, 'solicitud_concretada':solicitud_concretada, 'cant_votos':cant_votos}
-                return render_to_response('desarrollo/analizar_solicitud.html', ctx, context_instance=RequestContext(request))
-            else:
-                cant_votos = len(solicitud.votantes)
-                ctx = {'solicitud':solicitud, 'proyecto':proyecto, 'usuario_ya_voto':usuario_ya_voto, 'solicitud_concretada':solicitud_concretada, 'cant_votos':cant_votos}
-                return render_to_response('desarrollo/analizar_solicitud.html', ctx, context_instance=RequestContext(request))
-    else:
-        cant_votos = len(solicitud.votantes)
-        ctx = {'solicitud':solicitud, 'proyecto':proyecto, 'cant_votos':cant_votos}
-        return render_to_response('desarrollo/analizar_solicitud.html', ctx, context_instance=RequestContext(request))
+                            if h.padre:
+                                version_h.padre = h.padre.id
+                            if h.linea_base:
+                                version_h.linea_base = h.linea_base
+                            version_h.save()
+                # Si la cantidad de votos final es negativa.
+                else:
+                    solicitud.aprobada = False
+                # Guardamos los cambios hechos en la solicitud de cambio.    
+                solicitud.save()
+                
+    cant_votos = len(solicitud.votantes)
+    ctx = {'solicitud':solicitud, 'proyecto':proyecto, 'ruta_grafo':ruta_grafo, 'costo_monetario':costo_monetario, 'costo_temporal':costo_temporal, 'usuario_ya_voto':usuario_ya_voto, 'solicitud_concretada':solicitud_concretada, 'cant_votos':cant_votos}
+    return render_to_response('desarrollo/analizar_solicitud.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear solicitud")
@@ -1748,7 +1821,9 @@ def modificar_item_view(request, id_proyecto, id_fase, id_item):
                                 a.valor_archivo = request.FILES[key]
                                 a.save()
                 
+                version_nueva = False
                 if item.nombre != nombre or item.descripcion != descripcion or item.complejidad != complejidad or item.costo_monetario != costo_monetario or item.costo_temporal != costo_temporal:
+                    version_nueva = True
                     item.version = VersionItem.objects.filter(id_item=item.id).latest('id').version + 1
                     item.nombre = nombre
                     item.descripcion = descripcion
@@ -1760,12 +1835,40 @@ def modificar_item_view(request, id_proyecto, id_fase, id_item):
                                                               descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
                                                               costo_temporal=item.costo_temporal, complejidad=item.complejidad,
                                                               estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
-                                                              adan=item.adan, cain=item.cain,
-                                                              tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
+                                                              adan=item.adan, cain=item.cain, tipo_relacion=item.tipo_relacion,
+                                                              fecha_version=datetime.datetime.now())
                     if item.padre:
                         version_item.padre = item.padre.id
+                    if item.linea_base:
+                        version_item.linea_base = item.linea_base
                     version_item.save()
                 
+                # Buscamos las solicitudes de cambio ligadas al item en cuestion.
+                solicitudes_item = SolicitudCambio.objects.filter(item=item)
+                if solicitudes_item:
+                    existe_solicitud = True
+                    try:
+                        solicitud = solicitudes_item.get(accion="Modificar item")
+                    except SolicitudCambio.DoesNotExist:
+                        existe_solicitud = False
+                    
+                    # Si la solicitud de cambio correspondiente a la accion en cuestion existe.
+                    if existe_solicitud:
+                        # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
+                        solicitud.delete()
+                        # Obtenemos la linea base a la cual pertenecia el item antes de alterarlo.
+                        if version_nueva:
+                            linea_base = VersionItem.objects.filter(id_item=item.id).get(version=item.version-2).linea_base
+                        else:
+                            linea_base = VersionItem.objects.filter(id_item=item.id).get(version=item.version-1).linea_base
+                            
+                        item.linea_base = linea_base
+                        item.estado = 2
+                        item.save()
+                        version_item.linea_base = linea_base
+                        version_item.estado = 2
+                        version_item.save()
+                        
                 return HttpResponseRedirect('/desarrollo/fases/items/item/%s/fase/%s/proyecto/%s'%(id_item, id_fase, id_proyecto))
     
     if request.method == "GET":
@@ -3237,24 +3340,27 @@ def cerrar_linea_base_view(request, id_proyecto, id_fase, id_linea_base):
     if estado_valido:
         items = linea_base.items.all()
         for i in items:
+            existe_version = True
             i.estado = 2
-            i.version = VersionItem.objects.filter(id_item=i.id).latest('id').version + 1
             i.save()
-            
-            version_i = VersionItem.objects.create(version=i.version, id_item=i.id, nombre=i.nombre, 
-                                                   descripcion=i.descripcion, costo_monetario=i.costo_monetario, 
-                                                   costo_temporal=i.costo_temporal, complejidad=i.complejidad,
-                                                   estado=i.estado, fase=i.fase, tipo_item=i.tipo_item,
-                                                   linea_base=i.linea_base, adan=i.adan, cain=i.cain,
-                                                   tipo_relacion=i.tipo_relacion, fecha_version=datetime.datetime.now())
-            if i.padre:
-                version_i.padre = i.padre.id
-            version_i.save()
+            try:
+                i.version = VersionItem.objects.filter(id_item=i.id).latest('id').version + 1
+                i.save()
+            except VersionItem.DoesNotExist:
+                existe_version = False
+            if existe_version:
+                version_i = VersionItem.objects.create(version=i.version, id_item=i.id, nombre=i.nombre, 
+                                                       descripcion=i.descripcion, costo_monetario=i.costo_monetario, 
+                                                       costo_temporal=i.costo_temporal, complejidad=i.complejidad,
+                                                       estado=i.estado, fase=i.fase, tipo_item=i.tipo_item,
+                                                       linea_base=i.linea_base, adan=i.adan, cain=i.cain,
+                                                       tipo_relacion=i.tipo_relacion, fecha_version=datetime.datetime.now())
+                if i.padre:
+                    version_i.padre = i.padre.id
+                version_i.save()
             
         linea_base.estado = 1
         linea_base.save()
-        ctx = {'fase':fase, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
-        return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
-    else:
-        ctx = {'fase':fase, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
-        return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
+
+    ctx = {'fase':fase, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
+    return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))

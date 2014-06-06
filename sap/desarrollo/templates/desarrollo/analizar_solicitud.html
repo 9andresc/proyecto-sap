@@ -34,6 +34,23 @@
 		<input type="text" class="form-control" id="item" name="item" value="{{ solicitud.item.nombre }}" disabled="disabled">
     </div>
     <br>
+    
+    <div class="input-group">
+		<span class="input-group-addon"><b>Costo monetario</b></span>
+		<input type="text" class="form-control" id="costo_monetario" name="costo_monetario" value="{{ costo_monetario }}" disabled="disabled">
+    </div>
+    <br>
+    <div class="input-group">
+		<span class="input-group-addon"><b>Costo temporal</b></span>
+		<input type="text" class="form-control" id="costo_temporal" name="costo_temporal" value="{{ costo_temporal }}" disabled="disabled">
+    </div>
+    
+    <h2 align="center"><small>Grafo de relaciones del item <i>{{ solicitud.item.nombre }}</i></small></h2>
+    <div align="center">
+		<img src="{{ ruta_grafo }}" alt="Grafo de relaciones del item {{ solicitud.item.nombre }}" class="img-thumbnail">
+	</div>
+    
+    <br>
 	<div class="input-group">
 		<span class="input-group-addon"><b>Acción</b></span>
 		<input type="text" class="form-control" id="accion" name="accion" value="{{ solicitud.accion }}" disabled="disabled">
@@ -45,7 +62,7 @@
     </div>
     <br>
     <div class="input-group">
-		<span class="input-group-addon"><b>Votos</b></span>
+		<span class="input-group-addon"><b>Resultado de votación</b></span>
 		<input type="text" class="form-control" id="votos" name="votos" value="{{ solicitud.votos }}" disabled="disabled">
     </div>
     <br>
