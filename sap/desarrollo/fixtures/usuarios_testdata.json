@@ -14,7 +14,7 @@
         "direccion": "", 
         "is_superuser": true, 
         "is_staff": true, 
-        "last_login": "2014-05-24T02:58:56.806", 
+        "last_login": "2014-06-07T00:29:30.620", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$u9UhE2ICdPeP$ihyjAOyaClNXAt6L2TAZqxDqJl59k30ZnFsJs2dDuQo=", 
@@ -31,15 +31,14 @@
         "first_name": "Gustavo", 
         "last_name": "Cabral", 
         "roles": [
-            2, 
-            4
+            2
         ], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
         "is_superuser": false, 
         "is_staff": false, 
-        "last_login": "2014-05-24T02:23:21.072", 
+        "last_login": "2014-06-07T00:12:52.947", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$xP5EtVFCxgJZ$F53IGwFUrRMRFUDYdwQmi7xwz+GCGgQ5Wk16gnj8w7A=", 
@@ -63,7 +62,7 @@
         "direccion": "", 
         "is_superuser": false, 
         "is_staff": false, 
-        "last_login": "2014-05-24T02:59:58.145", 
+        "last_login": "2014-06-07T00:13:36.322", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$0tls7L0w5UYv$p8WkVeYxRvAkQujDPVEku4A55+Hb4qS7YoqB/55Lzm0=", 
@@ -80,14 +79,14 @@
         "first_name": "Andres", 
         "last_name": "Cabral", 
         "roles": [
-            3
+            2
         ], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
         "is_superuser": false, 
         "is_staff": false, 
-        "last_login": "2014-05-06T15:51:26.809", 
+        "last_login": "2014-06-07T00:27:39.898", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$zMoCHpVyDF7b$6VfNgS2YXL7UL2vJxnhLxZb+uL+9PzR63BSla1QhoI4=", 
@@ -103,13 +102,16 @@
         "username": "gabriel", 
         "first_name": "Gabriel", 
         "last_name": "Santos", 
-        "roles": [], 
+        "roles": [
+            3, 
+            2
+        ], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
         "is_superuser": false, 
         "is_staff": false, 
-        "last_login": "2014-05-06T15:51:52.210", 
+        "last_login": "2014-06-07T00:30:08.449", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$7RD4XdN3BAIW$BM+P2Rxz3d1+LI1SSq66lkaj5Y4BUaGH792/g3pPZS8=", 
@@ -147,9 +149,7 @@
         "username": "marcos", 
         "first_name": "Marcos", 
         "last_name": "Aquino", 
-        "roles": [
-            4
-        ], 
+        "roles": [], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 
@@ -171,9 +171,7 @@
         "username": "alexis", 
         "first_name": "Alexis", 
         "last_name": "Ojeda", 
-        "roles": [
-            4
-        ], 
+        "roles": [], 
         "telefono": "", 
         "is_active": true, 
         "direccion": "", 

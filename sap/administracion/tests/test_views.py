@@ -20,7 +20,7 @@ from administracion.views import usuarios_proyecto_view, proyecto_confirmacion_a
 from administracion.views import roles_proyecto_view, proyecto_confirmacion_agregar_rol_view, proyecto_quitar_rol_view
 from administracion.views import comite_proyecto_view, proyecto_confirmacion_agregar_miembro_view, proyecto_quitar_miembro_view
 from administracion.views import iniciar_proyecto_view
-# -------------- Vistas de proyectos -------------- #
+# -------------- Vistas de fases -------------- #
 from administracion.views import crear_fase_view, modificar_fase_view, eliminar_fase_view
 
 
@@ -533,17 +533,17 @@ class ProyectoTestCase(TestCase):
     def test_proyecto_quitar_usuario_view(self):
         print "Prueba: Quitar usuario de proyecto"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/quitar_usuario/4/proyecto/2/')
+        request = self.factory.get('/administracion/gestion_proyectos/quitar_usuario/3/proyecto/2/')
         self.user = User.objects.get(pk=3)
         request.user = self.user
-        response = proyecto_quitar_usuario_view(request, 2, 4)
+        response = proyecto_quitar_usuario_view(request, 2, 3)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina para quitar un usuario de un proyecto retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
         self.assertTrue('usuario' in response.content, "[GET] No se ha encontrado el contenido usuario en la pagina retornada.")
         
         proyecto = Proyecto.objects.get(pk=2)
-        usuario = proyecto.usuarios.filter(pk=4)
+        usuario = proyecto.usuarios.filter(pk=3)
         
         self.assertFalse(usuario, "Se ha encontrado el usuario recientemente quitado del proyecto.")
         print "Quitar usuario de proyecto sin errores\n"
@@ -631,17 +631,17 @@ class ProyectoTestCase(TestCase):
     def test_proyecto_quitar_miembro_view(self):
         print "Prueba: Quitar miembro de comite de cambios"
         print ""
-        request = self.factory.get('/administracion/gestion_proyectos/quitar_miembro/2/proyecto/2/')
+        request = self.factory.get('/administracion/gestion_proyectos/quitar_miembro/9/proyecto/2/')
         self.user = User.objects.get(pk=3)
         request.user = self.user
-        response = proyecto_quitar_miembro_view(request, 2, 2)
+        response = proyecto_quitar_miembro_view(request, 2, 9)
         
         self.assertEqual(response.status_code, 200, "[GET] La pagina para quitar un miembro de un comite de cambios retornada no es correcta.\nCodigo de la pagina retornada: %s\nCodigo de la pagina esperada: 200"%response.status_code)
         self.assertTrue('proyecto' in response.content, "[GET] No se ha encontrado el contenido proyecto en la pagina retornada.")
         self.assertTrue('usuario' in response.content, "[GET] No se ha encontrado el contenido usuario en la pagina retornada.")
         
         proyecto = Proyecto.objects.get(pk=2)
-        miembro = proyecto.comite_de_cambios.filter(pk=2)
+        miembro = proyecto.comite_de_cambios.filter(pk=9)
         
         self.assertFalse(miembro, "Se ha encontrado el miembro recientemente quitado del comite de cambios.")
         print "Quitar miembro de comite de cambios sin errores\n"

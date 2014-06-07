@@ -514,7 +514,7 @@
     "pk": 76, 
     "model": "administracion.permiso", 
     "fields": {
-        "nombre": "Gestionar solicitudes"
+        "nombre": "Gestionar solicitudes de proyecto"
     }
 },
 {
@@ -529,6 +529,34 @@
     "model": "administracion.permiso", 
     "fields": {
         "nombre": "Crear solicitud"
+    }
+},
+{
+    "pk": 79, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Gestionar solicitudes de usuario"
+    }
+},
+{
+    "pk": 80, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Visualizar solicitud"
+    }
+},
+{
+    "pk": 81, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Cancelar solicitud"
+    }
+},
+{
+    "pk": 82, 
+    "model": "administracion.permiso", 
+    "fields": {
+        "nombre": "Finalizar proyecto"
     }
 }
 ]

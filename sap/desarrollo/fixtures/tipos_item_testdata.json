@@ -34,5 +34,27 @@
         "tipos_atributo": [], 
         "fase": 3
     }
+},
+{
+    "pk": 4, 
+    "model": "desarrollo.tipoitem", 
+    "fields": {
+        "descripcion": "", 
+        "nombre": "TI Inicial", 
+        "tipos_atributo": [], 
+        "fase": 4
+    }
+},
+{
+    "pk": 5, 
+    "model": "desarrollo.tipoitem", 
+    "fields": {
+        "descripcion": "", 
+        "nombre": "TI Final", 
+        "tipos_atributo": [
+            3
+        ], 
+        "fase": 5
+    }
 }
 ]

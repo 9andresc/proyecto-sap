@@ -21,7 +21,7 @@
         "valor_texto_grande": "", 
         "valor_logico": null, 
         "tipo_atributo": 2, 
-        "valor_fecha": null, 
+        "valor_fecha": "2014-06-06", 
         "item": 1, 
         "valor_archivo": "", 
         "valor_numerico": null, 
@@ -125,12 +125,12 @@
     "fields": {
         "valor_texto_grande": "", 
         "valor_logico": null, 
-        "tipo_atributo": 3, 
+        "tipo_atributo": 4, 
         "valor_fecha": null, 
         "item": 5, 
         "valor_archivo": "", 
         "valor_numerico": null, 
-        "tipo_item": 2, 
+        "tipo_item": 1, 
         "valor_texto_chico": ""
     }
 },
@@ -140,12 +140,12 @@
     "fields": {
         "valor_texto_grande": "", 
         "valor_logico": null, 
-        "tipo_atributo": 1, 
+        "tipo_atributo": 2, 
         "valor_fecha": null, 
         "item": 5, 
         "valor_archivo": "", 
         "valor_numerico": null, 
-        "tipo_item": 2, 
+        "tipo_item": 1, 
         "valor_texto_chico": ""
     }
 },
@@ -206,6 +206,81 @@
         "valor_archivo": "", 
         "valor_numerico": null, 
         "tipo_item": 2, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 15, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 8, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 2, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 16, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 1, 
+        "valor_fecha": null, 
+        "item": 8, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 2, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 17, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 15, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 5, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 18, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 16, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 5, 
+        "valor_texto_chico": ""
+    }
+},
+{
+    "pk": 19, 
+    "model": "desarrollo.valoratributo", 
+    "fields": {
+        "valor_texto_grande": "", 
+        "valor_logico": null, 
+        "tipo_atributo": 3, 
+        "valor_fecha": null, 
+        "item": 17, 
+        "valor_archivo": "", 
+        "valor_numerico": null, 
+        "tipo_item": 5, 
         "valor_texto_chico": ""
     }
 }

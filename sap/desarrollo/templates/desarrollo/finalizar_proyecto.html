@@ -3,7 +3,7 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if estado_valido and items_bloqueados %}
+		{% if estado_valido and items_bloqueados and fases_finalizadas %}
 			<div class="panel panel-success">
       			<div class="panel-heading">
         			<h3 class="panel-title">¡Éxito!</h3>
@@ -23,6 +23,9 @@
 					<ul class="list-styled">
 						{% if estado_valido == False %}
 							<li>El proyecto debe estar en estado <b>En curso</b>.</li>
+						{% endif %}
+						{% if fases_finalizadas == False %}
+							<li>Todas las fases del proyecto deben estar en estado <b>Finalizado</b>.</li>
 						{% endif %}
 						{% if items_bloqueados == False %}
 							<li>Todos los items de las fases del proyecto deben estar en estado <b>Bloqueado</b>.</li>

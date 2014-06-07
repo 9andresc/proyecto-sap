@@ -13,7 +13,7 @@
         "descripcion": "", 
         "nombre": "Fase inicial", 
         "proyecto": 1, 
-        "estado": 1
+        "estado": 2
     }
 },
 {
@@ -30,7 +30,7 @@
         "descripcion": "", 
         "nombre": "Fase de desarrollo", 
         "proyecto": 1, 
-        "estado": 1
+        "estado": 2
     }
 },
 {
@@ -47,34 +47,95 @@
         "descripcion": "", 
         "nombre": "Fase de cierre", 
         "proyecto": 1, 
-        "estado": 1
+        "estado": 2
     }
 },
 {
     "pk": 4, 
     "model": "administracion.fase", 
     "fields": {
-        "roles": [], 
+        "roles": [
+            2
+        ], 
         "num_secuencia": 1, 
         "fecha_inicio": "2014-05-28", 
         "duracion": 5, 
         "descripcion": "", 
         "nombre": "Fase inicial", 
         "proyecto": 2, 
-        "estado": 0
+        "estado": 1
     }
 },
 {
     "pk": 5, 
     "model": "administracion.fase", 
     "fields": {
-        "roles": [], 
+        "roles": [
+            3, 
+            2
+        ], 
         "num_secuencia": 2, 
         "fecha_inicio": "2014-05-31", 
         "duracion": 2, 
         "descripcion": "", 
         "nombre": "Fase final", 
         "proyecto": 2, 
+        "estado": 1
+    }
+},
+{
+    "pk": 6, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [], 
+        "num_secuencia": 1, 
+        "fecha_inicio": "2014-06-09", 
+        "duracion": 2, 
+        "descripcion": "", 
+        "nombre": "Fase inicial", 
+        "proyecto": 3, 
+        "estado": 0
+    }
+},
+{
+    "pk": 7, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [], 
+        "num_secuencia": 2, 
+        "fecha_inicio": "2014-06-10", 
+        "duracion": 5, 
+        "descripcion": "", 
+        "nombre": "Fase final", 
+        "proyecto": 3, 
+        "estado": 0
+    }
+},
+{
+    "pk": 8, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [], 
+        "num_secuencia": 1, 
+        "fecha_inicio": "2014-06-10", 
+        "duracion": 1, 
+        "descripcion": "", 
+        "nombre": "Fase inicial", 
+        "proyecto": 4, 
+        "estado": 0
+    }
+},
+{
+    "pk": 9, 
+    "model": "administracion.fase", 
+    "fields": {
+        "roles": [], 
+        "num_secuencia": 2, 
+        "fecha_inicio": "2014-06-19", 
+        "duracion": 2, 
+        "descripcion": "", 
+        "nombre": "Fase final", 
+        "proyecto": 4, 
         "estado": 0
     }
 }

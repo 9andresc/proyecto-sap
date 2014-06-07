@@ -3,7 +3,7 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if valido %}
+		{% if existe_item == False and item_lb == False %}
 			<div class="panel panel-success">
       			<div class="panel-heading">
         			<h3 class="panel-title">¡Éxito!</h3>
@@ -18,7 +18,16 @@
         			<h3 class="panel-title">¡Alto ahí!</h3>
       			</div>
       			<div class="panel-body">
-        			El item <i>{{ item.nombre }}</i> no puede ser asignado porque ya está asignado a la línea base <i>{{ linea_base.nombre }}</i>.
+        			El item <i>{{ item.nombre }}</i> no puede ser asignado a la línea base <i>{{ linea_base.nombre }}</i> porque:
+        			<br><br>
+        			<ul>
+        				{% if existe_item %}
+        					<li>El item ya está asignado a la línea base.</li>
+        				{% endif %}
+        				{% if item_lb %}
+        					<li>El item ya pertenece a otra línea base.</li>
+        				{% endif %}
+        			</ul>
       			</div>
       		</div>
 		{% endif %}

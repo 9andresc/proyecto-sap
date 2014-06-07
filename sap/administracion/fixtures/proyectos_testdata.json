@@ -4,8 +4,6 @@
     "model": "administracion.proyecto", 
     "fields": {
         "comite_de_cambios": [
-            7, 
-            8, 
             9
         ], 
         "roles": [
@@ -19,7 +17,8 @@
         "descripcion": "", 
         "nombre": "Proyecto Uno", 
         "usuarios": [
-            2
+            2, 
+            5
         ], 
         "estado": 1
     }
@@ -29,7 +28,7 @@
     "model": "administracion.proyecto", 
     "fields": {
         "comite_de_cambios": [
-            2
+            9
         ], 
         "roles": [
             3, 
@@ -42,8 +41,53 @@
         "descripcion": "", 
         "nombre": "Proyecto Dos", 
         "usuarios": [
+            3
+        ], 
+        "estado": 1
+    }
+},
+{
+    "pk": 3, 
+    "model": "administracion.proyecto", 
+    "fields": {
+        "comite_de_cambios": [
+            9
+        ], 
+        "roles": [
             3, 
+            2
+        ], 
+        "usuario_lider": 4, 
+        "fecha_inicio": "2014-06-07", 
+        "complejidad": 5, 
+        "presupuesto": 150000.0, 
+        "descripcion": "", 
+        "nombre": "Proyecto Tres", 
+        "usuarios": [
             4
+        ], 
+        "estado": 1
+    }
+},
+{
+    "pk": 4, 
+    "model": "administracion.proyecto", 
+    "fields": {
+        "comite_de_cambios": [
+            9
+        ], 
+        "roles": [
+            3, 
+            2
+        ], 
+        "usuario_lider": 5, 
+        "fecha_inicio": "2014-06-18", 
+        "complejidad": 6, 
+        "presupuesto": 2000000.0, 
+        "descripcion": "", 
+        "nombre": "Proyecto Cuatro", 
+        "usuarios": [
+            5
         ], 
         "estado": 0
     }

@@ -1985,7 +1985,7 @@ def eliminar_fase_view(request, id_proyecto, id_fase):
         estado_valido = False
     if request.method == "POST":
         if estado_valido == True:
-            fases = proyecto.fases.filter(id__gt=id_fase)
+            fases = proyecto.fases.filter(num_secuencia__gt=fase.num_secuencia)
             for f in fases:
                 f.num_secuencia = f.num_secuencia - 1
                 f.save()

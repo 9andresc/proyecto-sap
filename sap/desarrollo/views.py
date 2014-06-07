@@ -122,6 +122,7 @@ def finalizar_proyecto_view(request, id_proyecto):
         las siguientes condiciones:
         
             - El proyecto se encuentra en estado En curso.
+            - Todas las fases del proyecto se encuentran en estado Finalizado.
             - Todos los items de las fases del proyecto se encuentran en estado Bloqueado.
             
         La vista recibe los siguientes parametros:
@@ -136,10 +137,17 @@ def finalizar_proyecto_view(request, id_proyecto):
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fases = proyecto.fases.all()
     estado_valido = True
+    fases_finalizadas = True
     items_bloqueados = True
     
     if proyecto.estado != 1:
         estado_valido = False
+    
+    for f in fases:
+        if f.estado != 2:
+            fases_finalizadas = False
+            break
+        
     for f in fases:
         items = f.items.all()
         for i in items:
@@ -149,7 +157,11 @@ def finalizar_proyecto_view(request, id_proyecto):
         if items_bloqueados == False:
             break
         
-    ctx = {'proyecto':proyecto, 'estado_valido':estado_valido, 'items_bloqueados':items_bloqueados}
+    if estado_valido and fases_finalizadas and items_bloqueados:
+        proyecto.estado = 2
+        proyecto.save()
+        
+    ctx = {'proyecto':proyecto, 'estado_valido':estado_valido, 'items_bloqueados':items_bloqueados, 'fases_finalizadas':fases_finalizadas}
     return render_to_response('desarrollo/finalizar_proyecto.html', ctx, context_instance=RequestContext(request))
     
 @login_required(login_url='/login/')
@@ -1836,11 +1848,9 @@ def modificar_item_view(request, id_proyecto, id_fase, id_item):
                                                               costo_temporal=item.costo_temporal, complejidad=item.complejidad,
                                                               estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
                                                               adan=item.adan, cain=item.cain, tipo_relacion=item.tipo_relacion,
-                                                              fecha_version=datetime.datetime.now())
+                                                              linea_base=item.linea_base, fecha_version=datetime.datetime.now())
                     if item.padre:
                         version_item.padre = item.padre.id
-                    if item.linea_base:
-                        version_item.linea_base = item.linea_base
                     version_item.save()
                 
                 # Buscamos las solicitudes de cambio ligadas al item en cuestion.
@@ -1942,6 +1952,20 @@ def eliminar_item_view(request, id_proyecto, id_fase, id_item):
                 version_eliminada.save()
             except VersionItem.DoesNotExist:
                 pass
+            
+            # Buscamos las solicitudes de cambio ligadas al item en cuestion.
+            solicitudes_item = SolicitudCambio.objects.filter(item=item)
+            if solicitudes_item:
+                existe_solicitud = True
+                try:
+                    solicitud = solicitudes_item.get(accion="Eliminar item")
+                except SolicitudCambio.DoesNotExist:
+                    existe_solicitud = False
+                    
+                # Si la solicitud de cambio correspondiente a la accion en cuestion existe.
+                if existe_solicitud:
+                    # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
+                    solicitud.delete()
                 
             item.delete()
             return HttpResponseRedirect('/desarrollo/fases/items/fase/%s/proyecto/%s'%(id_fase, id_proyecto))
@@ -2031,8 +2055,8 @@ def aprobar_item_view(request, id_proyecto, id_fase, id_item):
                                                   descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
                                                   costo_temporal=item.costo_temporal, complejidad=item.complejidad,
                                                   estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
-                                                  adan=item.adan, cain=item.cain,
-                                                  tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
+                                                  adan=item.adan, cain=item.cain, tipo_relacion=item.tipo_relacion, 
+                                                  linea_base=item.linea_base, fecha_version=datetime.datetime.now())
         if item.padre:
             version_item.padre = item.padre.id
         version_item.save()
@@ -2086,8 +2110,8 @@ def desaprobar_item_view(request, id_proyecto, id_fase, id_item):
                                                   descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
                                                   costo_temporal=item.costo_temporal, complejidad=item.complejidad,
                                                   estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
-                                                  adan=item.adan, cain=item.cain,
-                                                  tipo_relacion=item.tipo_relacion, fecha_version=datetime.datetime.now())
+                                                  adan=item.adan, cain=item.cain, tipo_relacion=item.tipo_relacion, 
+                                                  linea_base=item.linea_base, fecha_version=datetime.datetime.now())
         if item.padre:
             version_item.padre = item.padre.id
         version_item.save()
@@ -2358,7 +2382,7 @@ def confirmacion_revivir_item_view(request, id_proyecto, id_fase, id_item):
                 item_revivido = Item.objects.create(id=item.id_item, nombre=item.nombre, version=item.version, estado=0, 
                                                     descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
                                                     costo_temporal=item.costo_temporal, complejidad=item.complejidad,
-                                                    fase=item.fase, tipo_item=item.tipo_item)
+                                                    linea_base=item.linea_base, fase=item.fase, tipo_item=item.tipo_item)
                 item_revivido.save()
                 item.estado = 0
                 item.save()
@@ -2380,7 +2404,8 @@ def confirmacion_revivir_item_view(request, id_proyecto, id_fase, id_item):
                                                 descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
                                                 costo_temporal=item.costo_temporal, complejidad=item.complejidad,
                                                 fase=item.fase, tipo_item=item.tipo_item, adan=item.adan,
-                                                cain=item.cain, padre=item_padre, tipo_relacion=item.tipo_relacion)
+                                                cain=item.cain, padre=item_padre, tipo_relacion=item.tipo_relacion,
+                                                linea_base=item.linea_base)
             if item_padre.adan:
                 item_revivido.adan = item_padre.adan
             else:
@@ -2414,7 +2439,7 @@ def confirmacion_revivir_item_view(request, id_proyecto, id_fase, id_item):
             item_revivido = Item.objects.create(id=item.id_item, nombre=item.nombre, version=item.version, estado=0, 
                                                 descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
                                                 costo_temporal=item.costo_temporal, complejidad=item.complejidad,
-                                                fase=item.fase, tipo_item=item.tipo_item)
+                                                fase=item.fase, tipo_item=item.tipo_item, linea_base=item.linea_base)
             item_revivido.save()
             item.estado = 0
             item.save()
@@ -2666,8 +2691,8 @@ def confirmacion_agregar_relacion_view(request, id_proyecto, id_fase, id_item, i
                                                           descripcion=relacion.descripcion, costo_monetario=relacion.costo_monetario, 
                                                           costo_temporal=relacion.costo_temporal, complejidad=relacion.complejidad,
                                                           estado=relacion.estado, fase=relacion.fase, tipo_item=relacion.tipo_item,
-                                                          adan=relacion.adan, cain=relacion.cain,
-                                                          tipo_relacion=relacion.tipo_relacion, fecha_version=datetime.datetime.now())
+                                                          adan=relacion.adan, cain=relacion.cain, tipo_relacion=relacion.tipo_relacion, 
+                                                          linea_base=relacion.linea_base, fecha_version=datetime.datetime.now())
             if relacion.padre:
                 version_relacion.padre = relacion.padre.id
             version_relacion.save()
@@ -2700,8 +2725,8 @@ def confirmacion_agregar_relacion_view(request, id_proyecto, id_fase, id_item, i
                                                            descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
                                                            costo_temporal=r.costo_temporal, complejidad=r.complejidad,
                                                            estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
-                                                           adan=r.adan, cain=r.cain,
-                                                           tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
+                                                           adan=r.adan, cain=r.cain, tipo_relacion=r.tipo_relacion, 
+                                                           linea_base=r.linea_base, fecha_version=datetime.datetime.now())
                     if r.padre:
                         version_r.padre = r.padre.id
                     version_r.save()
@@ -2719,8 +2744,8 @@ def confirmacion_agregar_relacion_view(request, id_proyecto, id_fase, id_item, i
                                                           descripcion=relacion.descripcion, costo_monetario=relacion.costo_monetario, 
                                                           costo_temporal=relacion.costo_temporal, complejidad=relacion.complejidad,
                                                           estado=relacion.estado, fase=relacion.fase, tipo_item=relacion.tipo_item,
-                                                          adan=relacion.adan, cain=relacion.cain,
-                                                          tipo_relacion=relacion.tipo_relacion, fecha_version=datetime.datetime.now())
+                                                          adan=relacion.adan, cain=relacion.cain, tipo_relacion=relacion.tipo_relacion, 
+                                                          linea_base=relacion.linea_base, fecha_version=datetime.datetime.now())
             if relacion.padre:
                 version_relacion.padre = relacion.padre.id
             version_relacion.save()
@@ -2753,8 +2778,8 @@ def confirmacion_agregar_relacion_view(request, id_proyecto, id_fase, id_item, i
                                                            descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
                                                            costo_temporal=r.costo_temporal, complejidad=r.complejidad,
                                                            estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
-                                                           adan=r.adan, cain=r.cain,
-                                                           tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
+                                                           adan=r.adan, cain=r.cain, tipo_relacion=r.tipo_relacion, 
+                                                           linea_base=r.linea_base, fecha_version=datetime.datetime.now())
                     if r.padre:
                         version_r.padre = r.padre.id
                     version_r.save()
@@ -2827,8 +2852,8 @@ def quitar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, el
                                                       descripcion=relacion.descripcion, costo_monetario=relacion.costo_monetario, 
                                                       costo_temporal=relacion.costo_temporal, complejidad=relacion.complejidad,
                                                       estado=relacion.estado, fase=relacion.fase, tipo_item=relacion.tipo_item,
-                                                      adan=relacion.adan, cain=relacion.cain,
-                                                      tipo_relacion=relacion.tipo_relacion, fecha_version=datetime.datetime.now())
+                                                      adan=relacion.adan, cain=relacion.cain, tipo_relacion=relacion.tipo_relacion, 
+                                                      linea_base=relacion.linea_base, fecha_version=datetime.datetime.now())
         if relacion.padre:
             version_relacion.padre = relacion.padre.id
         version_relacion.save()
@@ -2843,8 +2868,8 @@ def quitar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, el
                                                    descripcion=r.descripcion, costo_monetario=r.costo_monetario, 
                                                    costo_temporal=r.costo_temporal, complejidad=r.complejidad,
                                                    estado=r.estado, fase=r.fase, tipo_item=r.tipo_item,
-                                                   adan=r.adan, cain=r.cain,
-                                                   tipo_relacion=r.tipo_relacion, fecha_version=datetime.datetime.now())
+                                                   adan=r.adan, cain=r.cain, tipo_relacion=r.tipo_relacion, 
+                                                   linea_base=r.linea_base, fecha_version=datetime.datetime.now())
             if r.padre:
                 version_r.padre = r.padre.id
             version_r.save()
@@ -2872,8 +2897,8 @@ def quitar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, el
                                                        descripcion=h.descripcion, costo_monetario=h.costo_monetario, 
                                                        costo_temporal=h.costo_temporal, complejidad=h.complejidad,
                                                        estado=h.estado, fase=h.fase, tipo_item=h.tipo_item,
-                                                       adan=h.adan, cain=h.cain,
-                                                       tipo_relacion=h.tipo_relacion, fecha_version=datetime.datetime.now())
+                                                       adan=h.adan, cain=h.cain, tipo_relacion=h.tipo_relacion, 
+                                                       linea_base=h.linea_base, fecha_version=datetime.datetime.now())
                 if h.padre:
                     version_h.padre = h.padre.id
                 version_h.save()
@@ -2997,6 +3022,7 @@ def confirmacion_reversionar_item_view(request, id_proyecto, id_fase, id_item, i
                 item.complejidad = item_reversion.complejidad
                 item.fase = item_reversion.fase
                 item.tipo_item = item_reversion.tipo_item
+                item.linea_base = item_reversion.linea_base
                 
                 # Verificamos si el padre y el item a reversionar pertenecen a la misma fase.
                 if item_padre.fase == item.fase:
@@ -3037,6 +3063,7 @@ def confirmacion_reversionar_item_view(request, id_proyecto, id_fase, id_item, i
                 item.adan = None
                 item.cain = None
                 item.tipo_relacion = None
+                item.linea_base = item_reversion.linea_base
                 item.save()
                 
                 # Version del item guardada.
@@ -3045,7 +3072,7 @@ def confirmacion_reversionar_item_view(request, id_proyecto, id_fase, id_item, i
                                                           costo_temporal=item.costo_temporal, complejidad=item.complejidad,
                                                           estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
                                                           adan=None, cain=None, padre = None, tipo_relacion=None, 
-                                                          fecha_version=datetime.datetime.now())
+                                                          linea_base=item.linea_base, fecha_version=datetime.datetime.now())
                 version_item.save()
             
                 ctx = {"item_reversion":item_reversion, "item":item, "fase":fase, "proyecto":proyecto, "posee_padre":posee_padre, "existe_padre":existe_padre, "estado_padre_valido":estado_padre_valido, "estado_valido":estado_valido, "fase_valida":fase_valida, 'posee_hijos':posee_hijos}
@@ -3067,6 +3094,7 @@ def confirmacion_reversionar_item_view(request, id_proyecto, id_fase, id_item, i
             item.adan = None
             item.cain = None
             item.tipo_relacion = None
+            item.linea_base = item_reversion.linea_base
             item.save()
             
             ctx = {"item_reversion":item_reversion, "item":item, "fase":fase, "proyecto":proyecto, "posee_padre":posee_padre, "estado_valido":estado_valido, "fase_valida":fase_valida, 'posee_hijos':posee_hijos}
@@ -3331,12 +3359,16 @@ def linea_base_confirmacion_agregar_item_view(request, id_proyecto, id_fase, id_
     fase = proyecto.fases.get(id=id_fase)
     linea_base = fase.lineas_base.get(id=id_linea_base)
     item = fase.items.get(id=id_item)
-    valido = False
+    existe_item = True
+    item_lb = False
     try:
         item = linea_base.items.get(id=id_item)
     except item.DoesNotExist:
-        valido = True      
-    if valido:
+        existe_item = False
+    if item.linea_base:
+        item_lb = True   
+    
+    if existe_item == False and item_lb == False:
         linea_base.items.add(item)
         linea_base.save()
         item.version = VersionItem.objects.filter(id_item=item.id).latest('id').version + 1
@@ -3352,7 +3384,7 @@ def linea_base_confirmacion_agregar_item_view(request, id_proyecto, id_fase, id_
             version_item.padre = item.padre.id
         version_item.save()
         
-    ctx = {'fase':fase, 'item':item, 'linea_base':linea_base, 'proyecto':proyecto, 'valido':valido}
+    ctx = {'fase':fase, 'item':item, 'linea_base':linea_base, 'proyecto':proyecto, 'existe_item':existe_item, 'item_lb':item_lb}
     return render_to_response('linea_base/confirmacion_agregar_item.html', ctx, context_instance=RequestContext(request))  
 
 @login_required(login_url='/login/')

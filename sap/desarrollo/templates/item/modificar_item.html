@@ -66,54 +66,54 @@
 				{% if a.tipo_atributo.tipo_dato == 0 %}
 					{% if a.tipo_atributo.obligatorio == True %}
 						<div class="input-group">
-							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}/Numérico</b></span>
 							<input type="number" step="{{ a.tipo_atributo.patron_precision }}" max="{{ a.tipo_atributo.num_max }}" min="{{ a.tipo_atributo.num_min }}" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:".f" }}" required="required">
 						</div>
 					{% else %}
 						<div class="input-group">
-							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}/Numérico</b></span>
 							<input type="number" step="{{ a.tipo_atributo.patron_precision }}" max="{{ a.tipo_atributo.num_max }}" min="{{ a.tipo_atributo.num_min }}" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_numerico|stringformat:".f" }}">
 						</div>
 					{% endif %}
 				{% elif a.tipo_atributo.tipo_dato == 1 %}
 					{% if a.tipo_atributo.obligatorio == True %}
 						<div class="input-group">
-							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}/Fecha</b></span>
 							<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}" required="required">
 						</div>
 					{% else %}
 						<div class="input-group">
-							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}/Fecha</b></span>
 							<input type="date" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_fecha|date:"Y-m-d" }}">
 						</div>
 					{% endif %}
 				{% elif a.tipo_atributo.tipo_dato == 2 %}
 					{% if a.tipo_atributo.obligatorio == True %}
 						<div class="input-group">
-							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}/Texto</b></span>
 							<textarea rows="3" class="form-control" maxlength="{{ a.tipo_atributo.textg_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" required>{{ a.valor_texto_grande }}</textarea>
 						</div>
 					{% else %}
 						<div class="input-group">
-							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}/Texto</b></span>
 							<textarea rows="3" class="form-control" maxlength="{{ a.tipo_atributo.textg_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">{{ a.valor_texto_grande }}</textarea>
 						</div>
 					{% endif %}
 				{% elif a.tipo_atributo.tipo_dato == 3 %}
 					{% if a.tipo_atributo.obligatorio == True %}
 						<div class="input-group">
-							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+							<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}/Cadena</b></span>
 							<input type="text" class="form-control" maxlength="{{ a.tipo_atributo.textch_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_texto_chico }}" required="required">
 						</div>
 					{% else %}
 						<div class="input-group">
-							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+							<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}/Cadena</b></span>
 							<input type="text" class="form-control" maxlength="{{ a.tipo_atributo.textch_longitud }}" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" value="{{ a.valor_texto_chico }}">
 						</div>
 					{% endif %}
 				{% elif a.tipo_atributo.tipo_dato == 4 %}
 					<div class="input-group">
-						<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+						<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}/Lógico</b></span>
 						<select class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">
 			            	{% if a.valor_logico == True %}
 			                	<option value="1" selected="selected">Sí</option>
@@ -131,7 +131,7 @@
 		            {% if a.tipo_atributo.obligatorio == True %}
 		            	{% if a.valor_archivo %}
 		            		<div class="input-group">
-		            			<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+		            			<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}/Archivo</b></span>
 		            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" required="required">
 							</div>
 							<br>
@@ -139,14 +139,14 @@
 							<br>
 						{% else %}
 							<div class="input-group">
-								<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}</b></span>
+								<span class="input-group-addon"><b>* {{ a.tipo_atributo.nombre }}/Archivo</b></span>
 		            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}" required="required">
 							</div>
 						{% endif %}
 					{% else %}
 						{% if a.valor_archivo %}
 		            		<div class="input-group">
-		            			<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+		            			<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}/Archivo</b></span>
 		            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">
 							</div>
 							<br>
@@ -154,7 +154,7 @@
 							<br>
 						{% else %}
 							<div class="input-group">
-								<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}</b></span>
+								<span class="input-group-addon"><b>{{ a.tipo_atributo.nombre }}/Archivo</b></span>
 		            			<input type="file" class="form-control" id="{{ a.tipo_atributo.nombre }}" name="{{ a.tipo_atributo.nombre }}">
 							</div>
 						{% endif %}
