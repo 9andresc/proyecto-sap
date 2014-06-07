@@ -1840,9 +1840,7 @@ def modificar_item_view(request, id_proyecto, id_fase, id_item):
                                 a.valor_archivo = request.FILES[key]
                                 a.save()
                 
-                version_nueva = False
                 if item.nombre != nombre or item.descripcion != descripcion or item.complejidad != complejidad or item.costo_monetario != costo_monetario or item.costo_temporal != costo_temporal:
-                    version_nueva = True
                     item.version = VersionItem.objects.filter(id_item=item.id).latest('id').version + 1
                     item.nombre = nombre
                     item.descripcion = descripcion
@@ -1862,20 +1860,14 @@ def modificar_item_view(request, id_proyecto, id_fase, id_item):
                     
                 # Si la solicitud de cambio correspondiente a la accion en cuestion existe.
                 if existe_solicitud:
-                    # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
-                    solicitud.delete()
-                    # Obtenemos la linea base a la cual pertenecia el item antes de alterarlo.
-                    if version_nueva:
-                        linea_base = VersionItem.objects.filter(id_item=item.id).get(version=item.version-2).linea_base
-                    else:
-                        linea_base = VersionItem.objects.filter(id_item=item.id).get(version=item.version-1).linea_base
-                            
-                    item.linea_base = linea_base
+                    item.linea_base = solicitud.linea_base
                     item.estado = 2
                     item.save()
-                    version_item.linea_base = linea_base
-                    version_item.estado = 2
+                    version_item.linea_base = item.linea_base
+                    version_item.estado = item.estado
                     version_item.save()
+                    # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
+                    solicitud.delete()
                         
                 return HttpResponseRedirect('/desarrollo/fases/items/item/%s/fase/%s/proyecto/%s'%(id_item, id_fase, id_proyecto))
     
@@ -1932,6 +1924,7 @@ def eliminar_item_view(request, id_proyecto, id_fase, id_item):
     estado_valido = True
     item_valido = True
     posee_relaciones = False
+    existe_solicitud = True
     
     if fase.estado == 2:
         estado_valido = False
@@ -1942,7 +1935,12 @@ def eliminar_item_view(request, id_proyecto, id_fase, id_item):
     if relaciones:
         posee_relaciones = True
         
-    if estado_valido and item_valido and posee_relaciones == False:
+    try:
+        solicitud = SolicitudCambio.objects.filter(item=item).get(accion="Eliminar item")
+    except SolicitudCambio.DoesNotExist:
+        existe_solicitud = False
+        
+    if estado_valido and item_valido and posee_relaciones == False or existe_solicitud:
         if request.method == "POST":
             try:
                 version_eliminada = VersionItem.objects.filter(id_item=item.id).get(version=item.version)
@@ -1950,20 +1948,11 @@ def eliminar_item_view(request, id_proyecto, id_fase, id_item):
                 version_eliminada.save()
             except VersionItem.DoesNotExist:
                 pass
-            
-            # Buscamos las solicitudes de cambio ligadas al item en cuestion.
-            solicitudes_item = SolicitudCambio.objects.filter(item=item)
-            if solicitudes_item:
-                existe_solicitud = True
-                try:
-                    solicitud = solicitudes_item.get(accion="Eliminar item")
-                except SolicitudCambio.DoesNotExist:
-                    existe_solicitud = False
                     
-                # Si la solicitud de cambio correspondiente a la accion en cuestion existe.
-                if existe_solicitud:
-                    # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
-                    solicitud.delete()
+            # Si la solicitud de cambio correspondiente a la accion en cuestion existe.
+            if existe_solicitud:
+                # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
+                solicitud.delete()
                 
             item.delete()
             return HttpResponseRedirect('/desarrollo/fases/items/fase/%s/proyecto/%s'%(id_fase, id_proyecto))
@@ -2519,102 +2508,93 @@ def agregar_relacion_view(request, id_proyecto, id_fase, id_item):
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fase = proyecto.fases.get(id=id_fase)
     item = fase.items.get(id=id_item)
-    estado_fase_valido = True
-    item_valido = True
-    
-    if fase.estado == 2:
-        estado_fase_valido = False
-    
-    if item.estado == 1 or item.estado == 2:
-        item_valido = False
         
-    if estado_fase_valido and item_valido:
-        if request.method == "POST":
-            eleccion_relacion = request.POST.get('eleccion_relacion')
+    if request.method == "POST":
+        eleccion_relacion = request.POST.get('eleccion_relacion')
             
-            # Hijos para el item padre
-            if eleccion_relacion == "0":
-                existen_items_hijos = False
-                items_hijos = fase.items.filter(padre=None).exclude(id=id_item).exclude(estado=1).exclude(estado=2)
+        # Hijos para el item padre
+        if eleccion_relacion == "0":
+            existen_items_hijos = False
+            items_hijos = fase.items.filter(padre=None).exclude(id=id_item).exclude(estado=1).exclude(estado=2)
                 
-                if item.adan:
-                    items_hijos = items_hijos.exclude(id=item.adan)
-                if item.cain:
-                    items_hijos = items_hijos.exclude(id=item.cain)
+            if item.adan:
+                items_hijos = items_hijos.exclude(id=item.adan)
+            if item.cain:
+                items_hijos = items_hijos.exclude(id=item.cain)
                 
-                if items_hijos:
-                    existen_items_hijos = True
+            if items_hijos:
+                existen_items_hijos = True
                 
-                ctx = {'item':item, 'items_hijos':items_hijos, 'fase':fase, 'proyecto':proyecto, 'estado_fase_valido':estado_fase_valido, 'item_valido':item_valido, 'existen_items_hijos':existen_items_hijos, 'eleccion':eleccion_relacion}
+            ctx = {'item':item, 'items_hijos':items_hijos, 'fase':fase, 'proyecto':proyecto, 'existen_items_hijos':existen_items_hijos, 'eleccion':eleccion_relacion}
+            return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
+            
+        # Sucesores para el item antecesor
+        elif eleccion_relacion == "1":
+            estado_item_valido = False
+            secuencia_fase_valida = True
+                
+            if item.estado == 2:
+                estado_item_valido = True
+                
+            cant_secuencias = proyecto.fases.count() 
+            if fase.num_secuencia == cant_secuencias:
+                secuencia_fase_valida = False
+                
+            if secuencia_fase_valida and estado_item_valido:
+                existen_items_sucesores = False
+                fase_vecina = proyecto.fases.get(num_secuencia=int(fase.num_secuencia)+1)
+                items_sucesores = fase_vecina.items.filter(padre=None).exclude(estado=1).exclude(estado=2)
+                    
+                if items_sucesores:
+                    existen_items_sucesores = True
+                    
+                ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'fase_vecina':fase_vecina, 'items_sucesores':items_sucesores, 'estado_item_valido':estado_item_valido, 'secuencia_fase_valida':secuencia_fase_valida, 'existen_items_sucesores':existen_items_sucesores, 'eleccion':eleccion_relacion}
                 return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
-            
-            # Sucesores para el item antecesor
-            elif eleccion_relacion == "1":
-                estado_item_valido = False
-                secuencia_fase_valida = True
-                
-                if item.estado == 2:
-                    estado_item_valido = True
-                
-                cant_secuencias = proyecto.fases.count() 
-                if fase.num_secuencia == cant_secuencias:
-                    secuencia_fase_valida = False
-                
-                if secuencia_fase_valida and estado_item_valido:
-                    existen_items_sucesores = False
-                    fase_vecina = proyecto.fases.get(num_secuencia=int(fase.num_secuencia)+1)
-                    items_sucesores = fase_vecina.items.filter(padre=None).exclude(estado=1).exclude(estado=2)
-                    
-                    if items_sucesores:
-                        existen_items_sucesores = True
-                    
-                    ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'fase_vecina':fase_vecina, 'items_sucesores':items_sucesores, 'estado_fase_valido':estado_fase_valido, 'estado_item_valido':estado_item_valido, 'item_valido':item_valido, 'secuencia_fase_valida':secuencia_fase_valida, 'existen_items_sucesores':existen_items_sucesores, 'eleccion':eleccion_relacion}
-                    return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
-                else:
-                    ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'estado_fase_valido':estado_fase_valido, 'estado_item_valido':estado_item_valido, 'item_valido':item_valido, 'secuencia_fase_valida':secuencia_fase_valida, 'eleccion':eleccion_relacion}
-                    return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
-                    
-            # Padres para el item hijo
-            elif eleccion_relacion == "2":
-                posee_padre = False
-                existen_items_padres = False
-                items_padres = fase.items.exclude(id=item.id).exclude(adan=item.id)
-                
-                if item.padre:
-                    posee_padre = True
-                    
-                if items_padres:
-                    existen_items_padres = True
-                    
-                ctx = {'item':item, 'items_padres':items_padres, 'fase':fase, 'proyecto':proyecto, 'estado_fase_valido':estado_fase_valido, 'item_valido':item_valido, 'existen_items_padres':existen_items_padres, 'posee_padre':posee_padre, 'eleccion':eleccion_relacion}
+            else:
+                ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'estado_item_valido':estado_item_valido, 'secuencia_fase_valida':secuencia_fase_valida, 'eleccion':eleccion_relacion}
                 return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
-            
-            # Antecesores para el item sucesor
-            elif eleccion_relacion == "3":
-                posee_padre = False
-                secuencia_fase_valida = True
+                    
+        # Padres para el item hijo
+        elif eleccion_relacion == "2":
+            posee_padre = False
+            existen_items_padres = False
+            items_padres = fase.items.exclude(id=item.id).exclude(adan=item.id)
                 
-                if item.padre:
-                    posee_padre = True
+            if item.padre:
+                posee_padre = True
+                    
+            if items_padres:
+                existen_items_padres = True
+                    
+            ctx = {'item':item, 'items_padres':items_padres, 'fase':fase, 'proyecto':proyecto, 'existen_items_padres':existen_items_padres, 'posee_padre':posee_padre, 'eleccion':eleccion_relacion}
+            return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
+            
+        # Antecesores para el item sucesor
+        elif eleccion_relacion == "3":
+            posee_padre = False
+            secuencia_fase_valida = True
+                
+            if item.padre:
+                posee_padre = True
                      
-                if fase.num_secuencia == 1:
-                    secuencia_fase_valida = False
+            if fase.num_secuencia == 1:
+                secuencia_fase_valida = False
                     
-                if posee_padre == False and secuencia_fase_valida:
-                    existen_items_antecesores = False
-                    fase_vecina = proyecto.fases.get(num_secuencia=int(fase.num_secuencia)-1)
-                    items_antecesores = fase_vecina.items.filter(estado=2)
+            if posee_padre == False and secuencia_fase_valida:
+                existen_items_antecesores = False
+                fase_vecina = proyecto.fases.get(num_secuencia=int(fase.num_secuencia)-1)
+                items_antecesores = fase_vecina.items.filter(estado=2)
                     
-                    if items_antecesores:
-                        existen_items_antecesores = True
+                if items_antecesores:
+                    existen_items_antecesores = True
                         
-                    ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'fase_vecina':fase_vecina, 'items_antecesores':items_antecesores, 'estado_fase_valido':estado_fase_valido, 'item_valido':item_valido, 'secuencia_fase_valida':secuencia_fase_valida, 'existen_items_antecesores':existen_items_antecesores, 'posee_padre':posee_padre, 'eleccion':eleccion_relacion}
-                    return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
-                else:
-                    ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'estado_fase_valido':estado_fase_valido, 'item_valido':item_valido, 'secuencia_fase_valida':secuencia_fase_valida, 'posee_padre':posee_padre, 'eleccion':eleccion_relacion}
-                    return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
+                ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'fase_vecina':fase_vecina, 'items_antecesores':items_antecesores, 'secuencia_fase_valida':secuencia_fase_valida, 'existen_items_antecesores':existen_items_antecesores, 'posee_padre':posee_padre, 'eleccion':eleccion_relacion}
+                return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
+            else:
+                ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'secuencia_fase_valida':secuencia_fase_valida, 'posee_padre':posee_padre, 'eleccion':eleccion_relacion}
+                return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
             
-    ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'estado_fase_valido':estado_fase_valido, 'item_valido':item_valido}
+    ctx = {'item':item, 'fase':fase, 'proyecto':proyecto}
     return render_to_response('item/agregar_relacion.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -2651,6 +2631,7 @@ def confirmacion_agregar_relacion_view(request, id_proyecto, id_fase, id_item, i
     fase = proyecto.fases.get(id=id_fase)
     estado_valido = True
     item_valido = True
+    existe_solicitud = True
     
     if fase.estado == 2:
         estado_valido = False
@@ -2659,6 +2640,11 @@ def confirmacion_agregar_relacion_view(request, id_proyecto, id_fase, id_item, i
         item = fase.items.get(id=id_item)
         relacion = Item.objects.get(id=id_relacion)
         
+        try:
+            solicitud = SolicitudCambio.objects.filter(item=item).get(accion="Agregar relacion a item")
+        except SolicitudCambio.DoesNotExist:
+            existe_solicitud = False
+        
         if item.estado == 1 or item.estado == 2:
             item_valido = False
         
@@ -2666,10 +2652,15 @@ def confirmacion_agregar_relacion_view(request, id_proyecto, id_fase, id_item, i
         relacion = fase.items.get(id=id_item)
         item = Item.objects.get(id=id_relacion)
         
+        try:
+            solicitud = SolicitudCambio.objects.filter(item=relacion).get(accion="Agregar relacion a item")
+        except SolicitudCambio.DoesNotExist:
+            existe_solicitud = False
+        
         if relacion.estado == 1 or relacion.estado == 2:
             item_valido = False
     
-    if estado_valido and item_valido:
+    if estado_valido and item_valido or existe_solicitud:
         if item.fase.id == relacion.fase.id:
             relacion.tipo_relacion = 0
         else:
@@ -2785,8 +2776,29 @@ def confirmacion_agregar_relacion_view(request, id_proyecto, id_fase, id_item, i
             
         item.relaciones.add(relacion)
         item.save()
+        
+    # Si la solicitud de cambio correspondiente a la accion en cuestion existe.
+    if existe_solicitud:
+        if eleccion == "0" or eleccion == "1":
+            item.linea_base = solicitud.linea_base
+            item.estado = 2
+            item.save()
+            version_item = VersionItem.objects.filter(id_item=item.id).latest('id')
+            version_item.linea_base = item.linea_base
+            version_item.estado = item.estado
+            version_item.save()
+        elif eleccion == "2" or eleccion == "3" :
+            relacion.linea_base = solicitud.linea_base
+            relacion.estado = 2
+            relacion.save()
+            version_relacion = VersionItem.objects.filter(id_item=relacion.id).latest('id')
+            version_relacion.linea_base = relacion.linea_base
+            version_relacion.estado = relacion.estado
+            version_relacion.save()
+        # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
+        solicitud.delete()
 
-    ctx = {'item':item, 'relacion':relacion, 'fase':fase, 'proyecto':proyecto, 'eleccion':eleccion, 'estado_valido':estado_valido, 'item_valido':item_valido}
+    ctx = {'item':item, 'relacion':relacion, 'fase':fase, 'proyecto':proyecto, 'eleccion':eleccion, 'estado_valido':estado_valido, 'item_valido':item_valido, 'existe_solicitud':existe_solicitud}
     return render_to_response('item/confirmacion_agregar_relacion.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -2822,6 +2834,7 @@ def quitar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, el
     fase = proyecto.fases.get(id=id_fase)
     estado_valido = True
     item_valido = True
+    existe_solicitud = True
     
     if fase.estado == 2:
         estado_valido = False
@@ -2830,16 +2843,26 @@ def quitar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, el
         item = fase.items.get(id=id_item)
         relacion = Item.objects.get(id=id_relacion)
         
+        try:
+            solicitud = SolicitudCambio.objects.filter(item=item).get(accion="Agregar relacion a item")
+        except SolicitudCambio.DoesNotExist:
+            existe_solicitud = False
+        
         if item.estado == 1 or item.estado == 2:
             item_valido = False
     elif eleccion == "2" or eleccion == "3" :
         item = Item.objects.get(id=id_item)
         relacion = fase.items.get(id=id_relacion)
         
+        try:
+            solicitud = SolicitudCambio.objects.filter(item=relacion).get(accion="Agregar relacion a item")
+        except SolicitudCambio.DoesNotExist:
+            existe_solicitud = False
+        
         if relacion.estado == 1 or relacion.estado == 2:
             item_valido = False
-        
-    if estado_valido and item_valido:
+
+    if estado_valido and item_valido or existe_solicitud:
         relacion.adan = None
         relacion.cain = None
         relacion.padre = None
@@ -2900,6 +2923,27 @@ def quitar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, el
                 if h.padre:
                     version_h.padre = h.padre.id
                 version_h.save()
+            
+    # Si la solicitud de cambio correspondiente a la accion en cuestion existe.
+    if existe_solicitud:
+        if eleccion == "0" or eleccion == "1":
+            item.linea_base = solicitud.linea_base
+            item.estado = 2
+            item.save()
+            version_item = VersionItem.objects.filter(id_item=item.id).latest('id')
+            version_item.linea_base = item.linea_base
+            version_item.estado = item.estado
+            version_item.save()
+        elif eleccion == "2" or eleccion == "3" :
+            relacion.linea_base = solicitud.linea_base
+            relacion.estado = 2
+            relacion.save()
+            version_relacion = VersionItem.objects.filter(id_item=relacion.id).latest('id')
+            version_relacion.linea_base = relacion.linea_base
+            version_relacion.estado = relacion.estado
+            version_relacion.save()
+        # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
+        solicitud.delete()
             
     ctx = {'item':item, 'relacion':relacion, 'fase':fase, 'proyecto':proyecto, 'eleccion':eleccion, 'estado_valido':estado_valido, 'item_valido':item_valido}
     return render_to_response('item/quitar_relacion.html', ctx, context_instance=RequestContext(request))
