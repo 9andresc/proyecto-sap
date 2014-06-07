@@ -2129,11 +2129,13 @@ def calcular_impacto_view(request, id_proyecto, id_fase, id_item):
     costo_temporal = item.costo_temporal
     posee_hijos = False
     
+    # Verificamos si el item de la solicitud de cambio posee hijos/sucesores.
     if relaciones:
         posee_hijos = True
         
     if posee_hijos:
-        resultados = []
+        # Cargamos en el listado hijos todos los hijos/sucesores del item de la solicitud de cambio.
+        hijos = []
                             
         # Obtenemos todos los hijos/sucesores del item.
         while 1:
@@ -2141,18 +2143,125 @@ def calcular_impacto_view(request, id_proyecto, id_fase, id_item):
             if len(relaciones) == 0:
                 break
             for r in relaciones:
-                resultados.append(r)
+                hijos.append(r)
                 if r.relaciones.count() > 0:
                     for h in r.relaciones.all():
                         nuevas_relaciones.append(h)
                 relaciones = nuevas_relaciones
+    
+        # Calculamos el costo de impacto monetario y temporal del item de la solicitud.
+        for h in hijos:
+            costo_monetario = costo_monetario + h.costo_monetario
+            costo_temporal = costo_temporal + h.costo_temporal
+    
+    # Creamos el grafo de relaciones del item de la solicitud de cambio.
+    fases = proyecto.fases.all()
+    grafo_relaciones = pydot.Dot(graph_type='digraph', fontname="Verdana", rankdir="TB")
+    grafo_relaciones.set_node_defaults(style="filled", fillcolor="white", shape="record")
+    grafo_relaciones.set_edge_defaults(color="black", arrowhead="vee")
+    
+    for f in fases:
+        cluster_fase = pydot.Cluster("fase"+str(f.id),
+                                     label="Fase: " + str(f.nombre), 
+                                     shape='rectangle', 
+                                     fontsize=15, 
+                                     style='filled', 
+                                     color='#E6E6E6', 
+                                     fillcolor="#BDBDBD", 
+                                     fontcolor="white")
+        items = f.items.exclude(estado=2).filter(linea_base=None)
+        if items:
+            for i in items:
+                if i == item:
+                    color_estado = "white"
+                    if i.estado == 1:
+                        color_estado = "#80FF00"
+                    elif i.estado == 3:
+                        color_estado = "#045FB4"
+                    
+                    cluster_fase.add_node(pydot.Node("item"+str(i.id),
+                                          label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario),
+                                          fillcolor=color_estado, 
+                                          fontsize=15))
+                if posee_hijos:
+                    if i in hijos:
+                        color_estado = "white"
+                        if i.estado == 1:
+                            color_estado = "#80FF00"
+                        elif i.estado == 3:
+                            color_estado = "#045FB4"
+                        
+                        cluster_fase.add_node(pydot.Node("item"+str(i.id),
+                                              label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario),
+                                              fillcolor=color_estado, 
+                                              fontsize=15))
+                
+        items = f.items.exclude(linea_base=None)
+        if items:
+            lineas_base = f.lineas_base.all().exclude(estado=2)
+            for lb in lineas_base:
+                cluster_linea_base = pydot.Cluster("lb"+str(lb.id), 
+                                                   label="Linea base: " + str(lb.nombre), 
+                                                   shape='rectangle', 
+                                                   fontsize=15, 
+                                                   style='filled', 
+                                                   color='#E6E6E6', 
+                                                   fillcolor="#FFFFFF", 
+                                                   fontcolor="black")
+                items = lb.items.all()
+                for i in items:
+                    if i == item:
+                        if i.estado == 1:
+                            color_estado = "#80FF00"
+                        elif i.estado == 2:
+                            color_estado = "#DF0101"
+                        else:
+                            color_estado = "#045FB4"
+                        
+                        cluster_linea_base.add_node(pydot.Node("item"+str(i.id), 
+                                                               label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario), 
+                                                               fillcolor=color_estado, 
+                                                               fontsize=15))
+                        
+                    if posee_hijos:
+                        if i in hijos:
+                            if i.estado == 1:
+                                color_estado = "#80FF00"
+                            elif i.estado == 2:
+                                color_estado = "#DF0101"
+                            else:
+                                color_estado = "#045FB4"
                             
-        # Por cada hijo/sucesor se suma su costo monetario y temporal para los calculos a retornar en el template.
-        for r in resultados:
-            costo_monetario = costo_monetario + r.costo_monetario
-            costo_temporal = costo_temporal + r.costo_temporal
+                            cluster_linea_base.add_node(pydot.Node("item"+str(i.id), 
+                                                                   label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario), 
+                                                                   fillcolor=color_estado, 
+                                                                   fontsize=15))
+                cluster_fase.add_subgraph(cluster_linea_base)
             
-    ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'posee_hijos':posee_hijos, 'costo_monetario':costo_monetario, 'costo_temporal':costo_temporal}
+        grafo_relaciones.add_subgraph(cluster_fase)
+
+    for f in fases:
+        items = f.items.all()
+        for i in items:
+            if i == item:
+                relaciones = i.relaciones.all()
+                for r in relaciones:
+                    grafo_relaciones.add_edge(pydot.Edge("item"+str(i.id), "item"+str(r.id), 
+                                                       label='costo='+str(i.costo_monetario), 
+                                                       fontsize=10))
+            if posee_hijos:
+                if i in hijos:
+                    relaciones = i.relaciones.all()
+                    for r in relaciones:
+                        grafo_relaciones.add_edge(pydot.Edge("item"+str(i.id), "item"+str(r.id), 
+                                                           label='costo='+str(i.costo_monetario), 
+                                                           fontsize=10))
+    # La direccion del grafico png que representa al grafo de relaciones del item de la solicitud de cambio.
+    ruta_grafo = str(settings.MEDIA_ROOT) + "grafos/grafo_relaciones_item_" + str(item.nombre) + ".png"
+    grafo_relaciones.write(ruta_grafo, prog='dot', format='png')
+    ruta_grafo = str(settings.MEDIA_URL) + "grafos/grafo_relaciones_item_" + str(item.nombre) + ".png"
+            
+    ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'ruta_grafo':ruta_grafo, 'posee_hijos':posee_hijos, 'costo_monetario':costo_monetario, 'costo_temporal':costo_temporal}
     return render_to_response('item/calculo_impacto.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')

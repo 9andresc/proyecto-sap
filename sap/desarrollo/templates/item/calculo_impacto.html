@@ -16,6 +16,10 @@
 				<span class="input-group-addon"><b>Costo temporal</b></span>
 				<input type="text" class="form-control" id="costo_temporal" name="costo_temporal" value="{{ costo_temporal }}" disabled="disabled">
        	 	</div>
+       	 	<h2 align="center"><small>Grafo de relaciones del item <i>{{ solicitud.item.nombre }}</i></small></h2>
+    		<div align="center">
+				<img src="{{ ruta_grafo }}" alt="Grafo de relaciones del item {{ solicitud.item.nombre }}" class="img-thumbnail">
+			</div>
 		{% else %}
 			<div class="panel panel-info">
 				<div class="panel-heading">
