@@ -58,7 +58,8 @@ def desarrollo_view(request):
                 break
             
     proyectos = Proyecto.objects.filter(estado=1)
-    ctx = {'proyectos': proyectos, 'calcular_costo':calcular_costo, 'gestionar_fases':gestionar_fases, 'gestionar_solicitudes_proyecto':gestionar_solicitudes_proyecto, 'gestionar_solicitudes_usuario':gestionar_solicitudes_usuario, 'finalizar_proyecto':finalizar_proyecto}
+    finalizados = Proyecto.objects.filter(estado=2)
+    ctx = {'proyectos': proyectos, 'finalizados':finalizados, 'calcular_costo':calcular_costo, 'gestionar_fases':gestionar_fases, 'gestionar_solicitudes_proyecto':gestionar_solicitudes_proyecto, 'gestionar_solicitudes_usuario':gestionar_solicitudes_usuario, 'finalizar_proyecto':finalizar_proyecto}
     return render_to_response('desarrollo/desarrollo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
@@ -1780,15 +1781,21 @@ def modificar_item_view(request, id_proyecto, id_fase, id_item):
     atributos = ValorAtributo.objects.filter(item__id=id_item)
     estado_valido = True
     item_valido = True
+    existe_solicitud = True
     
     if fase.estado == 2:
         estado_valido = False
     
     if item.estado == 1 or item.estado == 2:
         item_valido = False
+        
+    try:
+        solicitud = SolicitudCambio.objects.filter(item=item).get(accion="Modificar item")
+    except SolicitudCambio.DoesNotExist:
+        existe_solicitud = False
     
     form = ModificarItemForm()
-    if estado_valido and item_valido:
+    if estado_valido and item_valido or existe_solicitud:
         if request.method == "POST":
             form = ModificarItemForm(request.POST)
             if form.is_valid():
@@ -1852,32 +1859,23 @@ def modificar_item_view(request, id_proyecto, id_fase, id_item):
                     if item.padre:
                         version_item.padre = item.padre.id
                     version_item.save()
-                
-                # Buscamos las solicitudes de cambio ligadas al item en cuestion.
-                solicitudes_item = SolicitudCambio.objects.filter(item=item)
-                if solicitudes_item:
-                    existe_solicitud = True
-                    try:
-                        solicitud = solicitudes_item.get(accion="Modificar item")
-                    except SolicitudCambio.DoesNotExist:
-                        existe_solicitud = False
                     
-                    # Si la solicitud de cambio correspondiente a la accion en cuestion existe.
-                    if existe_solicitud:
-                        # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
-                        solicitud.delete()
-                        # Obtenemos la linea base a la cual pertenecia el item antes de alterarlo.
-                        if version_nueva:
-                            linea_base = VersionItem.objects.filter(id_item=item.id).get(version=item.version-2).linea_base
-                        else:
-                            linea_base = VersionItem.objects.filter(id_item=item.id).get(version=item.version-1).linea_base
+                # Si la solicitud de cambio correspondiente a la accion en cuestion existe.
+                if existe_solicitud:
+                    # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
+                    solicitud.delete()
+                    # Obtenemos la linea base a la cual pertenecia el item antes de alterarlo.
+                    if version_nueva:
+                        linea_base = VersionItem.objects.filter(id_item=item.id).get(version=item.version-2).linea_base
+                    else:
+                        linea_base = VersionItem.objects.filter(id_item=item.id).get(version=item.version-1).linea_base
                             
-                        item.linea_base = linea_base
-                        item.estado = 2
-                        item.save()
-                        version_item.linea_base = linea_base
-                        version_item.estado = 2
-                        version_item.save()
+                    item.linea_base = linea_base
+                    item.estado = 2
+                    item.save()
+                    version_item.linea_base = linea_base
+                    version_item.estado = 2
+                    version_item.save()
                         
                 return HttpResponseRedirect('/desarrollo/fases/items/item/%s/fase/%s/proyecto/%s'%(id_item, id_fase, id_proyecto))
     
@@ -1889,7 +1887,7 @@ def modificar_item_view(request, id_proyecto, id_fase, id_item):
             'costo_monetario': item.costo_monetario,
             'complejidad': item.complejidad,
             })
-    ctx = {'form':form, 'item':item, 'fase':fase, 'proyecto':proyecto, 'atributos':atributos, 'setting':settings, 'estado_valido':estado_valido, 'item_valido':item_valido}
+    ctx = {'form':form, 'item':item, 'fase':fase, 'proyecto':proyecto, 'atributos':atributos, 'setting':settings, 'estado_valido':estado_valido, 'item_valido':item_valido, 'existe_solicitud':existe_solicitud}
     return render_to_response('item/modificar_item.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')

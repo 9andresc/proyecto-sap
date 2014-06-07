@@ -69,6 +69,33 @@
     	{% else %}
     		<h3>No existen proyectos en curso.</h3>
     	{% endif %}
+    	{% if finalizados %}
+    		<h1><small>Proyectos finalizados</small></h1>
+			<br>
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre de proyecto</th>   
+                    		<th>Líder</th>
+                    		<th>Fecha de inicio</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for pf in finalizados %}
+                			<tr>
+                    			<td>{{ pf.id }}</td>
+                    			<td>{{ pf.nombre }}</td>
+                    			<td>{{ pf.usuario_lider.username }}</td>
+                    			<td>{{ pf.fecha_inicio }}</td>
+                 			<tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% endif%}
 	</div>
 </div>
 {% endblock %}

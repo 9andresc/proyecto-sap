@@ -3,7 +3,7 @@
 {% block content %}
 <div class="jumbotron">
 
-	{% if estado_valido and item_valido %}
+	{% if estado_valido and item_valido or existe_solicitud %}
 		<h1><small>Modificar item</small></h1>
 		<form class="form-horizontal" method="POST" enctype="multipart/form-data">
 			{% csrf_token %}
@@ -179,6 +179,9 @@
         			{% endif %}
         			{% if item_valido == False %}
         				<li>El item <i>{{ item.nombre }}</i> se encuentra en estado <b>Aprobado</b> o <b>Bloqueado</b>.</li>
+        			{% endif %}
+        			{% if estado_valido == False and existe_solicitud == False %}
+        				<li>El item <i>{{ item.nombre }}</i> no posee una solicitud de cambio aprobada existente.</li>
         			{% endif %}
         		</ul>
       		</div>
