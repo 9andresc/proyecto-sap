@@ -2844,7 +2844,7 @@ def quitar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, el
         relacion = Item.objects.get(id=id_relacion)
         
         try:
-            solicitud = SolicitudCambio.objects.filter(item=item).get(accion="Agregar relacion a item")
+            solicitud = SolicitudCambio.objects.filter(item=item).get(accion="Quitar relacion de item")
         except SolicitudCambio.DoesNotExist:
             existe_solicitud = False
         
@@ -2855,7 +2855,7 @@ def quitar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, el
         relacion = fase.items.get(id=id_relacion)
         
         try:
-            solicitud = SolicitudCambio.objects.filter(item=relacion).get(accion="Agregar relacion a item")
+            solicitud = SolicitudCambio.objects.filter(item=relacion).get(accion="Quitar relacion de item")
         except SolicitudCambio.DoesNotExist:
             existe_solicitud = False
         
@@ -2945,7 +2945,7 @@ def quitar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, el
         # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
         solicitud.delete()
             
-    ctx = {'item':item, 'relacion':relacion, 'fase':fase, 'proyecto':proyecto, 'eleccion':eleccion, 'estado_valido':estado_valido, 'item_valido':item_valido}
+    ctx = {'item':item, 'relacion':relacion, 'fase':fase, 'proyecto':proyecto, 'eleccion':eleccion, 'estado_valido':estado_valido, 'item_valido':item_valido, 'existe_solicitud':existe_solicitud}
     return render_to_response('item/quitar_relacion.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')

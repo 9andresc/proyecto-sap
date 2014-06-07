@@ -3,7 +3,7 @@
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if estado_valido and item_valido %}
+		{% if estado_valido and item_valido or existe_solicitud %}
 			<div class="panel panel-success">
 	      		<div class="panel-heading">
 	        		<h3 class="panel-title">¡Éxito!</h3>
