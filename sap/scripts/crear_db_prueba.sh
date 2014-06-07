@@ -25,8 +25,10 @@ sudo -u postgres createdb -O "$usuario" sap
 
 echo 4- Se crean las tablas para la base de datos sap
 
+cd ..
+
 python manage.py syncdb
 
 echo 5- Se cargan los datos iniciales para el proyecto
 
-python manage.py loaddata datos_iniciales_prueba.json
+python manage.py loaddata scripts/datos_iniciales_prueba.json
