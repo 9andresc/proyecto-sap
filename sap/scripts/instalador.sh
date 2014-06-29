@@ -16,7 +16,7 @@ iteracion2="https://github.com/GustavoAndresCabral/proyecto-sap/archive/Iteracio
 iteracion3="https://github.com/GustavoAndresCabral/proyecto-sap/archive/Iteracion_3.zip"
 iteracion4="https://github.com/GustavoAndresCabral/proyecto-sap/archive/Iteracion_4.zip"
 iteracion5="https://github.com/GustavoAndresCabral/proyecto-sap/archive/Iteracion_5.zip"
-iteracion6=""
+iteracion6="https://github.com/GustavoAndresCabral/proyecto-sap/archive/Iteracion_6.zip"
 actual="https://github.com/GustavoAndresCabral/proyecto-sap/archive/master.zip"
 
 function opciones
