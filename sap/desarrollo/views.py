@@ -63,6 +63,132 @@ def desarrollo_view(request):
     return render_to_response('desarrollo/desarrollo.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@miembro_proyecto()
+def ver_fases_view(request, id_proyecto):
+    """
+    ::
+    
+        La vista de visualizacion de fases. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+                - El usuario debe estar logueado.
+                
+        Esta vista permite al usuario visualizar el listado de fases finalizadas de un proyecto finalizado.
+          
+        La vista recibe los siguientes parametros:
+    
+                - request: contiene informacion sobre la sesion actual.
+                - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+      
+                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+            
+    fases = proyecto.fases.all()
+    grafo_proyecto = pydot.Dot(graph_type='digraph', fontname="Verdana", rankdir="TB")
+    grafo_proyecto.set_node_defaults(style="filled", fillcolor="white", shape="record")
+    grafo_proyecto.set_edge_defaults(color="black", arrowhead="vee")
+    
+    for f in fases:
+        cluster_fase = pydot.Cluster("fase"+str(f.id),
+                                     label="Fase: " + str(f.nombre) + " sec(" + str(f.num_secuencia) + ")", 
+                                     shape='rectangle', 
+                                     fontsize=15, 
+                                     style='filled', 
+                                     color='#E6E6E6', 
+                                     fillcolor="#BDBDBD", 
+                                     fontcolor="white")
+        items = f.items.exclude(estado=2).filter(linea_base=None)
+        if items:
+            for i in items:
+                color_estado = "white"
+                if i.estado == 1:
+                    color_estado = "#80FF00"
+                elif i.estado == 3:
+                    color_estado = "#045FB4"
+                
+                cluster_fase.add_node(pydot.Node("item"+str(i.id),
+                                      label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario),
+                                      fillcolor=color_estado, 
+                                      fontsize=15))
+        items = f.items.exclude(linea_base=None)
+        if items:
+            lineas_base = f.lineas_base.all().exclude(estado=2)
+            for lb in lineas_base:
+                cluster_linea_base = pydot.Cluster("lb"+str(lb.id), 
+                                                   label="Linea base: " + str(lb.nombre), 
+                                                   shape='rectangle', 
+                                                   fontsize=15, 
+                                                   style='filled', 
+                                                   color='#E6E6E6', 
+                                                   fillcolor="#FFFFFF", 
+                                                   fontcolor="black")
+                items = lb.items.all()
+                for i in items:
+                    if i.estado == 1:
+                        color_estado = "#80FF00"
+                    elif i.estado == 2:
+                        color_estado = "#DF0101"
+                    else:
+                        color_estado = "#045FB4"
+                    
+                    cluster_linea_base.add_node(pydot.Node("item"+str(i.id), 
+                                                           label = "<f0>Item: %s|<f1>Costo: %d"%(i.nombre, i.costo_monetario), 
+                                                           fillcolor=color_estado, 
+                                                           fontsize=15))
+                cluster_fase.add_subgraph(cluster_linea_base)
+            
+        grafo_proyecto.add_subgraph(cluster_fase)
+
+    for f in fases:
+        items = f.items.all()
+        for i in items:
+            relaciones = i.relaciones.all()
+            for r in relaciones:
+                grafo_proyecto.add_edge(pydot.Edge("item"+str(i.id), "item"+str(r.id), 
+                                                   label='costo='+str(i.costo_monetario), 
+                                                   fontsize=10))
+            
+    ruta_grafo = str(settings.MEDIA_ROOT) + "grafos/grafo_proyecto_" + str(proyecto.nombre) + ".png"
+    grafo_proyecto.write(ruta_grafo, prog='dot', format='png')
+    ruta_grafo = str(settings.MEDIA_URL) + "grafos/grafo_proyecto_" + str(proyecto.nombre) + ".png"
+
+    ctx = {'fases':fases, 'proyecto':proyecto, 'ruta_grafo':ruta_grafo}
+    return render_to_response('desarrollo/ver_fases.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@miembro_proyecto()
+def ver_items_view(request, id_proyecto, id_fase):
+    """
+    ::
+    
+        La vista de visualizacion de items. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+                - El usuario debe estar logueado.
+                
+        Esta vista permite al usuario visualizar el listado de items de las fases finalizadas de un proyecto finalizado.
+          
+        La vista recibe los siguientes parametros:
+    
+                - request: contiene informacion sobre la sesion actual.
+                - id_proyecto: el identificador del proyecto.
+                - id_fase: el identificador de la fase.
+            
+        La vista retorna lo siguiente:
+      
+                - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    items = fase.items.all()
+
+    ctx = {'proyecto':proyecto, 'fase':fase, 'items':items}
+    return render_to_response('desarrollo/ver_items.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
 @permiso_requerido(permiso="Calcular costo de proyecto")
 @miembro_proyecto()
 def calcular_costo_view(request, id_proyecto):
@@ -441,6 +567,88 @@ def analizar_solicitud_view(request, id_proyecto, id_solicitud):
     return render_to_response('desarrollo/analizar_solicitud.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@miembro_proyecto()
+@miembro_comite()
+def historial_item_view(request, id_proyecto, id_item, id_solicitud):
+    """
+    ::
+    
+        La vista del listado de versiones por item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe ser miembro del proyecto.
+            - El usuario debe ser miembro del comite de cambios del proyecto.
+            
+        Esta vista permite al usuario listar las versiones de un item previamente seleccionado. Por cada item en la tabla de 
+        versiones, se podra visualizar todos los campos de cada uno.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_fase: el identificador de la fase.
+            - id_item: el identificador del item.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    solicitud = SolicitudCambio.objects.get(id=id_solicitud)
+    item = solicitud.item
+    versiones = VersionItem.objects.filter(id_item=id_item).exclude(estado=4).exclude(version=item.version)
+    ctx = {'item':item, 'versiones':versiones, 'solicitud':solicitud, 'proyecto':proyecto}
+    return render_to_response('desarrollo/historial_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
+@miembro_proyecto()
+@miembro_comite()
+def visualizar_version_item_view(request, id_proyecto, id_item, id_solicitud, version):
+    """
+    ::
+    
+        La vista para visualizar una version del item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+        
+            - El usuario debe estar logueado.
+            - El usuario debe ser miembro del proyecto.
+            - El usuario debe ser miembro del comite de cambios del proyecto.
+            
+        Esta vista permite al usuario visualizar todos los campos de una version de un item.
+            
+        La vista recibe los siguientes parametros:
+        
+            - request: contiene informacion sobre la sesion actual.
+            - id_item: el identificador del item.
+            - id_proyecto: el identificador del proyecto.
+            - id_solicitud: el identificador de la solicitud.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente. 
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    solicitud = SolicitudCambio.objects.get(id=id_solicitud)
+    item = solicitud.item
+    version = VersionItem.objects.filter(id_item=id_item).get(version=version)
+    
+    posee_padre = True
+    if version.padre:
+        try:
+            padre = Item.objects.get(id=version.padre)
+        except Item.DoesNotExist:
+            posee_padre = False
+    else:
+        posee_padre = False
+    
+    if posee_padre:
+        ctx = {'item':item, 'padre':padre, 'version':version, 'solicitud':solicitud, 'proyecto':proyecto}
+    else:
+        ctx = {'item':item, 'version':version, 'solicitud':solicitud, 'proyecto':proyecto}
+    return render_to_response('desarrollo/visualizar_version_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
 @permiso_requerido(permiso="Crear solicitud")
 @miembro_proyecto()
 def crear_solicitud_view(request, id_proyecto, id_fase, id_item):
@@ -811,7 +1019,7 @@ def fases_proyecto_view(request, id_proyecto):
     
     for f in fases:
         cluster_fase = pydot.Cluster("fase"+str(f.id),
-                                     label="Fase: " + str(f.nombre), 
+                                     label="Fase: " + str(f.nombre) + " sec(" + str(f.num_secuencia) + ")", 
                                      shape='rectangle', 
                                      fontsize=15, 
                                      style='filled', 
@@ -1858,14 +2066,23 @@ def modificar_item_view(request, id_proyecto, id_fase, id_item):
                         version_item.padre = item.padre.id
                     version_item.save()
                     
+                    # Si la solicitud de cambio correspondiente a la accion en cuestion existe.
+                    if existe_solicitud:
+                        item.linea_base = solicitud.linea_base
+                        item.estado = 2
+                        item.save()
+                        version_item.linea_base = item.linea_base
+                        version_item.estado = item.estado
+                        version_item.save()
+                        # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
+                        solicitud.delete()
+                        existe_solicitud = False
+                    
                 # Si la solicitud de cambio correspondiente a la accion en cuestion existe.
                 if existe_solicitud:
                     item.linea_base = solicitud.linea_base
                     item.estado = 2
                     item.save()
-                    version_item.linea_base = item.linea_base
-                    version_item.estado = item.estado
-                    version_item.save()
                     # Borramos la solicitud de cambio que ya ha sido utilizada para efectuar los cambios en el item.
                     solicitud.delete()
                         
@@ -1995,6 +2212,58 @@ def visualizar_item_view(request, id_proyecto, id_fase, id_item):
     return render_to_response('item/visualizar_item.html', ctx, context_instance=RequestContext(request))
 
 @login_required(login_url='/login/')
+@miembro_proyecto()
+@rol_fase_requerido()
+def validar_item_view(request, id_proyecto, id_fase, id_item):
+    """
+    ::
+    
+        La vista para validar un item. Para acceder a esta vista se deben cumplir los siguientes
+        requisitos:
+    
+            - El usuario debe estar logueado.
+            - El usuario debe ser miembro del proyecto al cual esta ligada la fase.
+            - El usuario debe poseer un rol valido a la fase.
+    
+        Esta vista permite al usuario validar un item, es decir, convertir el estado en revision del item a su estado anterior.
+        La vista recibe los siguientes parametros:
+    
+            - request: contiene informacion sobre la sesion actual.
+            - id_item: el identificador del item.
+            - id_fase: el identificador de la fase.
+            - id_proyecto: el identificador del proyecto.
+            
+        La vista retorna lo siguiente:
+        
+            - render_to_response: devuelve el contexto, generado en la vista, al template correspondiente.
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fase = proyecto.fases.get(id=id_fase)
+    item = fase.items.get(id=id_item)
+    item_valido = True
+    
+    if item.estado == 0 or item.estado == 1 or item.estado == 2:
+        item_valido = False
+        
+    if item_valido:
+        item.version = VersionItem.objects.filter(id_item=item.id).latest('id').version + 1
+        version = VersionItem.objects.filter(id_item=item.id).exclude(estado=3).latest('id')
+        item.estado = version.estado
+        item.save()
+        version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
+                                                  descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
+                                                  costo_temporal=item.costo_temporal, complejidad=item.complejidad,
+                                                  estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
+                                                  adan=item.adan, cain=item.cain, tipo_relacion=item.tipo_relacion, 
+                                                  linea_base=item.linea_base, fecha_version=datetime.datetime.now())
+        if item.padre:
+            version_item.padre = item.padre.id
+        version_item.save()
+        
+    ctx = {'item':item, 'fase':fase, 'proyecto':proyecto, 'item_valido':item_valido}
+    return render_to_response('item/validar_item.html', ctx, context_instance=RequestContext(request))
+
+@login_required(login_url='/login/')
 @permiso_requerido(permiso="Aprobar item")
 @miembro_proyecto()
 @rol_fase_requerido()
@@ -2031,7 +2300,7 @@ def aprobar_item_view(request, id_proyecto, id_fase, id_item):
     if fase.estado == 2:
         estado_valido = False
     
-    if item.estado == 1 or item.estado == 2:
+    if item.estado == 1 or item.estado == 2 or item.estado == 3:
         item_valido = False
         
     if estado_valido and item_valido:
@@ -2092,13 +2361,14 @@ def desaprobar_item_view(request, id_proyecto, id_fase, id_item):
     if estado_valido and item_valido:
         item.version = VersionItem.objects.filter(id_item=item.id).latest('id').version + 1
         item.estado = 0
+        item.linea_base = None
         item.save()
         version_item = VersionItem.objects.create(version=item.version, id_item=item.id, nombre=item.nombre, 
                                                   descripcion=item.descripcion, costo_monetario=item.costo_monetario, 
                                                   costo_temporal=item.costo_temporal, complejidad=item.complejidad,
                                                   estado=item.estado, fase=item.fase, tipo_item=item.tipo_item,
                                                   adan=item.adan, cain=item.cain, tipo_relacion=item.tipo_relacion, 
-                                                  linea_base=item.linea_base, fecha_version=datetime.datetime.now())
+                                                  linea_base=None, fecha_version=datetime.datetime.now())
         if item.padre:
             version_item.padre = item.padre.id
         version_item.save()
@@ -2516,6 +2786,11 @@ def agregar_relacion_view(request, id_proyecto, id_fase, id_item):
         if eleccion_relacion == "0":
             existen_items_hijos = False
             items_hijos = fase.items.filter(padre=None).exclude(id=id_item).exclude(estado=1).exclude(estado=2)
+            
+            for i in items_hijos:
+                solicitudes = SolicitudCambio.objects.filter(item=i)
+                if solicitudes:
+                    items_hijos = items_hijos.exclude(id=i.id)
                 
             if item.adan:
                 items_hijos = items_hijos.exclude(id=item.adan)
@@ -2544,6 +2819,11 @@ def agregar_relacion_view(request, id_proyecto, id_fase, id_item):
                 existen_items_sucesores = False
                 fase_vecina = proyecto.fases.get(num_secuencia=int(fase.num_secuencia)+1)
                 items_sucesores = fase_vecina.items.filter(padre=None).exclude(estado=1).exclude(estado=2)
+                    
+                for i in items_sucesores:
+                    solicitudes = SolicitudCambio.objects.filter(item=i)
+                    if solicitudes:
+                        items_sucesores.exclude(id=i.id)
                     
                 if items_sucesores:
                     existen_items_sucesores = True
@@ -2851,8 +3131,8 @@ def quitar_relacion_view(request, id_proyecto, id_fase, id_item, id_relacion, el
         if item.estado == 1 or item.estado == 2:
             item_valido = False
     elif eleccion == "2" or eleccion == "3" :
-        item = Item.objects.get(id=id_item)
-        relacion = fase.items.get(id=id_relacion)
+        item = Item.objects.get(id=id_relacion)
+        relacion = fase.items.get(id=id_item)
         
         try:
             solicitud = SolicitudCambio.objects.filter(item=relacion).get(accion="Quitar relacion de item")

@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-{% block title %}SAP - Aprobación de item{% endblock %}
+{% block title %}SAP - Validación del item {{ item.nombre }}{% endblock %}
 {% block content %}
 <div class="jumbotron">
 	<div class="bs-example">
-		{% if estado_valido and item_valido %}
+		{% if item_valido %}
 			<div class="panel panel-success">
       			<div class="panel-heading">
         			<h3 class="panel-title">¡Éxito!</h3>
       			</div>
       			<div class="panel-body">
-        			El item <i>{{ item.nombre }}</i> fue correctamente <b>aprobado</b>.
+        			El item <i>{{ item.nombre }}</i> fue correctamente <b>validado</b>.
       			</div>
       		</div>
 		{% else %}
@@ -18,14 +18,11 @@
         			<h3 class="panel-title">¡Alto ahí!</h3>
       			</div>
       			<div class="panel-body">
-        			El item <i>{{ item.nombre }}</i> no puede ser aprobado porque:
+        			El item <i>{{ item.nombre }}</i> no puede ser validado porque:
         			<br><br>
         			<ul>
-        				{% if estado_valido == False %}
-        					<li>La fase <i>{{ fase.nombre }}</i> se encuentra en estado <b>Finalizado</b>.</li>
-        				{% endif %}
         				{% if item_valido == False %}
-        					<li>El item <i>{{ item.nombre }}</i> se encuentra en estado <b>Aprobado</b>, <b>Bloqueado</b> o <b>En revisión</b>.</li>
+        					<li>El item <i>{{ item.nombre }}</i> se encuentra en un estado distinto a <b>En revisión</b>.</li>
         				{% endif %}
         			</ul>
       			</div>

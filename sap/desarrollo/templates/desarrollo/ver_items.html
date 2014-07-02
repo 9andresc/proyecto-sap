@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}SAP - Items de la fase {{ fase.nombre }}{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Items de la fase <i>{{ fase.nombre }}</i></small></h1>
+		<br>
+		{% if items %}
+			<br>
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>ID</th>
+                    		<th>Nombre de item</th>
+                    		<th>Estado</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for i in items %}
+                			<tr>
+                    			<td>{{ i.id }}</td>
+                    			<td>{{ i.nombre }}</td>
+                    			<td>
+                    			{% ifequal i.estado 0 %}
+									En construcción
+								{% endifequal %}
+								{% ifequal i.estado 1 %}
+									Aprobado
+								{% endifequal %}
+								{% ifequal i.estado 2 %}
+									Bloqueado
+								{% endifequal %}
+								{% ifequal i.estado 3 %}
+									En revisión
+								{% endifequal %}
+                    			</td>
+                    			<td>
+        							<a class="btn btn-default" href="/desarrollo/fases/items/item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-search"></span> Visualizar</a>
+                    			</td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    	{% else %}
+    		<h3>No posee items.</h3>
+    	{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_ver_fases' id_proyecto=proyecto.id %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver al listado de fases del proyecto {{ proyecto.nombre }}</a>
+</div>
+{% endblock %}

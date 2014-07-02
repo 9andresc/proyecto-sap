@@ -90,6 +90,7 @@
                     			<td>{{ pf.nombre }}</td>
                     			<td>{{ pf.usuario_lider.username }}</td>
                     			<td>{{ pf.fecha_inicio }}</td>
+                    			<td><a class="btn btn-default" href="{% url 'vista_ver_fases' id_proyecto=pf.id %}"><span class="glyphicon glyphicon-search"></span> Ver fases</a></td>
                  			<tr>
                 		{% endfor %}
                 	</tbody>

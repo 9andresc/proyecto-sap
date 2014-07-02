@@ -49,8 +49,11 @@
     <div align="center">
 		<img src="{{ ruta_grafo }}" alt="Grafo de relaciones del item {{ solicitud.item.nombre }}" class="img-thumbnail">
 	</div>
+	
+	<br>
+	<a class="btn btn-default" href="/desarrollo/solicitudes/{{ solicitud.id }}/historial_item/{{ solicitud.item.id }}/proyecto/{{ solicitud.proyecto.id }}/"><span class="glyphicon glyphicon-refresh"></span> Historial del item</a>
     
-    <br>
+    <br><br>
 	<div class="input-group">
 		<span class="input-group-addon"><b>Acción</b></span>
 		<input type="text" class="form-control" id="accion" name="accion" value="{{ solicitud.accion }}" disabled="disabled">

@@ -56,6 +56,7 @@
 	        								{% if visualizar_item %}
 	        									<li><a href="/desarrollo/fases/items/item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-search"></span> Visualizar</a></li>
 	      									{% endif %}
+	      									<li><a href="/desarrollo/fases/items/validar_item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-ok"></span> Validar</a></li>
 	      									{% if aprobar_item %}
 	        									<li><a href="/desarrollo/fases/items/aprobar_item/{{ i.id }}/fase/{{ fase.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-certificate"></span> Aprobar</a></li>
 	      									{% endif %}

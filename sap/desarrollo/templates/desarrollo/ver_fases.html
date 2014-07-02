@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}SAP - Fases del proyecto {{ proyecto.nombre }}{% endblock %}
+{% block content %}
+
+<div class="jumbotron">
+	<div class="bs-example">
+		<h1><small>Fases del proyecto <i>{{ proyecto.nombre }}</i></small></h1>
+		<br>
+		{% if fases %}
+			<div class="table-responsive"> 
+        		<table class="table table-hover">
+            		<thead>
+                		<tr>
+                    		<th>Secuencia</th>
+                    		<th>Nombre de fase</th>
+                    		<th>Estado</th>
+                    		<th>Fecha de inicio</th>
+                    		<th></th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+                		{% for f in fases %}
+                			<tr>
+                    			<td>{{ f.num_secuencia }}</td>
+                    			<td>{{ f.nombre }}</td>
+                    			<td>
+                    			{% ifequal f.estado 0 %}
+									Inactivo
+								{% endifequal %}
+								{% ifequal f.estado 1 %}
+									En curso
+								{% endifequal %}
+								{% ifequal f.estado 2 %}
+									Finalizado
+								{% endifequal %}
+                    			</td>
+                    			<td>{{ f.fecha_inicio }}</td>
+                    			<td>
+	                    			<a class="btn btn-default" href="/desarrollo/ver_items/fase/{{ f.id }}/proyecto/{{ proyecto.id }}/"><span class="glyphicon glyphicon-search"></span> Ver Items</a>
+                    			</td>
+                			</tr>
+                		{% endfor %}
+                	</tbody>
+        		</table>
+    		</div>
+    		<h2 align="center"><small>Grafo de items del proyecto <i>{{ proyecto.nombre }}</i></small></h2>
+    		<div align="center">
+			 	<img src="{{ ruta_grafo }}" alt="Grafo del proyecto {{ proyecto.nombre }}" class="img-thumbnail">
+			</div>
+    	{% else %}
+    		<h3>No posee fases.</h3>
+    	{% endif %}
+	</div>
+	<br>
+	<a class="btn btn-default" href="{% url 'vista_desarrollo' %}"><span class="glyphicon glyphicon-chevron-left"></span> Volver al módulo de desarrollo</a>
+</div>
+{% endblock %}

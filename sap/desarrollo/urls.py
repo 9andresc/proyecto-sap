@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
-from desarrollo.views import desarrollo_view
-from desarrollo.views import calcular_costo_view, crear_solicitud_view, solicitudes_proyecto_view, analizar_solicitud_view, solicitudes_usuario_view, visualizar_solicitud_view, cancelar_solicitud_view, finalizar_proyecto_view
+from desarrollo.views import desarrollo_view, ver_fases_view, ver_items_view
+from desarrollo.views import calcular_costo_view, crear_solicitud_view, solicitudes_proyecto_view, analizar_solicitud_view, solicitudes_usuario_view, visualizar_solicitud_view, cancelar_solicitud_view, finalizar_proyecto_view, historial_item_view, visualizar_version_item_view
 from desarrollo.views import fases_proyecto_view
 from desarrollo.views import roles_fase_view, fase_agregar_rol_view, fase_confirmacion_agregar_rol_view, fase_quitar_rol_view
 from desarrollo.views import tipos_item_fase_view
@@ -9,7 +9,7 @@ from desarrollo.views import tipos_atributo_tipo_item_view, agregar_tipo_atribut
 from desarrollo.views import iniciar_fase_view
 from desarrollo.views import finalizar_fase_view
 from desarrollo.views import items_fase_view
-from desarrollo.views import crear_item_view, modificar_item_view, eliminar_item_view, visualizar_item_view, aprobar_item_view, desaprobar_item_view, revivir_item_view, confirmacion_revivir_item_view, calcular_impacto_view
+from desarrollo.views import crear_item_view, modificar_item_view, eliminar_item_view, visualizar_item_view, validar_item_view, aprobar_item_view, desaprobar_item_view, revivir_item_view, confirmacion_revivir_item_view, calcular_impacto_view
 from desarrollo.views import relaciones_item_view, agregar_relacion_view, confirmacion_agregar_relacion_view, quitar_relacion_view
 from desarrollo.views import lineas_base_fase_view, crear_linea_base_view, visualizar_linea_base_view, cerrar_linea_base_view
 from desarrollo.views import items_linea_base_view, linea_base_agregar_item_view,linea_base_confirmacion_agregar_item_view, linea_base_quitar_item_view
@@ -17,8 +17,12 @@ from desarrollo.views import versiones_item_view, confirmacion_reversionar_item_
 
 urlpatterns = patterns('',
     url(r'^desarrollo/$', desarrollo_view, name="vista_desarrollo"),
+    url(r'^desarrollo/ver_fases/proyecto/(?P<id_proyecto>\d+)/$', ver_fases_view, name="vista_ver_fases"),
+    url(r'^desarrollo/ver_items/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', ver_items_view, name="vista_ver_items"),
     url(r'^desarrollo/solicitudes/proyecto/(?P<id_proyecto>\d+)/$', solicitudes_proyecto_view, name="vista_solicitudes_proyecto"),
     url(r'^desarrollo/solicitudes/analizar_solicitud/(?P<id_solicitud>\d+)/proyecto/(?P<id_proyecto>\d+)/$', analizar_solicitud_view, name="vista_analizar_solicitud"),
+    url(r'^desarrollo/solicitudes/(?P<id_solicitud>\d+)/historial_item/(?P<id_item>\d+)/proyecto/(?P<id_proyecto>\d+)/$', historial_item_view, name="vista_historial_item"),
+    url(r'^desarrollo/solicitudes/(?P<id_solicitud>\d+)/historial_item/(?P<id_item>\d+)/version/(?P<version>\d+)/proyecto/(?P<id_proyecto>\d+)/$', visualizar_version_item_view, name="vista_visualizar_version_item"),
     url(r'^desarrollo/crear_solicitud/item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', crear_solicitud_view, name="vista_crear_solicitud"),
     url(r'^desarrollo/solicitudes/usuario/(?P<id_usuario>\d+)/proyecto/(?P<id_proyecto>\d+)/$', solicitudes_usuario_view, name="vista_solicitudes_usuario"),
     url(r'^desarrollo/solicitudes/visualizar_solicitud/(?P<id_solicitud>\d+)/proyecto/(?P<id_proyecto>\d+)/$', visualizar_solicitud_view, name="vista_visualizar_solicitud"),
@@ -45,6 +49,7 @@ urlpatterns = patterns('',
     url(r'^desarrollo/fases/items/modificar_item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', modificar_item_view, name="vista_modificar_item"),
     url(r'^desarrollo/fases/items/eliminar_item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', eliminar_item_view, name="vista_eliminar_item"),
     url(r'^desarrollo/fases/items/item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', visualizar_item_view, name="vista_visualizar_item"),
+    url(r'^desarrollo/fases/items/validar_item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', validar_item_view, name="vista_validar_item"),
     url(r'^desarrollo/fases/items/aprobar_item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', aprobar_item_view, name="vista_aprobar_item"),
     url(r'^desarrollo/fases/items/desaprobar_item/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', desaprobar_item_view, name="vista_desaprobar_item"),
     url(r'^desarrollo/fases/items/calcular_impacto/(?P<id_item>\d+)/fase/(?P<id_fase>\d+)/proyecto/(?P<id_proyecto>\d+)/$', calcular_impacto_view, name="vista_calcular_impacto"),
