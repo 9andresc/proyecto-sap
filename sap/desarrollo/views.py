@@ -3554,6 +3554,25 @@ def cerrar_linea_base_view(request, id_proyecto, id_fase, id_linea_base):
     return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
 
 
+@login_required(login_url='/login/')
+@miembro_proyecto()
+def reporte_cambios_view(request, id_proyecto):
+    """
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fases = Fase.objects.filter(proyecto_id=id_proyecto)
+    items = []
+    solicitudCambios = []
+    
+    for p in fases:
+        items = items + list(Item.objects.filter(fase_id=p.id))
+        
+    for i in items:
+        solicitudCambios = solicitudCambios + list(SolicitudCambio.objects.filter(item_id=i.id))
+        
+    ctx = {'pagesize':'A4', 'proyecto':proyecto, 'items':items, 'solicitudCambios':solicitudCambios}
+    html = render_to_string('desarrollo/reporte_cambios.html', ctx, context_instance=RequestContext(request))
+    return generar_pdf(html)
 
 @login_required(login_url='/login/')
 @miembro_proyecto()
