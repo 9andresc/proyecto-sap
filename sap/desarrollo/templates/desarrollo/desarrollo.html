@@ -57,6 +57,8 @@
       									{% if finalizar_proyecto %}
         									<li><a href="/desarrollo/finalizar_proyecto/{{ p.id }}/"><span class="glyphicon glyphicon-stop"></span> Finalizar</a></li>
       									{% endif %}
+      									    <li><a href="{% url 'vista_reporte_proyecto' id_proyecto=p.id %}"><span class="glyphicon glyphicon-file"></span> Reporte Proyecto </a></li>
+      									    <li><a href="{% url 'vista_reporte_cambios' id_proyecto=p.id %}"><span class="glyphicon glyphicon-file"></span> Reporte Cambios </a></li>
       								</ul>
     							</div>
     							{% endif %}

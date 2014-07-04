@@ -1,0 +1,36 @@
+{% block title %} SAP - Reporte de Cambios {% endblock %}
+{% block content %}
+<div class="jumbotron">
+<div class="bs-example">
+<p><label><b>Nombre del proyecto: </b></label> {{ proyecto.nombre }}</p>
+{% for m in solicitudCambios %}
+<p>	<label><b>ID de la solicitud: </b></label> {{m.id}}<br>	
+{% for i in items%}
+{% if m.item == i%}
+<label><b>Lider de Proyecto Voto: </b></label> 
+{% if proyecto.usuario_lider == m.votantes%}
+Si<br>
+{% else %}
+No<br>
+{% endif %}
+<label><b>Usuario solicitante: </b></label> {{m.usuario}}<br>	
+<label><b>Linea base afectada: </b></label> 
+{% if i.linea_base.nombre == null%}
+El item no se encuentra en ninguna linea base<br>
+{% else %}
+{{i.linea_base.nombre}}<br>
+{% endif %}
+{% endif %}
+{% endfor %}
+<label><b>Item modificado: </b></label> {{m.item}}<br>
+{% if m.votos == False%}
+<label><b>Resultado de la votacion: </b></label>En votacion</p>	
+{% elif m.votos == True%}
+<label><b>Resultado de la votacion: </b></label>Aprobada</p>
+{% else %}
+<label><b>Resultado de la votacion: </b></label>Rechazada</p>
+{% endif %}
+{% endfor %}
+</div>
+</div>
+{% endblock %}

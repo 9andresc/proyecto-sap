@@ -1,3 +1,8 @@
+import ho.pisa as pisa
+import cStringIO as StringIO
+import cgi
+from django.template.loader import render_to_string
+from django.http import HttpResponse
 import datetime
 import pydot
 from django.conf import settings
@@ -8,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from administracion.models import Proyecto, Rol, TipoAtributo
 from desarrollo.models import Item, Fase, TipoItem, ValorAtributo, VersionItem, LineaBase, SolicitudCambio
 from desarrollo.forms import CrearItemForm, ModificarItemForm, CrearTipoItemForm, ModificarTipoItemForm, CrearLineaBaseForm, CrearSolicitudForm
-from inicio.decorators import permiso_requerido, miembro_proyecto, rol_fase_requerido, miembro_comite, solicitud_requerida
+from inicio.decorators import permiso_requerido, miembro_proyecto, rol_fase_requerido, miembro_comite, solicitud_requerida,lider_proyecto
 
 @login_required(login_url='/login/')
 def desarrollo_view(request):
@@ -3827,3 +3832,64 @@ def cerrar_linea_base_view(request, id_proyecto, id_fase, id_linea_base):
 
     ctx = {'fase':fase, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
     return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
+
+
+@login_required(login_url='/login/')
+@lider_proyecto()
+def reporte_cambios_view(request, id_proyecto):
+    """
+    ::
+    
+        Reporte con la lista de solicitudes de cambio de un proyecto dado mostrando la linea base afectada, 
+        el usuario que realizo la solicitud, si el lider ya voto o no; y si la solicitud fue aprobada, rechazada o sigue pendiente.
+        Solo el lider del proyecto puede solicitar el reporte de cambios
+        
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fases = Fase.objects.filter(proyecto_id=id_proyecto)
+    items = []
+    solicitudCambios = []
+    
+    for p in fases:
+        items = items + list(Item.objects.filter(fase_id=p.id))
+        
+    for i in items:
+        solicitudCambios = solicitudCambios + list(SolicitudCambio.objects.filter(item_id=i.id))
+        
+    ctx = {'pagesize':'A4', 'proyecto':proyecto, 'items':items, 'solicitudCambios':solicitudCambios}
+    html = render_to_string('desarrollo/reporte_cambios.html', ctx, context_instance=RequestContext(request))
+    return generar_pdf(html)
+
+@login_required(login_url='/login/')
+@miembro_proyecto()
+def reporte_proyecto_view(request, id_proyecto):
+    """
+    ::
+    
+        Lista de items de un proyecto dado, agrupado por fases. Dentro de cada fase, por cada
+        item se muestra los campos de id, nombre, nombre de tipo de item, nombre del item padre (si lo tuviere), version y costo.
+  
+    """
+    proyecto = Proyecto.objects.get(id=id_proyecto)
+    fases = Fase.objects.filter(proyecto_id=id_proyecto)
+    items = []
+    
+    for p in fases:
+        items = items + list(Item.objects.filter(fase_id=p.id))
+        
+    ctx = {'pagesize':'A4','proyecto':proyecto, 'fases':fases, 'items':items}
+    html = render_to_string('desarrollo/reporte_proyecto.html', ctx, context_instance=RequestContext(request))
+    return generar_pdf(html)
+
+def generar_pdf(html):
+    """
+    ::
+    
+    Funcion para generar el archivo PDF y devolverlo mediante HttpResponse
+    
+    """
+    result = StringIO.StringIO()
+    pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), mimetype='application/pdf')
+    return HttpResponse('Error al generar el PDF: %s' % cgi.escape(html)) 

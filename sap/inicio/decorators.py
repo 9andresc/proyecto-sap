@@ -145,3 +145,18 @@ def solicitud_requerida(accion):
                     return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
         return wraps(func)(inner_decorator)
     return decorator
+
+def lider_proyecto():
+    def decorator(func):
+        def inner_decorator(request, id_proyecto, *args, **kwargs):
+            es_lider_proyecto = False
+            proyecto = Proyecto.objects.get(id=id_proyecto)
+            if request.user.id == proyecto.usuario_lider.id:
+                es_lider_proyecto = True
+
+            if es_lider_proyecto:
+                return func(request, id_proyecto, *args, **kwargs)
+            ctx = {'es_lider_proyecto':es_lider_proyecto}
+            return render_to_response("acceso_denegado.html", ctx, context_instance=RequestContext(request))
+        return wraps(func)(inner_decorator)
+    return decorator

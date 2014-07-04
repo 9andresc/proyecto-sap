@@ -1,0 +1,24 @@
+{% block title %} SAP - Reporte de Proyecto {% endblock %}
+{% block content %}
+<div class="jumbotron">
+<div class="bs-example">
+<p><label><b>Nombre del proyecto: </b></label> {{ proyecto.nombre }}</p>
+{% for p in fases %}
+<p>	<label><b>Nombre de la fase: </b></label> {{ p.nombre }}<br>
+<label><b>--- Items de la fase ---</b></label></p>
+
+{% for i in items %}
+{% if i.fase == p%}
+<p>	<label><b>ID: </b></label> {{i.id}}<br>
+<label><b>Nombre: </b></label> {{i.nombre}}<br>
+<label><b>Tipo de Item: </b></label> {{i.tipo_item}}<br>
+<label><b>Costo Monetario: </b></label> {{i.costo_monetario}}<br>
+<label><b>Costo Temporal: </b></label> {{i.costo_temporal}}<br>
+<label><b>Versión: </b></label> {{i.version}}<br>
+<label><b>Padre: </b></label> {{i.padre}}<br>
+{% endif %}
+{% endfor %}
+{% endfor %}
+</div>
+</div>
+{% endblock %}
