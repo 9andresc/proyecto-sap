@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from administracion.models import Proyecto, Rol, TipoAtributo
 from desarrollo.models import Item, Fase, TipoItem, ValorAtributo, VersionItem, LineaBase, SolicitudCambio
 from desarrollo.forms import CrearItemForm, ModificarItemForm, CrearTipoItemForm, ModificarTipoItemForm, CrearLineaBaseForm, CrearSolicitudForm
-from inicio.decorators import permiso_requerido, miembro_proyecto, rol_fase_requerido, miembro_comite, solicitud_requerida
+from inicio.decorators import permiso_requerido, miembro_proyecto, rol_fase_requerido, miembro_comite, solicitud_requerida,lider_proyecto
 
 @login_required(login_url='/login/')
 def desarrollo_view(request):
@@ -3555,9 +3555,15 @@ def cerrar_linea_base_view(request, id_proyecto, id_fase, id_linea_base):
 
 
 @login_required(login_url='/login/')
-@miembro_proyecto()
+@lider_proyecto()
 def reporte_cambios_view(request, id_proyecto):
     """
+    ::
+    
+        Reporte con la lista de solicitudes de cambio de un proyecto dado mostrando la línea base afectada, 
+        el usuario que realizó la solicitud, si el líder ya votó o no; y si la solicitud fue aprobada, rechazada o sigue pendiente.
+        Solo el lider del proyecto puede solicitar el reporte de cambios
+        
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fases = Fase.objects.filter(proyecto_id=id_proyecto)
@@ -3578,6 +3584,11 @@ def reporte_cambios_view(request, id_proyecto):
 @miembro_proyecto()
 def reporte_proyecto_view(request, id_proyecto):
     """
+    ::
+    
+        Lista de ítems de un proyecto dado, agrupado por fases. Dentro de cada fase, por cada
+        ítem se muestra los campos de id, nombre, nombre de tipo de item, nombre del item padre (si lo tuviere), versión y costo.
+  
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
     fases = Fase.objects.filter(proyecto_id=id_proyecto)
@@ -3592,7 +3603,10 @@ def reporte_proyecto_view(request, id_proyecto):
 
 def generar_pdf(html):
     """
+    ::
+    
     Funcion para generar el archivo PDF y devolverlo mediante HttpResponse
+    
     """
     result = StringIO.StringIO()
     pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), result)

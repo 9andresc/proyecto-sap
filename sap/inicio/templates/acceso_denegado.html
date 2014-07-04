@@ -13,6 +13,8 @@
 				No puedes realizar acciones sobre este proyecto, ya que, no eres miembro del mismo. Consulta con el <b>Líder del proyecto</b> para obtener el permiso.
 			{% elif es_miembro_comite == False %}
 				No puedes gestionar las solicitudes de cambio, puesto que, no eres miembro del comité de cambios de este proyecto.
+			{% elif es_lider_proyecto == False %}
+				No puedes generar el reporte de solicitudes de cambios, puesto que, no eres el usuario lider de este proyecto.
 			{% elif posee_rol_fase == False %}
 				No puedes acceder o realizar cambios, puesto que, no posees un rol válido para esta fase.
 			{% elif existe_solicitud %}
