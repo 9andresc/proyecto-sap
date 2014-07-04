@@ -3560,8 +3560,8 @@ def reporte_cambios_view(request, id_proyecto):
     """
     ::
     
-        Reporte con la lista de solicitudes de cambio de un proyecto dado mostrando la línea base afectada, 
-        el usuario que realizó la solicitud, si el líder ya votó o no; y si la solicitud fue aprobada, rechazada o sigue pendiente.
+        Reporte con la lista de solicitudes de cambio de un proyecto dado mostrando la linea base afectada, 
+        el usuario que realizo la solicitud, si el lider ya voto o no; y si la solicitud fue aprobada, rechazada o sigue pendiente.
         Solo el lider del proyecto puede solicitar el reporte de cambios
         
     """
@@ -3586,8 +3586,8 @@ def reporte_proyecto_view(request, id_proyecto):
     """
     ::
     
-        Lista de ítems de un proyecto dado, agrupado por fases. Dentro de cada fase, por cada
-        ítem se muestra los campos de id, nombre, nombre de tipo de item, nombre del item padre (si lo tuviere), versión y costo.
+        Lista de items de un proyecto dado, agrupado por fases. Dentro de cada fase, por cada
+        item se muestra los campos de id, nombre, nombre de tipo de item, nombre del item padre (si lo tuviere), version y costo.
   
     """
     proyecto = Proyecto.objects.get(id=id_proyecto)
