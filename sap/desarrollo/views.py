@@ -3553,6 +3553,10 @@ def cerrar_linea_base_view(request, id_proyecto, id_fase, id_linea_base):
     ctx = {'fase':fase, 'estado_valido':estado_valido, 'proyecto':proyecto, 'linea_base':linea_base}
     return render_to_response('linea_base/cerrar_linea_base.html', ctx, context_instance=RequestContext(request))
 
+
+
+@login_required(login_url='/login/')
+@miembro_proyecto()
 def reporte_proyecto_view(request, id_proyecto):
     """
     """
