@@ -89,16 +89,6 @@ continuar=false ;;
 esac
 done
 
-#Detectamos si tenemos conexion a internet para continuar con la instalacion
-gnome-terminal -x bash -c "ping -c 1 www.google.com > red.txt"
-conexion=`grep 'PING www.google.com' red.txt`
-rm red.txt
-if [ -z "$conexion" ];
-then
-echo "IMPOSIBLE CONTINUAR CON LA INSTALACION, DEBE ASEGURARSE DE TENER UNA CONEXION A INTERNET"
-exit
-fi
-
 if [ ! -d "$rutainstalacion" ];
 then
 echo "###### LA RUTA DE INSTALACION NO EXISTE, SE CREARA EL DIRECTORIO EN LA RUTA ESPECIFICADA ######"
