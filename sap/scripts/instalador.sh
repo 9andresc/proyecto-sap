@@ -179,7 +179,7 @@ a2ensite sap.conf
 cd "$rutainstalador"
 echo "servidor apache activado"
 
-if [ $nombre_fichero == "Iteracion_6" ] || [ $nombre_fichero == "master" ];
+if [ $nombre_fichero == "Iteracion_6" ] || [ $nombre_fichero == "Iteracion_7" ];
 then
 
 
