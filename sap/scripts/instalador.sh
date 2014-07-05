@@ -17,7 +17,7 @@ iteracion3="https://github.com/GustavoAndresCabral/proyecto-sap/archive/Iteracio
 iteracion4="https://github.com/GustavoAndresCabral/proyecto-sap/archive/Iteracion_4.zip"
 iteracion5="https://github.com/GustavoAndresCabral/proyecto-sap/archive/Iteracion_5.zip"
 iteracion6="https://github.com/GustavoAndresCabral/proyecto-sap/archive/Iteracion_6.zip"
-actual="https://github.com/GustavoAndresCabral/proyecto-sap/archive/master.zip"
+iteracion7="https://github.com/GustavoAndresCabral/proyecto-sap/archive/Iteracion_7.zip"
 
 function opciones
 {
@@ -27,7 +27,7 @@ echo ' 3 Iteracion3'
 echo ' 4 Iteracion4'
 echo ' 5 Iteracion5'
 echo ' 6 Iteracion6'
-echo ' 7 Actual'
+echo ' 7 Iteracion7'
 echo 'Seleccione el numero de la opción a instalar'
 }
 
@@ -81,13 +81,128 @@ echo 'Iteracion 6 seleccionado'
 nombre_fichero='Iteracion_6'
 continuar=false ;;
 7 )
-fuente="$actual"
+fuente="$iteracion7"
 echo 'Ultima version del proyecto seleccionada'
-nombre_fichero='master'
+nombre_fichero='Iteracion_7'
 continuar=false ;;
 ? ) clear && error;;
 esac
 done
+
+#Detectamos si tenemos conexion a internet para continuar con la instalacion
+gnome-terminal -x bash -c "ping -c 1 www.google.com > red.txt"
+conexion=`grep 'PING www.google.com' red.txt`
+rm red.txt
+if [ -z "$conexion" ];
+then
+echo "IMPOSIBLE CONTINUAR CON LA INSTALACION, DEBE ASEGURARSE DE TENER UNA CONEXION A INTERNET"
+exit
+fi
+
+if [ ! -d "$rutainstalacion" ];
+then
+echo "###### LA RUTA DE INSTALACION NO EXISTE, SE CREARA EL DIRECTORIO EN LA RUTA ESPECIFICADA ######"
+mkdir -p "$rutainstalacion"
+fi
+
+#instalamos zlib1g-dev
+instalado=`dpkg -l | grep zlib1g-dev`
+if [ -n "$instalado" ];
+then
+echo "zlib1g-dev ya esta instalado"
+else
+apt-get install zlib1g-dev
+fi
+
+# instalamos python 2.7.4
+instalado=`dpkg -l | grep python2.7`
+if [ -n "$instalado" ];
+then
+echo "python2.7 ya esta instalado"
+else
+echo "Instalamos python2.7..."
+cd paquetes
+tar -Jxf Python-2.7.4.tar.xz
+cd Python-2.7.4
+./configure
+make
+make install
+cd ..
+rm -rf Python-2.7.4
+cd ..
+fi
+
+#python-setuptools
+instalado=`dpkg -l | grep python-setuptools`
+if [ -n "$instalado" ];
+then
+echo "python-setuptools ya esta instalada"
+else
+echo "Instalamos la libreria python-setuptools"
+apt-get -y install python-setuptools
+fi
+
+#python-dev
+instalado=`dpkg -l | grep python-dev`
+if [ -n "$instalado" ];
+then
+echo "python-dev ya esta instalada"
+else
+echo "Instalamos la libreria python-dev"
+apt-get -y install python-dev
+fi
+
+#Django
+if [ -d /usr/local/lib/python2.7/dist-packages/django ];
+then
+echo "Django ya esta instalado"
+else
+#instalamos el framework Django
+echo "Instalamos el framework Django"
+cd paquetes
+tar xzvf Django-1.6.2.tar.gz
+cd Django-1.6.2
+python setup.py install
+cd ..
+rm -rf Django-1.6.2
+cd ..
+fi
+
+#unipath
+if [ -d /usr/local/lib/python2.7/dist-packages/unipath ];
+then
+echo "unipath ya esta instalado"
+else
+#instalamos el framework Django
+echo "Instalamos la libreria unipath"
+cd paquetes
+tar xzvf Unipath-1.0.tar.gz
+cd Unipath-1.0
+python setup.py install
+cd ..
+rm -rf Unipath-1.0
+fi
+
+#apache
+instalado=`dpkg -l | grep apache2`
+if [ -n "$instalado" ];
+then
+echo "apache2 ya esta instalado"
+else
+echo "Instalamos apache2"
+apt-get -y install apache2
+fi
+
+#libapache2
+instalado=`dpkg -l | grep libapache2`
+if [ -n "$instalado" ];
+then
+echo "libapache2 ya esta instalada"
+else
+echo "Instalamos la libreria libapache2"
+apt-get -y install libapache2-mod-wsgi
+fi
+
 
 
 if [ ! -d "$rutainstalacion" ];
