@@ -52,37 +52,37 @@ read OPT
 case $OPT in
 1 )
 fuente="$iteracion1"
-echo 'Iteracion 1 seleccionado'
+echo 'Iteracion 1 seleccionada'
 nombre_fichero='Iteracion_1'
 continuar=false ;;
 2 )
 fuente="$iteracion2"
-echo 'Iteracion 2 seleccionado'
+echo 'Iteracion 2 seleccionada'
 nombre_fichero='Iteracion_2'
 continuar=false ;;
 3 )
 fuente="$iteracion3"
-echo 'Iteracion 3 seleccionado'
+echo 'Iteracion 3 seleccionada'
 nombre_fichero='Iteracion_3'
 continuar=false ;;
 4 )
 fuente="$iteracion4"
-echo 'Iteracion 4 seleccionado'
+echo 'Iteracion 4 seleccionada'
 nombre_fichero='Iteracion_4'
 continuar=false ;;
 5 )
 fuente="$iteracion5"
-echo 'Iteracion 5 seleccionado'
+echo 'Iteracion 5 seleccionada'
 nombre_fichero='Iteracion_5'
 continuar=false ;;
 6 )
 fuente="$iteracion6"
-echo 'Iteracion 6 seleccionado'
+echo 'Iteracion 6 seleccionada'
 nombre_fichero='Iteracion_6'
 continuar=false ;;
 7 )
 fuente="$iteracion7"
-echo 'Ultima version del proyecto seleccionada'
+echo 'Iteracion 7 Seleccionada'
 nombre_fichero='Iteracion_7'
 continuar=false ;;
 ? ) clear && error;;
